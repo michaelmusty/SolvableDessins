@@ -1,14 +1,10 @@
 # SolvableDessins
 
-This is a database and magma code for computing solvable Belyi maps.
-
-## Getting Started
-
-These instructions are meant to help get a copy of the database up and runnig on your machine and give you the necessary tools to play around with the data.
+This is a database and MAGMA code for computing solvable Belyi maps.
 
 ### Prerequisities
 
-You will need a copy of MAGMA on your machine. See http://magma.maths.usyd.edu.au/magma/ for details.
+You will need a copy of MAGMA on your machine. See http://magma.maths.usyd.edu.au/magma/ for details. We are currently using a custom installation of MAGMA, so it is unlikely that this code will work with your installation. Sorry :(
 
 ### Usage
 
