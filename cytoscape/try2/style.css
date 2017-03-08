@@ -16,3 +16,7 @@ body {
   right: 0;
   bottom: 0;
 }
+
+.qtip {
+  max-width: none !important;
+}
