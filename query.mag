@@ -1,0 +1,138 @@
+AttachSpec("spec");
+// directory := "/Users/mjmusty/Dropbox/2017_Winter/01-SolvableDessins/BelyiDB";
+// ChangeDirectory(directory);
+
+// degree 2^1
+d2 := [Sym(2) | (1,2),(1,2),Id(Sym(2))];
+
+// degree 2^2
+d4 := PossibleGaloisCoveringPermutationTriples(d2);
+
+// degree 2^3
+d4t1_1 := d4[3];
+d4t1_2 := d4[2];
+d4t2 := d4[1];
+d8_1 := PossibleGaloisCoveringPermutationTriples(d4t1_1);
+d8_2 := PossibleGaloisCoveringPermutationTriples(d4t1_2);
+d8_3 := PossibleGaloisCoveringPermutationTriples(d4t2);
+
+/*
+sigma := SimultaneousConjugation(d4[3], Sym(4)!(1,3));
+sigma := SimultaneousConjugation(d4[2], Sym(4)!(1,3));
+sigma := d4[1];
+
+d := Degree(Parent(sigma[1]));
+assert sigma[3]*sigma[2]*sigma[1] eq Id(Sym(d));
+list_0 := PossibleGaloisCoveringPermutations(sigma[1]);
+list_1 := PossibleGaloisCoveringPermutations(sigma[2]);
+list_oo := PossibleGaloisCoveringPermutations(sigma[3]);
+all := [];
+triple := [];
+not_triple := [];
+transitive := [];
+not_transitive := [];
+order := [];
+not_order := [];
+for i in [1..#list_0] do
+  for j in [1..#list_1] do
+    for k in [1..#list_oo] do
+      wt0 := list_0[i];
+      wt1 := list_1[j];
+      wtoo := list_oo[k];
+      sigmap := [wt0, wt1, wtoo];
+      Append(~all, sigmap);
+      if wtoo*wt1*wt0 eq Id(Sym(2*d)) then
+        Append(~triple, sigmap);
+        wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
+        if IsTransitive(wtG) then
+          Append(~transitive, sigmap);
+          if #wtG eq (2*d) then
+            Append(~order, sigmap);
+          else
+            Append(~not_order, sigmap);
+          end if;
+        else
+          Append(~not_transitive, sigmap);
+        end if;
+      else
+        Append(~not_triple, sigmap);
+      end if;
+    end for;
+  end for;
+end for;
+correct := order;
+for i := #correct to 1 by -1 do
+  for j in [1..i-1] do
+    if IsWeaklyIsomorphic(Sym(2*d), correct[i], correct[j]) then
+      Remove(~correct, i);
+      break j;
+    end if;
+  end for;
+end for;
+
+// sigma := [Sym(8)|(1,2,3,4,5,6,7,8),(1,6,3,8,5,2,7,4),(1,5)(2,6)(3,7)(4,8)];
+
+d8_1 := PossibleGaloisCoveringPermutationTriples(d4[3]);
+d8_2 := PossibleGaloisCoveringPermutationTriples(d4[2]);
+d8_3 := PossibleGaloisCoveringPermutationTriples(d4[1]);
+
+for i in [1..#d8_1] do
+  assert IsTransitive(sub< Sym(8) | d8_1[i] >);
+  assert d8_1[i][3]*d8_1[i][2]*d8_1[i][1] eq Id(Sym(8));
+  bool := true;
+  for j in [1..#d8_1] do
+    if i ne j and IsWeaklyIsomorphic(Sym(8), d8_1[i], d8_1[j]) then
+      bool := false;
+    end if;
+  end for;
+  assert bool;
+end for;
+
+for i in [1..#d8_2] do
+  assert IsTransitive(sub< Sym(8) | d8_2[i] >);
+  assert d8_2[i][3]*d8_2[i][2]*d8_2[i][1] eq Id(Sym(8));
+  bool := true;
+  for j in [1..#d8_2] do
+    if i ne j and IsWeaklyIsomorphic(Sym(8), d8_2[i], d8_2[j]) then
+      bool := false;
+    end if;
+  end for;
+  assert bool;
+end for;
+for i in [1..#d8_3] do
+  assert IsTransitive(sub< Sym(8) | d8_3[i] >);
+  assert d8_3[i][3]*d8_3[i][2]*d8_3[i][1] eq Id(Sym(8));
+  bool := true;
+  for j in [1..#d8_3] do
+    if i ne j and IsWeaklyIsomorphic(Sym(8), d8_3[i], d8_3[j]) then
+      bool := false;
+    end if;
+  end for;
+  assert bool;
+end for;
+*/
+
+// degree 2^4
+// d8t1_1
+d8t1_1 := d8_1[3];
+covers := PossibleGaloisCoveringPermutationTriples(d8t1_1);
+d16t1_1 := covers[3];
+d16t1_2 := covers[2];
+d16t5_1 := covers[1];
+// d8t1_3
+d8t1_3 := d8_2[2];
+covers := PossibleGaloisCoveringPermutationTriples(d8t1_3);
+
+// d8t2
+d8t2 := d8_1[1];
+// d8t4
+d8t4 := d8_3[1];
+// d8t5
+d8t5 := d8_3[3];
+
+
+/*
+// d8t1_2
+d8t1_2 := d8_1[2];
+covers := PossibleGaloisCoveringPermutationTriples(d8t1_2);
+*/

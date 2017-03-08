@@ -1,0 +1,97 @@
+declare type SolvableDBObject;
+declare attributes SolvableDBObject:
+  // basic attributes present when object is generated
+  SolvableDBAutomorphismGroup, // GrpPerm attribute set to "" if not hyperbolic
+  SolvableDBName, // MonStgElt
+  SolvableDBPermutationTriple, // SeqEnum[GrpPermElt]
+  SolvableDBDegree, // RngIntElt
+  SolvableDBABC, // SeqEnum[RngIntElt]
+  SolvableDBType, // MonStgElt
+  SolvableDBGenus, // RngIntElt
+  SolvableDBSize, // RngIntElt
+  SolvableDBPointedSize, // RngIntElt
+  SolvableDBMonodromyGroup, // GrpPerm
+  SolvableDBPointedPassport, // SeqEnum[SeqEnum[GrpPermElt]]
+  // boolean attributes
+  SolvableDBNumericalComputationsComputed,
+  SolvableDBExactComputationsComputed, // TODO
+  SolvableDBGaloisOrbitsComputed,
+  SolvableDBAllBelyiMapsComputed,
+  // numerical attributes specified by boolean SolvableDBNumericalComputationsComputed
+  SolvableDBNumericalPrecision, // RngIntElt
+  SolvableDBNumericalCurveInvariants, // SeqEnum[SeqEnum[FldComElt]], depends on genus, keep track of order, etc
+  SolvableDBNumericalCurveCoefficients, // SeqEnum[SeqEnum[FldComElt]]
+  SolvableDBNumericalBelyiMapLeadingCoefficients, // SeqEnum[FldComElt]
+  SolvableDBNumericalBelyiMapNumeratorCoefficients, // SeqEnum[SeqEnum[FldComElt]]
+  SolvableDBNumericalBelyiMapDenominatorCoefficients, // SeqEnum[SeqEnum[FldComElt]]
+  // exact attributs specified by boolean SolvableDBExactComputationsComputed
+  SolvableDBExactCurveInvariants, // TODO
+  SolvableDBExactCurveCoefficients, // TODO
+  SolvableDBExactBelyiMapLeadingCoefficients, // TODO
+  SolvableDBExactBelyiMapNumeratorCoefficients, // TODO
+  SolvableDBExactBelyiMapDenominatorCoefficients, // TODO
+  // specified by boolean SolvableDBGaloisOrbitsComuted
+  SolvableDBPolyList, // SeqEnum[RngUpolElt]
+  SolvableDBGaloisOrbits, // SeqEnum[SeqEnum[SeqEnum[GrpPermElt]]]
+  SolvableDBBaseFieldData, // SeqEnum[FldNum]
+  SolvableDBBelyiCurves, // SeqEnum[Crv]
+  SolvableDBBelyiMaps, // SeqEnum[FldFunFracSchElt] or SeqEnum[FldFunRatUElt]?
+  SolvableDBDessinCode; // SeqEnum[RngIntElt]
+
+intrinsic 'eq'(s::SolvableDBObject, t::SolvableDBObject) -> BoolElt
+  {Return whether s is equal to t.}
+  isSame := true;
+  for attr in GetAttributes(Type(s)) do
+    if Type(s``attr) ne Type(t``attr) then
+      isSame := false;
+    elif s``attr ne t``attr then
+      isSame := false;
+    end if;
+  end for;
+  return isSame;
+end intrinsic;
+
+intrinsic SolvableDBObjectInitialize() -> SolvableDBObject
+  {Create an empty SolvableDBObject.}
+  s := New(SolvableDBObject);
+  attributes := GetAttributes(SolvableDBObject);
+  for attr in attributes do
+    s``attr := "";
+  end for;
+  return s;
+end intrinsic;
+
+intrinsic Print(s::SolvableDBObject)
+  {Print SolvableDBObject}
+  printf "SolvableDBObject %o:\n", s`SolvableDBName;
+  printf "  Degree %o\n", s`SolvableDBDegree;
+  printf "  Genus %o\n", s`SolvableDBGenus;
+  printf "  %o\n", s`SolvableDBType;
+  printf "  Size %o\n", s`SolvableDBSize;
+  printf "  PointedSize %o\n", s`SolvableDBPointedSize;
+  if s`SolvableDBNumericalComputationsComputed then
+    printf "  Numerical Belyi data computed :)\n";
+  else
+    printf "  Numerical Belyi data not computed :(\n";
+  end if;
+  if s`SolvableDBExactComputationsComputed then
+    printf "  Exact Belyi data computed :)\n";
+  else
+    printf "  Exact Belyi data not computed :(\n";
+  end if;
+  if s`SolvableDBGaloisOrbitsComputed then
+    printf "  Galois orbits computed :)\n";
+    if #s`SolvableDBGaloisOrbits eq 1 then
+      printf "    There is %o Galois orbit\n", #s`SolvableDBGaloisOrbits;
+    else
+      printf "    There are %o Galois orbits\n", #s`SolvableDBGaloisOrbits;
+    end if;
+  else
+    printf "  Galois orbits not computed :(\n";
+  end if;
+  if s`SolvableDBAllBelyiMapsComputed then
+    printf "  All BelyiMaps computed :)\n";
+  else
+    print "  All BelyiMaps NOT computed :(\n";
+  end if;
+end intrinsic;
