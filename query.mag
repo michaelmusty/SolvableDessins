@@ -81,7 +81,10 @@ degree 16
 
 // TODO above 8T1_2
   // 16T5_1 IsWeaklyIso but not the same triple
-  // 16T1_3 appears but only 1 triple of size 2 passport
+  // 16T1_3
+  s16t1_3 := SolvableDBAccessEntry("16T1-[16,16,4]-16-16-4,4,4,4-g6.m");
+  p16t1_3 := s16t1_3`SolvableDBPointedPassport;
+  d16t1_3 := p16t1_3[1];
 
 // TODO above 8T1_3 (size 2 passport)
   // 16T5_2 arises from both triples of this size 2 passport the copies are WeaklyIso

@@ -76,7 +76,6 @@ $(function(){ // on dom ready
         { data: { source: '16T1_4', target: '8T1_3' } },
         { data: { source: '16T4', target: '8T2' } },
         { data: { source: '16T5_1', target: '8T1_1' } },
-        { data: { source: '16T5_1', target: '8T1_2' } },
         { data: { source: '16T5_1', target: '8T2' } },
         { data: { source: '16T5_2', target: '8T1_3' } },
         { data: { source: '16T5_2', target: '8T2' } },
@@ -84,7 +83,6 @@ $(function(){ // on dom ready
         { data: { source: '16T6_2', target: '8T2' } },
         { data: { source: '16T8', target: '8T2' } },
         { data: { source: '16T8', target: '8T4' } },
-        { data: { source: '16T8', target: '8T5' } },
         { data: { source: '16T10', target: '8T4' } },
         { data: { source: '16T12', target: '8T4' } },
         { data: { source: '16T13', target: '8T4' } },
@@ -215,7 +213,7 @@ $(function(){ // on dom ready
   cy.$('#16T1_3').qtip({
     content: {
       title: '16T1-[16,16,4]-16-16-4444-g6',
-      text: '<br><br><br><br>G = Z/16Z'
+      text: 'sigma0 = (1 8 7 10 13 12 3 6 9 16 15 2 5 4 11 14)<br>sigma1 = (1 10 3 16 5 14 7 12 9 2 11 8 13 6 15 4)<br>sigmaoo = (1 5 9 13)(2 6 10 14)(3 7 11 15)(4 16 12 8)<br><br>sigma0 = (1 8 7 10 13 12 3 6 9 16 15 2 5 4 11 14)<br>sigma1 = (1 2 3 8 5 6 7 4 9 10 11 16 13 14 15 12)<br>sigmaoo = (1 13 9 5)(2 14 10 6)(3 15 11 7)(4 8 12 16)<br><br>G = Z/16Z'
     },
     style: {
       classes: 'qtip-tipsy',
