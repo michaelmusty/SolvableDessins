@@ -77,7 +77,6 @@ $(function(){ // on dom ready
         { data: { source: '16T4', target: '8T2' } },
         { data: { source: '16T5_1', target: '8T1_1' } },
         { data: { source: '16T5_1', target: '8T2' } },
-        { data: { source: '16T5_2', target: '8T1_3' } },
         { data: { source: '16T5_2', target: '8T2' } },
         { data: { source: '16T6_1', target: '8T2' } },
         { data: { source: '16T6_2', target: '8T2' } },
@@ -222,7 +221,7 @@ $(function(){ // on dom ready
   cy.$('#16T1_4').qtip({
     content: {
       title: '16T1-[16,16,8]-16-16-88-g7',
-      text: '<br><br><br><br>G = Z/16Z'
+      text: 'sigma0 = (1 8 7 10 13 12 3 6 9 16 15 2 5 4 11 14)<br>sigma1 = (1 8 7 10 13 12 3 6 9 16 15 2 5 4 11 14)<br>sigmaoo = (1 11 5 15 9 3 13 7)(2 16 6 12 10 8 14 4)<br><br>sigma0 = (1 8 7 10 13 12 3 6 9 16 15 2 5 4 11 14)<br>sigma1 = (1 16 7 2 13 4 3 14 9 8 15 10 5 12 11 6)<br>sigmaoo = (1 3 5 7 9 11 13 15)(2 8 6 4 10 16 14 12)<br><br>sigma0 = (1 8 7 10 13 12 3 6 9 16 15 2 5 4 11 14)<br>sigma1 = (1 12 15 14 13 16 11 10 9 4 7 6 5 8 3 2)<br>sigmaoo = (1 15 13 11 9 7 5 3)(2 12 14 16 10 4 6 8)<br><br>sigma0 = (1 8 7 10 13 12 3 6 9 16 15 2 5 4 11 14)<br>sigma1 = (1 4 15 6 13 8 11 2 9 12 7 14 5 16 3 10)<br>sigmaoo = (1 7 13 3 9 15 5 11)(2 4 14 8 10 12 6 16)<br><br>G = Z/16Z<br><br>splits into 2 Galois orbits?'
     },
     style: {
       classes: 'qtip-tipsy',
@@ -276,7 +275,7 @@ $(function(){ // on dom ready
   cy.$('#16T8').qtip({
     content: {
       title: '16T8-[4,4,4]-4444-4444-4444-g3',
-      text: '<br><br><br><br>G = Z/4Z : Z/4Z'
+      text: 'sigma0 = (1 2 5 14)(3 4 7 8)(6 9 10 13)(11 12 15 16)<br>sigma1 = (1 12 5 16)(2 3 14 7)(4 13 8 9)(6 15 10 11)<br>sigmaoo = (1 3 13 15)(2 16 6 4)(5 7 9 11)(8 14 12 10)<br><br>sigma0 = (1 2 5 14)(3 4 7 8)(6 9 10 13)(11 12 15 16)<br>sigma1 = (1 4 13 16)(2 11 6 7)(3 14 15 10)(5 8 9 12)<br>sigmaoo = (1 3 5 7)(2 16 14 12)(4 10 8 6)(9 11 13 15)<br><br>sigma0 = (1 2 5 14)(3 4 7 8)(6 9 10 13)(11 12 15 16)<br>sigma1 = (1 12 13 8)(2 11 6 7)(3 14 15 10)(4 5 16 9)<br>sigmaoo = (1 3 13 15)(2 8 6 12)(4 10 16 14)(5 7 9 11)<br><br>G = Z/4Z : Z/4Z<br><br>first triple covers 8T2 and 8T4...others come form 8T5???'
     },
     style: {
       classes: 'qtip-tipsy',

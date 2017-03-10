@@ -1,5 +1,5 @@
 AttachSpec("spec");
-directory := "/Users/mjmusty/Dropbox/github/SolvableDessins/SolvableDB";
+directory := GetCurrentDirectory() cat "/SolvableDB";
 ChangeDirectory(directory);
 
 /*
@@ -79,29 +79,32 @@ degree 16
   p16t5_1 := s16t5_1`SolvableDBPointedPassport;
   d16t5_1 := p16t5_1[1];
 
-// TODO above 8T1_2
-  // 16T5_1 IsWeaklyIso but not the same triple
+// above 8T1_2
+  // 16T5_1 unramified
   // 16T1_3
   s16t1_3 := SolvableDBAccessEntry("16T1-[16,16,4]-16-16-4,4,4,4-g6.m");
   p16t1_3 := s16t1_3`SolvableDBPointedPassport;
   d16t1_3 := p16t1_3[1];
 
-// TODO above 8T1_3 (size 2 passport)
-  // 16T5_2 arises from both triples of this size 2 passport the copies are WeaklyIso
-  s16t5_2 := SolvableDBAccessEntry("16T5-[8,8,4]-8,8-8,8-4,4,4,4-g5.m");
-  p16t5_2 := s16t5_2`SolvableDBPointedPassport;
-  d16t5_2 := p16t5_2[1];
-  // 16T1_4 arises from both triples of this size 2 passport...but 16T1_4 is size 4 and we are only getting 3 total
+// above 8T1_3 (size 2 passport)
+  // 16T5_2 unramified
+  // 16T1_4 size 4 passport 2 each coming from size 2 passport 8T1_3
+  s16t1_4 := SolvableDBAccessEntry("16T1-[16,16,8]-16-16-8,8-g7.m");
+  p16t1_4 := s16t1_4`SolvableDBPointedPassport;
+  d16t1_4 := p16t1_4[1];
 
-// TODO above 8T2
-  // 16T10 unramified...how to eliminate these...
-  // 16T4 seems fine
+// above 8T2
+  // 16T10 unramified TODO
+  // 16T4
   s16t4 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3.m");
   p16t4 := s16t4`SolvableDBPointedPassport;
   d16t4 := p16t4[1];
-  // 16T8 size 3, but only 1 arising this way
-  // 16T5_1 weakly iso
-  // 16T5_2 weakly iso
+  // 16T8 size 3, but only 1 arising this way TODO
+  // 16T5_1 iso
+  // 16T5_2
+  s16t5_2 := SolvableDBAccessEntry("16T5-[8,8,4]-8,8-8,8-4,4,4,4-g5.m");
+  p16t5_2 := s16t5_2`SolvableDBPointedPassport;
+  d16t5_2 := p16t5_2[1];
   // 16T6_2
   s16t6_2 := SolvableDBAccessEntry("16T6-[8,8,4]-8,8-8,8-4,4,4,4-g5.m");
   p16t6_2 := s16t6_2`SolvableDBPointedPassport;
@@ -111,12 +114,12 @@ degree 16
   p16t6_1 := s16t6_1`SolvableDBPointedPassport;
   d16t6_1 := p16t6_1[1];
 
-// TODO above 8T4
+// above 8T4
   // 16T13
   s16t13 := SolvableDBAccessEntry("16T13-[2,2,8]-2,2,2,2,2,2,2,2-2,2,2,2,2,2,2,2-8,8-g0.m");
   p16t13 := s16t13`SolvableDBPointedPassport;
   d16t13 := p16t13[1];
-  // 16T10
+  // 16T10 TODO
   s16t10 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1.m");
   p16t10 := s16t10`SolvableDBPointedPassport;
   d16t10 := p16t10[1];
@@ -124,18 +127,17 @@ degree 16
   s16t12 := SolvableDBAccessEntry("16T12-[2,4,8]-2,2,2,2,2,2,2,2-4,4,4,4-8,8-g2.m");
   p16t12 := s16t12`SolvableDBPointedPassport;
   d16t12 := p16t12[1];
-  // 16T8 size 3, only 1 arising this way (2/3 including above 8T2)
+  // 16T8 size 3, but only 1 arising this way and conjugate to triple over 8T2 TODO
   // 16T14
   s16t14 := SolvableDBAccessEntry("16T14-[4,4,8]-4,4,4,4-4,4,4,4-8,8-g4.m");
   p16t14 := s16t14`SolvableDBPointedPassport;
   d16t14 := p16t14[1];
 
-// TODO above 8T5
-  // 16T8 size 3, only 1 arising this way
-  // so put all 3 together right? nope...they are all
-  c5 := PossibleGaloisCoveringPermutationTriples(d8t5);
-  s5 := c5[1];
-  c2 := PossibleGaloisCoveringPermutationTriples(d8t2);
-  s2 := c2[3];
-  c4 := PossibleGaloisCoveringPermutationTriples(d8t4);
-  s4 := c4[4];
+// above 8T5
+  // 16T8 unramified but yields the entire size 3 passport TODO
+  s16t8 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3.m");
+  p16t8 := s16t8`SolvableDBPointedPassport;
+  d16t8 := p16t8[1];
+
+
+// TODO some sanity checks!!!
