@@ -34,8 +34,10 @@ declare attributes SolvableDBObject:
   SolvableDBPolyList, // SeqEnum[RngUpolElt]
   SolvableDBGaloisOrbits, // SeqEnum[SeqEnum[SeqEnum[GrpPermElt]]]
   SolvableDBBaseFieldData, // SeqEnum[FldNum]
+  // specified by boolean SolvableDBAllBelyiMapsComputed
   SolvableDBBelyiCurves, // SeqEnum[Crv]
   SolvableDBBelyiMaps, // SeqEnum[FldFunFracSchElt] or SeqEnum[FldFunRatUElt]?
+  // drawing
   SolvableDBDessinCode; // SeqEnum[RngIntElt]
 
 intrinsic 'eq'(s::SolvableDBObject, t::SolvableDBObject) -> BoolElt
@@ -55,9 +57,6 @@ intrinsic SolvableDBObjectInitialize() -> SolvableDBObject
   {Create an empty SolvableDBObject.}
   s := New(SolvableDBObject);
   attributes := GetAttributes(SolvableDBObject);
-  for attr in attributes do
-    s``attr := "";
-  end for;
   return s;
 end intrinsic;
 
@@ -92,6 +91,6 @@ intrinsic Print(s::SolvableDBObject)
   if s`SolvableDBAllBelyiMapsComputed then
     printf "  All BelyiMaps computed :)\n";
   else
-    print "  All BelyiMaps NOT computed :(\n";
+    print "  All BelyiMaps not computed :(\n";
   end if;
 end intrinsic;

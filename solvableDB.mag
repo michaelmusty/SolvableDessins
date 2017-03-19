@@ -8,6 +8,7 @@ intrinsic SolvableDBAccessEntry(filename::MonStgElt) -> Any
   else
     error "make sure your working directory is /SolvableDB";
   end if;
+  // extract d from filename
   num_chars := 0;
   for i in {1..#filename} do
     if filename[i] eq "T" then
@@ -20,10 +21,9 @@ intrinsic SolvableDBAccessEntry(filename::MonStgElt) -> Any
     d_str *:= filename[i];
   end for;
   d := StringToInteger(d_str);
-  // change filename to work from database directory
-  directory := dbdirectory cat Sprintf("/%o", d);
-  ChangeDirectory(directory);
-  str := Read(filename);
+  // extract text from file
+  file := dbdirectory cat Sprintf("/%o/%o", d, filename);
+  str := Read(file);
   // eval
   s := eval str;
   assert Type(s) eq SolvableDBObject;
@@ -341,10 +341,6 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
   Append(~easy_attrs, "SolvableDBSize");
   Append(~easy_attrs, "SolvableDBPointedSize");
   Append(~easy_attrs, "SolvableDBType");
-  Append(~easy_attrs, "SolvableDBNumericalComputationsComputed");
-  Append(~easy_attrs, "SolvableDBExactComputationsComputed");
-  Append(~easy_attrs, "SolvableDBGaloisOrbitsComputed");
-  Append(~easy_attrs, "SolvableDBAllBelyiMapsComputed");
   permutation_attrs := [];
   Append(~permutation_attrs, "SolvableDBPermutationTriple");
   Append(~permutation_attrs, "SolvableDBPointedPassport");
@@ -377,22 +373,27 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
   */
   str *:= "\n/*\nBasic Information about the Passport\n*/\n\n";
   for attr in easy_attrs do
-    str *:= Sprintf("s`%o := ", attr);
-    str *:= Sprintf("%O;\n", s``attr, "Magma");
+    if assigned s``attr then
+      str *:= Sprintf("s`%o := ", attr);
+      str *:= Sprintf("%O;\n", s``attr, "Magma");
+    end if;
   end for;
   /*
   write attributes containing permutations with magma printing
   */
   str *:= "\n/*\nPermutations and Passports\n*/\n\n";
   for attr in permutation_attrs do
-    str *:= Sprintf("s`%o := ", attr);
-    str *:= Sprintf("%O;\n", s``attr, "Magma");
+    if assigned s``attr then
+      str *:= Sprintf("s`%o := ", attr);
+      str *:= Sprintf("%O;\n", s``attr, "Magma");
+    end if;
   end for;
   /*
   write field data with custom printing
   */
   str *:= "\n/*\nBase Field Data\n*/\n\n";
-  if s`SolvableDBGaloisOrbitsComputed then
+  if assigned s`SolvableDBPolyList and assigned s`SolvableDBBaseFieldData then
+    // TODO sanity check of incoming data
     // write Polylist magma printing
     str *:= Sprintf("s`SolvableDBPolyList := %m;\n", s`SolvableDBPolyList);
     // write base field(s) data with custom printing
@@ -424,23 +425,35 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
       // Append
       str *:= Sprintf("Append(~s`SolvableDBBaseFieldData, [* K%o, v%o, conj%o, zopCC%o *]);\n", i, i, i, i);
     end for;
+    str *:= Sprintf("s`SolvableDBGaloisOrbitsComputed := true;\n");
+  else
+    str *:= Sprintf("s`SolvableDBGaloisOrbitsComputed := false;\n");
   end if;
   /*
   write exact data with custom printing
   */
   str *:= "\n/*\nExact Data\n*/\n\n";
-  if s`SolvableDBExactComputationsComputed then
-    assert s`SolvableDBGaloisOrbitsComputed; // need K_list
-    for attr in exact_attrs do
+  exact_count := 0;
+  for attr in exact_attrs do
+    if assigned s``attr then
+      // TODO assert incoming data
+      assert s`SolvableDBGaloisOrbitsComputed; // need K_list
       str *:= Sprintf("s`%o := %o;\n", attr, SolvableDBExactWriter(s``attr));
       str *:= Sprintf("s`%o := [* s`%o, s`SolvableDBBaseFieldData *];\n", attr, attr);
-    end for;
+      exact_count +:= 1;
+    end if;
+  end for;
+  if exact_count eq #exact_attrs then
+    str *:= Sprintf("s`SolvableDBExactComputationsComputed := true;\n");
+  else
+    str *:= Sprintf("s`SolvableDBExactComputationsComputed := false;\n");
   end if;
   /*
   write list of BelyiMaps with custom printing
   */
   str *:= "\n/*\nBelyi Maps\n*/\n\n";
-  if s`SolvableDBAllBelyiMapsComputed then
+  if assigned s`SolvableDBBelyiCurves and assigned s`SolvableDBBelyiMaps then
+    // TODO assert incoming data
     str *:= Sprintf("s`SolvableDBBelyiCurves := [* *];\n");
     str *:= Sprintf("s`SolvableDBBelyiMaps := [* *];\n");
     curves := s`SolvableDBBelyiCurves;
@@ -451,23 +464,37 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
       str *:= Sprintf("s`SolvableDBBelyiCurves[%o] := X%o;\n", i, i);
       str *:= Sprintf("s`SolvableDBBelyiMaps[%o] := phi%o;\n", i, i);
     end for;
+    str *:= Sprintf("s`SolvableDBAllBelyiMapsComputed := true;\n");
+  else
+    str *:= Sprintf("s`SolvableDBAllBelyiMapsComputed := false;\n");
   end if;
   /*
   write numerical data with magma printing
   */
   str *:= "\n/*\nNumerical Data\n*/\n\n";
-  if s`SolvableDBNumericalComputationsComputed then
-    str *:= Sprintf("I := ComplexField(%o).1;\n", s`SolvableDBNumericalPrecision);
-    for attr in numerical_attrs do
+  if assigned s`SolvableDBNumericalPrecision then
+    str *:= Sprintf("CC<I> := ComplexField(%o);\n", s`SolvableDBNumericalPrecision);
+  end if;
+  numerical_count := 0;
+  for attr in numerical_attrs do
+    if assigned s``attr then
       str *:= Sprintf("s`%o := ", attr);
       str *:= Sprintf("%O;\n", s``attr, "Magma");
-    end for;
+      numerical_count +:= 1;
+    end if;
+  end for;
+  if numerical_count eq #numerical_attrs then
+    str *:= Sprintf("s`SolvableDBNumericalComputationsComputed := true;\n");
+  else
+    str *:= Sprintf("s`SolvableDBNumericalComputationsComputed := false;\n");
   end if;
   // write dessin_attr using magma printing
   str *:= "\n/*\nDrawDessin Code\n*/\n\n";
   for attr in dessin_attr do
-    str *:= Sprintf("s`%o := ", attr);
-    str *:= Sprintf("%O;\n", s``attr, "Magma");
+    if assigned s``attr then
+      str *:= Sprintf("s`%o := ", attr);
+      str *:= Sprintf("%O;\n", s``attr, "Magma");
+    end if;
   end for;
   // return statement for eval fuction
   str *:= "\n/*\nReturn for eval\n*/\n\n";
@@ -590,211 +617,6 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> MonStgElt
   ChangeDirectory(dbdirectory);
   return returnText;
 end intrinsic;
-
-/* we don't want to mess up triples by calling passport reps...
-intrinsic SolvableDBExample(sigma::SeqEnum[GrpPermElt]) -> MonStgElt
-  {Creates a SolvableDBObject file corresponding to sigma in the directory SolvableDB/d where d is the degree of sigma. This assumes the current directory is SolvableDB.}
-  // some sanity checks
-  assert #sigma eq 3;
-  assert Type(Parent(sigma[1])) eq GrpPerm;
-  d := Degree(Parent(sigma[1]));
-  G := sub< Sym(d) | sigma >;
-  assert IsTransitive(G);
-  // generate passports
-  pass := PassportRepresentatives(sigma);
-  pointed_pass := PassportRepresentatives(sigma : Pointed := true);
-  // directory stuff
-  dir := GetCurrentDirectory();
-  parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
-  if parentdir eq "SolvableDB\n" then
-    dbdirectory := dir;
-  else
-    error "make sure your working directory is /SolvableDB";
-  end if;
-  directory := dbdirectory cat Sprintf("/%o/", d);
-  System(Sprintf("mkdir %o", d)); // if directory already exists this throws a system error but all good
-  System(Sprintf("chmod 777 %o", d)); // set permissions for directory
-  ChangeDirectory(directory);
-  // create one SolvableDBObject per passport
-  s := SolvableDBObjectInitialize();
-  // check to see if example already exists in the SolvableDB
-  // TODO what do we do if it does...
-  ls := Pipe("ls", "");
-  filenames := Split(ls, "\n");
-  if Degree(sigma[1]) gt TransitiveGroupDatabaseLimit() then
-    newname := SolvableDBGenerateNameAboveTransitiveDatabaseLimit(sigma);
-  else
-    newname := SolvableDBGenerateName(sigma);
-  end if;
-  // check to see if there are matches in the folder
-  matches := [];
-  for i in {1..#filenames} do
-    if Substring(filenames[i], 1, #newname) eq newname then
-      Append(~matches, filenames[i]);
-    end if;
-  end for;
-  if #matches gt 0 then
-    error "already a passport with this name in this folder!\n";
-  end if;
-  // SolvableDBName
-  s`SolvableDBName := newname;
-  // SolvableDBPermutationTriple
-  s`SolvableDBPermutationTriple := sigma;
-  // SolvableDBDegree
-  s`SolvableDBDegree := d;
-  // SolvableDBABC
-  s`SolvableDBABC := [Order(sigma[i]) : i in {1..3}];
-  // SolvableDBType
-  a,b,c := Explode(s`SolvableDBABC);
-  if 1/a+1/b+1/c gt 1 then
-    s`SolvableDBType := "Spherical";
-  elif 1/a+1/b+1/c eq 1 then
-    s`SolvableDBType := "Euclidean";
-  else
-    s`SolvableDBType := "Hyperbolic";
-  end if;
-  // SolvableDBGenus
-  c0 := #CycleDecomposition(sigma[1]);
-  c1 := #CycleDecomposition(sigma[2]);
-  coo := #CycleDecomposition(sigma[3]);
-  genus := (d+2-c0-c1-coo)/2;
-  s`SolvableDBGenus := genus;
-  // SolvableDBSize
-  s`SolvableDBSize := #pass;
-  // SolvableDBPointedSize
-  s`SolvableDBPointedSize := #pointed_pass;
-  // SolvableDBMonodromyGroup
-  s`SolvableDBMonodromyGroup := G;
-  // SolvableDBAutomorphismGroup and SolvableDBDessinCode
-  if s`SolvableDBType eq "Hyperbolic" then
-    lcm := LeastCommonMultiple([a,b,c]);
-    vprint Shimura : Sprintf("\nComputing Gamma with LCM(a,b,c) = %o...\n", lcm);
-    if lcm lt 100 then
-      Gamma := TriangleSubgroup(sigma);
-    else
-      Gamma := TriangleSubgroup(sigma : Simplify := 0);
-    end if;
-    s`SolvableDBAutomorphismGroup := AutomorphismGroup(Gamma);
-    s`SolvableDBDessinCode := SolvableDBStringToCode(TriangleDrawDessin(Gamma));
-  else
-    s`SolvableDBDessinCode := [];
-  end if;
-  // SolvableDBPointedPassport
-  s`SolvableDBPointedPassport := pointed_pass;
-  // booleans
-  s`SolvableDBNumericalComputationsComputed := false;
-  s`SolvableDBExactComputationsComputed := false;
-  s`SolvableDBGaloisOrbitsComputed := false;
-  s`SolvableDBAllBelyiMapsComputed := false;
-  // write the object to file
-  ChangeDirectory(dbdirectory);
-  SolvableDBWriteObject(s);
-  returnText := Sprintf("SolvableDBObject file for %o written in directory %oSolvableDB/%o\n", s`SolvableDBName, directory, d);
-  ChangeDirectory(dbdirectory);
-  return returnText;
-end intrinsic;
-
-intrinsic SolvableDBGenerate(d::RngIntElt) -> MonStgElt
-  {Creates the folder /d in SolvableDB with all SolvableDBObject files for degree d. This assumes the current directory is /SolvableDB.}
-  // directory stuff
-  dir := GetCurrentDirectory();
-  parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
-  if parentdir eq "SolvableDB\n" then
-    dbdirectory := dir;
-  else
-    error "make sure your working directory is /SolvableDB";
-  end if;
-  directory := dbdirectory cat Sprintf("/%o/", d);
-  System(Sprintf("mkdir %o", d)); // if directory already exists this throws a system error but all good
-  System(Sprintf("chmod 777 %o", d)); // set permissions for directory
-  ChangeDirectory(directory);
-  // generate all degree d passports
-  passes := PassportRepresentatives(d);
-  pointed_passes := PassportRepresentatives(d : Pointed := true);
-  for i in {1..#pointed_passes} do // i indexes the group
-    for j in {1..#pointed_passes[i][2]} do // j indexes the passports of a group
-      pass := passes[i][2][j][2]; // this is a single passport
-      pointed_pass := pointed_passes[i][2][j][2]; // this is a single passport
-      sigma := pointed_pass[1];
-      // some sanity checks
-      assert #sigma eq 3;
-      assert Type(Parent(sigma[1])) eq GrpPerm;
-      assert Degree(Parent(sigma[1])) eq d;
-      // create one SolvableDBObject per passport
-      s := SolvableDBObjectInitialize();
-      // SolvableDBName
-      ls := Pipe("ls", "");
-      filenames := Split(ls, "\n");
-      newname := SolvableDBGenerateName(sigma);
-      // check to see if there are matches in the folder
-      matches := [];
-      for i in {1..#filenames} do
-        if Substring(filenames[i], 1, #newname) eq newname then
-          Append(~matches, filenames[i]);
-        end if;
-      end for;
-      if #matches gt 0 then
-        error "already a passport with this name in this folder!\n";
-      end if;
-      s`SolvableDBName := newname;
-      // SolvableDBPermutationTriple
-      s`SolvableDBPermutationTriple := sigma;
-      // SolvableDBDegree
-      s`SolvableDBDegree := d;
-      // SolvableDBABC
-      s`SolvableDBABC := [Order(sigma[i]) : i in {1..3}];
-      // SolvableDBType
-      a,b,c := Explode(s`SolvableDBABC);
-      if 1/a+1/b+1/c gt 1 then
-        s`SolvableDBType := "Spherical";
-      elif 1/a+1/b+1/c eq 1 then
-        s`SolvableDBType := "Euclidean";
-      else
-        s`SolvableDBType := "Hyperbolic";
-      end if;
-      // SolvableDBGenus
-      c0 := #CycleDecomposition(sigma[1]);
-      c1 := #CycleDecomposition(sigma[2]);
-      coo := #CycleDecomposition(sigma[3]);
-      genus := (d+2-c0-c1-coo)/2;
-      s`SolvableDBGenus := genus;
-      // SolvableDBSize
-      s`SolvableDBSize := #pass;
-      // SolvableDBPointedSize
-      s`SolvableDBPointedSize := #pointed_pass;
-      // SolvableDBMonodromyGroup
-      s`SolvableDBMonodromyGroup := pointed_passes[i][1];
-      // SolvableDBAutomorphismGroup SolvableDBDessinCode
-      if s`SolvableDBType eq "Hyperbolic" then
-        lcm := LeastCommonMultiple([a,b,c]);
-        vprint Shimura : Sprintf("\nComputing Gamma with LCM(a,b,c) = %o...\n", lcm);
-        if lcm lt 100 then
-          Gamma := TriangleSubgroup(sigma);
-        else
-          Gamma := TriangleSubgroup(sigma : Simplify := 0);
-        end if;
-        s`SolvableDBAutomorphismGroup := AutomorphismGroup(Gamma);
-        s`SolvableDBDessinCode := SolvableDBStringToCode(TriangleDrawDessin(Gamma));
-      else
-        s`SolvableDBDessinCode := [];
-      end if;
-      // SolvableDBPointedPassport
-      s`SolvableDBPointedPassport := pointed_pass;
-      // booleans
-      s`SolvableDBNumericalComputationsComputed := false;
-      s`SolvableDBExactComputationsComputed := false;
-      s`SolvableDBGaloisOrbitsComputed := false;
-      s`SolvableDBAllBelyiMapsComputed := false;
-      // write the object to file
-      ChangeDirectory(dbdirectory);
-      SolvableDBWriteObject(s);
-    end for;
-  end for;
-  returnText := Sprintf("SolvableDB for degree %o constructed in directory %o/%o\n", d, dbdirectory, d);
-  ChangeDirectory(dbdirectory);
-  return returnText;
-end intrinsic;
-*/
 
 intrinsic SolvableDBFilenames(d::RngIntElt) -> SeqEnum[MonStgElt]
   {Returns the filenames (MonStgElts) in SolvableDB/d as a SeqEnum. This assumes the current directory is SolvableDB.}
