@@ -34,13 +34,11 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<2 |
 [ 1, 2 ]
 ]
 ];
-s`SolvableDBGaloisOrbits := "";
 s`SolvableDBMonodromyGroup := PermutationGroup<2 |  
 \[ 2, 1 ],
 \[ 2, 1 ],
 \[ 1, 2 ]:
  Order := 2 >;
-s`SolvableDBAutomorphismGroup := "";
 
 /*
 Base Field Data

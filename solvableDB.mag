@@ -437,7 +437,7 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
   for attr in exact_attrs do
     if assigned s``attr then
       // TODO assert incoming data
-      assert s`SolvableDBGaloisOrbitsComputed; // need K_list
+      assert s`SolvableDBGaloisOrbitsComputed; // need list of fields to write exact data
       str *:= Sprintf("s`%o := %o;\n", attr, SolvableDBExactWriter(s``attr));
       str *:= Sprintf("s`%o := [* s`%o, s`SolvableDBBaseFieldData *];\n", attr, attr);
       exact_count +:= 1;

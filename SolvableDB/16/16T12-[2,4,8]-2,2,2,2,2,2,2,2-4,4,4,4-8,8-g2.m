@@ -11,10 +11,6 @@ s`SolvableDBGenus := 2;
 s`SolvableDBSize := 1;
 s`SolvableDBPointedSize := 1;
 s`SolvableDBType := "Hyperbolic";
-s`SolvableDBNumericalComputationsComputed := false;
-s`SolvableDBExactComputationsComputed := false;
-s`SolvableDBGaloisOrbitsComputed := false;
-s`SolvableDBAllBelyiMapsComputed := false;
 
 /*
 Permutations and Passports
@@ -41,7 +37,6 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 [ 7, 12, 9, 14, 3, 8, 5, 10, 15, 4, 1, 6, 11, 16, 13, 2 ]
 ]
 ];
-s`SolvableDBGaloisOrbits := "";
 s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
 \[ 2, 1, 12, 11, 14, 13, 8, 7, 10, 9, 4, 3, 6, 5, 16, 15 ],
 \[ 4, 15, 14, 9, 8, 3, 2, 13, 12, 7, 6, 1, 16, 11, 10, 5 ],
@@ -56,21 +51,26 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<16 |
 Base Field Data
 */
 
+s`SolvableDBGaloisOrbitsComputed := false;
 
 /*
 Exact Data
 */
 
+s`SolvableDBExactComputationsComputed := false;
 
 /*
 Belyi Maps
 */
 
+s`SolvableDBAllBelyiMapsComputed := false;
 
 /*
 Numerical Data
 */
 
+s`SolvableDBNumericalCurveInvariants := \[ 1, 2, 3 ];
+s`SolvableDBNumericalComputationsComputed := false;
 
 /*
 DrawDessin Code
