@@ -1,8 +1,9 @@
 AttachSpec("spec");
+AttachSpec("~/Dropbox/belyi/Code/spec");
+
 directory := GetCurrentDirectory() cat "/SolvableDB";
 ChangeDirectory(directory);
 
-// deletes empty attributes
 for d in [2,4,8,16] do
   f := SolvableDBFilenames(d);
   for i in [1..#f] do
