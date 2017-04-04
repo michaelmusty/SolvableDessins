@@ -1,15 +1,7 @@
 AttachSpec("spec");
 AttachSpec("~/Dropbox/belyi/Code/spec");
-
 directory := GetCurrentDirectory() cat "/SolvableDB";
 ChangeDirectory(directory);
-
-/*
-degree 2
-*/
-
-// 2T1
-d2 := [Sym(2) | (1,2),(1,2),Id(Sym(2))];
 
 /*
 degree 4

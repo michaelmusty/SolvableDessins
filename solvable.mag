@@ -663,30 +663,60 @@ intrinsic PossibleGaloisCoveringPermutations(perm::GrpPermElt : zentral := true)
   return UnramifiedPossibilities(perm : zentral := zentral) cat RamifiedPossibilities(perm : zentral := zentral);
 end intrinsic;
 
-intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : zentral := true) -> SeqEnum[SeqEnum[GrpPermElt]]
-  {brute force for now...}
+intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : zentral := true, brutal := true, exclude_unramified := true) -> SeqEnum[SeqEnum[GrpPermElt]]
+  {brutal for now...}
   d := Degree(Parent(sigma[1]));
   assert sigma[3]*sigma[2]*sigma[1] eq Id(Sym(d));
+  // generate above each permutation
   list_0 := PossibleGaloisCoveringPermutations(sigma[1] : zentral := zentral);
   list_1 := PossibleGaloisCoveringPermutations(sigma[2] : zentral := zentral);
   list_oo := PossibleGaloisCoveringPermutations(sigma[3] : zentral := zentral);
   possible := [];
-  for i in [1..#list_0] do
-    for j in [1..#list_1] do
-      for k in [1..#list_oo] do
-        wt0 := list_0[i];
-        wt1 := list_1[j];
-        wtoo := list_oo[k];
-        if wtoo*wt1*wt0 eq Id(Sym(2*d)) then
-          wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
-          if IsTransitive(wtG) and #wtG eq (2*d) then
-            Append(~possible, [wt0, wt1, wtoo]);
+  // filter out triples that can be Belyi maps
+  if brutal then
+    for i in [1..#list_0] do
+      for j in [1..#list_1] do
+        for k in [1..#list_oo] do
+          wt0 := list_0[i];
+          wt1 := list_1[j];
+          wtoo := list_oo[k];
+          if wtoo*wt1*wt0 eq Id(Sym(2*d)) then
+            wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
+            if IsTransitive(wtG) and #wtG eq (2*d) then
+              Append(~possible, [wt0, wt1, wtoo]);
+            end if;
           end if;
-        end if;
+        end for;
       end for;
     end for;
-  end for;
+  else
+    for i in [1..#list_0] do
+      for j in [1..#list_1] do
+        for k in [1..#list_oo] do
+          wt0 := list_0[i];
+          wt1 := list_1[j];
+          wtoo := list_oo[k];
+          if wtoo*wt1*wt0 eq Id(Sym(2*d)) then
+            wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
+            if IsTransitive(wtG) and #wtG eq (2*d) then
+              Append(~possible, [wt0, wt1, wtoo]);
+            end if;
+          end if;
+        end for;
+      end for;
+    end for;
+  end if;
   correct := possible;
+  // get rid of some possibilities
+  if exclude_unramified then
+    abc := [Order(sigma[i]) : i in [1..3]];
+    for i := #correct to 1 by -1 do
+      abc_i := [Order(correct[i][j]) : j in [1..3]];
+      if abc eq abc_i then
+        Remove(~correct, i);
+      end if;
+    end for;
+  end if;
   for i := #correct to 1 by -1 do
     for j in [1..i-1] do
       // if IsWeaklyIsomorphic(Sym(2*d), correct[i], correct[j]) then

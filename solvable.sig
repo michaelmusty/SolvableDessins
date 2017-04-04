@@ -47,4 +47,4 @@ S,CodeEntry,returns code entry at index,1,0,1,82,1,82,0,148,2,0,0,0,0,0,0,0,148,
 S,UnramifiedPossibilities,all unramified permutations above perm,0,1,0,0,0,0,0,0,0,222,,82,-38,-38,-38,-38,-38
 S,RamifiedPossibilities,all ramified permutations above perm,0,1,0,0,0,0,0,0,0,222,,82,-38,-38,-38,-38,-38
 S,PossibleGaloisCoveringPermutations,a sequence of degree 2 Galois covering permutations possible after identifying sheets via tau,0,1,0,0,0,0,0,0,0,222,,82,-38,-38,-38,-38,-38
-S,PossibleGaloisCoveringPermutationTriples,brute force for now..,1,0,1,82,0,222,1,0,0,0,0,0,0,0,82,,82,-38,-38,-38,-38,-38
+S,PossibleGaloisCoveringPermutationTriples,brutal for now..,1,0,1,82,0,222,1,0,0,0,0,0,0,0,82,,82,-38,-38,-38,-38,-38
