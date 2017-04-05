@@ -11,7 +11,7 @@ load "query.mag";
 // IsConjugate: correct
 // IsWeaklyIsomorphic: correct
 
-// sigma := d8t1_2;
+sigma := d8t1_2;
 // IsConjugate: correct
 // IsWeaklyIsomorphic: too few
 
@@ -33,7 +33,7 @@ load "query.mag";
 // IsConjugate: correct
 // IsWeaklyIsomorphic: correct
 
-sigma := d16t1_1;
+// sigma := d16t1_1;
 
 l0, l1, loo, all, arebelyimaps, justramified, covers :=
 PossibleGaloisCoveringPermutationTriples(sigma : weakly := false);
