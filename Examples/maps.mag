@@ -1,18 +1,67 @@
 /*
+Belyi Map for  -> 4T2-222-g0 -> PP1
+*/
+AttachSpec("~/GITHUB/SolvableDessins/spec");
+AttachSpec("~/Dropbox/belyi/Code/spec");
+start := GetCurrentDirectory();
+repo := "~/GITHUB/SolvableDessins";
+ChangeDirectory(repo); // need to be here to load query
+load "~/GITHUB/SolvableDessins/query.mag";
+ChangeDirectory(start);
+
+/*
 BASE FIELD
 */
-// a priori we know (by group theory) the field of definition
+// we can figure out the base field a priori right?
 K<nu> := QuadraticField(-4);
 
 /*
 LEVEL 0: PP1
 */
-
+R0<x0> := PolynomialRing(K, 1);
+AA1<x0> := AffineSpace(R0);
+Y0<x0> := Curve(AA1);
+X0<z0, w> := ProjectiveClosure(Y0);
+KX0<Kx0> := FunctionField(X0);
+pt0 := X0![0, 1];
+pt1 := X0![1, 1];
+ptoo := X0![1, 0];
+P0 := Divisor(pt0);
+P1 := Divisor(pt1);
+Poo := Divisor(ptoo);
+D0 := P0-Poo;
+LD0, mD0 := RiemannRochSpace(-D0);
+f0 := mD0(LD0.1);
 
 /*
-LEVEL 1: X->PP1 of degree 2^1
+Degree 2
+LEVEL 1
+X1 -> PP1
+Name = 2T1-[2,2,1]-2-2-11-g0
 */
 
 /*
-LEVEL 2: X->PP1 of degree 2^2
+Degree 4
+Level 2
+X2 -> PP1
+sigma = d4t2;
+Name = 4T2-[2,2,2]-22-22-22-g0
 */
+
+/*
+Degree 8
+Level 3
+X3 -> PP1
+sigma = d8covers[2];
+Name = 8T2-[2,4,4]-2222-44-44-g1
+*/
+d8covers := PossibleGaloisCoveringPermutationTriples(d4t2);
+
+/*
+Degree 16
+Level 4
+X4 -> PP1
+sigma = d16covers[5];
+Name = 16T5-[4,8,8]-4444-88-88-g5
+*/
+d16covers := PossibleGaloisCoveringPermutationTriples(d8covers[2]);
