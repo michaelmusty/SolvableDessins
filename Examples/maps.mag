@@ -1,0 +1,18 @@
+/*
+BASE FIELD
+*/
+// a priori we know (by group theory) the field of definition
+K<nu> := QuadraticField(-4);
+
+/*
+LEVEL 0: PP1
+*/
+
+
+/*
+LEVEL 1: X->PP1 of degree 2^1
+*/
+
+/*
+LEVEL 2: X->PP1 of degree 2^2
+*/
