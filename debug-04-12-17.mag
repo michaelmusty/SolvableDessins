@@ -1,0 +1,42 @@
+AttachSpec("spec");
+AttachSpec("~/Dropbox/belyi/Code/spec");
+
+load "query.mag";
+
+// sigma := d4t2;
+// IsConjugate: too many
+// IsWeaklyIsomorphic: correct
+
+// sigma := d8t1_1;
+// IsConjugate: correct
+// IsWeaklyIsomorphic: correct
+
+sigma := d8t1_2;
+// IsConjugate: correct
+// IsWeaklyIsomorphic: too few
+
+// pass := p8t1_3;
+// sigma := pass[1];
+// sigma := pass[2];
+// IsConjugate: correct 2 above each
+// IsWeaklyIsomorphic: too few 2 above pass[1] but only 1 above pass[2]
+
+// sigma := d8t2;
+// IsConjugate: "correct" but only 1 rep for size 3 passport of 16T8
+// IsWeaklyIsomorphic: same
+
+// sigma := d8t4;
+// IsConjugate: 16T8 too few, 16T10, 16T12 overcount
+// IsWeaklyIsomorphic: 16T8 too few, but rest correct
+
+// sigma := d8t5;
+// IsConjugate: correct
+// IsWeaklyIsomorphic: correct
+
+// sigma := d16t1_1;
+
+l0, l1, loo, all, arebelyimaps, justramified, covers :=
+PossibleGaloisCoveringPermutationTriples(sigma : weakly := false);
+
+l0w, l1w, loow, allw, arebelyimapsw, justramifiedw, coversw :=
+PossibleGaloisCoveringPermutationTriples(sigma : weakly := true);
