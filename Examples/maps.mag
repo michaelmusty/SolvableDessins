@@ -1,5 +1,5 @@
 /*
-Belyi Map for  -> 4T2-222-g0 -> PP1
+Belyi Map for  16T5-488-g5 -> 8T2-244-g1 -> 4T2-222-g0 -> PP1
 */
 AttachSpec("~/GITHUB/SolvableDessins/spec");
 AttachSpec("~/Dropbox/belyi/Code/spec");
@@ -35,10 +35,22 @@ f0 := mD0(LD0.1);
 
 /*
 Degree 2
-LEVEL 1
+Level 1
 X1 -> PP1
 Name = 2T1-[2,2,1]-2-2-11-g0
 */
+R1<x0, x1> := PolynomialRing(K, 2);
+AA2<x0, x1> := AffineSpace(R1);
+num0 := Numerator(f0);
+den0 := Denominator(f0);
+AffAlg0<Kx0> := Parent(den0);
+phi0 := hom< AffAlg0 -> R1 | R1.1 >;
+I1 := ideal< R1 | phi0(den0)*R1.2^2-phi0(num0) >;
+Y1<x0, x1> := Curve(AA2, I1);
+X1<z0, z1, w> := ProjectiveClosure(Y1);
+KX1<Kx0, Kx1> := FunctionField(X1);
+pt001 := X1![0,0,1];
+
 
 /*
 Degree 4
