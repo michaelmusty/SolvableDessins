@@ -34,7 +34,7 @@
       destroy();
       var nodes = [];
       var edges = [];
-      nodes.push({id: 1, label: 'PP1', group: '', title: 'complex projective line'});
+      nodes.push({id: 1, label: 'PP1', group: 'size1', title: 'complex projective line'});
       nodes.push({id: 21, label: '2T1', group: 'size1', title: '2T1-[2,2,1]-2-2-11-g0 : C2 : Size 1'});
       nodes.push({id: 411, label: '4T1:1', group: 'size1', title: '4T1-[4,4,1]-4-4-1111-g0 : C4 : Size 1'});
       nodes.push({id: 412, label: '4T1:2', group: 'size1', title: '4T1-[4,4,2]-4-4-22-g1 : C4 : Size 1'});
@@ -81,6 +81,7 @@
       edges.push({from: 16061, to: 821});
       edges.push({from: 16062, to: 821});
       edges.push({from: 16081, to: 821});
+      edges.push({from: 16081, to: 851, dashes:true});
       edges.push({from: 16081, to: 841});
       edges.push({from: 16101, to: 841});
       edges.push({from: 16121, to: 841});
@@ -110,18 +111,19 @@
         },
         groups: {
           size1: {
+            color: {background: 'white', border: 'black'}
           },
           unramified: {
-            color: {background: 'lightgray', border: 'gray'}
+            color: {background: 'lightgray', border: 'black'}
           },
           sizeN: {
-            color: {background: 'gray'}
+            color: {background: 'gray', border: 'black'}
           },
           reducible: {
-            color: {background: 'pink', border: 'gray'}
+            color: {background: 'pink', border: 'black'}
           },
           irred: {
-            color: {background: 'cyan', border: 'gray'}
+            color: {background: 'cyan', border: 'black'}
           }
         },
         interaction: {
