@@ -22,7 +22,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css" rel="stylesheet" type="text/css" />
   <script type="text/javascript">
     var network = null;
-    var layoutMethod = "directed";
+    // var layoutMethod = "directed";
     var len = undefined;
     function destroy() {
       if (network !== null) {
@@ -127,12 +127,12 @@
         interaction: {
           hover: true
         },
-        layout: {
-          randomSeed: 2,
-          hierarchical: {
-            sortMethod: layoutMethod
-          }
-        },
+        //layout: {
+         //  randomSeed: 2,
+          // hierarchical: {
+            // sortMethod: layoutMethod
+          // }
+        //},
       };
       network = new vis.Network(container, data, options);
     }
