@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>SolvableDessins</title>
+  <title>SolvableDessinsGraph</title>
   <style type="text/css">
     html, body {
       color: #d3d3d3;
@@ -39,26 +39,26 @@
       nodes.push({id: 411, label: '4T1:1', group: 'size1', title: '4T1-[4,4,1]-4-4-1111-g0 : C4 : Size 1'});
       nodes.push({id: 412, label: '4T1:2', group: 'size1', title: '4T1-[4,4,2]-4-4-22-g1 : C4 : Size 1'});
       nodes.push({id: 421, label: '4T2', group: 'size1', title: '4T2-[2,2,2]-22-22-22-g0 : C4xC4 : Size 1'});
-      nodes.push({id: 811, label: '8T1:1', group: '', title: ''});
-      nodes.push({id: 812, label: '8T1:2', group: '', title: ''});
-      nodes.push({id: 813, label: '8T1:3', group: '', title: ''});
-      nodes.push({id: 821, label: '8T2', group: '', title: ''});
-      nodes.push({id: 841, label: '8T4', group: '', title: ''});
-      nodes.push({id: 851, label: '8T5', group: '', title: ''});
-      nodes.push({id: 16011, label: '16T1:1', group: '', title: ''});
-      nodes.push({id: 16012, label: '16T1:2', group: '', title: ''});
-      nodes.push({id: 16013, label: '16T1:3', group: '', title: ''});
-      nodes.push({id: 16014, label: '16T1:4', group: '', title: ''});
-      nodes.push({id: 16041, label: '16T4', group: '', title: ''});
-      nodes.push({id: 16051, label: '16T5:1', group: '', title: ''});
-      nodes.push({id: 16052, label: '16T5:2', group: '', title: ''});
-      nodes.push({id: 16061, label: '16T6:1', group: '', title: ''});
-      nodes.push({id: 16062, label: '16T6:2', group: '', title: ''});
-      nodes.push({id: 16081, label: '16T8', group: '', title: ''});
-      nodes.push({id: 16101, label: '16T10', group: '', title: ''});
-      nodes.push({id: 16121, label: '16T12', group: '', title: ''});
-      nodes.push({id: 16131, label: '16T13', group: '', title: ''});
-      nodes.push({id: 16141, label: '16T14', group: '', title: ''});
+      nodes.push({id: 811, label: '8T1:1', group: 'size1', title: '8T1-[8,8,1]-8-8-11111111-g0 : C8 : Size 1'});
+      nodes.push({id: 812, label: '8T1:2', group: 'size1', title: '8T1-[8,8,2]-8-8-2222-g2 : C8 : Size 1'});
+      nodes.push({id: 813, label: '8T1:3', group: 'sizeN', title: '8T1-[8,8,4]-8-8-44-g3 : C8 : Size 2'});
+      nodes.push({id: 821, label: '8T2', group: 'size1', title: '8T2-[4,4,2]-44-44-2222-g1 : C4xC2 : Size 1'});
+      nodes.push({id: 841, label: '8T4', group: 'size1', title: '8T4-[2,2,4]-2222-2222-44-g0 : D8 : Size 1'});
+      nodes.push({id: 851, label: '8T5', group: 'size1', title: '8T5-[4,4,4]-44-44-44-g2 : Q8 : Size 1'});
+      nodes.push({id: 16011, label: '16T1:1', group: 'size1', title: '16T1-[16,16,1]-16-16-1111111111111111-g0 : C16 : Size 1'});
+      nodes.push({id: 16012, label: '16T1:2', group: 'size1', title: '16T1-[16,16,2]-16-16-22222222-g4 : C16 : Size 1'});
+      nodes.push({id: 16013, label: '16T1:3', group: 'sizeN', title: '16T1-[16,16,4]-16-16-4444-g6 : C16 : Size 2'});
+      nodes.push({id: 16014, label: '16T1:4', group: 'sizeN', title: '16T1-[16,16,8]-16-16-88-g7 : C16 : Size 4 (2 Galois orbits?)'});
+      nodes.push({id: 16041, label: '16T4', group: 'size1', title: '16T4-[4,4,4]-4444-4444-4444-g3 : C4xC4 : Size 1'});
+      nodes.push({id: 16051, label: '16T5:1', group: 'size1', title: '16T5-[8,8,2]-88-88-22222222-g3 : C8xC2 : Size 1'});
+      nodes.push({id: 16052, label: '16T5:2', group: 'size1', title: '16T5-[8,8,4]-88-88-4444-g5 : C8xC2 : Size 1'});
+      nodes.push({id: 16061, label: '16T6:1', group: 'size1', title: '16T6-[8,8,2]-88-88-22222222-g3 : (C8:C2) : Size 1'});
+      nodes.push({id: 16062, label: '16T6:2', group: 'size1', title: '16T6-[8,8,4]-88-88-4444-g5 : (C8:C2) : Size 1'});
+      nodes.push({id: 16081, label: '16T8', group: 'sizeN', title: '16T8-[4,4,4]-4444-4444-4444-g3 : (C4:C4) : Size 3 (unramified over 8T5?)'});
+      nodes.push({id: 16101, label: '16T10', group: 'size1', title: '16T10-[2,4,4]-22222222-4444-4444-g1 : ((C2xC2):C4) : Size 1'});
+      nodes.push({id: 16121, label: '16T12', group: 'size1', title: '16T12-[2,4,8]-22222222-4444-88-g2 : QD16 : Size 1'});
+      nodes.push({id: 16131, label: '16T13', group: 'size1', title: '16T13-[2,2,8]-22222222-22222222-88-g0 : D16 : Size 1'});
+      nodes.push({id: 16141, label: '16T14', group: 'size1', title: '16T14-[4,4,8]-4444-4444-88-g4 : Q16 : Size 1'});
       edges.push({from: 21, to: 1});
       edges.push({from: 411, to: 21});
       edges.push({from: 412, to: 21});
@@ -115,7 +115,7 @@
             color: {background: 'lightgray', border: 'gray'}
           },
           sizeN: {
-            color: {background: 'gray', border: 'lightgray'}
+            color: {background: 'gray'}
           },
           reducible: {
             color: {background: 'pink', border: 'gray'}
