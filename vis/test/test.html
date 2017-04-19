@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+  <title>test</title>
+  <style type="text/css">
+    html, body {
+      color: #d3d3d3;
+      font: 12pt arial;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #mynetwork {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #444444;
+      background-color: #dddddd;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.min.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript">
+    var network = null;
+    var layoutMethod = "directed";
+    var len = undefined;
+    function destroy() {
+      if (network !== null) {
+        network.destroy();
+        network = null;
+      }
+    }
+    function draw() {
+      destroy();
+      var nodes = [];
+      var edges = [];
+      nodes.push({id: 1, label: 'PP1', group: 'size1', title: 'complex projective line'});
+      nodes.push({id: 21, label: '2T1', group: 'size1', title: '2T1-[2,2,1]-2-2-11-g0\n'});
+      nodes.push({id: 411, label: '4T1:1', group: 'size1', title: '4T1-[4,4,1]-4-4-1111-g0'});
+      nodes.push({id: 412, label: '4T1:2', group: 'size1', title: '4T1-[4,4,2]-4-4-22-g1'});
+      nodes.push({id: 421, label: '4T2:1', group: 'reducible', title: '4T2-[2,2,2]-22-22-22-g0'});
+      edges.push({from: 21, to: 1});
+      edges.push({from: 411, to: 21});
+      edges.push({from: 412, to: 21});
+      edges.push({from: 421, to: 21});
+      // create a network
+      var container = document.getElementById('mynetwork');
+      var data = {
+        nodes: nodes,
+        edges: edges
+      };
+      var options = {
+        nodes: {
+          shape: 'box',
+          size: 30,
+          font: {
+            size: 32,
+          },
+          borderWidth: 1,
+          shadow: true
+        },
+        edges: {
+          width: 2,
+          shadow: true,
+          smooth: true,
+          arrows: {to : true }
+        },
+        groups: {
+          size1: {
+          },
+          unramified: {
+            color: {background: 'lightgray', border: 'gray'}
+          },
+          reducible: {
+            color: {background: 'pink', border: 'gray'}
+          },
+          irred: {
+            color: {background: 'cyan', border: 'gray'}
+          }
+        },
+        interaction: {
+          hover: true
+        },
+        layout: {
+          randomSeed: 2,
+          hierarchical: {
+            sortMethod: layoutMethod
+          }
+        },
+      };
+      network = new vis.Network(container, data, options);
+    }
+  </script>
+</head>
+
+<body onload="draw();">
+<div id="mynetwork"></div>
+</body>
+</html>
