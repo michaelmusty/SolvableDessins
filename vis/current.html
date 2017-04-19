@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>test</title>
+  <title>SolvableDessins</title>
   <style type="text/css">
     html, body {
       color: #d3d3d3;
@@ -35,26 +35,26 @@
       var nodes = [];
       var edges = [];
       nodes.push({id: 1, label: 'PP1', group: '', title: 'complex projective line'});
-      nodes.push({id: 21, label: '2T1', group: '', title: '2T1-[2,2,1]-2-2-11-g0\n'});
-      nodes.push({id: 411, label: '4T1:1', group: '', title: '4T1-[4,4,1]-4-4-1111-g0'});
-      nodes.push({id: 412, label: '4T1:2', group: '', title: '4T1-[4,4,2]-4-4-22-g1'});
-      nodes.push({id: 421, label: '4T2', group: '', title: '4T2-[2,2,2]-22-22-22-g0'});
+      nodes.push({id: 21, label: '2T1', group: 'size1', title: '2T1-[2,2,1]-2-2-11-g0 : C2 : Size 1'});
+      nodes.push({id: 411, label: '4T1:1', group: 'size1', title: '4T1-[4,4,1]-4-4-1111-g0 : C4 : Size 1'});
+      nodes.push({id: 412, label: '4T1:2', group: 'size1', title: '4T1-[4,4,2]-4-4-22-g1 : C4 : Size 1'});
+      nodes.push({id: 421, label: '4T2', group: 'size1', title: '4T2-[2,2,2]-22-22-22-g0 : C4xC4 : Size 1'});
       nodes.push({id: 811, label: '8T1:1', group: '', title: ''});
       nodes.push({id: 812, label: '8T1:2', group: '', title: ''});
       nodes.push({id: 813, label: '8T1:3', group: '', title: ''});
       nodes.push({id: 821, label: '8T2', group: '', title: ''});
       nodes.push({id: 841, label: '8T4', group: '', title: ''});
       nodes.push({id: 851, label: '8T5', group: '', title: ''});
-      nodes.push({id: 1611, label: '16T1:1', group: '', title: ''});
-      nodes.push({id: 1612, label: '16T1:2', group: '', title: ''});
-      nodes.push({id: 1613, label: '16T1:3', group: '', title: ''});
-      nodes.push({id: 1614, label: '16T1:4', group: '', title: ''});
-      nodes.push({id: 1641, label: '16T4', group: '', title: ''});
-      nodes.push({id: 1651, label: '16T5:1', group: '', title: ''});
-      nodes.push({id: 1652, label: '16T5:2', group: '', title: ''});
-      nodes.push({id: 1661, label: '16T6:1', group: '', title: ''});
-      nodes.push({id: 1662, label: '16T6:2', group: '', title: ''});
-      nodes.push({id: 1681, label: '16T8', group: '', title: ''});
+      nodes.push({id: 16011, label: '16T1:1', group: '', title: ''});
+      nodes.push({id: 16012, label: '16T1:2', group: '', title: ''});
+      nodes.push({id: 16013, label: '16T1:3', group: '', title: ''});
+      nodes.push({id: 16014, label: '16T1:4', group: '', title: ''});
+      nodes.push({id: 16041, label: '16T4', group: '', title: ''});
+      nodes.push({id: 16051, label: '16T5:1', group: '', title: ''});
+      nodes.push({id: 16052, label: '16T5:2', group: '', title: ''});
+      nodes.push({id: 16061, label: '16T6:1', group: '', title: ''});
+      nodes.push({id: 16062, label: '16T6:2', group: '', title: ''});
+      nodes.push({id: 16081, label: '16T8', group: '', title: ''});
       nodes.push({id: 16101, label: '16T10', group: '', title: ''});
       nodes.push({id: 16121, label: '16T12', group: '', title: ''});
       nodes.push({id: 16131, label: '16T13', group: '', title: ''});
@@ -70,18 +70,18 @@
       edges.push({from: 821, to: 421});
       edges.push({from: 841, to: 421});
       edges.push({from: 851, to: 421});
-      edges.push({from: 1611, to: 811});
-      edges.push({from: 1612, to: 811});
-      edges.push({from: 1613, to: 812});
-      edges.push({from: 1614, to: 813});
-      edges.push({from: 1641, to: 821});
-      edges.push({from: 1651, to: 811});
-      edges.push({from: 1651, to: 821});
-      edges.push({from: 1652, to: 821});
-      edges.push({from: 1661, to: 821});
-      edges.push({from: 1662, to: 821});
-      edges.push({from: 1681, to: 821});
-      edges.push({from: 1681, to: 841});
+      edges.push({from: 16011, to: 811});
+      edges.push({from: 16012, to: 811});
+      edges.push({from: 16013, to: 812});
+      edges.push({from: 16014, to: 813});
+      edges.push({from: 16041, to: 821});
+      edges.push({from: 16051, to: 811});
+      edges.push({from: 16051, to: 821});
+      edges.push({from: 16052, to: 821});
+      edges.push({from: 16061, to: 821});
+      edges.push({from: 16062, to: 821});
+      edges.push({from: 16081, to: 821});
+      edges.push({from: 16081, to: 841});
       edges.push({from: 16101, to: 841});
       edges.push({from: 16121, to: 841});
       edges.push({from: 16131, to: 841});
@@ -95,9 +95,9 @@
       var options = {
         nodes: {
           shape: 'box',
-          size: 30,
+          size: 15,
           font: {
-            size: 32,
+            size: 15,
           },
           borderWidth: 1,
           shadow: true
@@ -113,6 +113,9 @@
           },
           unramified: {
             color: {background: 'lightgray', border: 'gray'}
+          },
+          sizeN: {
+            color: {background: 'gray', border: 'lightgray'}
           },
           reducible: {
             color: {background: 'pink', border: 'gray'}
