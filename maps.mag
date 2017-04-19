@@ -1,28 +1,28 @@
 /*
 Belyi Map for  16T5-488-g5 -> 8T2-244-g1 -> 4T2-222-g0 -> PP1
 */
+// assumes GetCurrentDirectory = repo directory
 AttachSpec("~/GITHUB/SolvableDessins/spec");
 AttachSpec("~/Dropbox/belyi/Code/spec");
-start := GetCurrentDirectory();
-repo := "~/GITHUB/SolvableDessins";
-ChangeDirectory(repo); // need to be here to load query
-load "~/GITHUB/SolvableDessins/query.mag";
-ChangeDirectory(start);
+repo := GetCurrentDirectory();
+load "catalog16.mag";
 
 /*
 BASE FIELD
 */
-// we can figure out the base field a priori right?
+// we don't know the base field a priori >_<
 K<nu> := QuadraticField(-4);
 
 /*
 LEVEL 0: PP1
 */
-R0<x0> := PolynomialRing(K, 1);
-AA1<x0> := AffineSpace(R0);
+Poly0<x0> := PolynomialRing(K, 1);
+AA1<x0> := AffineSpace(Poly0);
 Y0<x0> := Curve(AA1);
 X0<z0, w> := ProjectiveClosure(Y0);
-KX0<Kx0> := FunctionField(X0);
+KX0<kx0> := FunctionField(X0);
+R0<x0> := PolynomialRing(K, 1);
+// points to move up a level
 pt0 := X0![0, 1];
 pt1 := X0![1, 1];
 ptoo := X0![1, 0];
@@ -39,17 +39,27 @@ Level 1
 X1 -> PP1
 Name = 2T1-[2,2,1]-2-2-11-g0
 */
-R1<x0, x1> := PolynomialRing(K, 2);
-AA2<x0, x1> := AffineSpace(R1);
+Poly1<x0, x1> := PolynomialRing(K, 2);
+AA2<x0, x1> := AffineSpace(Poly1);
 num0 := Numerator(f0);
 den0 := Denominator(f0);
-AffAlg0<Kx0> := Parent(den0);
-phi0 := hom< AffAlg0 -> R1 | R1.1 >;
-I1 := ideal< R1 | phi0(den0)*R1.2^2-phi0(num0) >;
+AffAlg0<kx0> := Parent(den0);
+phi0 := hom< AffAlg0 -> Poly1 | Poly1.1 >;
+I1 := ideal< Poly1 | phi0(den0)*Poly1.2^2-phi0(num0) >;
 Y1<x0, x1> := Curve(AA2, I1);
 X1<z0, z1, w> := ProjectiveClosure(Y1);
-KX1<Kx0, Kx1> := FunctionField(X1);
+KX1<kx0, kx1> := FunctionField(X1);
+R1, mp1 := Poly1/I1; // 2T1 -> PP1 is R1.1
+// points to move up a level
 pt001 := X1![0,0,1];
+pt111 := X1![1,1,1];
+pt1_11 := X1![1,-1,1];
+P001 := Divisor(pt001);
+P111 := Divisor(pt111);
+P1_11 := Divisor(pt1_11);
+D1 := P111-P1_11;
+LD1, mD1 := RiemannRochSpace(-D1);
+f1 := mD1(LD1.1);
 
 
 /*
@@ -59,6 +69,18 @@ X2 -> PP1
 sigma = d4t2;
 Name = 4T2-[2,2,2]-22-22-22-g0
 */
+Poly2<x0, x1, x2> := PolynomialRing(K, 3);
+AA3<x0, x1, x2> := AffineSpace(Poly2);
+num1 := Numerator(f1);
+den1 := Denominator(f1);
+AffAlg1<kx0, kx1> := Parent(den1);
+phi0 := hom< AffAlg0 -> Poly2 | Poly2.1 >;
+phi1 := hom< AffAlg1 -> Poly2 | Poly2.1, Poly2.2 >;
+I2 := ideal< Poly2 | phi1(den1)*Poly2.2^2-phi1(num1), phi0(den0)*Poly2.1^2-phi0(num0) >;
+Y2<x0, x1, x2> := Curve(AA3, I2);
+X2<z0, z1, z2, w> := ProjectiveClosure(Y2);
+KX2<kx0, kx1, kx2> := FunctionField(X2);
+R2, mp2 := Poly2/I2;
 
 /*
 Degree 8
@@ -67,7 +89,7 @@ X3 -> PP1
 sigma = d8covers[2];
 Name = 8T2-[2,4,4]-2222-44-44-g1
 */
-d8covers := PossibleGaloisCoveringPermutationTriples(d4t2);
+// d8covers := PossibleGaloisCoveringPermutationTriples(d4t2);
 
 /*
 Degree 16
@@ -76,4 +98,4 @@ X4 -> PP1
 sigma = d16covers[5];
 Name = 16T5-[4,8,8]-4444-88-88-g5
 */
-d16covers := PossibleGaloisCoveringPermutationTriples(d8covers[2]);
+// d16covers := PossibleGaloisCoveringPermutationTriples(d8covers[2]);
