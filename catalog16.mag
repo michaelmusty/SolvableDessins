@@ -1,15 +1,9 @@
+// assumes GetCurrentDirectory = repo directory
 AttachSpec("spec");
 AttachSpec("~/Dropbox/belyi/Code/spec");
-
-directory := GetCurrentDirectory() cat "/SolvableDB";
-ChangeDirectory(directory);
-
-/*
-degree 2
-*/
-
-// 2T1
-d2 := [Sym(2) | (1,2),(1,2),Id(Sym(2))];
+repo := GetCurrentDirectory();
+db := repo cat "/SolvableDB";
+ChangeDirectory(db);
 
 /*
 degree 4
@@ -140,3 +134,5 @@ degree 16
   s16t8 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3.m");
   p16t8 := s16t8`SolvableDBPointedPassport;
   d16t8 := p16t8[1];
+
+ChangeDirectory(repo);

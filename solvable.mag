@@ -663,7 +663,7 @@ intrinsic PossibleGaloisCoveringPermutations(perm::GrpPermElt : zentral := true)
   return UnramifiedPossibilities(perm : zentral := zentral) cat RamifiedPossibilities(perm : zentral := zentral);
 end intrinsic;
 
-intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : zentral := true, brutal := true, weakly := false, return_everything := false) -> SeqEnum[SeqEnum[GrpPermElt]]
+intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : zentral := true, brutal := true, lax := false, return_everything := false) -> SeqEnum[SeqEnum[GrpPermElt]]
   {return_everything yields: list_0, list_1, list_oo, all, possible, justramified, correct}
   d := Degree(Parent(sigma[1]));
   assert sigma[3]*sigma[2]*sigma[1] eq Id(Sym(d));
@@ -688,9 +688,10 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
   possible := [];
   // filter out triples that can be Belyi maps
   printf "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
-  printf "\tChecking which ones can be Belyi maps...\n";
+  printf "\tChecking which ones can be Belyi maps...";
   time2 := Cputime();
   if brutal then
+    printf "USING BRUTAL APPROACH\n";
     for i in [1..#list_0] do
       for j in [1..#list_1] do
         for k in [1..#list_oo] do
@@ -708,20 +709,20 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
       end for;
     end for;
   else // non-brutal
+    printf "USING LESS BRUTAL APPROACH\n";
+    list_oo_inverses := [s^-1 : s in list_oo];
     for i in [1..#list_0] do
       for j in [1..#list_1] do
-        for k in [1..#list_oo] do
-          wt0 := list_0[i];
-          wt1 := list_1[j];
-          wtoo := list_oo[k];
-          Append(~all, [wt0, wt1, wtoo]);
-          if wtoo*wt1*wt0 eq Id(Sym(2*d)) then
-            wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
-            if IsTransitive(wtG) and #wtG eq (2*d) then
-              Append(~possible, [wt0, wt1, wtoo]);
-            end if;
+        wt0 := list_0[i];
+        wt1 := list_1[j];
+        Append(~all, [wt0, wt1]);
+        if wt0*wt1 in list_oo_inverses then
+          wtoo := (wt1*wt0)^-1;
+          wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
+          if IsTransitive(wtG) and #wtG eq (2*d) then
+            Append(~possible, [wt0, wt1, wtoo]);
           end if;
-        end for;
+        end if;
       end for;
     end for;
   end if;
@@ -748,7 +749,7 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
   time6 := Cputime();
   for i := #correct to 1 by -1 do
     for j in [1..i-1] do
-      if weakly then
+      if lax then
         if IsWeaklyIsomorphic(Sym(2*d), correct[i], correct[j]) then
           Remove(~correct, i);
           break j;

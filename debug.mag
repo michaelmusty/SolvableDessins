@@ -1,7 +1,8 @@
 AttachSpec("spec");
 AttachSpec("~/Dropbox/belyi/Code/spec");
 
-load "query.mag";
+// load "catalog16.mag";
+load "catalog8.mag";
 
 // sigma := d4t2;
 // IsConjugate: too many
@@ -11,7 +12,7 @@ load "query.mag";
 // IsConjugate: correct
 // IsWeaklyIsomorphic: correct
 
-sigma := d8t1_2;
+// sigma := d8t1_2;
 // IsConjugate: correct
 // IsWeaklyIsomorphic: too few
 
@@ -36,7 +37,7 @@ sigma := d8t1_2;
 // sigma := d16t1_1;
 
 l0, l1, loo, all, arebelyimaps, justramified, covers :=
-PossibleGaloisCoveringPermutationTriples(sigma : weakly := false);
+PossibleGaloisCoveringPermutationTriples(sigma : lax := true, return_everything := true);
 
-l0w, l1w, loow, allw, arebelyimapsw, justramifiedw, coversw :=
-PossibleGaloisCoveringPermutationTriples(sigma : weakly := true);
+l0lax, l1lax, loolax, alllax, arebelyimapslax, justramifiedlax, coverslax :=
+PossibleGaloisCoveringPermutationTriples(sigma : lax := false, return_everything := true);
