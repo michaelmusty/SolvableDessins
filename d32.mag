@@ -6,7 +6,7 @@ repo := GetCurrentDirectory();
 
 load "catalog16.mag";
 
-sigma := d8t1_1;
+sigma := d16t13;
 
 SetProfile(true);
 l0, l1, loo, all, arebelyimaps, justramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := false, lax := false, return_everything := true);
