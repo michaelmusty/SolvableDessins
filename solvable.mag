@@ -663,7 +663,7 @@ intrinsic PossibleGaloisCoveringPermutations(perm::GrpPermElt : zentral := true)
   return UnramifiedPossibilities(perm : zentral := zentral) cat RamifiedPossibilities(perm : zentral := zentral);
 end intrinsic;
 
-intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : zentral := true, brutal := true, lax := false, return_everything := false) -> SeqEnum[SeqEnum[GrpPermElt]]
+intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : zentral := true, brutal := false, lax := false, return_everything := false) -> SeqEnum[SeqEnum[GrpPermElt]]
   {return_everything yields: list_0, list_1, list_oo, all, possible, justramified, correct}
   d := Degree(Parent(sigma[1]));
   assert sigma[3]*sigma[2]*sigma[1] eq Id(Sym(d));
