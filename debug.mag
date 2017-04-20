@@ -1,8 +1,8 @@
 AttachSpec("spec");
 AttachSpec("~/Dropbox/belyi/Code/spec");
 
-// load "catalog16.mag";
-load "catalog8.mag";
+load "catalog16.mag";
+// load "catalog8.mag";
 
 // sigma := d4t2;
 // IsConjugate: too many
