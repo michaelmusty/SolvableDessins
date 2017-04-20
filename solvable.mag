@@ -589,8 +589,8 @@ intrinsic UnramifiedPossibilities(perm::GrpPermElt : zentral := true) -> SeqEnum
   cycles := CycleDecomposition(perm);
   tau := IdentifyingTau(fact[1][2]+1);
   unramified := [];
+  code := PermutationToCode(perm);
   for i in [0..2^d-1] do
-    code := PermutationToCode(perm);
     guide := IntegerToBinary(i, d);
     for j in [1..d] do
       new := Mod(CodeEntry(code, j) + d, 2*d);
