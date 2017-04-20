@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <style type='text/css'>
+            .rel { POSITION: relative; width: 100%; }
+            .abs { POSITION: absolute; width: 100%; }
+            .right { text-align:right; }
+            .left { text-align:left; }
+            .center { text-align:center; }
+        </style>
+
+        <script language='javascript' src='/Applications/Magma/libs/prof/sorttable.js'></script>
+        <script language='javascript'>
+            var c = new SortTable('c');
+            c.AddColumn('Index', '', '', 'numeric');
+            c.AddColumn('Name', '', '', '');
+            c.AddColumn('Time', '', '', 'numeric');
+            c.AddColumn('Time (%)', '', '', 'numeric');
+            c.AddColumn('Count', '', '', 'numeric');
+            c.AddColumn('Count (%)', '', '', 'numeric');
+            c.AddLine('<a href="profile2.html">2</a>', '<a href="profile2.html">PossibleGaloisCoveringPermutationTriples(&lt;SeqEnum&gt; sigma) -&gt; SeqEnum</a>', '2.040', '100.00', '1', '50.00');
+            c.AddLineSortData('2', 'PossibleGaloisCoveringPermutationTriples(&lt;SeqEnum&gt; sigma) -&gt; SeqEnum', '', '', '', '');
+            c.AddLine('<a href="profile62.html">62</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile62.html">SetProfile(&lt;BoolElt&gt; v)</a>', '0.000', '0.00', '1', '50.00');
+            c.AddLineSortData('62', 'SetProfile(&lt;BoolElt&gt; v)', '', '', '', '');
+        </script>
+
+        <title>Magma Profiler Output for &lt;main&gt;</title>
+    </head>
+    <body>
+        <h1>Magma Profiler Output</h1>
+        <p>
+        <h3>Function: &lt;main&gt;</h3>
+        <h3>Function Time: 2.040</h3>
+        <h3>Function Count: 1</h3>
+        <p>
+        <h3>Contributions from children</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(c,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(c,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(c,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(c,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(c,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(c,5)'>Count (%)</a></th>
+            </tr>
+            <script>c.WriteRows()</script>
+        </table>
+        <p>
+        <a href='profile.html'>Go to function listing</a>
+    </body>
+</html>

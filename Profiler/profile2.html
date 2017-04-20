@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <style type='text/css'>
+            .rel { POSITION: relative; width: 100%; }
+            .abs { POSITION: absolute; width: 100%; }
+            .right { text-align:right; }
+            .left { text-align:left; }
+            .center { text-align:center; }
+        </style>
+
+        <script language='javascript' src='/Applications/Magma/libs/prof/sorttable.js'></script>
+        <script language='javascript'>
+            var p = new SortTable('p');
+            p.AddColumn('Index', '', '', 'numeric');
+            p.AddColumn('Name', '', '', '');
+            p.AddColumn('Time', '', '', 'numeric');
+            p.AddColumn('Time (%)', '', '', 'numeric');
+            p.AddColumn('Count', '', '', 'numeric');
+            p.AddColumn('Count (%)', '', '', 'numeric');
+            p.AddLine('<a href="profile1.html">1</a>', '<a href="profile1.html">&lt;main&gt;</a>', '2.040', '100.00', '1', '100.00');
+            p.AddLineSortData('1', '&lt;main&gt;', '', '', '', '');
+            var c = new SortTable('c');
+            c.AddColumn('Index', '', '', 'numeric');
+            c.AddColumn('Name', '', '', '');
+            c.AddColumn('Time', '', '', 'numeric');
+            c.AddColumn('Time (%)', '', '', 'numeric');
+            c.AddColumn('Count', '', '', 'numeric');
+            c.AddColumn('Count (%)', '', '', 'numeric');
+            c.AddLine('<a href="profile3.html">3</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile3.html">Parent(&lt;Any&gt; x) -&gt; .</a>', '0.000', '0.00', '1', '0.00');
+            c.AddLineSortData('3', 'Parent(&lt;Any&gt; x) -&gt; .', '', '', '', '');
+            c.AddLine('<a href="profile61.html">61</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile61.html">Remove(&lt;SeqEnum&gt;~Q, &lt;RngIntElt&gt; i)</a>', '0.000', '0.00', '95', '0.12');
+            c.AddLineSortData('61', 'Remove(&lt;SeqEnum&gt;~Q, &lt;RngIntElt&gt; i)', '', '', '', '');
+            c.AddLine('<a href="profile4.html">4</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile4.html">Degree(&lt;GrpPerm&gt; G) -&gt; RngIntElt</a>', '0.000', '0.00', '1', '0.00');
+            c.AddLineSortData('4', 'Degree(&lt;GrpPerm&gt; G) -&gt; RngIntElt', '', '', '', '');
+            c.AddLine('<a href="profile5.html">5</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile5.html">*(&lt;GrpPermElt&gt; x, &lt;GrpPermElt&gt; y) -&gt; GrpPermElt</a>', '0.020', '0.98', '17034', '22.27');
+            c.AddLineSortData('5', '*(&lt;GrpPermElt&gt; x, &lt;GrpPermElt&gt; y) -&gt; GrpPermElt', '', '', '', '');
+            c.AddLine('<a href="profile35.html">35</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile35.html">*(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; RngIntElt</a>', '0.010', '0.49', '2503', '3.27');
+            c.AddLineSortData('35', '*(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; RngIntElt', '', '', '', '');
+            c.AddLine('<a href="profile6.html">6</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile6.html">Sym(&lt;RngIntElt&gt; n) -&gt; GrpPerm</a>', '0.000', '0.00', '2404', '3.14');
+            c.AddLineSortData('6', 'Sym(&lt;RngIntElt&gt; n) -&gt; GrpPerm', '', '', '', '');
+            c.AddLine('<a href="profile7.html">7</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile7.html">Id(&lt;GrpPerm&gt; G) -&gt; GrpPermElt</a>', '0.000', '0.00', '1', '0.00');
+            c.AddLineSortData('7', 'Id(&lt;GrpPerm&gt; G) -&gt; GrpPermElt', '', '', '', '');
+            c.AddLine('<a href="profile8.html">8</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile8.html">eq(&lt;GrpPermElt&gt; x, &lt;GrpPermElt&gt; y) -&gt; BoolElt</a>', '0.000', '0.00', '1', '0.00');
+            c.AddLineSortData('8', 'eq(&lt;GrpPermElt&gt; x, &lt;GrpPermElt&gt; y) -&gt; BoolElt', '', '', '', '');
+            c.AddLine('<a href="profile9.html">9</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile9.html">Cputime() -&gt; FldReElt</a>', '0.000', '0.00', '12', '0.02');
+            c.AddLineSortData('9', 'Cputime() -&gt; FldReElt', '', '', '', '');
+            c.AddLine('<a href="profile10.html">10</a>', '<a href="profile10.html">PossibleGaloisCoveringPermutations(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum</a>', '1.520', '74.51', '3', '0.00');
+            c.AddLineSortData('10', 'PossibleGaloisCoveringPermutations(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum', '', '', '', '');
+            c.AddLine('<a href="profile14.html">14</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile14.html">#(&lt;SeqEnum&gt; Q) -&gt; RngIntElt</a>', '0.000', '0.00', '142', '0.19');
+            c.AddLineSortData('14', '#(&lt;SeqEnum&gt; Q) -&gt; RngIntElt', '', '', '', '');
+            c.AddLine('<a href="profile15.html">15</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile15.html">eq(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; BoolElt</a>', '0.000', '0.00', '98', '0.13');
+            c.AddLineSortData('15', 'eq(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; BoolElt', '', '', '', '');
+            c.AddLine('<a href="profile47.html">47</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile47.html">-(&lt;FldReElt&gt; x, &lt;FldReElt&gt; y) -&gt; FldReElt</a>', '0.000', '0.00', '6', '0.01');
+            c.AddLineSortData('47', '-(&lt;FldReElt&gt; x, &lt;FldReElt&gt; y) -&gt; FldReElt', '', '', '', '');
+            c.AddLine('<a href="profile48.html">48</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile48.html">^(&lt;GrpPermElt&gt; x, &lt;RngIntElt&gt; n) -&gt; GrpPermElt</a>', '0.000', '0.00', '132', '0.17');
+            c.AddLineSortData('48', '^(&lt;GrpPermElt&gt; x, &lt;RngIntElt&gt; n) -&gt; GrpPermElt', '', '', '', '');
+            c.AddLine('<a href="profile49.html">49</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile49.html">in(&lt;Any&gt; x, &lt;SeqEnum&gt; M) -&gt; BoolElt</a>', '0.000', '0.00', '16900', '22.10');
+            c.AddLineSortData('49', 'in(&lt;Any&gt; x, &lt;SeqEnum&gt; M) -&gt; BoolElt', '', '', '', '');
+            c.AddLine('<a href="profile21.html">21</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile21.html">-(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; RngIntElt</a>', '0.000', '0.00', '98', '0.13');
+            c.AddLineSortData('21', '-(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; RngIntElt', '', '', '', '');
+            c.AddLine('<a href="profile50.html">50</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile50.html">IsTransitive(&lt;GrpPerm&gt; G) -&gt; BoolElt</a>', '0.000', '0.00', '132', '0.17');
+            c.AddLineSortData('50', 'IsTransitive(&lt;GrpPerm&gt; G) -&gt; BoolElt', '', '', '', '');
+            c.AddLine('<a href="profile22.html">22</a>', '<a href="profile22.html">Constructor (sub)</a>', '0.030', '1.47', '17459', '22.83');
+            c.AddLineSortData('22', 'Constructor (sub)', '', '', '', '');
+            c.AddLine('<a href="profile51.html">51</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile51.html">#(&lt;GrpPerm&gt; G) -&gt; RngIntElt</a>', '0.000', '0.00', '98', '0.13');
+            c.AddLineSortData('51', '#(&lt;GrpPerm&gt; G) -&gt; RngIntElt', '', '', '', '');
+            c.AddLine('<a href="profile53.html">53</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile53.html">eq(&lt;SeqEnum&gt; S, &lt;SeqEnum&gt; T) -&gt; BoolElt</a>', '0.000', '0.00', '98', '0.13');
+            c.AddLineSortData('53', 'eq(&lt;SeqEnum&gt; S, &lt;SeqEnum&gt; T) -&gt; BoolElt', '', '', '', '');
+            c.AddLine('<a href="profile54.html">54</a>', '<a href="profile54.html">IsWeaklyIsomorphic(&lt;GrpPerm&gt; N, &lt;SeqEnum&gt; sigma, &lt;SeqEnum&gt; tau) -&gt; BoolElt</a>', '0.310', '15.20', '2271', '2.97');
+            c.AddLineSortData('54', 'IsWeaklyIsomorphic(&lt;GrpPerm&gt; N, &lt;SeqEnum&gt; sigma, &lt;SeqEnum&gt; tau) -&gt; BoolElt', '', '', '', '');
+            c.AddLine('<a href="profile27.html">27</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile27.html">Append(&lt;SeqEnum&gt;~Q, &lt;Any&gt; x)</a>', '0.020', '0.98', '16998', '22.22');
+            c.AddLineSortData('27', 'Append(&lt;SeqEnum&gt;~Q, &lt;Any&gt; x)', '', '', '', '');
+        </script>
+
+        <title>Magma Profiler Output for PossibleGaloisCoveringPermutationTriples(&lt;SeqEnum&gt; sigma) -&gt; SeqEnum</title>
+    </head>
+    <body>
+        <h1>Magma Profiler Output</h1>
+        <p>
+        <h3>Function: PossibleGaloisCoveringPermutationTriples(&lt;SeqEnum&gt; sigma) -&gt; SeqEnum</h3>
+        <h3>Function Time: 2.040</h3>
+        <h3>Function Count: 1</h3>
+        <p>
+        <h3>Distribution to callers</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(p,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(p,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(p,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(p,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(p,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(p,5)'>Count (%)</a></th>
+            </tr>
+            <script>p.WriteRows()</script>
+        </table>
+        <p>
+        <h3>Contributions from children</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(c,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(c,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(c,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(c,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(c,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(c,5)'>Count (%)</a></th>
+            </tr>
+            <script>c.WriteRows()</script>
+        </table>
+        <p>
+        <a href='profile.html'>Go to function listing</a>
+    </body>
+</html>

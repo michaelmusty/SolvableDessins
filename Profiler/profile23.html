@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <style type='text/css'>
+            .rel { POSITION: relative; width: 100%; }
+            .abs { POSITION: absolute; width: 100%; }
+            .right { text-align:right; }
+            .left { text-align:left; }
+            .center { text-align:center; }
+        </style>
+
+        <script language='javascript' src='/Applications/Magma/libs/prof/sorttable.js'></script>
+        <script language='javascript'>
+            var p = new SortTable('p');
+            p.AddColumn('Index', '', '', 'numeric');
+            p.AddColumn('Name', '', '', '');
+            p.AddColumn('Time', '', '', 'numeric');
+            p.AddColumn('Time (%)', '', '', 'numeric');
+            p.AddColumn('Count', '', '', 'numeric');
+            p.AddColumn('Count (%)', '', '', 'numeric');
+            p.AddLine('<a href="profile39.html">39</a>', '<a href="profile39.html">CodeToPermutation(&lt;SeqEnum&gt; code) -&gt; GrpPermElt</a>', '0.020', '100.00', '3584', '98.68');
+            p.AddLineSortData('39', 'CodeToPermutation(&lt;SeqEnum&gt; code) -&gt; GrpPermElt', '', '', '', '');
+            p.AddLine('<a href="profile18.html">18</a>', '<a href="profile18.html">IdentifyingTau(&lt;RngIntElt&gt; n) -&gt; GrpPermElt</a>', '0.000', '0.00', '48', '1.32');
+            p.AddLineSortData('18', 'IdentifyingTau(&lt;RngIntElt&gt; n) -&gt; GrpPermElt', '', '', '', '');
+        </script>
+
+        <title>Magma Profiler Output for Constructor (elt)</title>
+    </head>
+    <body>
+        <h1>Magma Profiler Output</h1>
+        <p>
+        <h3>Function: Constructor (elt)</h3>
+        <h3>Function Time: 0.020</h3>
+        <h3>Function Count: 3632</h3>
+        <p>
+        <h3>Distribution to callers</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(p,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(p,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(p,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(p,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(p,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(p,5)'>Count (%)</a></th>
+            </tr>
+            <script>p.WriteRows()</script>
+        </table>
+        <p>
+        <h3>This function called no other functions</h3>
+        <p>
+        <a href='profile.html'>Go to function listing</a>
+    </body>
+</html>

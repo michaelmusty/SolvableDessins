@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <style type='text/css'>
+            .rel { POSITION: relative; width: 100%; }
+            .abs { POSITION: absolute; width: 100%; }
+            .right { text-align:right; }
+            .left { text-align:left; }
+            .center { text-align:center; }
+        </style>
+
+        <script language='javascript' src='/Applications/Magma/libs/prof/sorttable.js'></script>
+        <script language='javascript'>
+            var p = new SortTable('p');
+            p.AddColumn('Index', '', '', 'numeric');
+            p.AddColumn('Name', '', '', '');
+            p.AddColumn('Time', '', '', 'numeric');
+            p.AddColumn('Time (%)', '', '', 'numeric');
+            p.AddColumn('Count', '', '', 'numeric');
+            p.AddColumn('Count (%)', '', '', 'numeric');
+            p.AddLine('<a href="profile36.html">36</a>', '<a href="profile36.html">Mod(&lt;RngIntElt&gt; a, &lt;RngIntElt&gt; b) -&gt; RngIntElt</a>', '0.020', '66.67', '24576', '94.12');
+            p.AddLineSortData('36', 'Mod(&lt;RngIntElt&gt; a, &lt;RngIntElt&gt; b) -&gt; RngIntElt', '', '', '', '');
+            p.AddLine('<a href="profile28.html">28</a>', '<a href="profile28.html">IntegerToBinary(&lt;RngIntElt&gt; a, &lt;RngIntElt&gt; e) -&gt; SeqEnum</a>', '0.010', '33.33', '1536', '5.88');
+            p.AddLineSortData('28', 'IntegerToBinary(&lt;RngIntElt&gt; a, &lt;RngIntElt&gt; e) -&gt; SeqEnum', '', '', '', '');
+        </script>
+
+        <title>Magma Profiler Output for lt(&lt;RngIntElt&gt; i, &lt;RngIntElt&gt; j) -&gt; BoolElt</title>
+    </head>
+    <body>
+        <h1>Magma Profiler Output</h1>
+        <p>
+        <h3>Function: lt(&lt;RngIntElt&gt; i, &lt;RngIntElt&gt; j) -&gt; BoolElt</h3>
+        <h3>Function Time: 0.030</h3>
+        <h3>Function Count: 26112</h3>
+        <p>
+        <h3>Distribution to callers</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(p,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(p,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(p,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(p,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(p,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(p,5)'>Count (%)</a></th>
+            </tr>
+            <script>p.WriteRows()</script>
+        </table>
+        <p>
+        <h3>This function called no other functions</h3>
+        <p>
+        <a href='profile.html'>Go to function listing</a>
+    </body>
+</html>

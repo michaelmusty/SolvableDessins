@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <style type='text/css'>
+            .rel { POSITION: relative; width: 100%; }
+            .abs { POSITION: absolute; width: 100%; }
+            .right { text-align:right; }
+            .left { text-align:left; }
+            .center { text-align:center; }
+        </style>
+
+        <script language='javascript' src='/Applications/Magma/libs/prof/sorttable.js'></script>
+        <script language='javascript'>
+            var p = new SortTable('p');
+            p.AddColumn('Index', '', '', 'numeric');
+            p.AddColumn('Name', '', '', '');
+            p.AddColumn('Time', '', '', 'numeric');
+            p.AddColumn('Time (%)', '', '', 'numeric');
+            p.AddColumn('Count', '', '', 'numeric');
+            p.AddColumn('Count (%)', '', '', 'numeric');
+            p.AddLine('<a href="profile54.html">54</a>', '<a href="profile54.html">IsWeaklyIsomorphic(&lt;GrpPerm&gt; N, &lt;SeqEnum&gt; sigma, &lt;SeqEnum&gt; tau) -&gt; BoolElt</a>', '0.000', '100.00', '95', '100.00');
+            p.AddLineSortData('54', 'IsWeaklyIsomorphic(&lt;GrpPerm&gt; N, &lt;SeqEnum&gt; sigma, &lt;SeqEnum&gt; tau) -&gt; BoolElt', '', '', '', '');
+            var c = new SortTable('c');
+            c.AddColumn('Index', '', '', 'numeric');
+            c.AddColumn('Name', '', '', '');
+            c.AddColumn('Time', '', '', 'numeric');
+            c.AddColumn('Time (%)', '', '', 'numeric');
+            c.AddColumn('Count', '', '', 'numeric');
+            c.AddColumn('Count (%)', '', '', 'numeric');
+            c.AddLine('<a href="profile22.html">22</a>', '<a href="profile22.html">Constructor (sub)</a>', '0.000', '100.00', '95', '50.00');
+            c.AddLineSortData('22', 'Constructor (sub)', '', '', '', '');
+            c.AddLine('<a href="profile59.html">59</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile59.html">IsOdd(&lt;GrpPermElt&gt; x) -&gt; BoolElt</a>', '0.000', '100.00', '95', '50.00');
+            c.AddLineSortData('59', 'IsOdd(&lt;GrpPermElt&gt; x) -&gt; BoolElt', '', '', '', '');
+        </script>
+
+        <title>Magma Profiler Output for S3Action(&lt;GrpPermElt&gt; g, &lt;SeqEnum&gt; sigma) -&gt; SeqEnum</title>
+    </head>
+    <body>
+        <h1>Magma Profiler Output</h1>
+        <p>
+        <h3>Function: S3Action(&lt;GrpPermElt&gt; g, &lt;SeqEnum&gt; sigma) -&gt; SeqEnum</h3>
+        <h3>Function Time: 0.000</h3>
+        <h3>Function Count: 95</h3>
+        <p>
+        <h3>Distribution to callers</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(p,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(p,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(p,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(p,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(p,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(p,5)'>Count (%)</a></th>
+            </tr>
+            <script>p.WriteRows()</script>
+        </table>
+        <p>
+        <h3>Contributions from children</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(c,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(c,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(c,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(c,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(c,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(c,5)'>Count (%)</a></th>
+            </tr>
+            <script>c.WriteRows()</script>
+        </table>
+        <p>
+        <a href='profile.html'>Go to function listing</a>
+    </body>
+</html>

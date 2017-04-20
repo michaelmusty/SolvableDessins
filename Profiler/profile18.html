@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <style type='text/css'>
+            .rel { POSITION: relative; width: 100%; }
+            .abs { POSITION: absolute; width: 100%; }
+            .right { text-align:right; }
+            .left { text-align:left; }
+            .center { text-align:center; }
+        </style>
+
+        <script language='javascript' src='/Applications/Magma/libs/prof/sorttable.js'></script>
+        <script language='javascript'>
+            var p = new SortTable('p');
+            p.AddColumn('Index', '', '', 'numeric');
+            p.AddColumn('Name', '', '', '');
+            p.AddColumn('Time', '', '', 'numeric');
+            p.AddColumn('Time (%)', '', '', 'numeric');
+            p.AddColumn('Count', '', '', 'numeric');
+            p.AddColumn('Count (%)', '', '', 'numeric');
+            p.AddLine('<a href="profile11.html">11</a>', '<a href="profile11.html">UnramifiedPossibilities(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum</a>', '0.000', '100.00', '3', '50.00');
+            p.AddLineSortData('11', 'UnramifiedPossibilities(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum', '', '', '', '');
+            p.AddLine('<a href="profile45.html">45</a>', '<a href="profile45.html">RamifiedPossibilities(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum</a>', '0.000', '100.00', '3', '50.00');
+            p.AddLineSortData('45', 'RamifiedPossibilities(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum', '', '', '', '');
+            var c = new SortTable('c');
+            c.AddColumn('Index', '', '', 'numeric');
+            c.AddColumn('Name', '', '', '');
+            c.AddColumn('Time', '', '', 'numeric');
+            c.AddColumn('Time (%)', '', '', 'numeric');
+            c.AddColumn('Count', '', '', 'numeric');
+            c.AddColumn('Count (%)', '', '', 'numeric');
+            c.AddLine('<a href="profile22.html">22</a>', '<a href="profile22.html">Constructor (sub)</a>', '0.000', '100.00', '6', '1.82');
+            c.AddLineSortData('22', 'Constructor (sub)', '', '', '', '');
+            c.AddLine('<a href="profile23.html">23</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile23.html">Constructor (elt)</a>', '0.000', '100.00', '48', '14.55');
+            c.AddLineSortData('23', 'Constructor (elt)', '', '', '', '');
+            c.AddLine('<a href="profile24.html">24</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile24.html">!(&lt;Any&gt; M, &lt;Any&gt; x) -&gt; .</a>', '0.000', '100.00', '48', '14.55');
+            c.AddLineSortData('24', '!(&lt;Any&gt; M, &lt;Any&gt; x) -&gt; .', '', '', '', '');
+            c.AddLine('<a href="profile5.html">5</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile5.html">*(&lt;GrpPermElt&gt; x, &lt;GrpPermElt&gt; y) -&gt; GrpPermElt</a>', '0.000', '100.00', '48', '14.55');
+            c.AddLineSortData('5', '*(&lt;GrpPermElt&gt; x, &lt;GrpPermElt&gt; y) -&gt; GrpPermElt', '', '', '', '');
+            c.AddLine('<a href="profile6.html">6</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile6.html">Sym(&lt;RngIntElt&gt; n) -&gt; GrpPerm</a>', '0.000', '100.00', '6', '1.82');
+            c.AddLineSortData('6', 'Sym(&lt;RngIntElt&gt; n) -&gt; GrpPerm', '', '', '', '');
+            c.AddLine('<a href="profile17.html">17</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile17.html">+(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; RngIntElt</a>', '0.000', '100.00', '48', '14.55');
+            c.AddLineSortData('17', '+(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; RngIntElt', '', '', '', '');
+            c.AddLine('<a href="profile7.html">7</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile7.html">Id(&lt;GrpPerm&gt; G) -&gt; GrpPermElt</a>', '0.000', '100.00', '6', '1.82');
+            c.AddLineSortData('7', 'Id(&lt;GrpPerm&gt; G) -&gt; GrpPermElt', '', '', '', '');
+            c.AddLine('<a href="profile19.html">19</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile19.html">gt(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; BoolElt</a>', '0.000', '100.00', '6', '1.82');
+            c.AddLineSortData('19', 'gt(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; BoolElt', '', '', '', '');
+            c.AddLine('<a href="profile20.html">20</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile20.html">^(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; n) -&gt; RngIntElt</a>', '0.000', '100.00', '60', '18.18');
+            c.AddLineSortData('20', '^(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; n) -&gt; RngIntElt', '', '', '', '');
+            c.AddLine('<a href="profile21.html">21</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile21.html">-(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; RngIntElt</a>', '0.000', '100.00', '54', '16.36');
+            c.AddLineSortData('21', '-(&lt;RngIntElt&gt; x, &lt;RngIntElt&gt; y) -&gt; RngIntElt', '', '', '', '');
+        </script>
+
+        <title>Magma Profiler Output for IdentifyingTau(&lt;RngIntElt&gt; n) -&gt; GrpPermElt</title>
+    </head>
+    <body>
+        <h1>Magma Profiler Output</h1>
+        <p>
+        <h3>Function: IdentifyingTau(&lt;RngIntElt&gt; n) -&gt; GrpPermElt</h3>
+        <h3>Function Time: 0.000</h3>
+        <h3>Function Count: 6</h3>
+        <p>
+        <h3>Distribution to callers</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(p,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(p,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(p,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(p,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(p,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(p,5)'>Count (%)</a></th>
+            </tr>
+            <script>p.WriteRows()</script>
+        </table>
+        <p>
+        <h3>Contributions from children</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(c,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(c,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(c,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(c,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(c,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(c,5)'>Count (%)</a></th>
+            </tr>
+            <script>c.WriteRows()</script>
+        </table>
+        <p>
+        <a href='profile.html'>Go to function listing</a>
+    </body>
+</html>

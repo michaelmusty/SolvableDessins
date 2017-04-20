@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <style type='text/css'>
+            .rel { POSITION: relative; width: 100%; }
+            .abs { POSITION: absolute; width: 100%; }
+            .right { text-align:right; }
+            .left { text-align:left; }
+            .center { text-align:center; }
+        </style>
+
+        <script language='javascript' src='/Applications/Magma/libs/prof/sorttable.js'></script>
+        <script language='javascript'>
+            var p = new SortTable('p');
+            p.AddColumn('Index', '', '', 'numeric');
+            p.AddColumn('Name', '', '', '');
+            p.AddColumn('Time', '', '', 'numeric');
+            p.AddColumn('Time (%)', '', '', 'numeric');
+            p.AddColumn('Count', '', '', 'numeric');
+            p.AddColumn('Count (%)', '', '', 'numeric');
+            p.AddLine('<a href="profile2.html">2</a>', '<a href="profile2.html">PossibleGaloisCoveringPermutationTriples(&lt;SeqEnum&gt; sigma) -&gt; SeqEnum</a>', '1.520', '100.00', '3', '100.00');
+            p.AddLineSortData('2', 'PossibleGaloisCoveringPermutationTriples(&lt;SeqEnum&gt; sigma) -&gt; SeqEnum', '', '', '', '');
+            var c = new SortTable('c');
+            c.AddColumn('Index', '', '', 'numeric');
+            c.AddColumn('Name', '', '', '');
+            c.AddColumn('Time', '', '', 'numeric');
+            c.AddColumn('Time (%)', '', '', 'numeric');
+            c.AddColumn('Count', '', '', 'numeric');
+            c.AddColumn('Count (%)', '', '', 'numeric');
+            c.AddLine('<a href="profile11.html">11</a>', '<a href="profile11.html">UnramifiedPossibilities(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum</a>', '0.730', '48.03', '3', '33.33');
+            c.AddLineSortData('11', 'UnramifiedPossibilities(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum', '', '', '', '');
+            c.AddLine('<a href="profile45.html">45</a>', '<a href="profile45.html">RamifiedPossibilities(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum</a>', '0.790', '51.97', '3', '33.33');
+            c.AddLineSortData('45', 'RamifiedPossibilities(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum', '', '', '', '');
+            c.AddLine('<a href="profile46.html">46</a><img src="/Applications/Magma/libs/prof/leaf.gif" alt="Leaf Function"></img>', '<a href="profile46.html">cat(&lt;SeqEnum&gt; s, &lt;SeqEnum&gt; t) -&gt; SeqEnum</a>', '0.000', '0.00', '3', '33.33');
+            c.AddLineSortData('46', 'cat(&lt;SeqEnum&gt; s, &lt;SeqEnum&gt; t) -&gt; SeqEnum', '', '', '', '');
+        </script>
+
+        <title>Magma Profiler Output for PossibleGaloisCoveringPermutations(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum</title>
+    </head>
+    <body>
+        <h1>Magma Profiler Output</h1>
+        <p>
+        <h3>Function: PossibleGaloisCoveringPermutations(&lt;GrpPermElt&gt; perm) -&gt; SeqEnum</h3>
+        <h3>Function Time: 1.520</h3>
+        <h3>Function Count: 3</h3>
+        <p>
+        <h3>Distribution to callers</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(p,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(p,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(p,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(p,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(p,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(p,5)'>Count (%)</a></th>
+            </tr>
+            <script>p.WriteRows()</script>
+        </table>
+        <p>
+        <h3>Contributions from children</h3>
+        <p>
+        Click on the column headings below to change the sort order.
+        <p>
+        <table border='1'>
+            <tr>
+                <th><a href='javascript:SortRows(c,0)'>Index</a></th>
+                <th><a href='javascript:SortRows(c,1)'>Name</a></th>
+                <th><a href='javascript:SortRows(c,2)'>Time</a></th>
+                <th><a href='javascript:SortRows(c,3)'>Time (%)</a></th>
+                <th><a href='javascript:SortRows(c,4)'>Count</a></th>
+                <th><a href='javascript:SortRows(c,5)'>Count (%)</a></th>
+            </tr>
+            <script>c.WriteRows()</script>
+        </table>
+        <p>
+        <a href='profile.html'>Go to function listing</a>
+    </body>
+</html>
