@@ -4,7 +4,7 @@ AttachSpec("~/Dropbox/belyi/Code/spec");
 
 load "catalog16.mag";
 
-sigma := d16t4;
+sigma := d16t13;
 
 l0, l1, loo, all, arebelyimaps, justramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := false, lax := false, return_everything := true);
 
