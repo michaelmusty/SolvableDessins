@@ -589,8 +589,10 @@ intrinsic UnramifiedPossibilities(perm::GrpPermElt : zentral := true) -> SeqEnum
   cycles := CycleDecomposition(perm);
   tau := IdentifyingTau(fact[1][2]+1);
   unramified := [];
-  code := PermutationToCode(perm);
   for i in [0..2^d-1] do
+    // TODO seems like this should go outside for loop,
+    // but somehow this changes something...
+    code := PermutationToCode(perm);
     guide := IntegerToBinary(i, d);
     for j in [1..d] do
       new := Mod(CodeEntry(code, j) + d, 2*d);
@@ -628,8 +630,10 @@ intrinsic RamifiedPossibilities(perm::GrpPermElt : zentral := true) -> SeqEnum[G
   cycles := CycleDecomposition(perm);
   tau := IdentifyingTau(fact[1][2]+1);
   ramified := [];
-  code := PermutationToCode(perm);
   for i in [0..2^d-1] do
+    // TODO seems like this should go outside for loop,
+    // but somehow this changes something...
+    code := PermutationToCode(perm);
     guide := IntegerToBinary(i, d);
     for j in [1..d] do
       new := Mod(CodeEntry(code, j) + d, 2*d);
@@ -687,11 +691,10 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
   all := [];
   possible := [];
   // filter out triples that can be Belyi maps
-  printf "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
-  printf "\tChecking which ones can be Belyi maps...";
   time2 := Cputime();
   if brutal then
-    printf "USING BRUTAL APPROACH\n";
+    printf "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
+    printf "\tChecking which ones can be Belyi maps...USING BRUTAL APPROACH\n";
     for i in [1..#list_0] do
       for j in [1..#list_1] do
         for k in [1..#list_oo] do
@@ -709,7 +712,10 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
       end for;
     end for;
   else // non-brutal
-    printf "USING LESS BRUTAL APPROACH\n";
+    // TODO sort lists so that we loop over the smaller ones
+    printf "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
+    printf "Looping over %o*%o = %o pairs of permutations:\n", #list_0, #list_1, #list_0*#list_1;
+    printf "\tChecking which ones can be Belyi maps...USING LESS BRUTAL APPROACH\n";
     list_oo_inverses := [s^-1 : s in list_oo];
     for i in [1..#list_0] do
       for j in [1..#list_1] do

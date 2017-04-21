@@ -1,0 +1,23 @@
+// assumes current directory = repo directory
+AttachSpec("spec");
+AttachSpec("~/Dropbox/belyi/Code/spec");
+
+load "catalog16.mag";
+
+// sigma := d8t1_2;
+// sigma := d8t4;
+sigma := d8t1_3;
+
+nonbrutal_time_start := Cputime();
+l0, l1, loo, all, arebelyimaps, justramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := false, lax := false, return_everything := true);
+nonbrutal_time_end := Cputime();
+
+brutal_time_start := Cputime();
+l0, l1, loo, all, arebelyimaps, justramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := true, lax := false, return_everything := true);
+brutal_time_end := Cputime();
+
+nonbrutal_time := nonbrutal_time_end - nonbrutal_time_start;
+brutal_time := brutal_time_end - brutal_time_start;
+
+printf "nonbrutal time = %o\n", nonbrutal_time;
+printf "brutal time = %o\n", brutal_time;
