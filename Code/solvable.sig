@@ -3,7 +3,7 @@ S,S3Action,Transforms a Belyi map sigma by the left action of an element g of Sy
 S,S3Action,Transforms a Belyi map partition triple by the right action of an element g of Sym(3),1,0,1,82,1,82,0,148,2,0,0,0,0,0,0,0,222,,0,0,82,,82,-38,-38,-38,-38,-38
 S,SimultaneousConjugation,Simultaneous conjugation of sigma by g,1,0,1,82,0,222,2,0,0,0,0,0,0,0,222,,0,0,82,,82,-38,-38,-38,-38,-38
 S,PermutationToPartition,See function name,0,1,0,0,0,0,0,0,0,222,,82,-38,-38,-38,-38,-38
-S,PermutationSheetify,"Sheetifies the permutation...that is, if Degree(Parent(sigma[1])) is d, then use digits 0..d-1 for the permutations",0,1,0,0,0,0,0,0,0,222,,222,-38,-38,-38,-38,-38
+S,PermutationSheetify,"Sheetifies the permutation...that is, if Degree(Parent(perm[1])) is d, then use digits 0..d-1 for the permutations",0,1,0,0,0,0,0,0,0,222,,222,-38,-38,-38,-38,-38
 S,PermutationsSheetify,"Sheetifies the permutations...that is, if Degree(Parent(sigma[1])) is d, then use digits 0..d-1 for the permutations",0,1,0,0,0,0,0,0,0,82,,82,-38,-38,-38,-38,-38
 S,ShapeOfCoveringPermutation,"Given a permutation sigma of degree 2^i and ramification data, return a partition of 2^(i+1)",1,1,1,82,0,36,2,0,0,0,0,0,0,0,82,,0,0,222,,82,-38,-38,-38,-38,-38
 S,ShapeOfCoveringPermutationTriple,"Given a permutation triple sigma of degree 2^i and ramification data, return three partitions of 2^(i+1)",2,0,1,82,0,222,1,1,82,1,82,0,36,2,0,0,0,0,0,0,0,82,,0,0,82,,82,-38,-38,-38,-38,-38
