@@ -43,15 +43,6 @@ intrinsic PermutationToPartition(perm::GrpPermElt) -> SeqEnum[RngIntElt]
   return part;
 end intrinsic;
 
-intrinsic PermutationsSheetify(sigma::SeqEnum) -> SeqEnum
-  {Sheetifies the permutations...that is, if Degree(Parent(sigma[1])) is d, then use digits 0..d-1 for the permutations.}
-  sigmap := [];
-  for i in {1..#sigma} do
-    Append(~sigmap, PermutationSheetify(sigma[i]));
-  end for;
-  return sigmap;
-end intrinsic;
-
 intrinsic ShapeOfCoveringPermutation(sigma::GrpPermElt, ram::SeqEnum[BoolElt]) -> SeqEnum[RngIntElt]
   {Given a permutation sigma of degree 2^i and ramification data, return a partition of 2^(i+1).}
   old_partition := PermutationToPartition(sigma);
