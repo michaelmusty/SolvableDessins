@@ -1,3 +1,7 @@
+/*
+Not currently loadable
+*/
+
 AttachSpec("spec");
 AttachSpec("~/Dropbox/belyi/Code/spec");
 

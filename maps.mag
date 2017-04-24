@@ -1,10 +1,31 @@
 /*
 Belyi Map for  16T5-488-g5 -> 8T2-244-g1 -> 4T2-222-g0 -> PP1
 */
-// assumes GetCurrentDirectory = repo directory
-AttachSpec("~/GITHUB/SolvableDessins/spec");
-AttachSpec("~/Dropbox/belyi/Code/spec");
-repo := GetCurrentDirectory();
+
+/*
+Front Matter
+*/
+  // assumes current directory = repo directory
+  dir := GetCurrentDirectory();
+  parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
+  if parentdir eq "SolvableDessins\n" then
+    repo := dir;
+  else
+    error "make sure your working directory is /BelyiDB";
+  end if;
+  // directories in SolvableDessins repo
+  code := repo cat "/Code/";
+  db := repo cat "/SolvableDB/";
+  profiler := repo cat "/Profiler/";
+  examples := repo cat "/Examples/";
+  // spec files
+  AttachSpec(code cat "spec");
+  AttachSpec("~/Dropbox/belyi/Code/spec");
+
+/*
+MAIN
+*/
+
 load "catalog16.mag";
 
 /*

@@ -1,0 +1,41 @@
+AttachSpec("~/Dropbox/belyi/Code/spec");
+
+db := TransitiveGroups(32);
+
+l := [* *];
+l_p := [* *];
+for i in [1..51] do
+  printf "i = %o, ", i;
+  G := db[i];
+  assert #G eq 32;
+  passes := PassportRepresentatives(G);
+  ppasses := PassportRepresentatives(G : Pointed := true);
+  printf "#passes = %o, #ppasses = %o\n", #passes, #ppasses;
+  Append(~l, passes);
+  Append(~l_p, ppasses);
+end for;
+
+inds := [8,10,12,14,19,22,25,28,30,31,32,33,41,42,43,44,47,48,50,51];
+
+/*
+i = 8, #passes = 3, #ppasses = 3
+i = 10, #passes = 2, #ppasses = 2
+i = 12, #passes = 1, #ppasses = 1
+i = 14, #passes = 2, #ppasses = 2
+i = 19, #passes = 2, #ppasses = 2
+i = 22, #passes = 1, #ppasses = 1
+i = 25, #passes = 1, #ppasses = 1
+i = 28, #passes = 1, #ppasses = 1
+i = 30, #passes = 1, #ppasses = 1
+i = 31, #passes = 1, #ppasses = 1
+i = 32, #passes = 3, #ppasses = 3
+i = 33, #passes = 5, #ppasses = 5
+i = 41, #passes = 1, #ppasses = 1
+i = 42, #passes = 1, #ppasses = 1
+i = 43, #passes = 1, #ppasses = 1
+i = 44, #passes = 1, #ppasses = 1
+i = 47, #passes = 1, #ppasses = 1
+i = 48, #passes = 1, #ppasses = 1
+i = 50, #passes = 1, #ppasses = 1
+i = 51, #passes = 1, #ppasses = 1
+*/
