@@ -43,20 +43,6 @@ intrinsic PermutationToPartition(perm::GrpPermElt) -> SeqEnum[RngIntElt]
   return part;
 end intrinsic;
 
-intrinsic PermutationSheetify(perm::GrpPermElt) -> GrpPermElt
-  {Sheetifies the permutation...that is, if Degree(Parent(perm[1])) is d, then use digits 0..d-1 for the permutations.}
-  assert Type(Parent(perm)) eq GrpPerm;
-  d := Degree(Parent(perm));
-  S := Sym({  0..d-1 });
-  one_line_permp := [];
-  one_line_perm := Eltseq(perm);
-  for i in {1..#one_line_perm} do
-    Append(~one_line_permp, one_line_perm[i]-1);
-  end for;
-  permp := S!one_line_permp;
-  return permp;
-end intrinsic;
-
 intrinsic PermutationsSheetify(sigma::SeqEnum) -> SeqEnum
   {Sheetifies the permutations...that is, if Degree(Parent(sigma[1])) is d, then use digits 0..d-1 for the permutations.}
   sigmap := [];
