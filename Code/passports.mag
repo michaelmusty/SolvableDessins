@@ -1,0 +1,243 @@
+declare attributes GrpPerm: ClassesModAmbients;
+declare attributes GrpPerm: NormalizerInAmbient;
+
+ /* Auxiliary functions: */
+
+intrinsic NormalizerInAmbient(G::GrpPerm) -> GrpPerm
+  {Returns the normalizer of a permutation group in the symmetric group on its letters.}
+  if assigned G`NormalizerInAmbient then
+    return G`NormalizerInAmbient;
+  end if;
+  N := Normalizer(SymmetricGroup(Degree(G)), G);
+  G`NormalizerInAmbient := N;
+  return N;
+end intrinsic;
+
+intrinsic ConjugacyClass(G::GrpPerm, g::GrpPermElt) -> Tup
+  {Returns the conjugacy class data for g as an element of G.}
+  // NOTE: the following line is a lookup once it has been calculated before,
+  // so no time is lost here. The same holds for later invocations.
+  CCG := ConjugacyClasses(G);
+  for CC in CCG do
+    if IsConjugate(G, g, CC[3]) then
+      return CC;
+    end if;
+  end for;
+end intrinsic;
+
+/* Conjugacy classes modulo ambient: */
+
+intrinsic ConjugacyClassesModAmbient(G::GrpPerm, N::GrpPerm) -> SeqEnum[Tup]
+  {Returns conjugacy classes representatives of G up to the conjugation action of N, where G is a subgroup of N.}
+  ass := assigned G`ClassesModAmbients;
+  test := false;
+  if ass then
+    test := N in [ class[1] : class in G`ClassesModAmbients ];
+  end if;
+  if test then
+    return [ class[2] : class in G`ClassesModAmbients | class[1] eq N ][1];
+  end if;
+  CCG := ConjugacyClasses(G);
+  if N eq G then
+    CCGModN := [ tup : tup in CCG ];
+  else
+    CCGModN := [];
+    for i in [1..#CCG] do
+      done := false;
+      for j in [1..#CCGModN] do
+        if IsConjugate(N, CCG[i][3], CCGModN[j][3]) then
+          CCGModN[j][2] +:= CCG[i][2];
+          done := true;
+          break;
+        end if;
+      end for;
+      if not done then
+        Append(~CCGModN, CCG[i]);
+      end if;
+    end for;
+  end if;
+  if not ass then
+    G`ClassesModAmbients := [];
+  end if;
+  G`ClassesModAmbients cat:= [ [* N, CCGModN *] ];
+  return CCGModN;
+end intrinsic;
+
+intrinsic ClassRepresentativesModAmbient(G::GrpPerm, N::GrpPerm) -> SeqEnum
+  {Returns conjugacy class representatives of G up to the conjugation action of N, where G is a subgroup of N.}
+  return [ class[3] : class in ConjugacyClassesModAmbient(G, N) ];
+end intrinsic;
+
+intrinsic ConjugacyClassModAmbient(G::GrpPerm, N::GrpPerm, g::GrpPermElt) -> Tup
+  {Returns the conjugacy class data for g as an element of G, modulo ambient N.}
+  CCGModN := ConjugacyClassesModAmbient(G, N);
+  for CC in CCGModN do
+    if IsConjugate(N, g, CC[3]) then
+      return CC;
+    end if;
+  end for;
+end intrinsic;
+
+/* Some primitive lookups: */
+
+intrinsic ConjugacyClassNumber(G::GrpPerm, g::GrpPermElt) -> Tup
+  {Returns the conjugacy class number for g in the set of conjugacy classes of G. Note that this output is inconsistent, but not after the classes have been calculated once.}
+  CCG := ConjugacyClasses(G);
+  for i:=1 to #CCG do
+    if IsConjugate(G, g, CCG[i][3]) then
+      return i;
+    end if;
+  end for;
+end intrinsic;
+
+intrinsic ConjugacyClassNumber(G::GrpPerm, C::Tup) -> Tup
+  {Returns the conjugacy class number for C in the set of conjugacy classes of G. Note that this output is inconsistent, but not after the classes have been calculated once.}
+  return ConjugacyClassNumber(G, C[3]);
+end intrinsic;
+
+intrinsic ConjugacyClassModAmbientNumber(G::GrpPerm, N::GrpPerm, g::GrpElt) -> Tup
+  {Returns the conjugacy class number for g in the set of conjugacy classes of G, up to the ambient N. Note that this output is inconsistent, but not after the classes have been calculated once.}
+  CCGModN := ConjugacyClassesModAmbient(G, N);
+  for i:=1 to #CCGModN do
+    if IsConjugate(N, g, CCGModN[i][3]) then
+      return i;
+    end if;
+  end for;
+end intrinsic;
+
+intrinsic ConjugacyClassModAmbientNumber(G::GrpPerm, N::GrpPerm, C::Tup) -> Tup
+  {Returns the conjugacy class number for C in the set of conjugacy classes of G, up to the ambient N. Note that this output is inconsistent, but not after the classes have been calculated once.}
+  CCGModN := ConjugacyClassesModAmbient(G, N);
+  for i:=1 to #CCGModN do
+    if IsConjugate(N, C[3], CCGModN[i][3]) then
+      return i;
+    end if;
+  end for;
+end intrinsic;
+
+/* Weak equivalence: */
+
+intrinsic S3Action(g::GrpPermElt, sigma::SeqEnum[GrpPermElt]) -> SeqEnum[GrpPermElt]
+  {Transforms a Belyi map sigma by the left action of an element g of Sym(3).}
+  assert Parent(g) eq Sym(3);
+  assert #sigma eq 3;
+  // This function of course also works for conjugacy class representatives.
+  sigmap := [ sigma[i^g] : i in [1..#sigma] ];
+  if IsOdd(g) then
+    sigmap := [ s^(-1) : s in sigmap ];
+  end if;
+  return sigmap;
+end intrinsic;
+
+intrinsic S3Action(g::GrpPermElt, CCs::SeqEnum[Tup]) -> SeqEnum[Tup]
+  {Transforms a triple of conjugacy classes CCs by the left action of an element g of Sym(3).}
+  G := Parent(CCs[1][3]);
+  CCG := ConjugacyClasses(G);
+  if IsEven(g) then
+    return [ CCs[i^g] : i in [1..#CCs] ];
+  else
+    return [ ConjugacyClass(G, CCs[i^g][3]^(-1)) : i in [1..#CCs] ];
+  end if;
+end intrinsic;
+
+intrinsic S3Action(g::GrpPermElt, cycstrs::SeqEnum[SeqEnum[Tup]]) -> SeqEnum[SeqEnum[Tup]]
+  {Transforms a triple of cycle structures cycstrs by the left action of an element g of Sym(3).}
+  return [ cycstrs[i^g] : i in [1..#cycstrs] ];
+end intrinsic;
+
+intrinsic S3Action(g::GrpPermElt, inds::SeqEnum[RngIntElt], G::GrpPerm, N::GrpPerm) -> SeqEnum[RngIntElt]
+  {Transforms a triple of conjugacy classes indices inds by the left action of an element g of Sym(3).}
+  CCG := ConjugacyClassesModAmbient(G, N);
+  if IsEven(g) then
+    return [ inds[i^g] : i in [1..#inds] ];
+  else
+    return [ ConjugacyClassModAmbientNumber(G, N, CCG[inds[i^g]][3]^(-1)) : i in [1..#inds] ];
+  end if;
+end intrinsic;
+
+intrinsic IsWeaklyIsomorphic(N::GrpPerm, sigma::SeqEnum[GrpPermElt], tau::SeqEnum[GrpPermElt]) -> BoolElt
+  {Determines if two dessins sigma and tau are weakly isomorphic. These are supposed to generate the same monodromy group; N is a group containing this monodromy group that functions as an ambient.}
+  gs := [ g : g in Sym(3) | &and[ IsConjugate(N, sigma[i^g], tau[i]) : i in [1..3] ] ];
+  for g in gs do
+    if IsConjugate(N, S3Action(g, sigma), tau) then
+      return true;
+    end if;
+  end for;
+  return false;
+end intrinsic;
+
+/* Representatives of conjugacy classes up to weak equivalence: */
+
+intrinsic IsInCanonicalOrderC3(inds::SeqEnum[RngIntElt]) -> BoolElt
+  {Determines if a triple of integers is ordered well with respect to rotation of the indices.}
+  return ((inds[1] eq inds[2]) and (inds[1] eq inds[3])) or ((inds[1] le inds[2]) and (inds[1] lt inds[3]));
+  // TODO: Incorporate this again.
+  // We do not do the above because larger cycle types seems better:
+  //return ((inds[1] eq inds[2]) and (inds[1] eq inds[3])) or ((inds[1] ge inds[2]) and (inds[1] gt inds[3]));
+end intrinsic;
+
+intrinsic CanonicalOrderC3(inds::SeqEnum[RngIntElt]) -> SeqEnum[RngIntElt]
+  {Canonically orders a triple of integers with respect to rotation of the indices.}
+  g0 := Sym(3)!(1,2,3);
+  for e:=0 to 2 do
+    g := g0^e;
+    indsnew := [ inds[i^g] : i in [1..#inds] ];
+    if IsInCanonicalOrderC3(indsnew) then
+      return indsnew;
+    end if;;
+  end for;
+end intrinsic;
+
+// NOTE: We can also write this without a number encoding, see below. This is
+// not used now; using indices seems just as good, and besides, using the
+// number allows us to kill the C3 action immediately.
+intrinsic S3Representatives(tups::SeqEnum[SeqEnum[RngIntElt]], G::GrpPerm, N::GrpPerm) -> SeqEnum[SeqEnum[RngIntElt]]
+  {Given a set of triples of conjugacy classes, presumed stable under the action of Sym(3), determines a set of representatives under this action.  Uses group G and ambient N. Using a labeling.}
+  CCGModN := ConjugacyClassesModAmbient(G, N);
+  indss := tups;
+  indss := [ inds : inds in indss | IsInCanonicalOrderC3(inds) ];
+  if &and[ &and[ IsConjugate(N, CCGModN[ind][3], CCGModN[ind][3]^(-1)) : ind in inds ] : inds in indss ] then
+    indss := [ inds : inds in indss | inds[2] le inds[3] ];
+  else
+    S2 := sub<Sym(3) | (1,2)>;
+    indssxS2 := CartesianProduct(Set(indss), S2);
+    // Note that we do get a right action here because the group has order 2:
+    f := map< indssxS2 -> Set(indss) | tup :-> CanonicalOrderC3(S3Action(tup[2], tup[1], G, N)) >;
+    indssGSet := GSet(S2, Set(indss), f);
+    // Pick out one with a large conjugacy class:
+    indss := [ Sort([ elt : elt in Set(orbit) ], func<L1,L2 | L2[1] - L1[1]>)[1] : orbit in Orbits(S2, indssGSet) ];
+  end if;
+  return indss;
+end intrinsic;
+
+// NOTE: Superfluous. Can also be modified to work with representatives (as above)
+intrinsic S3Representatives(tups::SeqEnum[SeqEnum[Tup]], G::GrpPerm, N::GrpPerm) -> SeqEnum[SeqEnum[Tup]]
+  {Given a set of triples of conjugacy classes, presumed stable under the action of Sym(3), determines a set of representatives under this action.  Uses group G and ambient N.}
+  CCGModN := ConjugacyClassesModAmbient(G, N);
+  indss := [ [ ConjugacyClassModAmbientNumber(G, N, CC) : CC in tup ] : tup in tups ];
+  indss := [ inds : inds in indss | IsInCanonicalOrderC3(inds) ];
+  if &and[ &and[ IsConjugate(N, CC[3], CC[3]^(-1)) : CC in tup ] : tup in tups ] then
+    indss := [ inds : inds in indss | inds[2] le inds[3] ];
+  else
+    S2 := sub<Sym(3) | (1,2)>;
+    indssxS2 := CartesianProduct(Set(indss), S2);
+    // Note that we do get a right action here because the group has order 2:
+    f := map< indssxS2 -> Set(indss) | tup :-> CanonicalOrderC3(S3Action(tup[2], tup[1], G, N)) >;
+    r := Random(indss);
+    indssGSet := GSet(S2, Set(indss), f);
+    indss := [ Representative(Set(orbit)) : orbit in Orbits(S2, indssGSet) ];
+  end if;
+  return [ [ CCGModN[ind] : ind in inds ] : inds in indss ];
+end intrinsic;
+
+// In the big function, a much simpler version suffices; since we only use
+// cycle types, we can sort directly.
+intrinsic S3Representatives(tups::SeqEnum[SeqEnum[RngIntElt]]) -> SeqEnum[SeqEnum[RngIntElt]]
+  {Returns tuples that are in order.}
+  return [ tup : tup in Set([ Sort(tup) : tup in tups ]) ];
+end intrinsic;
+
+intrinsic S3Representative(tup::SeqEnum[RngIntElt]) -> SeqEnum[RngIntElt]
+  {Orders a tuple.}
+  return Sort(tup);
+end intrinsic;
