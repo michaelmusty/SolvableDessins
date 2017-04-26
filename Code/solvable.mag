@@ -1,214 +1,298 @@
-intrinsic S3Action(sigma::SeqEnum[GrpPermElt], g::GrpPermElt) -> SeqEnum[GrpPermElt]
-  {Transforms a Belyi map sigma by the left action of an element g of Sym(3).}
-  assert Parent(g) eq Sym(3);
-  assert #sigma eq 3;
-  // This function of course also works for conjugacy class representatives.
-  sigmap := [ sigma[i^g] : i in [1..#sigma] ];
-  if IsOdd(g) then
-    sigmap := [ s^(-1) : s in sigmap ];
-  end if;
-  return sigmap;
-end intrinsic;
+// user defined verbose flags for vprintf
+  declare verbose Solvable, 2;
+  declare verbose SolvableTime, 1;
 
-intrinsic S3Action(parts::SeqEnum[SeqEnum[RngIntElt]], g::GrpPermElt) -> SeqEnum
-  {Transforms a Belyi map partition triple by the right action of an element g of Sym(3).}
-  G := Parent(g);
-  assert G eq Sym(3);
-  assert #parts eq 3;
-  X := GSet(Sym(3), {1,2,3});
-  l := [Image(g, X, 1), Image(g, X, 2), Image(g, X, 3)];
-  partsp := [];
-  for i in [1..#parts] do
-    Append(~partsp, parts[l[i]]);
-  end for;
-  return partsp;
-end intrinsic;
-
-intrinsic SimultaneousConjugation(sigma::SeqEnum[GrpPermElt], g::GrpPermElt) -> SeqEnum[GrpPermElt]
-  {Simultaneous conjugation of sigma by g.}
-  assert #sigma eq 3;
-  assert Degree(Parent(sigma[1])) eq Degree(Parent(g));
-  return [ sigma[i]^g : i in [1,2,3] ];
-end intrinsic;
-
-intrinsic PermutationToPartition(perm::GrpPermElt) -> SeqEnum[RngIntElt]
-  {See function name.}
-  cs := CycleStructure(perm);
-  part := [];
-  for i in {1..#cs} do
-    for j in {1..cs[i][2]} do
-      Append(~part, cs[i][1]);
-    end for;
-  end for;
-  return part;
-end intrinsic;
-
-intrinsic ShapeOfCoveringPermutation(sigma::GrpPermElt, ram::SeqEnum[BoolElt]) -> SeqEnum[RngIntElt]
-  {Given a permutation sigma of degree 2^i and ramification data, return a partition of 2^(i+1).}
-  old_partition := PermutationToPartition(sigma);
-  assert #ram eq #old_partition;
-  new_partition := [];
-  for i in [1..#old_partition] do
-    if ram[i] then
-      Append(~new_partition, 2*old_partition[i]);
-    else
-      if not ram[i] then
-        Append(~new_partition, old_partition[i]);
-        Append(~new_partition, old_partition[i]);
-      else
-        error "ramification data corrupt!";
-      end if;
+/*
+PERMUTATIONS, PARTITIONS, and RAMIFICATION DATA
+*/
+  intrinsic S3Action(sigma::SeqEnum[GrpPermElt], g::GrpPermElt) -> SeqEnum[GrpPermElt]
+    {Transforms a Belyi map sigma by the left action of an element g of Sym(3).}
+    assert Parent(g) eq Sym(3);
+    assert #sigma eq 3;
+    // This function of course also works for conjugacy class representatives.
+    sigmap := [ sigma[i^g] : i in [1..#sigma] ];
+    if IsOdd(g) then
+      sigmap := [ s^(-1) : s in sigmap ];
     end if;
-  end for;
-  return new_partition;
-end intrinsic;
-
-intrinsic ShapeOfCoveringPermutationTriple(sigma::SeqEnum[GrpPermElt], rams::SeqEnum[SeqEnum[BoolElt]]) -> SeqEnum[SeqEnum[RngIntElt]]
-  {Given a permutation triple sigma of degree 2^i and ramification data, return three partitions of 2^(i+1).}
-  assert #sigma eq 3;
-  assert #rams eq 3;
-  partitions := [];
-  for i in [1..3] do
-    Append(~partitions, ShapeOfCoveringPermutation(sigma[i], rams[i]));
-  end for;
-  return partitions;
-end intrinsic;
-
-intrinsic Excess(part::SeqEnum[RngIntElt]) -> RngIntElt
-  {returns excess of partition.}
-  return &+[part[i]-1 : i in [1..#part]];
-end intrinsic;
-
-intrinsic Excess(perm::GrpPermElt) -> RngIntElt
-  {returns excess of permutation.}
-  return Excess(PermutationToPartition(perm));
-end intrinsic;
-
-intrinsic IsGenusOfCoveringPartitions(parts::SeqEnum[SeqEnum[RngIntElt]], d::RngIntElt) -> BoolElt
-  {Given a Belyi curve and a "degree d covering partition triple", return true if the genus of the Belyi curve for the partition triple according to Riemann-Hurwitz is an integer.}
-  assert #parts eq 3;
-  test_genus := 1-d+(Excess(parts[1])+Excess(parts[2])+Excess(parts[3]))/2;
-  return Denominator(test_genus) eq 1 and test_genus ge 0;
-end intrinsic;
-
-intrinsic IsPossibleRamification(sigma::SeqEnum[GrpPermElt], rams::SeqEnum[SeqEnum[BoolElt]]) -> BoolElt
-  {Checks if a given ramification above points corresponding to the cycles of sigma is possible according to Riemann-Hurwitz.}
-  assert #sigma eq 3;
-  assert #rams eq 3;
-  d_below := Degree(sigma[1]);
-  d_above := 2*d_below;
-  parts := ShapeOfCoveringPermutationTriple(sigma, rams);
-  if IsGenusOfCoveringPartitions(parts, d_above) then
-    if #SequenceToSet(rams[1]) eq 1 and #SequenceToSet(rams[2]) eq 1 and #SequenceToSet(rams[3]) eq 1 then
-      return true;
+    return sigmap;
+  end intrinsic;
+  intrinsic S3Action(parts::SeqEnum[SeqEnum[RngIntElt]], g::GrpPermElt) -> SeqEnum
+    {Transforms a Belyi map partition triple by the right action of an element g of Sym(3).}
+    G := Parent(g);
+    assert G eq Sym(3);
+    assert #parts eq 3;
+    X := GSet(Sym(3), {1,2,3});
+    l := [Image(g, X, 1), Image(g, X, 2), Image(g, X, 3)];
+    partsp := [];
+    for i in [1..#parts] do
+      Append(~partsp, parts[l[i]]);
+    end for;
+    return partsp;
+  end intrinsic;
+  intrinsic SimultaneousConjugation(sigma::SeqEnum[GrpPermElt], g::GrpPermElt) -> SeqEnum[GrpPermElt]
+    {Simultaneous conjugation of sigma by g.}
+    assert #sigma eq 3;
+    assert Degree(Parent(sigma[1])) eq Degree(Parent(g));
+    return [ sigma[i]^g : i in [1,2,3] ];
+  end intrinsic;
+  intrinsic PermutationToPartition(perm::GrpPermElt) -> SeqEnum[RngIntElt]
+    {See function name.}
+    cs := CycleStructure(perm);
+    part := [];
+    for i in {1..#cs} do
+      for j in {1..cs[i][2]} do
+        Append(~part, cs[i][1]);
+      end for;
+    end for;
+    return part;
+  end intrinsic;
+  intrinsic PermutationTripleToPartitions(sigma::SeqEnum[GrpPermElt]) -> SeqEnum[SeqEnum[RngIntElt]]
+    {See function name.}
+    assert #sigma eq 3;
+    perms := [];
+    for i in [1..#sigma] do
+      Append(~perms, PermutationToPartition(sigma[i]));
+    end for;
+    return perms;
+  end intrinsic;
+  intrinsic ValidPartitionTriple(parts::SeqEnum[SeqEnum[RngIntElt]]) -> BoolElt
+    {checks to see if there are 3 partitions of the same integer.}
+    if #parts eq 3 then
+      sum1 := &+[parts[1][i] : i in [1..#parts[1]]];
+      sum2 := &+[parts[2][i] : i in [1..#parts[2]]];
+      sum3 := &+[parts[3][i] : i in [1..#parts[3]]];
+      sums := [sum1, sum2, sum3];
+      if #SequenceToSet(sums) eq 1 then
+        return true;
+      else
+        return false;
+      end if;
     else
       return false;
     end if;
-  else
-    return false;
-  end if;
-end intrinsic;
-
-intrinsic IntegerToBinary(a::RngIntElt, e::RngIntElt) -> SeqEnum[RngIntElt]
-  {returns sequence of length e corresponding to a in base 2.}
-  assert a lt 2^e;
-  reverse_digits := [];
-  for i in [1..e] do
-    digit := a mod 2;
-    a := Integers()!((a-digit)/2);
-    Append(~reverse_digits, digit);
-  end for;
-  return Reverse(reverse_digits);
-end intrinsic;
-
-intrinsic IntegerToRamification(a::RngIntElt, sigma::SeqEnum[GrpPermElt]) -> SeqEnum[SeqEnum[BoolElt]]
-  {returns ramification given by integer a and triple sigma.}
-  pts_above_zero := #CycleDecomposition(sigma[1]);
-  pts_above_one := #CycleDecomposition(sigma[2]);
-  pts_above_oo := #CycleDecomposition(sigma[3]);
-  pts_above := [pts_above_zero, pts_above_one, pts_above_oo];
-  // pts_above_zero, pts_above_one, pts_above_oo := Explode(pts_above);
-  e := &+pts_above;
-  binary := IntegerToBinary(a, e);
-  ram_0 := [];
-  ram_1 := [];
-  ram_oo := [];
-  for i in [1..pts_above_zero] do
-    if binary[i] eq 1 then
-      Append(~ram_0, true);
+  end intrinsic;
+  intrinsic RandomRamificationData(sigma::SeqEnum[GrpPermElt]) -> SeqEnum[SeqEnum[BoolElt]]
+    {
+      Given a permutation triple sigma,
+      return a random triple of ramification data
+      corresponding to sigma.
+    }
+    assert #sigma eq 3;
+    rams := [];
+    for s in sigma do
+      ram := [];
+      part := PermutationToPartition(s);
+      for i in [1..#part] do
+        rand := Random(1);
+        bool := true;
+        if rand eq 0 then
+          bool := false;
+        end if;
+        Append(~ram, bool);
+      end for;
+      Append(~rams, ram);
+    end for;
+    return rams;
+  end intrinsic;
+  intrinsic ShapeOfCoveringPermutation(perm::GrpPermElt, ram::SeqEnum[BoolElt]) -> SeqEnum[RngIntElt]
+    {Given a permutation perm of degree 2^i and ramification data, return a partition of 2^(i+1).}
+    old_partition := PermutationToPartition(perm);
+    assert #ram eq #old_partition;
+    new_partition := [];
+    for i in [1..#old_partition] do
+      if ram[i] then
+        Append(~new_partition, 2*old_partition[i]);
+      else
+        if not ram[i] then
+          Append(~new_partition, old_partition[i]);
+          Append(~new_partition, old_partition[i]);
+        else
+          error "ramification data corrupt!";
+        end if;
+      end if;
+    end for;
+    return new_partition;
+  end intrinsic;
+  intrinsic ShapeOfCoveringPermutationTriple(sigma::SeqEnum[GrpPermElt], rams::SeqEnum[SeqEnum[BoolElt]]) -> SeqEnum[SeqEnum[RngIntElt]]
+    {Given a permutation triple sigma of degree 2^i and ramification data, return three partitions of 2^(i+1).}
+    assert #sigma eq 3;
+    assert #rams eq 3;
+    parts := [];
+    for i in [1..3] do
+      Append(~parts, ShapeOfCoveringPermutation(sigma[i], rams[i]));
+    end for;
+    assert ValidPartitionTriple(parts);
+    return parts;
+  end intrinsic;
+  intrinsic Excess(perm::GrpPermElt) -> RngIntElt
+    {returns excess of permutation.}
+    return Excess(PermutationToPartition(perm));
+  end intrinsic;
+  intrinsic Excess(part::SeqEnum[RngIntElt]) -> RngIntElt
+    {returns excess of partition.}
+    return &+[part[i]-1 : i in [1..#part]];
+  end intrinsic;
+  intrinsic Genus(sigma::SeqEnum[GrpPermElt]) -> FldRatElt
+    {Returns the genus of the permutation triple according to Riemann-Hurwitz.}
+    assert #sigma eq 3;
+    d := Degree(sigma[1]);
+    return 1-d+(Excess(sigma[1])+Excess(sigma[2])+Excess(sigma[3]))/2;
+  end intrinsic;
+  intrinsic Genus(parts::SeqEnum[SeqEnum[RngIntElt]]) -> FldRatElt
+    {Returns the genus of the partition triple according to Riemann-Hurwitz.}
+    assert ValidPartitionTriple(parts);
+    d := &+[parts[1][i] : i in [1..#parts[1]]];
+    return 1-d+(Excess(parts[1])+Excess(parts[2])+Excess(parts[3]))/2;
+  end intrinsic;
+  intrinsic IsGenus(sigma::SeqEnum[GrpPermElt]) -> BoolElt
+    {true if the genus of sigma is a positive integer.}
+    assert #sigma eq 3;
+    g := Genus(sigma);
+    return Denominator(g) eq 1 and g ge 0;
+  end intrinsic;
+  intrinsic IsGenus(parts::SeqEnum[SeqEnum[RngIntElt]]) -> BoolElt
+    {true if the genus of the partition triple is a positive integer.}
+    assert ValidPartitionTriple(parts);
+    d := &+[parts[1][i] : i in [1..#parts[1]]];
+    g := Genus(parts);
+    return Denominator(g) eq 1 and g ge 0;
+  end intrinsic;
+  intrinsic IsPossibleRamification(sigma::SeqEnum[GrpPermElt], rams::SeqEnum[SeqEnum[BoolElt]] : galois := true) -> BoolElt
+    {Checks if a given ramification above points corresponding to the cycles of sigma is possible according to Riemann-Hurwitz.}
+    assert #sigma eq 3;
+    assert #rams eq 3;
+    parts := ShapeOfCoveringPermutationTriple(sigma, rams);
+    if IsGenus(parts) then
+      if galois then
+        if #SequenceToSet(rams[1]) eq 1 and #SequenceToSet(rams[2]) eq 1 and #SequenceToSet(rams[3]) eq 1 then
+          return true;
+        else
+          return false;
+        end if;
+      else
+        return true;
+      end if;
     else
-      Append(~ram_0, false);
+      return false;
     end if;
-  end for;
-  for i in [pts_above_zero+1..pts_above_zero+pts_above_one] do
-    if binary[i] eq 1 then
-      Append(~ram_1, true);
+  end intrinsic;
+  intrinsic IntegerToBinary(a::RngIntElt, e::RngIntElt) -> SeqEnum[RngIntElt]
+    {Given a lt 2^e, returns sequence of length e corresponding to a in base 2.}
+    assert a lt 2^e;
+    reverse_digits := [];
+    for i in [1..e] do
+      digit := a mod 2;
+      a := Integers()!((a-digit)/2);
+      Append(~reverse_digits, digit);
+    end for;
+    return Reverse(reverse_digits);
+  end intrinsic;
+  intrinsic IntegerToRamification(a::RngIntElt, sigma::SeqEnum[GrpPermElt]) -> SeqEnum[SeqEnum[BoolElt]]
+    {
+      Returns ramification given by integer a and triple sigma.
+      Note that a must be in [0..2^e-1] where e is the number of total cycles in sigma.
+    }
+    pts_above_zero := #CycleDecomposition(sigma[1]);
+    pts_above_one := #CycleDecomposition(sigma[2]);
+    pts_above_oo := #CycleDecomposition(sigma[3]);
+    pts_above := [pts_above_zero, pts_above_one, pts_above_oo];
+    e := &+pts_above;
+    assert a ge 0;
+    assert a lt 2^e;
+    binary := IntegerToBinary(a, e);
+    ram_0 := [];
+    ram_1 := [];
+    ram_oo := [];
+    for i in [1..pts_above_zero] do
+      if binary[i] eq 1 then
+        Append(~ram_0, true);
+      else
+        Append(~ram_0, false);
+      end if;
+    end for;
+    for i in [pts_above_zero+1..pts_above_zero+pts_above_one] do
+      if binary[i] eq 1 then
+        Append(~ram_1, true);
+      else
+        Append(~ram_1, false);
+      end if;
+    end for;
+    for i in [pts_above_zero+pts_above_one+1..pts_above_zero+pts_above_one+pts_above_oo] do
+      if binary[i] eq 1 then
+        Append(~ram_oo, true);
+      else
+        Append(~ram_oo, false);
+      end if;
+    end for;
+    return [ram_0, ram_1, ram_oo];
+  end intrinsic;
+  intrinsic IntegerToGaloisRamification(a::RngIntElt, sigma::SeqEnum[GrpPermElt]) -> SeqEnum[SeqEnum[BoolElt]]
+    {
+      Returns ramification given by integer a and triple sigma.
+      Note that a must be in [0,1,2,3,4,5,6,7].
+    }
+    assert a ge 0;
+    assert a lt 2^3;
+    pts_above_zero := #CycleDecomposition(sigma[1]);
+    pts_above_one := #CycleDecomposition(sigma[2]);
+    pts_above_oo := #CycleDecomposition(sigma[3]);
+    pts_above := [pts_above_zero, pts_above_one, pts_above_oo];
+    binary := IntegerToBinary(a, 3);
+    rams := [];
+    for i in [1..#binary] do
+      if binary[i] eq 1 then
+        Append(~rams, [true : j in [1..pts_above[i]]]);
+      else
+        Append(~rams, [false : j in [1..pts_above[i]]]);
+      end if;
+    end for;
+    return rams;
+  end intrinsic;
+  intrinsic PossibleRamifications(sigma::SeqEnum[GrpPermElt] : galois := true) -> SeqEnum[SeqEnum[SeqEnum[BoolElt]]]
+    {
+      Returns all possible ramifications above a given sigma.
+    }
+    assert #sigma eq 3;
+    assert sigma[3]*sigma[2]*sigma[1] eq Id(Sym(Degree(sigma[1])));
+    pts_above_zero := #PermutationToPartition(sigma[1]);
+    pts_above_one := #PermutationToPartition(sigma[2]);
+    pts_above_oo := #PermutationToPartition(sigma[3]);
+    pts_above := [pts_above_zero, pts_above_one, pts_above_oo];
+    e := &+pts_above;
+    possible := [];
+    if galois then
+      for i in [0..2^3-1] do
+        rams := IntegerToGaloisRamification(i, sigma);
+        if IsPossibleRamification(sigma, rams : galois := galois) then
+          Append(~possible, rams);
+        end if;
+      end for;
     else
-      Append(~ram_1, false);
+      for i in [0..2^e-1] do
+        rams := IntegerToRamification(i, sigma);
+        if IsPossibleRamification(sigma, rams : galois := galois) then
+          Append(~possible, rams);
+        end if;
+      end for;
     end if;
-  end for;
-  for i in [pts_above_zero+pts_above_one+1..pts_above_zero+pts_above_one+pts_above_oo] do
-    if binary[i] eq 1 then
-      Append(~ram_oo, true);
-    else
-      Append(~ram_oo, false);
-    end if;
-  end for;
-  return [ram_0, ram_1, ram_oo];
-end intrinsic;
+    return possible;
+  end intrinsic;
+  intrinsic PossibleShapesOfCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : galois := true) -> SeqEnum[SeqEnum[SeqEnum[RngIntElt]]]
+    {returns triples of partitions possible in (degree 2) covering permutation triples of sigma according to Riemann-Hurwitz.}
+    possible_rams := PossibleRamifications(sigma);
+    l := [];
+    for rams in possible_rams do
+      Append(~l, ShapeOfCoveringPermutationTriple(sigma, rams));
+    end for;
+    return l;
+  end intrinsic;
 
-intrinsic PossibleRamifications(sigma::SeqEnum[GrpPermElt]) -> SeqEnum[SeqEnum[SeqEnum[BoolElt]]]
-  {Returns all possible ramifications above a given sigma.}
-  assert #sigma eq 3;
-  assert sigma[3]*sigma[2]*sigma[1] eq Id(Sym(Degree(sigma[1])));
-  pts_above_zero := #PermutationToPartition(sigma[1]);
-  pts_above_one := #PermutationToPartition(sigma[2]);
-  pts_above_oo := #PermutationToPartition(sigma[3]);
-  pts_above := [pts_above_zero, pts_above_one, pts_above_oo];
-  e := &+pts_above;
-  possible := [];
-  for i in [0..2^e-1] do
-    rams := IntegerToRamification(i, sigma);
-    if IsPossibleRamification(sigma, rams) then
-      Append(~possible, rams);
-    end if;
-  end for;
-  return possible;
-end intrinsic;
-
-intrinsic PossibleShapesOfCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt]) -> SeqEnum[SeqEnum[SeqEnum[RngIntElt]]]
-  {returns triples of partitions possible in (degree 2) covering permutation triples of sigma according to Riemann-Hurwitz.}
-  possible_rams := PossibleRamifications(sigma);
-  l := [];
-  for rams in possible_rams do
-    Append(~l, ShapeOfCoveringPermutationTriple(sigma, rams));
-  end for;
-  // now kill S3 action in l
-  ll := [];
-  return l;
-end intrinsic;
-
-intrinsic IsExtension(G::GrpPerm, H::GrpPerm) -> BoolElt
-  {True if there is a normal order 2 subgroup K of G with G/K isomorphic to H.}
-  bool := false;
-  lattice := SubgroupLattice(G);
-  order_two_normal := [];
-  for i in [1..#lattice] do
-    K := lattice[i];
-    if #K eq 2 and IsNormal(G, K) then
-      Append(~order_two_normal, K);
-    end if;
-  end for;
-  for i in [1..#order_two_normal] do
-    if IsIsomorphic(G/order_two_normal[i], H) then
-      bool := true;
-    end if;
-  end for;
-  return bool;
-end intrinsic;
+/*
+IDENTIFYING SHEETS
+*/
 
 intrinsic IdentifyingTau(n::RngIntElt) -> GrpPermElt
-  {for n >= 2, returns tau identifying 2^n sheets to 2^(n-1) sheets}
+  {For n ge 2, returns tau identifying 2^n sheets to 2^(n-1) sheets}
   assert n gt 1;
   S := Sym(2^n);
   tau := Id(S);
@@ -285,6 +369,7 @@ intrinsic CodeToPermutation(code::SeqEnum[SeqEnum[RngIntElt]]) -> GrpPermElt
   end if;
 end intrinsic;
 
+// TODO speed this up with a hash or rework the algorithm to bypass this entirely
 intrinsic ModifyCode(code::SeqEnum[SeqEnum[RngIntElt]], index::RngIntElt, new::RngIntElt) -> SeqEnum[SeqEnum[RngIntElt]]
   {returns modified code changing integer at position index to new.}
   ind := 1;
@@ -299,7 +384,20 @@ intrinsic ModifyCode(code::SeqEnum[SeqEnum[RngIntElt]], index::RngIntElt, new::R
   return code;
 end intrinsic;
 
+// TODO speed this up with a hash or rework the algorithm to bypass this entirely
 intrinsic CodeEntry(code::SeqEnum[SeqEnum[RngIntElt]], index::RngIntElt) -> RngIntElt
+  {returns code entry at index.}
+  ind := 1;
+  for i in [1..#code] do
+    for j in [1..#code[i]] do
+      if ind eq index then
+        return code[i][j];
+      end if;
+      ind +:= 1;
+    end for;
+  end for;
+end intrinsic;
+intrinsic CodeEntryTest(code::SeqEnum[SeqEnum[RngIntElt]], index::RngIntElt) -> RngIntElt
   {returns code entry at index.}
   ind := 1;
   for i in [1..#code] do
@@ -508,3 +606,25 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
     return correct;
   end if;
 end intrinsic;
+
+/*
+MISC
+*/
+  intrinsic IsExtension(G::GrpPerm, H::GrpPerm) -> BoolElt
+    {True if there is a normal order 2 subgroup K of G with G/K isomorphic to H.}
+    bool := false;
+    lattice := SubgroupLattice(G);
+    order_two_normal := [];
+    for i in [1..#lattice] do
+      K := lattice[i];
+      if #K eq 2 and IsNormal(G, K) then
+        Append(~order_two_normal, K);
+      end if;
+    end for;
+    for i in [1..#order_two_normal] do
+      if IsIsomorphic(G/order_two_normal[i], H) then
+        bool := true;
+      end if;
+    end for;
+    return bool;
+  end intrinsic;
