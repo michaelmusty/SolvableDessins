@@ -27,7 +27,8 @@ load "catalog16.mag";
 // sigma := d8t1_2;
 // sigma := d8t4;
 // sigma := d8t1_3;
-sigma := d16t1_1;
+// sigma := d8t1_2;
+// sigma := d8t1_2;
 
 time_start0 := Cputime();
 unram0 := UnramifiedPossibilities(sigma[1]);
@@ -44,5 +45,5 @@ time_end1 := Cputime();
 time0 := time_end0-time_start0;
 time1 := time_end1-time_start1;
 
-printf "nonbrutal time = %o\n", time0;
-printf "brutal time = %o\n", time1;
+printf "unramified time = %o\n", time0;
+printf "ramified time = %o\n", time1;
