@@ -26,18 +26,23 @@ load "catalog16.mag";
 
 // sigma := d8t1_2;
 // sigma := d8t4;
-sigma := d8t1_3;
+// sigma := d8t1_3;
+sigma := d16t1_1;
 
-nonbrutal_time_start := Cputime();
-l0, l1, loo, all, arebelyimaps, justramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := false, lax := false, return_everything := true);
-nonbrutal_time_end := Cputime();
+time_start0 := Cputime();
+unram0 := UnramifiedPossibilities(sigma[1]);
+unram1 := UnramifiedPossibilities(sigma[2]);
+unramoo := UnramifiedPossibilities(sigma[3]);
+time_end0 := Cputime();
 
-brutal_time_start := Cputime();
-l0, l1, loo, all, arebelyimaps, justramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := true, lax := false, return_everything := true);
-brutal_time_end := Cputime();
+time_start1 := Cputime();
+ram0 := RamifiedPossibilities(sigma[1]);
+ram1 := RamifiedPossibilities(sigma[2]);
+ramoo := RamifiedPossibilities(sigma[3]);
+time_end1 := Cputime();
 
-nonbrutal_time := nonbrutal_time_end - nonbrutal_time_start;
-brutal_time := brutal_time_end - brutal_time_start;
+time0 := time_end0-time_start0;
+time1 := time_end1-time_start1;
 
-printf "nonbrutal time = %o\n", nonbrutal_time;
-printf "brutal time = %o\n", brutal_time;
+printf "nonbrutal time = %o\n", time0;
+printf "brutal time = %o\n", time1;

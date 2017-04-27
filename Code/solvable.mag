@@ -418,10 +418,9 @@ intrinsic UnramifiedPossibilities(perm::GrpPermElt : zentral := true) -> SeqEnum
   cycles := CycleDecomposition(perm);
   tau := IdentifyingTau(fact[1][2]+1);
   unramified := [];
+  global_code := PermutationToCode(perm);
   for i in [0..2^d-1] do
-    // TODO seems like this should go outside for loop,
-    // but somehow this changes something...
-    code := PermutationToCode(perm);
+    code := global_code;
     guide := IntegerToBinary(i, d);
     for j in [1..d] do
       new := Mod(CodeEntry(code, j) + d, 2*d);
@@ -459,10 +458,9 @@ intrinsic RamifiedPossibilities(perm::GrpPermElt : zentral := true) -> SeqEnum[G
   cycles := CycleDecomposition(perm);
   tau := IdentifyingTau(fact[1][2]+1);
   ramified := [];
+  global_code := PermutationToCode(perm);
   for i in [0..2^d-1] do
-    // TODO seems like this should go outside for loop,
-    // but somehow this changes something...
-    code := PermutationToCode(perm);
+    code := global_code;
     guide := IntegerToBinary(i, d);
     for j in [1..d] do
       new := Mod(CodeEntry(code, j) + d, 2*d);
