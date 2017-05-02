@@ -24,7 +24,7 @@ MAIN
 
 load "catalog16.mag";
 
-pass := p16t14;
+pass := p16t10;
 sigma := pass[1];
 
 start_time := Cputime();
