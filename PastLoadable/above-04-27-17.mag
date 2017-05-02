@@ -24,6 +24,8 @@ MAIN
 
 load "catalog16.mag";
 
-sigma := d16t1_1;
+sigma := d16t10;
 
-l0, l1, loo, all, arebelyimaps, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := false, lax := false, return_everything := true);
+l0, l1, loo, all, arebelyimaps, justramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := false, lax := false, return_everything := true);
+
+//l0, l1, loo, all, arebelyimaps, justramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := true, lax := false, return_everything := true);

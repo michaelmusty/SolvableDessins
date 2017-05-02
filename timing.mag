@@ -24,26 +24,36 @@ MAIN
 
 load "catalog16.mag";
 
+// sigma := d8t1_1;
 // sigma := d8t1_2;
-// sigma := d8t4;
 // sigma := d8t1_3;
-// sigma := d8t1_2;
-// sigma := d8t1_2;
+sigma := d8t2;
+// sigma := d8t4;
+// sigma := d8t5;
 
+/*
+time0
+*/
 time_start0 := Cputime();
-unram0 := UnramifiedPossibilities(sigma[1]);
-unram1 := UnramifiedPossibilities(sigma[2]);
-unramoo := UnramifiedPossibilities(sigma[3]);
+l0b, l1b, loob, allb, arebelyimapsb, justramifiedb, unramifiedb, coversb := PossibleGaloisCoveringPermutationTriples(sigma : brutal := true, lax := false, return_everything := true);
 time_end0 := Cputime();
 
+/*
+time1
+*/
 time_start1 := Cputime();
-ram0 := RamifiedPossibilities(sigma[1]);
-ram1 := RamifiedPossibilities(sigma[2]);
-ramoo := RamifiedPossibilities(sigma[3]);
+l0, l1, loo, all, arebelyimaps, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := false, lax := false, return_everything := true);
 time_end1 := Cputime();
 
+/*
+printing
+*/
 time0 := time_end0-time_start0;
 time1 := time_end1-time_start1;
+printf "time 0 = %o\n", time0;
+printf "time 1 = %o\n", time1;
 
-printf "unramified time = %o\n", time0;
-printf "ramified time = %o\n", time1;
+/*
+misc
+*/
+SequenceToSet(coversb) eq SequenceToSet(covers);

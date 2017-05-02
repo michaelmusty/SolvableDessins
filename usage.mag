@@ -71,17 +71,6 @@ tau_code := PermutationToCode(tau);
 // CodeToPermutation
 CodeToPermutation(tau_code) eq tau;
 // ModifyCode(code, index, new), CodeEntry(code, index)
-/*
-G := Sym(1024);
-start := Cputime();
-for i in [1..10000] do
-  s := Random(G);
-  sc := PermutationToCode(s);
-  CodeEntry(sc, 1000);
-end for;
-done := Cputime();
-t := done - start;
-*/
 
 /*
 MISC

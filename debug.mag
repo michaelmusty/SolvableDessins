@@ -58,8 +58,8 @@ load "catalog16.mag";
 
 // sigma := d16t1_1;
 
-l0, l1, loo, all, arebelyimaps, justramified, covers :=
+l0, l1, loo, all, arebelyimaps, justramified, unramified, covers :=
 PossibleGaloisCoveringPermutationTriples(sigma : lax := true, return_everything := true);
 
-l0lax, l1lax, loolax, alllax, arebelyimapslax, justramifiedlax, coverslax :=
+l0lax, l1lax, loolax, alllax, arebelyimapslax, justramifiedlax, unramifiedlax, coverslax :=
 PossibleGaloisCoveringPermutationTriples(sigma : lax := false, return_everything := true);
