@@ -25,7 +25,7 @@ MAIN
 load "catalog16.mag";
 
 pass := p16t1_4;
-sigma := pass[4];
+sigma := pass[3];
 
 start_time := Cputime();
 l0, l1, loo, all, arebelyimaps, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriples(sigma : brutal := false, lax := false, return_everything := true);
