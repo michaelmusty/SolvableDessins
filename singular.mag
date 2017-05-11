@@ -1,5 +1,5 @@
 /*
-Belyi Map for  16T5-488-g5 -> 8T2-244-g1 -> 4T2-222-g0 -> PP1
+example from paper computing integral closures
 */
 
 /*
@@ -26,17 +26,20 @@ Front Matter
 MAIN
 */
 
-load "catalog16.mag";
-
 /*
 BASE FIELD
 */
 // K<nu> := QuadraticField(-4);
 K := Rationals();
+Poly<x1, x2, x3> := PolynomialRing(K, 3);
+AA3<x1, x2, x3> := AffineSpace(Poly);
+I := ideal< Poly | x3^2 - x1*x2 >;
+Y<x1, x2, x3> := Surface(AA3, I);
 
 /*
 LEVEL 0: PP1
 */
+/*
   Poly0<x0> := PolynomialRing(K, 1);
   AA1<x0> := AffineSpace(Poly0);
   Y0<x0> := Curve(AA1);
@@ -51,10 +54,12 @@ LEVEL 0: PP1
   P1 := Divisor(pt1);
   Poo := Divisor(ptoo);
   D0 := P0-Poo;
+  // D0 := P0-P1;
   LD0, mD0 := RiemannRochSpace(-D0);
   // D0 := P0-P1;
   // LD0, mD0 := RiemannRochSpace(D0);
   f0 := mD0(LD0.1);
+*/
 
 /*
 Degree 2
@@ -62,30 +67,32 @@ Level 1
 X1 -> PP1
 Name = 2T1-[2,2,1]-2-2-11-g0
 */
-Poly1<x0, x1> := PolynomialRing(K, 2);
-AA2<x0, x1> := AffineSpace(Poly1);
-num0 := Numerator(f0);
-den0 := Denominator(f0);
-AffAlg0<kx0> := Parent(den0);
-phi0 := hom< AffAlg0 -> Poly1 | Poly1.1 >;
-I1 := ideal< Poly1 | phi0(den0)*Poly1.2^2-phi0(num0) >;
-Y1<x0, x1> := Curve(AA2, I1);
-X1<z0, z1, w> := ProjectiveClosure(Y1);
-KX1<kx0, kx1> := FunctionField(X1);
-R1, mp1 := Poly1/I1; // 2T1 -> PP1 is R1.1
-// points to move up a level
-// Q: how can we find these points in general?
-pt001 := X1![0,0,1];
-pt111 := X1![1,1,1];
-pt1_11 := X1![1,-1,1];
-P001 := Divisor(pt001);
-P111 := Divisor(pt111);
-P1_11 := Divisor(pt1_11);
-D1 := P111-P1_11; // Q: why did we take these again?
-LD1, mD1 := RiemannRochSpace(-D1);
-f1 := mD1(LD1.1);
-// map of schemes
-phi10 := map< X1 -> X0 | [X1.1, X1.3] >;
+/*
+  Poly1<x0, x1> := PolynomialRing(K, 2);
+  AA2<x0, x1> := AffineSpace(Poly1);
+  num0 := Numerator(f0);
+  den0 := Denominator(f0);
+  AffAlg0<kx0> := Parent(den0);
+  phi0 := hom< AffAlg0 -> Poly1 | Poly1.1 >;
+  I1 := ideal< Poly1 | phi0(den0)*Poly1.2^2-phi0(num0) >;
+  Y1<x0, x1> := Curve(AA2, I1);
+  X1<z0, z1, w> := ProjectiveClosure(Y1);
+  KX1<kx0, kx1> := FunctionField(X1);
+  R1, mp1 := Poly1/I1; // 2T1 -> PP1 is R1.1
+  // points to move up a level
+  // Q: how can we find these points in general?
+  pt001 := X1![0,0,1];
+  pt111 := X1![1,1,1];
+  pt1_11 := X1![1,-1,1];
+  P001 := Divisor(pt001);
+  P111 := Divisor(pt111);
+  P1_11 := Divisor(pt1_11);
+  D1 := P111-P1_11; // Q: why did we take these again?
+  LD1, mD1 := RiemannRochSpace(-D1);
+  f1 := mD1(LD1.1);
+  // map of schemes
+  phi10 := map< X1 -> X0 | [X1.1, X1.3] >;
+*/
 
 /*
 Degree 4
@@ -94,18 +101,20 @@ X2 -> PP1
 sigma = d4t2;
 Name = 4T2-[2,2,2]-22-22-22-g0
 */
-Poly2<x0, x1, x2> := PolynomialRing(K, 3);
-AA3<x0, x1, x2> := AffineSpace(Poly2);
-num1 := Numerator(f1);
-den1 := Denominator(f1);
-AffAlg1<kx0, kx1> := Parent(den1);
-phi0 := hom< AffAlg0 -> Poly2 | Poly2.1 >;
-phi1 := hom< AffAlg1 -> Poly2 | Poly2.1, Poly2.2 >;
-I2 := ideal< Poly2 | phi1(den1)*Poly2.3^2-phi1(num1), phi0(den0)*Poly2.2^2-phi0(num0) >;
-Y2<x0, x1, x2> := Curve(AA3, I2);
-X2<z0, z1, z2, w> := ProjectiveClosure(Y2);
-KX2<kx0, kx1, kx2> := FunctionField(X2);
-R2, mp2 := Poly2/I2;
+/*
+  Poly2<x0, x1, x2> := PolynomialRing(K, 3);
+  AA3<x0, x1, x2> := AffineSpace(Poly2);
+  num1 := Numerator(f1);
+  den1 := Denominator(f1);
+  AffAlg1<kx0, kx1> := Parent(den1);
+  phi0 := hom< AffAlg0 -> Poly2 | Poly2.1 >;
+  phi1 := hom< AffAlg1 -> Poly2 | Poly2.1, Poly2.2 >;
+  I2 := ideal< Poly2 | phi1(den1)*Poly2.3^2-phi1(num1), phi0(den0)*Poly2.2^2-phi0(num0) >;
+  Y2<x0, x1, x2> := Curve(AA3, I2);
+  X2<z0, z1, z2, w> := ProjectiveClosure(Y2);
+  KX2<kx0, kx1, kx2> := FunctionField(X2);
+  R2, mp2 := Poly2/I2;
+*/
 
 /*
 Degree 8

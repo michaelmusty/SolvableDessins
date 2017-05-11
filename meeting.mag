@@ -1,0 +1,106 @@
+/*
+Belyi Map for  16T5-488-g5 -> 8T2-244-g1 -> 4T2-222-g0 -> PP1
+*/
+
+/*
+Front Matter
+*/
+  // assumes current directory = repo directory
+  dir := GetCurrentDirectory();
+  parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
+  if parentdir eq "SolvableDessins\n" then
+    repo := dir;
+  else
+    error "make sure your working directory is /BelyiDB";
+  end if;
+  // directories in SolvableDessins repo
+  code := repo cat "/Code/";
+  db := repo cat "/SolvableDB/";
+  profiler := repo cat "/Profiler/";
+  examples := repo cat "/Examples/";
+  // spec files
+  AttachSpec(code cat "spec");
+  AttachSpec("~/Dropbox/belyi/Code/spec");
+
+/*
+MAIN
+*/
+
+load "catalog16.mag";
+
+/*
+BASE FIELD
+*/
+K := Rationals();
+
+/*
+LEVEL 0: PP1
+*/
+// Function Field
+  K0<x0> := FunctionField(K);
+  R0<x0> := RingOfIntegers(K0);
+  f0 := x0;
+// Curve
+  P0<x0> := PolynomialRing(K, 1);
+  AA1<x0> := AffineSpace(P0);
+  Y0<x0> := Curve(AA1);
+  X0<z0, w> := ProjectiveClosure(Y0);
+  KX0<kx0> := FunctionField(X0);
+
+/*
+Degree 2
+Level 1
+X1 -> PP1
+Name = 2T1-[2,2,1]-2-2-11-g0
+*/
+// Function Field
+  P1<x1> := PolynomialRing(K0);
+  a1 := x1^2-f0;
+  K1<x1> := ext< K0 | a1 >;
+  R1 := IntegralClosure(R0, K1);
+  I1_0 := ideal< R1 | R1!x0 >;
+  I1_1 := ideal< R1 | R1!x0-1>;
+  assert #InfinitePlaces(K1) eq 1;
+  I1_oo := Ideal(InfinitePlaces(K1)[1]);
+  pp1_0 := ideal< R1 | R1!x0, R1!x1 >;
+  pp1_1a := ideal< R1 | R1!x0-1, R1!x1-1>;
+  pp1_1b := ideal< R1 | R1!x0-1, R1!x1+1>;
+  pp1_oo := ideal< R1 | R1!x0, R1!x1 >;
+  D1 := Divisor(pp1_1a) - Divisor(pp1_1b);
+  LD1, mp1 := RiemannRochSpace(D1);
+  assert Dimension(LD1) eq 1;
+  f1 := mp1(LD1.1);
+// Curve
+  P1<x0, x1> := PolynomialRing(K, 2);
+  AA2<x0, x1> := AffineSpace(P1);
+  I1 := ideal< P1 | x1^2-x0 >;
+  Y1<x0, x1> := Curve(AA2, I1);
+  X1<z0, z1, w> := ProjectiveClosure(Y1);
+  KX1<kx0, kx1> := FunctionField(X1);
+
+/*
+Degree 4
+Level 2
+X2 -> PP1
+sigma = d4t2;
+Name = 4T2-[2,2,2]-22-22-22-g0
+*/
+// Function Field
+// Curve
+P2<x0, x1, x2> := PolynomialRing(K, 3);
+AA3<x0, x1, x2> := AffineSpace(P2);
+I2 := ideal< P2 | x1^2-x0, (x0-1)*x2^2-x1-(1/2)*(x0+1)>;
+Y2<x0, x1, x2> := Curve(AA3, I2);
+X2<z0, z1, z2, w> := ProjectiveClosure(Y2);
+KX2<kx0, kx1, kx2> := FunctionField(X2);
+sigma := d4t2;
+phi := kx0;
+assert BelyiMapSanityCheck(sigma, X2, phi);
+
+/*
+Degree 8
+Level 3
+X3 -> PP1
+sigma = d8t4
+Name = 8T4-[4,2,4]-44-2222-44-g0
+*/
