@@ -24,6 +24,10 @@ ChangeDirectory(db);
 MAIN
 */
 
+s2t1 := SolvableDBAccessEntry("2T1-[2,2,1]-2-2-11-g0.m");
+p2t1 := s2t1`SolvableDBPointedPassport;
+d2t1 := p2t1[1];
+
 /*
 degree 4
 */

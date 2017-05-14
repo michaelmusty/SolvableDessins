@@ -1,0 +1,68 @@
+intrinsic Polyify(a::RngUPolElt) -> RngMPolElt
+  {Takes a univariate polynomial a over Ka a FldFun, clears any denominators in the coefficients, and returns the resulting multivariate polynomial.}
+  assert ISA(Type(CoefficientRing(a)), FldFun) or ISA(Type(CoefficientRing(a)), FldFunRat);
+  if ISA(Type(CoefficientRing(a)), FldFunRat) then
+    K0 := CoefficientRing(Parent(a));
+    K0coeffs := Eltseq(a);
+    assert #K0coeffs gt 0;
+    P0 := Parent(K0coeffs[1]);
+    K := CoefficientRing(P0);
+    P1<x0, x1> := PolynomialRing(K, 2);
+    h01 := hom< P0 -> P1 | P1.1 >;
+    denomP0 := P0!1;
+    for i in [1..#K0coeffs] do
+      if GreatestCommonDivisor(Numerator(denomP0), Denominator(K0coeffs[i])) gt 1 then
+        denomP0 *:= Denominator(K0coeffs[i]);
+      end if;
+    end for;
+    denomP1 := h01(denomP0);
+    poly := P1!0;
+    for i in [1..#K0coeffs] do
+      poly +:= denomP1*h01(Numerator(K0coeffs[i]))*P1.2^(i-1);
+    end for;
+  else
+    Ka := CoefficientRing(Parent(a));
+    Kacoeffs := Eltseq(a);
+    assert #Kacoeffs gt 0;
+    // assert each eltseqify has same depth
+    assert #SequenceToSet([SeqDepth(Eltseqify(Kacoeffs[i])) : i in [1..#Kacoeffs]]) eq 1;
+    for i in [1..#Kacoeffs] do
+      eltseq := Eltseqify(Kacoeffs[i]);
+    end for;
+    error "not implemented yet :(";
+  end if;
+  return poly;
+end intrinsic;
+
+intrinsic Polyify(f::FldFunElt) -> RngMPolyElt
+  {Clears denominators of f and returns a multivariate poly.}
+  coeffs := Eltseqify(f);
+  depth := SeqDepth(coeffs);
+  K := ConstantField(Parent(f));
+  P := PolynomialRing(K, depth+1);
+  vars := [];
+  for i in [0..depth] do
+    Append(~vars, Sprintf("x%o", i));
+  end for;
+  AssignNames(~P, vars);
+  error "not implemented yet!";
+end intrinsic;
+
+intrinsic Eltseqify(f::FldFunElt) -> SeqEnum
+  {Recursive function to eltseqify a function field element into its polynomial components.}
+  coeffs := Eltseq(f);
+  if ISA(Type(coeffs[1]), FldFunRatUElt) then
+    return coeffs;
+  else
+    return [Eltseqify(c) : c in coeffs];
+  end if;
+end intrinsic;
+
+intrinsic SeqDepth(s::SeqEnum) -> RngIntElt
+  {Recursive function to find the max depth of a SeqEnum s. Right now this assumes all leaves of same depth for a SeqEnum this is fine since this is required to have all elements in the same universe.}
+  if Type(s[1]) eq SeqEnum then
+    return 1+SeqDepth(s[1]);
+  else
+    return 1;
+  end if;
+end intrinsic;
