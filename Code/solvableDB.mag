@@ -337,37 +337,26 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
   Append(~easy_attrs, "SolvableDBName");
   Append(~easy_attrs, "SolvableDBDegree");
   Append(~easy_attrs, "SolvableDBABC");
+  Append(~easy_attrs, "SolvableDBType");
   Append(~easy_attrs, "SolvableDBGenus");
   Append(~easy_attrs, "SolvableDBSize");
   Append(~easy_attrs, "SolvableDBPointedSize");
-  Append(~easy_attrs, "SolvableDBType");
   permutation_attrs := [];
-  Append(~permutation_attrs, "SolvableDBPermutationTriple");
+  Append(~permutation_attrs, "SolvableDBPassport");
   Append(~permutation_attrs, "SolvableDBPointedPassport");
   Append(~permutation_attrs, "SolvableDBGaloisOrbits");
   Append(~permutation_attrs, "SolvableDBMonodromyGroup");
   Append(~permutation_attrs, "SolvableDBAutomorphismGroup");
-  field_attrs := [];
-  Append(~field_attrs, "SolvableDBPolyList");
-  Append(~field_attrs, "SolvableDBBaseFieldData");
-  belyimaps_attrs:= [];
+  belyimaps_attrs := [];
   Append(~belyimaps_attrs, "SolvableDBBelyiCurves");
   Append(~belyimaps_attrs, "SolvableDBBelyiMaps");
-  exact_attrs := [];
-  Append(~exact_attrs, "SolvableDBExactCurveInvariants");
-  Append(~exact_attrs, "SolvableDBExactCurveCoefficients");
-  Append(~exact_attrs, "SolvableDBExactBelyiMapLeadingCoefficients");
-  Append(~exact_attrs, "SolvableDBExactBelyiMapNumeratorCoefficients");
-  Append(~exact_attrs, "SolvableDBExactBelyiMapDenominatorCoefficients");
-  numerical_attrs := [];
-  Append(~numerical_attrs, "SolvableDBNumericalPrecision");
-  Append(~numerical_attrs, "SolvableDBNumericalCurveInvariants");
-  Append(~numerical_attrs, "SolvableDBNumericalCurveCoefficients");
-  Append(~numerical_attrs, "SolvableDBNumericalBelyiMapLeadingCoefficients");
-  Append(~numerical_attrs, "SolvableDBNumericalBelyiMapNumeratorCoefficients");
-  Append(~numerical_attrs, "SolvableDBNumericalBelyiMapDenominatorCoefficients");
-  dessin_attr := [];
-  Append(~dessin_attr, "SolvableDBDessinCode");
+  graph_attrs := [];
+  Append(~graph_attrs, "SolvableDBParents");
+  Append(~graph_attrs, "SolvableDBParentsUnramified");
+  Append(~graph_attrs, "SolvableDBChildren");
+  Append(~graph_attrs, "SolvableDBChildrenUnramified");
+  dessin_attrs := [];
+  Append(~dessin_attrs, "SolvableDBDessinCode");
   /*
   write easy attributes with magma printing
   */
@@ -375,7 +364,7 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
   for attr in easy_attrs do
     if assigned s``attr then
       str *:= Sprintf("s`%o := ", attr);
-      str *:= Sprintf("%O;\n", s``attr, "Magma");
+      str *:= Sprintf("%m;\n", s``attr);
     end if;
   end for;
   /*
@@ -385,69 +374,9 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
   for attr in permutation_attrs do
     if assigned s``attr then
       str *:= Sprintf("s`%o := ", attr);
-      str *:= Sprintf("%O;\n", s``attr, "Magma");
+      str *:= Sprintf("%m;\n", s``attr);
     end if;
   end for;
-  /*
-  write field data with custom printing
-  */
-  str *:= "\n/*\nBase Field Data\n*/\n\n";
-  if assigned s`SolvableDBPolyList and assigned s`SolvableDBBaseFieldData then
-    // TODO sanity check of incoming data
-    // write Polylist magma printing
-    str *:= Sprintf("s`SolvableDBPolyList := %m;\n", s`SolvableDBPolyList);
-    // write base field(s) data with custom printing
-    K_list := s`SolvableDBBaseFieldData;
-    assert #K_list gt 0;
-    str *:= Sprintf("s`SolvableDBBaseFieldData := [];\n");
-    for i in {1..#K_list} do
-      K := K_list[i][1];
-      v := K_list[i][2];
-      conj := K_list[i][3];
-      zopCC := K_list[i][4];
-      // write the field K_list[i][1]
-      str *:= Sprintf("%o", SolvableDBFieldWriter(K : index := i));
-      // write the place
-      places := InfinitePlaces(K);
-      v_ind := 1;
-      for j in {1..#places} do
-        if places[j] eq v then
-          v_ind := j;
-        end if;
-      end for;
-      str *:= Sprintf("v%o := InfinitePlaces(K%o)[%o];\n", i, i, v_ind);
-      // write conj
-      str *:= Sprintf("conj%o := %o;\n", i, conj);
-      // write zopCC
-      // TODO do we need complex field here?
-      str *:= Sprintf("CC<I> := ComplexField(%o);\n", Precision(Parent(zopCC)));
-      str *:= Sprintf("zopCC%o := %m;\n", i, zopCC);
-      // Append
-      str *:= Sprintf("Append(~s`SolvableDBBaseFieldData, [* K%o, v%o, conj%o, zopCC%o *]);\n", i, i, i, i);
-    end for;
-    str *:= Sprintf("s`SolvableDBGaloisOrbitsComputed := true;\n");
-  else
-    str *:= Sprintf("s`SolvableDBGaloisOrbitsComputed := false;\n");
-  end if;
-  /*
-  write exact data with custom printing
-  */
-  str *:= "\n/*\nExact Data\n*/\n\n";
-  exact_count := 0;
-  for attr in exact_attrs do
-    if assigned s``attr then
-      // TODO assert incoming data
-      assert s`SolvableDBGaloisOrbitsComputed; // need list of fields to write exact data
-      str *:= Sprintf("s`%o := %o;\n", attr, SolvableDBExactWriter(s``attr));
-      str *:= Sprintf("s`%o := [* s`%o, s`SolvableDBBaseFieldData *];\n", attr, attr);
-      exact_count +:= 1;
-    end if;
-  end for;
-  if exact_count eq #exact_attrs then
-    str *:= Sprintf("s`SolvableDBExactComputationsComputed := true;\n");
-  else
-    str *:= Sprintf("s`SolvableDBExactComputationsComputed := false;\n");
-  end if;
   /*
   write list of BelyiMaps with custom printing
   */
@@ -464,36 +393,25 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
       str *:= Sprintf("s`SolvableDBBelyiCurves[%o] := X%o;\n", i, i);
       str *:= Sprintf("s`SolvableDBBelyiMaps[%o] := phi%o;\n", i, i);
     end for;
-    str *:= Sprintf("s`SolvableDBAllBelyiMapsComputed := true;\n");
-  else
-    str *:= Sprintf("s`SolvableDBAllBelyiMapsComputed := false;\n");
   end if;
   /*
-  write numerical data with magma printing
+  write graph attributes using magma printing
   */
-  str *:= "\n/*\nNumerical Data\n*/\n\n";
-  if assigned s`SolvableDBNumericalPrecision then
-    str *:= Sprintf("CC<I> := ComplexField(%o);\n", s`SolvableDBNumericalPrecision);
-  end if;
-  numerical_count := 0;
-  for attr in numerical_attrs do
+  str *:= "\n/*\nGraph Data\n*/\n\n";
+  for attr in graph_attrs do
     if assigned s``attr then
       str *:= Sprintf("s`%o := ", attr);
-      str *:= Sprintf("%O;\n", s``attr, "Magma");
-      numerical_count +:= 1;
+      str *:= Sprintf("%m;\n", s``attr);
     end if;
   end for;
-  if numerical_count eq #numerical_attrs then
-    str *:= Sprintf("s`SolvableDBNumericalComputationsComputed := true;\n");
-  else
-    str *:= Sprintf("s`SolvableDBNumericalComputationsComputed := false;\n");
-  end if;
-  // write dessin_attr using magma printing
+  /*
+  write dessin_attrs using magma printing
+  */
   str *:= "\n/*\nDrawDessin Code\n*/\n\n";
-  for attr in dessin_attr do
+  for attr in dessin_attrs do
     if assigned s``attr then
       str *:= Sprintf("s`%o := ", attr);
-      str *:= Sprintf("%O;\n", s``attr, "Magma");
+      str *:= Sprintf("%m;\n", s``attr);
     end if;
   end for;
   // return statement for eval fuction

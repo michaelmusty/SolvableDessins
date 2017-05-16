@@ -1,20 +1,28 @@
 declare type SolvableDBObject;
 declare attributes SolvableDBObject:
-  SolvableDBAutomorphismGroup,
+  // easy attributes
   SolvableDBName,
-  SolvableDBPermutationTriple,
   SolvableDBDegree,
   SolvableDBABC,
   SolvableDBType,
   SolvableDBGenus,
   SolvableDBSize,
   SolvableDBPointedSize,
-  SolvableDBMonodromyGroup,
+  // permutation attributes
   SolvableDBPassport,
   SolvableDBPointedPassport,
   SolvableDBGaloisOrbits,
+  SolvableDBMonodromyGroup,
+  SolvableDBAutomorphismGroup,
+  // Belyi map attributes
   SolvableDBBelyiCurves,
   SolvableDBBelyiMaps,
+  // graph attributes
+  SolvableDBParents,
+  SolvableDBParentsUnramified,
+  SolvableDBChildren,
+  SolvableDBChildrenUnramified,
+  // dessin attributes
   SolvableDBDessinCode;
 
 // TODO equality in this way is quite silly...
@@ -45,4 +53,5 @@ intrinsic Print(s::SolvableDBObject)
   printf "  %o\n", s`SolvableDBType;
   printf "  Size %o\n", s`SolvableDBSize;
   printf "  PointedSize %o\n", s`SolvableDBPointedSize;
+  // TODO add some information here
 end intrinsic;
