@@ -479,8 +479,6 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> MonStgElt
   end if;
   // SolvableDBName
   s`SolvableDBName := newname;
-  // SolvableDBPermutationTriple
-  s`SolvableDBPermutationTriple := sigma;
   // SolvableDBDegree
   s`SolvableDBDegree := d;
   // SolvableDBABC
@@ -504,6 +502,11 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> MonStgElt
   s`SolvableDBSize := #pass;
   // SolvableDBPointedSize
   s`SolvableDBPointedSize := #check_pointed_pass;
+  // SolvableDBPassport
+  s`SolvableDBPassport := pass;
+  // SolvableDBPointedPassport
+  s`SolvableDBPointedPassport := check_pointed_pass;
+  // SolvableDBGaloisOrbits gets left unassigned
   // SolvableDBMonodromyGroup
   s`SolvableDBMonodromyGroup := G;
   // SolvableDBAutomorphismGroup and SolvableDBDessinCode
@@ -520,14 +523,6 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> MonStgElt
   else
     s`SolvableDBDessinCode := [];
   end if;
-  // TODO pointed vs not
-  // SolvableDBPointedPassport
-  s`SolvableDBPointedPassport := pass;
-  // booleans
-  s`SolvableDBNumericalComputationsComputed := false;
-  s`SolvableDBExactComputationsComputed := false;
-  s`SolvableDBGaloisOrbitsComputed := false;
-  s`SolvableDBAllBelyiMapsComputed := false;
   // write the object to file
   ChangeDirectory(dbdirectory);
   SolvableDBWriteObject(s);
