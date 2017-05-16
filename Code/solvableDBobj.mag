@@ -11,6 +11,7 @@ declare attributes SolvableDBObject:
   SolvableDBSize, // RngIntElt
   SolvableDBPointedSize, // RngIntElt
   SolvableDBMonodromyGroup, // GrpPerm
+  SolvableDBPassport, // SeqEnum[SeqEnum[GrpPermElt]]
   SolvableDBPointedPassport, // SeqEnum[SeqEnum[GrpPermElt]]
   // boolean attributes
   SolvableDBNumericalComputationsComputed,
