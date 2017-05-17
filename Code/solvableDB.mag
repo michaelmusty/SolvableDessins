@@ -517,7 +517,7 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> MonStgElt
   // write the object to file
   ChangeDirectory(dbdirectory);
   SolvableDBWriteObject(s);
-  returnText := Sprintf("SolvableDBObject file for %o written in directory %oSolvableDB/%o\n", s`SolvableDBName, directory, d);
+  returnText := Sprintf("SolvableDBObject file for %o written in directory %o\n", s`SolvableDBName, directory, d);
   ChangeDirectory(dbdirectory);
   return returnText;
 end intrinsic;

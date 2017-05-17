@@ -71,7 +71,8 @@ s`SolvableDBBelyiMaps[1] := phi2_1;
 Graph Data
 */
 
-s`SolvableDBChildren := [ Strings() | "2T1-[2,1,2]-2-11-2-g0.m" ];
+s`SolvableDBParents := [ Strings() | "8T2-[2,4,4]-2222-44-44-g1", "8T2-[4,2,4]-44-2222-44-g1", "8T2-[4,4,2]-44-44-2222-g1", "8T4-[2,2,4]-2222-2222-44-g0", "8T4-[2,4,2]-2222-44-2222-g0", "8T4-[4,2,2]-44-2222-2222-g0", "8T5-[4,4,4]-44-44-44-g2" ];
+s`SolvableDBChildren := [ Strings() | "2T1-[2,1,2]-2-11-2-g0" ];
 
 /*
 DrawDessin Code

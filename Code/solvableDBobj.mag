@@ -90,4 +90,20 @@ intrinsic Print(s::SolvableDBObject)
   else
     printf "    Parents not computed yet :(\n";
   end if;
+  printf "  Unramified Children:\n";
+  if assigned s`SolvableDBChildrenUnramified and #s`SolvableDBChildrenUnramified gt 0 then
+    for i in [1..#s`SolvableDBChildrenUnramified] do
+      printf "    %o\n", s`SolvableDBChildrenUnramified[i];
+    end for;
+  else
+    printf "    Unramified Children not computed yet :(\n";
+  end if;
+  printf "  Unramified Parents:\n";
+  if assigned s`SolvableDBParentsUnramified and #s`SolvableDBParentsUnramified gt 0 then
+    for i in [1..#s`SolvableDBParentsUnramified] do
+      printf "    %o\n", s`SolvableDBParentsUnramified[i];
+    end for;
+  else
+    printf "    Unramified Parents not computed yet :(\n";
+  end if;
 end intrinsic;
