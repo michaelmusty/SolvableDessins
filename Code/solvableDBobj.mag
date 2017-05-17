@@ -53,5 +53,41 @@ intrinsic Print(s::SolvableDBObject)
   printf "  %o\n", s`SolvableDBType;
   printf "  Size %o\n", s`SolvableDBSize;
   printf "  PointedSize %o\n", s`SolvableDBPointedSize;
-  // TODO add some information here
+  if assigned s`SolvableDBBelyiCurves and #s`SolvableDBBelyiCurves gt 0 then
+    printf "  BelyiMaps computed :)\n";
+    sane := true;
+    pass := s`SolvableDBPassport;
+    curves := s`SolvableDBBelyiCurves;
+    maps := s`SolvableDBBelyiMaps;
+    assert #pass eq #curves;
+    assert #pass eq #maps;
+    for i in [1..#pass] do
+      if not BelyiMapSanityCheck(pass[i], curves[i], maps[i]) then
+        sane := false;
+      end if;
+    end for;
+    if sane then
+      printf "    BelyiMaps passed sanity!\n";
+    else
+      printf "    BelyiMaps failed sanity!\n";
+    end if;
+  else
+    printf "  BelyiMaps not computed yet :(\n";
+  end if;
+  printf "  Children:\n";
+  if assigned s`SolvableDBChildren and #s`SolvableDBChildren gt 0 then
+    for i in [1..#s`SolvableDBChildren] do
+      printf "    %o\n", s`SolvableDBChildren[i];
+    end for;
+  else
+    printf "    Children not computed yet :(\n";
+  end if;
+  printf "  Parents:\n";
+  if assigned s`SolvableDBParents and #s`SolvableDBParents gt 0 then
+    for i in [1..#s`SolvableDBParents] do
+      printf "    %o\n", s`SolvableDBParents[i];
+    end for;
+  else
+    printf "    Parents not computed yet :(\n";
+  end if;
 end intrinsic;

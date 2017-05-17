@@ -191,39 +191,23 @@ intrinsic SolvableDBGenerateNameAboveTransitiveDatabaseLimit(sigma::SeqEnum[GrpP
   return name;
 end intrinsic;
 
-intrinsic SolvableDBFieldWriter(K::FldRat) -> MonStgElt
+intrinsic SolvableDBFieldWriter(K::FldRat : level := 0, index := 0) -> MonStgElt
   {Given a field K return a string to recreate the field.}
-  str := Sprintf("K := RationalsAsNumberField();\n");
+  str := Sprintf("K%o_%o<nu> := RationalsAsNumberField();\n", level, index);
   return str;
 end intrinsic;
 
-intrinsic SolvableDBFieldWriter(K::FldNum : index := 0) -> MonStgElt
+intrinsic SolvableDBFieldWriter(K::FldNum : level := 0, index := 0) -> MonStgElt
   {Given a field K return a string to recreate the field.}
   SetColumns(0);
   str := "";
   gens := GeneratorsSequence(K);
   assert #gens eq 1;
-  if index eq 0 then
-    if Degree(K) eq 1 then
-      str *:= Sprintf("K := RationalsAsNumberField();\n");
-    else
-      if Sprintf("%o", gens[1]) eq "K.1" then
-        minpolytext := Sprintf("%m", MinimalPolynomial(K.1));
-        str *:= Sprintf("K := NumberField(%o);\n", minpolytext);
-      else
-        minpolytext := Sprintf("%m", MinimalPolynomial(K.1));
-        str *:= Sprintf("K<%o> := NumberField(%o);\n", gens[1], minpolytext);
-      end if;
-    end if;
+  if Degree(K) eq 1 then
+    str *:= Sprintf("K%o_%o<nu> := RationalsAsNumberField();\n", level, index);
   else
-    if Degree(K) eq 1 then
-      nu_text := Sprintf("nu%o", index);
-      str *:= Sprintf("K%o<%o> := RationalsAsNumberField();\n", index, nu_text);
-    else
-      nu_text := Sprintf("nu%o", index);
-      minpolytext := Sprintf("%m", MinimalPolynomial(K.1));
-      str *:= Sprintf("K%o<%o> := NumberField(%o);\n", index, nu_text, minpolytext);
-    end if;
+    minpolytext := Sprintf("%m", MinimalPolynomial(K.1));
+    str *:= Sprintf("K%o_%o<nu> := NumberField(%o);\n", level, index, minpolytext);
   end if;
   return str;
 end intrinsic;
@@ -247,37 +231,42 @@ intrinsic SolvableDBGaloisOrbitsComputer(f_list::SeqEnum[RngUPolElt], passport::
   return orbits;
 end intrinsic;
 
-intrinsic SolvableDBBelyiMapWriter(X::Crv, phi::FldFunFracSchElt : index := 0) -> MonStgElt
+intrinsic VarText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgElt
+  {returns text "varlower, varlower+1, ..., varupper-1, varupper".}
+  assert upper gt lower;
+  var_text := "";
+  for i := lower to upper-1 by 1 do
+    var_text *:= Sprintf("%o%o, ", var, i);
+  end for;
+  var_text *:= Sprintf("%o%o", var, upper);
+  return var_text;
+end intrinsic;
+
+intrinsic SolvableDBBelyiMapWriter(X::Crv, phi::FldFunFracSchElt : level := 0, index := 0) -> MonStgElt
   {Given a BelyiMap [X, phi] return text to recreate [X, phi]. This text (once loaded) makes X and phi available in the session.}
   // TODO assertions about phi
+  assert IsAffine(X);
   K := BaseField(X);
   KX := FunctionField(X);
   assert Parent(phi) eq KX;
+  assert phi eq KX.1;
   SetColumns(0);
-  str := SolvableDBFieldWriter(K : index := index);
-  // TODO a more "general way" to coerce nu into K1<nu1>...since we might not know how nu is coming to us :(
-  str *:= Sprintf("nu := nu%o;\n", index);
-  if Genus(X) eq 0 then // genus 0
-    str *:= Sprintf("PP1_%o := Curve(ProjectiveSpace(PolynomialRing(K%o, 2)));\n", index, index);
-    str *:= Sprintf("KPP1_%o<x%o> := FunctionField(PP1_%o);\n", index, index, index);
-    str *:= Sprintf("phi%o := KPP1_%o!(%o);\n", index, index, phi);
-  elif Type(X) eq CrvEll then // elliptic
-    aInvs := aInvariants(X);
-    str *:= SolvableDBDeleteLineBreaks(Sprintf("aInvs%o := %o;\n", index, aInvs)) cat "\n";
-    str *:= Sprintf("E_Q%o := EllipticCurve(aInvs%o);\n", index, index);
-    str *:= Sprintf("X%o := BaseChange(E_Q%o, K%o);\n", index, index, index);
-    str *:= Sprintf("KX%o<%o,%o> := FunctionField(X%o);\n", index, KX.1, KX.2, index);
-    str *:= Sprintf("phi%o := KX%o!(%o);\n", index, index, phi);
-  elif Type(X) eq CrvHyp then // hyperelliptic
-    f,h := HyperellipticPolynomials(X);
-    P<x> := PolynomialRing(K);
-    str *:= Sprintf("P%o<x%o> := PolynomialRing(K%o);\n", index, index, index);
-    str *:= Sprintf("X%o := HyperellipticCurve([P%o!%o, P%o!%o]);\n", index, index, P!f, index, P!h);
-    str *:= Sprintf("KX%o<%o,%o> := FunctionField(X%o);\n", index, KX.1, KX.2, index);
-    str *:= Sprintf("phi%o := KX%o!(%o);\n", index, index, phi);
-  else // TODO general Crv
-    error "Writing general curves to file not implemented yet :(";
-  end if;
+  str := SolvableDBFieldWriter(K : level := level, index := index);
+  varx := VarText("x", 0, level);
+  varz := VarText("z", 0, level);
+  varz *:= ", w";
+  str *:= Sprintf("P%o<%o> := PolynomialRing(K%o_%o, %o);\n", level, varx, level, index, level+1);
+  str *:= Sprintf("AA%o<%o> := AffineSpace(P%o);\n", level+1, varx, level);
+  str *:= Sprintf("curve_equations_%o := [];\n", index);
+  curve_equations := DefiningEquations(X);
+  for i in [1..#curve_equations] do
+    str *:= Sprintf("Append(~curve_equations_%o, %o);\n", index, curve_equations[i]);
+  end for;
+  str *:= Sprintf("I%o_%o := ideal< P%o | curve_equations_%o >;\n", level, index, level, index);
+  str *:= Sprintf("Y%o_%o<%o> := Curve(AA%o, I%o_%o);\n", level, index, varx, level+1, level, index);
+  str *:= Sprintf("X%o_%o<%o> := ProjectiveClosure(Y%o_%o);\n", level, index, varz, level, index);
+  str *:= Sprintf("KX%o_%o<%o> := FunctionField(X%o_%o);\n", level, index, varx, level, index);
+  str *:= Sprintf("phi%o_%o := KX%o_%o.1;\n", level, index, level, index);
   return str;
 end intrinsic;
 
@@ -388,10 +377,12 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     curves := s`SolvableDBBelyiCurves;
     maps := s`SolvableDBBelyiMaps;
     assert #curves eq #maps;
+    deg := Degree(maps[1]);
+    level := Floor(Log(deg)/Log(2));
     for i in {1..#curves} do
-      str *:= SolvableDBBelyiMapWriter(curves[i], maps[i] : index := i);
-      str *:= Sprintf("s`SolvableDBBelyiCurves[%o] := X%o;\n", i, i);
-      str *:= Sprintf("s`SolvableDBBelyiMaps[%o] := phi%o;\n", i, i);
+      str *:= SolvableDBBelyiMapWriter(curves[i], maps[i] : level := level, index := i);
+      str *:= Sprintf("s`SolvableDBBelyiCurves[%o] := Y%o_%o;\n", i, level, i);
+      str *:= Sprintf("s`SolvableDBBelyiMaps[%o] := phi%o_%o;\n", i, level, i);
     end for;
   end if;
   /*

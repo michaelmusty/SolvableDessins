@@ -8,6 +8,7 @@ S,SolvableDBGenerateNameAboveTransitiveDatabaseLimit,Generate a unique string id
 S,SolvableDBFieldWriter,Given a field K return a string to recreate the field,0,1,0,0,0,0,0,0,0,262,,298,-38,-38,-38,-38,-38
 S,SolvableDBFieldWriter,Given a field K return a string to recreate the field,0,1,0,0,0,0,0,0,0,27,,298,-38,-38,-38,-38,-38
 S,SolvableDBGaloisOrbitsComputer,Sort a passport into Galois orbits according to a list of polynomials and return a sequence of orbits,2,0,1,82,0,312,1,1,82,1,82,0,222,2,0,0,0,0,0,0,0,82,,0,0,82,,82,-38,-38,-38,-38,-38
+S,VarText,"returns text ""varlower, varlower+1, ..., varupper-1, varupper""",0,3,0,0,0,0,0,0,0,148,,0,0,148,,0,0,298,,298,-38,-38,-38,-38,-38
 S,SolvableDBBelyiMapWriter,"Given a BelyiMap [X, phi] return text to recreate [X, phi]. This text (once loaded) makes X and phi available in the session",0,2,0,0,0,0,0,0,0,427,,0,0,371,,298,-38,-38,-38,-38,-38
 S,SolvableDBExactWriter,returns text to load a sequence l of elements of Kindex,0,2,0,0,0,0,0,0,0,148,,0,0,82,,298,-38,-38,-38,-38,-38
 S,SolvableDBExactWriter,"l[1] has exact elements, l[2] has K_list where the elements live, and this intrinsic returns text to load l[1]",0,1,0,0,0,0,0,0,0,168,,298,-38,-38,-38,-38,-38
