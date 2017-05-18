@@ -80,11 +80,44 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<8 |
 Belyi Maps
 */
 
+s`SolvableDBBelyiCurves := [* *];
+s`SolvableDBBelyiMaps := [* *];
+K3_1<nu> := RationalsAsNumberField();
+P3<x0, x1, x2, x3> := PolynomialRing(K3_1, 4);
+AA4<x0, x1, x2, x3> := AffineSpace(P3);
+curve_equations_1 := [];
+Append(~curve_equations_1, x0 - x1^2);
+Append(~curve_equations_1, x1*x2 + 2*x1*x3^2 - x2 + 2*x3^2);
+Append(~curve_equations_1, x1*x3^4 - 1/2*x2*x3^2 + x3^4 - 1/4);
+Append(~curve_equations_1, x2^2*x3^2 - 2*x2*x3^4 + 1/2*x2 + x3^2);
+I3_1 := ideal< P3 | curve_equations_1 >;
+Y3_1<x0, x1, x2, x3> := Curve(AA4, I3_1);
+X3_1<z0, z1, z2, z3, w> := ProjectiveClosure(Y3_1);
+KX3_1<x0, x1, x2, x3> := FunctionField(X3_1);
+phi3_1 := KX3_1.1;
+s`SolvableDBBelyiCurves[1] := Y3_1;
+s`SolvableDBBelyiMaps[1] := phi3_1;
+K3_2<nu> := RationalsAsNumberField();
+P3<x0, x1, x2, x3> := PolynomialRing(K3_2, 4);
+AA4<x0, x1, x2, x3> := AffineSpace(P3);
+curve_equations_2 := [];
+Append(~curve_equations_2, x0 - x1^2);
+Append(~curve_equations_2, x1*x2 + 2*x1*x3^2 - x2 + 2*x3^2);
+Append(~curve_equations_2, x1*x3^4 - 1/2*x2*x3^2 + x3^4 - 1/4);
+Append(~curve_equations_2, x2^2*x3^2 - 2*x2*x3^4 + 1/2*x2 + x3^2);
+I3_2 := ideal< P3 | curve_equations_2 >;
+Y3_2<x0, x1, x2, x3> := Curve(AA4, I3_2);
+X3_2<z0, z1, z2, z3, w> := ProjectiveClosure(Y3_2);
+KX3_2<x0, x1, x2, x3> := FunctionField(X3_2);
+phi3_2 := KX3_2.1;
+s`SolvableDBBelyiCurves[2] := Y3_2;
+s`SolvableDBBelyiMaps[2] := phi3_2;
 
 /*
 Graph Data
 */
 
+s`SolvableDBChildren := [ Strings() | "4T1-[4,2,4]-4-22-4-g1" ];
 
 /*
 DrawDessin Code

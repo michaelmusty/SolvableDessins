@@ -1,8 +1,4 @@
 /*
-Belyi Map for  4T1-[4,1,4]-g0 -> PP1
-*/
-
-/*
 Front Matter
 */
   // assumes current directory = repo directory
@@ -99,7 +95,6 @@ K := Rationals();
   Degree 4
   Level 2
   X2 -> PP1
-  sigma = d4t1_1;
   Name = 4T1-[4,1,4]-4-1111-4-g0
 */
 // setup algebraic function field
@@ -127,9 +122,7 @@ K := Rationals();
   Y2<x0, x1, x2> := Curve(AA3, Ps[1]);
   X2<z0, z1, z2, w> := ProjectiveClosure(Y2);
   KX2<x0, x1, x2> := FunctionField(X2);
-  sigma := d4t1_2;
   belyimap2 := KX2!x0;
-  assert BelyiMapSanityCheck(sigma, X2, belyimap2);
 // ideals
   I2_0 := ideal< R2 | R2!K0.1 >;
   I2_1 := ideal< R2 | R2!K0.1-1>;
@@ -143,60 +136,9 @@ K := Rationals();
   pp2_1a := fact1_1[1][1];
   pp2_1b := fact1_1[2][1];
   pp2_oo := fact1_oo[1][1];
-/*
 // RiemannRoch
   // D2 := Divisor(pp2_0) - Divisor(pp2_oo);
   D2 := Divisor(pp2_0) - Divisor(pp2_1a);
   LD2, mp2 := RiemannRochSpace(D2);
   assert Dimension(LD2) eq 1;
   f2 := mp2(LD2.1);
-*/
-
-/*
-  Degree 8
-  Level 3
-  X3 -> PP1
-  sigma = d8t4
-  Name = 8T4-[4,2,4]-44-2222-44-g0
-*/
-/*
-// setup algebraic function field
-  P3<x3> := PolynomialRing(K2);
-  a3 := x3^2-K2!f2;
-  K3<x3> := ext< K2 | a3 >;
-  R3 := IntegralClosure(R2, K3);
-// curve and FldFunFracSch
-  P3<x0, x1, x2, x3> := PolynomialRing(K, 4);
-  AA4<x0, x1, x2, x3> := AffineSpace(P3);
-  denom2 := Denominator(K2!f2, R2);
-  f2 := K2!denom2*f2; // still in K2
-  h := hom< Parent(denom2) -> P3 | P3.1 >;
-  denom2 := h(denom2); // now lives in P3
-  h0 := hom< K0 -> P3 | P3.1 >;
-  h1 := hom< K1 -> P3 | h0, P3.2 >;
-  h2 := hom< K2 -> P3 | h1, P3.3 >;
-  h := hom< Parent(f1) -> P3 | P3.1, P3.2, P3.3 >; // Parent(f1) is P2
-  f1 := h(f1);
-  f2 := h2(K2!f2);
-  poly3 := denom2*P3.4^2-f2;
-  h := hom< P1 -> P3 | P3.1, P3.2 >;
-  poly1 := h(poly1);
-  h := hom< P2 -> P3 | P3.1, P3.2, P3.3 >;
-  poly2 := h(poly2);
-  //
-  I3 := ideal< P3 | poly1, poly2, poly3 >;
-  Qs, Ps := PrimaryDecomposition(I3);
-  C := Curve(AA4, Ps[1]);
-  XC<z0, z1, z2, z3, w> := ProjectiveClosure(C);
-  KC<x0, x1, x2, x3> := FunctionField(XC);
-  sigma := d8t4;
-  phi := KC!x0;
-  [*[*BelyiMapSanityCheck(S3Action(s,sigma), XC, phi), s*] : s in Sym(3)*];
-  // moar
-  Y3<x0, x1, x2, x3> := Curve(AA4, I3);
-  X3<z0, z1, z2, z3, w> := ProjectiveClosure(Y3);
-  KX3<x0, x1, x2, x3> := FunctionField(X3);
-  belyimap3 := KX3!x0;
-  assert BelyiMapSanityCheck(sigma, X3, belyimap3);
-
-*/

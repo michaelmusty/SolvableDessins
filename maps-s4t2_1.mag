@@ -1,5 +1,5 @@
 /*
-Belyi Map for  4T1-[4,1,4]-g0 -> PP1
+Belyi Map for  16T5-488-g5 -> 8T2-244-g1 -> 4T2-222-g0 -> PP1
 */
 
 /*
@@ -88,8 +88,7 @@ K := Rationals();
   pp1_1b := fact1_1[2][1];
   pp1_oo := fact1_oo[1][1];
 // RiemannRoch
-  // D1 := Divisor(pp1_1a) - Divisor(pp1_1b);
-  D1 := Divisor(pp1_0) - Divisor(pp1_oo);
+  D1 := Divisor(pp1_1a) - Divisor(pp1_1b);
   LD1, mp1 := RiemannRochSpace(D1);
   assert Dimension(LD1) eq 1;
   f1 := mp1(LD1.1);
@@ -98,7 +97,7 @@ K := Rationals();
   Degree 4
   Level 2
   X2 -> PP1
-  s4t1_1
+  s4t2_1
 */
 // setup algebraic function field
   P2<x2> := PolynomialRing(K1);
@@ -119,9 +118,7 @@ K := Rationals();
   poly2 := denom1*P2.3^2-f1;
   h := hom< P1 -> P2 | P2.1, P2.2 >;
   I2 := ideal< P2 | h(poly1), poly2 >;
-  // fiddle with I2
-  Qs, Ps := PrimaryDecomposition(I2);
-  Y2<x0, x1, x2> := Curve(AA3, Ps[1]);
+  Y2<x0, x1, x2> := Curve(AA3, I2);
   X2<z0, z1, z2, w> := ProjectiveClosure(Y2);
   KX2<x0, x1, x2> := FunctionField(X2);
   belyimap2 := KX2!x0;
