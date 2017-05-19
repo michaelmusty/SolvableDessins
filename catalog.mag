@@ -7,7 +7,7 @@ Front Matter
   if parentdir eq "SolvableDessins\n" then
     repo := dir;
   else
-    error "make sure your working directory is /BelyiDB";
+    error "make sure your working directory is /SolvableDessins";
   end if;
   // directories in SolvableDessins repo
   code := repo cat "/Code/";
@@ -18,15 +18,17 @@ Front Matter
   AttachSpec(code cat "spec");
   AttachSpec("~/Dropbox/belyi/Code/spec");
 
-ChangeDirectory(db);
-
 /*
 MAIN
 */
 
-// level 1, degree 2
-s2t1 := SolvableDBAccessEntry("2T1-[2,1,2]-2-11-2-g0.m");
 
+// level 1, degree 2
+s2t1_1_a := SolvableDBAccessEntry("2T1-[1,2,2]-11-2-2-g0.m");
+s2t1_1_b := SolvableDBAccessEntry("2T1-[2,1,2]-2-11-2-g0.m");
+s2t1_1_c := SolvableDBAccessEntry("2T1-[2,2,1]-2-2-11-g0.m");
+
+/*
 // level 2, degree 4
 s4t1_1 := SolvableDBAccessEntry("4T1-[4,1,4]-4-1111-4-g0.m");
 s4t1_2 := SolvableDBAccessEntry("4T1-[4,2,4]-4-22-4-g1.m");
@@ -46,4 +48,4 @@ s8t5_1 := SolvableDBAccessEntry("8T5-[4,4,4]-44-44-44-g2.m");
 
 // level 4, degree 16
 
-ChangeDirectory(repo);
+*/

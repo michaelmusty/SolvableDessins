@@ -8,42 +8,38 @@ declare attributes SolvableDBObject:
   SolvableDBGenus,
   SolvableDBSize,
   SolvableDBPointedSize,
+  SolvableDBLevel,
   // permutation attributes
   SolvableDBPassport,
   SolvableDBPointedPassport,
-  SolvableDBGaloisOrbits,
   SolvableDBMonodromyGroup,
   SolvableDBAutomorphismGroup,
+  // algebraic function fields
+  // TODO all
+  SolvableDBConstantFieldList,
+  SolvableDBAlgebraicFunctionFieldList,
+  SolvableDBMaximalOrderList,
+  SolvableDBPrimeList,
+  SolvableDBRamifiedPrimesDivisorList,
+  SolvableDB2TorsionDivisorList,
+  SolvableDBExtractedSqrtList,
+  // curve function fields
+  // TODO all
+  SolvableDBAmbientList,
+  SolvableDBIdealList,
+  SolvableDBCurveFunctionFieldList,
+  SolvableDBRelativeBelyiMapList,
   // Belyi map attributes
   SolvableDBBelyiCurves,
   SolvableDBBelyiMaps,
   // graph attributes
+  SolvableDBPathToPP1, // TODO new
   SolvableDBParents,
   SolvableDBParentsUnramified,
   SolvableDBChildren,
   SolvableDBChildrenUnramified,
   // dessin attributes
   SolvableDBDessinCode;
-
-// TODO equality in this way is quite silly...
-intrinsic 'eq'(s::SolvableDBObject, t::SolvableDBObject) -> BoolElt
-  {Return whether s is equal to t.}
-  isSame := true;
-  for attr in GetAttributes(Type(s)) do
-    if Type(s``attr) ne Type(t``attr) then
-      isSame := false;
-    elif s``attr ne t``attr then
-      isSame := false;
-    end if;
-  end for;
-  return isSame;
-end intrinsic;
-
-intrinsic SolvableDBObjectInitialize() -> SolvableDBObject
-  {Create an empty SolvableDBObject.}
-  s := New(SolvableDBObject);
-  return s;
-end intrinsic;
 
 intrinsic Print(s::SolvableDBObject)
   {Print SolvableDBObject}
@@ -106,4 +102,23 @@ intrinsic Print(s::SolvableDBObject)
   else
     printf "    Unramified Parents not computed yet :(\n";
   end if;
+end intrinsic;
+
+intrinsic 'eq'(s::SolvableDBObject, t::SolvableDBObject) -> BoolElt
+  {Return whether s is equal to t.}
+  isSame := true;
+  for attr in GetAttributes(Type(s)) do
+    if Type(s``attr) ne Type(t``attr) then
+      isSame := false;
+    elif s``attr ne t``attr then
+      isSame := false;
+    end if;
+  end for;
+  return isSame;
+end intrinsic;
+
+intrinsic SolvableDBObjectInitialize() -> SolvableDBObject
+  {Create an empty SolvableDBObject.}
+  s := New(SolvableDBObject);
+  return s;
 end intrinsic;
