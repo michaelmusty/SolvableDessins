@@ -24,9 +24,20 @@ MAIN
 
 
 // level 1, degree 2
-s2t1_1_a := SolvableDBAccessEntry("2T1-[1,2,2]-11-2-2-g0.m");
-s2t1_1_b := SolvableDBAccessEntry("2T1-[2,1,2]-2-11-2-g0.m");
-s2t1_1_c := SolvableDBAccessEntry("2T1-[2,2,1]-2-2-11-g0.m");
+s2t1_1_a := SolvableDBAccessEntry("2T1-[1,2,2]-11-2-2-g0-path1.m");
+s2t1_1_b := SolvableDBAccessEntry("2T1-[2,1,2]-2-11-2-g0-path1.m");
+s2t1_1_c := SolvableDBAccessEntry("2T1-[2,2,1]-2-2-11-g0-path1.m");
+
+// level 2, degree 4
+s4t1_1_a := SolvableDBAccessEntry("4T1-[1,4,4]-1111-4-4-g0-path1.m");
+s4t1_1_b := SolvableDBAccessEntry("4T1-[4,1,4]-4-1111-4-g0-path1.m");
+s4t1_1_c := SolvableDBAccessEntry("4T1-[4,4,1]-4-4-1111-g0-path1.m");
+s4t1_2_a := SolvableDBAccessEntry("4T1-[2,4,4]-22-4-4-g1-path1.m");
+s4t1_2_b := SolvableDBAccessEntry("4T1-[4,2,4]-4-22-4-g1-path1.m");
+s4t1_2_c := SolvableDBAccessEntry("4T1-[4,4,2]-4-4-22-g1-path1.m");
+s4t2_1_path1 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path1.m");
+s4t2_1_path2 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path2.m");
+s4t2_1_path3 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path3.m");
 
 /*
 // level 2, degree 4

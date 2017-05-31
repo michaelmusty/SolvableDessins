@@ -1,0 +1,30 @@
+// user defined verbose flags for vprintf
+  declare verbose Solvable, 2;
+  declare verbose SolvableTime, 1;
+
+intrinsic SolvableSanityCheck(s::SolvableDBObject) -> BoolElt
+  {given a database object s, perform a detailed sanity check.}
+  sanity := true;
+  // check unramified children of s have s as an unramified parent
+  // TODO
+  // check ramified children of s have s as a ramified parent
+  // TODO
+  // if parents of s are computed
+  // then check unramified parents of s have s as an unramified child
+  // TODO
+  // if parents of s are computed
+  // then check ramified parents of s have s as an ramified child
+  // TODO
+  if assigned s`SolvableDBParents then
+    parents := s`SolvableDBParents;
+    l := s`SolvableDBLevel;
+    l_above := Integers()!(l*2);
+    names_above := SolvableDBFilenames(l_above);
+    for parent in parents do
+      parent_name := parent cat ".m";
+      if parent_name in names_above then
+      end if;
+    end for;
+  end if;
+  return sanity;
+end intrinsic;

@@ -188,35 +188,49 @@ intrinsic SolvableDBGenerateNameAboveTransitiveDatabaseLimit(sigma::SeqEnum[GrpP
   return name;
 end intrinsic;
 
-intrinsic SolvableDBFieldWriter(K::FldRat : level := 0, index := 0) -> MonStgElt
-  {Given a field Klevel_index<nu> return a string to recreate the field.}
-  str := Sprintf("K%o_%o<nu> := RationalsAsNumberField();\n", level, index);
+intrinsic SolvableDBUnsolvableName(s::SolvableDBObject) -> MonStgElt
+  {given an obj s, return "passport name" instead of "solvable name" ugh.}
+  d := s`SolvableDBDegree;
+  if d lt TransitiveGroupDatabaseLimit() then
+    return SolvableDBGenerateName(s`SolvableDBGaloisOrbit[1]);
+  else
+    return SolvableDBGenerateNameAboveTransitiveDatabaseLimit(s`SolvableDBGaloisOrbit[1]);
+  end if;
+end intrinsic;
+
+intrinsic SolvableDBFieldWriter(F::FldRat : level := 0) -> MonStgElt
+  {Given a field Flevel return a string to recreate the field.}
+  str := Sprintf("F%o := Rationals();\n", level);
   return str;
 end intrinsic;
 
-intrinsic SolvableDBFieldWriter(K::FldNum : level := 0, index := 0) -> MonStgElt
-  {Given a field Klevel_index<nu> return a string to recreate the field.}
+intrinsic SolvableDBFieldWriter(F::FldNum : level := 0) -> MonStgElt
+  {Given a field Flevel<nulevel> return a string to recreate the field.}
   SetColumns(0);
   str := "";
-  gens := GeneratorsSequence(K);
+  gens := GeneratorsSequence(F);
   assert #gens eq 1;
-  if Degree(K) eq 1 then
-    str *:= Sprintf("K%o_%o<nu> := RationalsAsNumberField();\n", level, index);
+  if Degree(F) eq 1 then
+    str *:= Sprintf("F%o<nu%o> := RationalsAsNumberField();\n", level, level);
   else
-    minpolytext := Sprintf("%m", MinimalPolynomial(K.1));
-    str *:= Sprintf("K%o_%o<nu> := NumberField(%o);\n", level, index, minpolytext);
+    minpolytext := Sprintf("%m", MinimalPolynomial(F.1));
+    str *:= Sprintf("K%o<nu%o> := NumberField(%o);\n", level, level, minpolytext);
   end if;
   return str;
 end intrinsic;
 
 intrinsic VarText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgElt
   {returns text "varlower, varlower+1, ..., varupper-1, varupper".}
-  assert upper gt lower;
+  assert upper ge lower;
   var_text := "";
-  for i := lower to upper-1 by 1 do
-    var_text *:= Sprintf("%o%o, ", var, i);
-  end for;
-  var_text *:= Sprintf("%o%o", var, upper);
+  if upper eq lower then
+    var_text *:= Sprintf("%o%o", var, lower);
+  else
+    for i := lower to upper-1 by 1 do
+      var_text *:= Sprintf("%o%o, ", var, i);
+    end for;
+    var_text *:= Sprintf("%o%o", var, upper);
+  end if;
   return var_text;
 end intrinsic;
 
@@ -261,10 +275,11 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     else
       d := s`SolvableDBDegree;
       name := s`SolvableDBName;
+      filename := s`SolvableDBFilename;
     end if;
     SetColumns(0);
-    filename := name cat ".m";
-    savedir := Sprintf(dir cat "/SolvableDB/%o/%o" cat ".m", d, name);
+    // savedir := Sprintf(dir cat "/SolvableDB/%o/%o" cat ".m", d, name);
+    savedir := Sprintf(dir cat "/SolvableDB/%o/%o", d, filename);
     str := "";
   // always make an instance of the object
     str *:= "s := SolvableDBObjectInitialize();\n";
@@ -272,18 +287,28 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     all_attrs := GetAttributes(Type(s));
     easy_attrs := [];
     Append(~easy_attrs, "SolvableDBName");
+    Append(~easy_attrs, "SolvableDBFilename");
+    Append(~easy_attrs, "SolvableDBPathNumber");
     Append(~easy_attrs, "SolvableDBDegree");
     Append(~easy_attrs, "SolvableDBABC");
     Append(~easy_attrs, "SolvableDBType");
     Append(~easy_attrs, "SolvableDBGenus");
-    Append(~easy_attrs, "SolvableDBSize");
-    Append(~easy_attrs, "SolvableDBPointedSize");
+    Append(~easy_attrs, "SolvableDBGaloisOrbitSize");
+    Append(~easy_attrs, "SolvableDBPassportSize");
+    Append(~easy_attrs, "SolvableDBPointedPassportSize");
     Append(~easy_attrs, "SolvableDBLevel");
     permutation_attrs := [];
+    Append(~permutation_attrs, "SolvableDBGaloisOrbit");
     Append(~permutation_attrs, "SolvableDBPassport");
     Append(~permutation_attrs, "SolvableDBPointedPassport");
     Append(~permutation_attrs, "SolvableDBMonodromyGroup");
     Append(~permutation_attrs, "SolvableDBAutomorphismGroup");
+    curve_function_field_attrs := [];
+    Append(~curve_function_field_attrs, "SolvableDBCurveBaseFieldList");
+    Append(~curve_function_field_attrs, "SolvableDBCurvePolynomialRingList");
+    Append(~curve_function_field_attrs, "SolvableDBCurveAmbientList");
+    Append(~curve_function_field_attrs, "SolvableDBCurveIdealList");
+    Append(~curve_function_field_attrs, "SolvableDBCurveList");
     belyimaps_attrs := [];
     Append(~belyimaps_attrs, "SolvableDBBelyiCurves");
     Append(~belyimaps_attrs, "SolvableDBBelyiMaps");
@@ -316,23 +341,61 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
       end if;
     end for;
   /*
+  write curve function field attrs using custom printing
+  */
+    str *:= "\n/*\nCurve FunctionField\n*/\n\n";
+    level := s`SolvableDBLevel;
+    if assigned s`SolvableDBCurveBaseFieldList and assigned s`SolvableDBCurvePolynomialRingList and assigned s`SolvableDBCurveAmbientList and assigned s`SolvableDBCurveIdealList and assigned s`SolvableDBCurveList then
+      assert #s`SolvableDBCurveBaseFieldList eq level+1;
+      assert #s`SolvableDBCurvePolynomialRingList eq level+1;
+      assert #s`SolvableDBCurveAmbientList eq level+1;
+      assert #s`SolvableDBCurveIdealList eq level+1;
+      assert #s`SolvableDBCurveList eq level+1;
+      str *:= Sprintf("s`SolvableDBCurveBaseFieldList := [* *];\n");
+      str *:= Sprintf("s`SolvableDBCurvePolynomialRingList := [* *];\n");
+      str *:= Sprintf("s`SolvableDBCurveAmbientList := [* *];\n");
+      str *:= Sprintf("s`SolvableDBCurveIdealList := [* *];\n");
+      str *:= Sprintf("s`SolvableDBCurveList := [* *];\n");
+      for i := 0 to level do
+        // SolvableDBCurveBaseFieldList level i
+        F := s`SolvableDBCurveBaseFieldList[i+1];
+        str *:= SolvableDBFieldWriter(F : level := i);
+        str *:= Sprintf("Append(~s`SolvableDBCurveBaseFieldList, F%o);\n", i);
+        // SolvableDBCurvePolynomialRingList level i
+        vartext := VarText("x", 0, i);
+        str *:= Sprintf("PX%o<%o> := PolynomialRing(F%o, %o);\n", i, vartext, i, i+1);
+        str *:= Sprintf("Append(~s`SolvableDBCurvePolynomialRingList, PX%o);\n", i);
+        // SolvableDBCurveAmbientList level i
+        vartext := VarText("x", 0, i);
+        str *:= Sprintf("AA%o<%o> := AffineSpace(PX%o);\n", i, vartext, i);
+        str *:= Sprintf("Append(~s`SolvableDBCurveAmbientList, AA%o);\n", i);
+        // SolvableDBCurveIdealList level i
+        vartext := VarText("x", 0, i);
+        str *:= Sprintf("I%o<%o> := %m;\n", i, vartext, s`SolvableDBCurveIdealList[i+1]);
+        str *:= Sprintf("Append(~s`SolvableDBCurveIdealList, I%o);\n", i);
+        // SolvableDBCurveList level i
+        vartext := VarText("x", 0, i);
+        str *:= Sprintf("X%o<%o> := %m;\n", i, vartext, s`SolvableDBCurveList[i+1]);
+        str *:= Sprintf("Append(~s`SolvableDBCurveList, X%o);\n", i);
+      end for;
+    end if;
+  /*
   write list of BelyiMaps with custom printing
   */
-    str *:= "\n/*\nBelyi Maps\n*/\n\n";
-    if assigned s`SolvableDBBelyiCurves and assigned s`SolvableDBBelyiMaps then
-      // TODO assert incoming data
-      str *:= Sprintf("s`SolvableDBBelyiCurves := [* *];\n");
-      str *:= Sprintf("s`SolvableDBBelyiMaps := [* *];\n");
-      curves := s`SolvableDBBelyiCurves;
-      maps := s`SolvableDBBelyiMaps;
-      assert #curves eq #maps;
-      deg := Degree(maps[1]);
-      level := Floor(Log(deg)/Log(2));
-      for i in {1..#curves} do
-        str *:= SolvableDBBelyiMapWriter(curves[i], maps[i] : level := level, index := i);
-        str *:= Sprintf("s`SolvableDBBelyiCurves[%o] := Y%o_%o;\n", i, level, i);
-        str *:= Sprintf("s`SolvableDBBelyiMaps[%o] := phi%o_%o;\n", i, level, i);
-      end for;
+    str *:= "\n/*\nTop Level Belyi Curve/Map\n*/\n\n";
+    if assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
+      assert assigned s`SolvableDBCurveList;
+      curve := s`SolvableDBBelyiCurve;
+      map := s`SolvableDBBelyiMap;
+      level := s`SolvableDBLevel;
+      assert ISA(Type(curve), Crv);
+      assert ISA(Type(map), FldFunFracSchElt);
+      assert s`SolvableDBCurveList[level+1] eq curve;
+      vartext := VarText("x", 0, level);
+      str *:= Sprintf("X<%o> := s`SolvableDBCurveList[%o];\n", vartext, level+1);
+      str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
+      str *:= Sprintf("KX<%o> := FunctionField(X);\n", vartext);
+      str *:= Sprintf("s`SolvableDBBelyiMap := KX.1;\n");
     end if;
   /*
   write graph attributes using magma printing
@@ -362,14 +425,14 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     Write(savedir, str : Overwrite := true);
     // System(Sprintf("chmod 666 %o", filename)); // set file permissions
     // returnText := Sprintf("%o written in directory %o\n", filename, savedir);
-    returnText := Sprintf("%o written in directory %o/SolvableDB/%o/\n", filename, GetCurrentDirectory(), d);
+    returnText := Sprintf("%o written in directory %o/SolvableDB/%o\n", filename, GetCurrentDirectory(), d);
     return returnText;
 end intrinsic;
 
 // intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> MonStgElt
 intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SolvableDBObject
   // {Creates a SolvableDBObject file corresponding to sigma in the directory SolvableDB/d where d is the degree of sigma. This assumes the current directory is SolvableDB.}
-  {Creates a SolvableDBObject corresponding to sigma. This assumes the current directory is SolvableDB.}
+  {Creates a SolvableDBObject corresponding to pass. This assumes the current directory is SolvableDessins.}
   // some sanity checks
     for i in [1..#pass] do
       sigma := pass[i];
@@ -381,9 +444,11 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SolvableDBObj
     end for;
     check_pass := PassportRepresentatives(sigma);
     check_pointed_pass := PassportRepresentatives(sigma : Pointed := true);
+    /*
     if #pass ne #check_pass then
       error Sprintf("#pass = %o but #check_pass = %o :(\n", #pass, #check_pass);
     end if;
+    */
   // stuff we need later
     sigma := pass[1];
     d := Degree(Parent(sigma[1]));
@@ -409,18 +474,24 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SolvableDBObj
     ls := Pipe(Sprintf("ls %o", directory), "");
     filenames := Split(ls, "\n");
     // check to see if there are matches in the folder
-    matches := [];
-    for i in {1..#filenames} do
-      if Substring(filenames[i], 1, #newname) eq newname then
-        Append(~matches, filenames[i]);
+    /*
+      matches := [];
+      for i in {1..#filenames} do
+        if Substring(filenames[i], 1, #newname) eq newname then
+          Append(~matches, filenames[i]);
+        end if;
+      end for;
+      if #matches gt 0 then
+        // error "already a passport with this name in this folder!\n";
+        printf "WARNING:\n%o already exists in directory\n%o\nProceed with caution!\n", newname, directory;
       end if;
-    end for;
-    if #matches gt 0 then
-      // error "already a passport with this name in this folder!\n";
-      printf "WARNING:\n%o already exists in directory\n%o\nProceed with caution!\n", newname, directory;
-    end if;
+    */
   // SolvableDBName
-    s`SolvableDBName := newname;
+    s`SolvableDBName := Sprintf("%o-path1", newname); // always initialize path# to 1?
+  // SolvableDBFilename
+    s`SolvableDBFilename := s`SolvableDBName cat ".m";
+  // SolvableDBPathNumber Always initialized to 1
+    s`SolvableDBPathNumber := 1;
   // SolvableDBDegree
     s`SolvableDBDegree := d;
   // SolvableDBABC
@@ -440,20 +511,23 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SolvableDBObj
     coo := #CycleDecomposition(sigma[3]);
     genus := (d+2-c0-c1-coo)/2;
     s`SolvableDBGenus := genus;
+  // SolvableDBGaloisOrbitSize
+    s`SolvableDBGaloisOrbitSize := #pass;
   // SolvableDBSize
-    s`SolvableDBSize := #pass;
-  // SolvableDBPointedSize
-    s`SolvableDBPointedSize := #check_pointed_pass;
+    s`SolvableDBPassportSize := #check_pass;
+  // SolvableDBPointedPassportSize
+    s`SolvableDBPointedPassportSize := #check_pointed_pass;
   // SolvableDBLevel
     floor := Floor(Log(d)/Log(2));
     ceil := Ceiling(Log(d)/Log(2));
     assert floor eq ceil;
     s`SolvableDBLevel := floor;
+  // SolvableDBGaloisOrbit
+    s`SolvableDBGaloisOrbit := pass;
   // SolvableDBPassport
-    s`SolvableDBPassport := pass;
+    s`SolvableDBPassport := check_pass;
   // SolvableDBPointedPassport
     s`SolvableDBPointedPassport := check_pointed_pass;
-  // SolvableDBGaloisOrbits gets left unassigned
   // SolvableDBMonodromyGroup
     s`SolvableDBMonodromyGroup := G;
   // SolvableDBAutomorphismGroup and SolvableDBDessinCode
@@ -479,6 +553,81 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SolvableDBObj
     return returnText;
   */
   return s;
+end intrinsic;
+
+intrinsic SolvableDBMerge(s::SolvableDBObject) -> SolvableDBObject, BoolElt
+  {Given s, search the database for same name if there is none just returns s and writes s to file. If an object with the same name already appears in the database, then we check to see if the one in the database has the same PathToPP1. If both have the same PathToPP1, then we assume the one in the database has more information so we want to just take the one in the database, but first we check if s has nonconjugate triples (it should NOT!!). Lastly, if both have the same name but different PathToPP1, then we check PathNumber of the (obj in the database) and make the PathNumber of s that plus 1. Then update SolvableDBFilename, PathNumber, PathToPP1, Children, Parents, and write s to file. Also rewrite the ones with same SolvableDBName.}
+  // directory stuff
+  dir := GetCurrentDirectory();
+  parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
+  if parentdir ne "SolvableDessins\n" then
+    error "make sure your working directory is /SolvableDessins";
+  end if;
+  assert assigned s`SolvableDBDegree;
+  assert assigned s`SolvableDBFilename;
+  d := s`SolvableDBDegree;
+  filenames := SolvableDBFilenames(d);
+  same := [* *];
+  // get objs in database that have same "passport name"
+  // but not necessarily same path to PP1
+  for i := 1 to #filenames do
+    t := SolvableDBAccessEntry(filenames[i]);
+    if SolvableDBUnsolvableName(t) eq SolvableDBUnsolvableName(s) then
+      Append(~same, t);
+    end if;
+  end for;
+  // TODO always write down path number at end of filename!!!!!
+  if #same eq 0 then // s is new and we just write it to file
+    SolvableDBWriteObject(s);
+    return s, true; // s is new
+  else // compare with the existing database
+    // check "isomorphic" BelyiMaps in database
+    // and get the highest path number so far
+    current_pathnumbers := [];
+    for i := 1 to #same do
+      Append(~current_pathnumbers, same[i]`SolvableDBPathNumber);
+    end for;
+    current_pathnumbers := SequenceToSet(current_pathnumbers);
+    if #current_pathnumbers ne #same then
+      error "current database is messed up with regards to PathNumbers!";
+    end if;
+    // now actually do things
+    new_path_number := Max(current_pathnumbers)+1;
+    for i := 1 to #same do
+      t := same[i];
+      if s`SolvableDBPathToPP1 eq t`SolvableDBPathToPP1 then
+        // in this case, we have found a triple in the same Galois orbit
+        // so just append it! :)
+        /*
+          for j := 1 to #s`SolvableDBGaloisOrbit do
+            test_triple := s`SolvableDBGaloisOrbit[j];
+            for k := 1 to #t`SolvableDBGaloisOrbit do
+              if not IsConjugate(Sym(d), test_triple, t`SolvableDBGaloisOrbit[k]) then
+                error Sprintf("%o, triple %o not conjugate to %o, triple %o. How could this happen?\n", s`SolvableDBName, j, t`SolvableDBFilename, k);
+              end if;
+            end for;
+          end for;
+          assert s`SolvableDBChildren subset t`SolvableDBChildren;
+        */
+        for triple in s`SolvableDBGaloisOrbit do
+          Append(~t`SolvableDBGaloisOrbit, triple);
+        end for;
+        SolvableDBWriteObject(t);
+        return t, false; // s is not new, but we appended new triples to Galois orbit above
+      end if;
+    end for;
+    // since we made it out of the loop we know s is a new path to PP1
+    // and we want to write s to the database and update it to have correct path number
+    assert new_path_number ge 2;
+    s`SolvableDBName := Sprintf("%o-path%o", SolvableDBUnsolvableName(s), new_path_number);
+    s`SolvableDBFilename := Sprintf("%o-path%o.m", SolvableDBUnsolvableName(s), new_path_number);
+    s`SolvableDBPathNumber := new_path_number;
+    Remove(~s`SolvableDBPathToPP1, #s`SolvableDBPathToPP1);
+    Append(~s`SolvableDBPathToPP1, Sprintf("%o-path%o", SolvableDBUnsolvableName(s), s`SolvableDBPathNumber));
+    // TODO assertions before writing to file?
+    SolvableDBWriteObject(s); // update s
+    return s, true; // s is new
+  end if;
 end intrinsic;
 
 intrinsic SolvableDBFilenames(d::RngIntElt) -> SeqEnum[MonStgElt]

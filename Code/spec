@@ -1,6 +1,7 @@
 {
   passports.mag
   solvable.mag
+  solvable_above.mag
   solvableDB.mag
   solvableDBobj.mag
   solvable_maps.mag

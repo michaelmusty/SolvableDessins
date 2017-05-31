@@ -2,38 +2,33 @@ declare type SolvableDBObject;
 declare attributes SolvableDBObject:
   // easy attributes
   SolvableDBName,
+  SolvableDBFilename,
+  SolvableDBPathNumber,
   SolvableDBDegree,
   SolvableDBABC,
   SolvableDBType,
   SolvableDBGenus,
-  SolvableDBSize,
-  SolvableDBPointedSize,
+  SolvableDBGaloisOrbitSize,
+  SolvableDBPassportSize,
+  SolvableDBPointedPassportSize,
   SolvableDBLevel,
   // permutation attributes
+  SolvableDBGaloisOrbit,
   SolvableDBPassport,
   SolvableDBPointedPassport,
   SolvableDBMonodromyGroup,
   SolvableDBAutomorphismGroup,
-  // algebraic function fields
-  // TODO all
-  SolvableDBConstantFieldList,
-  SolvableDBAlgebraicFunctionFieldList,
-  SolvableDBMaximalOrderList,
-  SolvableDBPrimeList,
-  SolvableDBRamifiedPrimesDivisorList,
-  SolvableDB2TorsionDivisorList,
-  SolvableDBExtractedSqrtList,
   // curve function fields
-  // TODO all
-  SolvableDBAmbientList,
-  SolvableDBIdealList,
-  SolvableDBCurveFunctionFieldList,
-  SolvableDBRelativeBelyiMapList,
+  SolvableDBCurveBaseFieldList, // [F0, F1]
+  SolvableDBCurvePolynomialRingList, // [PX0, PX1]
+  SolvableDBCurveAmbientList, // [AA0, AA1]
+  SolvableDBCurveIdealList, // [I0, I1]
+  SolvableDBCurveList, // [X0, X1]
   // Belyi map attributes
-  SolvableDBBelyiCurves,
-  SolvableDBBelyiMaps,
+  SolvableDBBelyiCurve, // X
+  SolvableDBBelyiMap, // phi
   // graph attributes
-  SolvableDBPathToPP1, // TODO new
+  SolvableDBPathToPP1,
   SolvableDBParents,
   SolvableDBParentsUnramified,
   SolvableDBChildren,
@@ -47,28 +42,29 @@ intrinsic Print(s::SolvableDBObject)
   printf "  Degree %o\n", s`SolvableDBDegree;
   printf "  Genus %o\n", s`SolvableDBGenus;
   printf "  %o\n", s`SolvableDBType;
-  printf "  Size %o\n", s`SolvableDBSize;
-  printf "  PointedSize %o\n", s`SolvableDBPointedSize;
-  if assigned s`SolvableDBBelyiCurves and #s`SolvableDBBelyiCurves gt 0 then
-    printf "  BelyiMaps computed :)\n";
+  printf "  Galois Orbit Size %o\n", s`SolvableDBGaloisOrbitSize;
+  printf "  Passport Size %o\n", s`SolvableDBPassportSize;
+  printf "  Pointed Passport Size %o\n", s`SolvableDBPointedPassportSize;
+  if assigned s`SolvableDBBelyiCurve then
+    printf "  BelyiMap computed :)\n";
     sane := true;
-    pass := s`SolvableDBPassport;
-    curves := s`SolvableDBBelyiCurves;
-    maps := s`SolvableDBBelyiMaps;
-    assert #pass eq #curves;
-    assert #pass eq #maps;
-    for i in [1..#pass] do
-      if not BelyiMapSanityCheck(pass[i], curves[i], maps[i]) then
-        sane := false;
-      end if;
-    end for;
+    pass := s`SolvableDBGaloisOrbit;
+    curve := s`SolvableDBBelyiCurve;
+    map := s`SolvableDBBelyiMap;
+    if not BelyiMapSanityCheck(pass[1], curve, map) then
+      sane := false;
+    end if;
     if sane then
-      printf "    BelyiMaps passed sanity!\n";
+      printf "    BelyiMap passed sanity!\n";
     else
-      printf "    BelyiMaps failed sanity!\n";
+      printf "    BelyiMap failed sanity!\n";
     end if;
   else
-    printf "  BelyiMaps not computed yet :(\n";
+    printf "  BelyiMap not computed yet :(\n";
+  end if;
+  if assigned s`SolvableDBPathToPP1 then
+    printf "  PathToPP1:\n";
+    printf "    %o\n", s`SolvableDBPathToPP1;
   end if;
   printf "  Children:\n";
   if assigned s`SolvableDBChildren and #s`SolvableDBChildren gt 0 then
