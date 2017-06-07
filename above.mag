@@ -1,0 +1,6 @@
+load "catalog.mag";
+
+names2 := SolvableDBFilenames(2);
+names4 := SolvableDBFilenames(4);
+names8 := SolvableDBFilenames(8);
+names16 := SolvableDBFilenames(16);
