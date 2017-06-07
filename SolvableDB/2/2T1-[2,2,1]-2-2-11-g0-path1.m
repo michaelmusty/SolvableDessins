@@ -111,7 +111,6 @@ Graph Data
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-[2,2,1]-2-2-11-g0-path1" ];
 s`SolvableDBParents := [ Strings() | "4T1-[4,4,1]-4-4-1111-g0-path1", "4T2-[2,2,2]-22-22-22-g0-path3", "4T1-[4,4,2]-4-4-22-g1-path1" ];
 s`SolvableDBChildren := [ Strings() | "PP1" ];
-s`SolvableDBChildrenUnramified := [ Strings() | "None" ];
 
 /*
 DrawDessin Code

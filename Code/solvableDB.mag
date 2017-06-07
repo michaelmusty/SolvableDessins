@@ -315,9 +315,7 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     graph_attrs := [];
     Append(~graph_attrs, "SolvableDBPathToPP1");
     Append(~graph_attrs, "SolvableDBParents");
-    Append(~graph_attrs, "SolvableDBParentsUnramified");
     Append(~graph_attrs, "SolvableDBChildren");
-    Append(~graph_attrs, "SolvableDBChildrenUnramified");
     dessin_attrs := [];
     Append(~dessin_attrs, "SolvableDBDessinCode");
   /*

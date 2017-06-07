@@ -4,3 +4,14 @@ names2 := SolvableDBFilenames(2);
 names4 := SolvableDBFilenames(4);
 names8 := SolvableDBFilenames(8);
 names16 := SolvableDBFilenames(16);
+
+// solvable sanity
+for i := 1 to #names4 do
+  s := SolvableDBAccessEntry(names4[i]);
+  for j := 1 to #s`SolvableDBParents do
+    t := SolvableDBAccessEntry(s`SolvableDBParents[j] cat ".m");
+    if s`SolvableDBName notin t`SolvableDBChildren then
+      printf "s := %o, t := %o\n", s`SolvableDBName, t`SolvableDBName;
+    end if;
+  end for;
+end for;

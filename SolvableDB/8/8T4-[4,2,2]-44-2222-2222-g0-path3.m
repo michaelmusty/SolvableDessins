@@ -34,14 +34,14 @@ s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<8 |
 ]
 ];
 s`SolvableDBPassport := [ PowerSequence(PermutationGroup<8 |  
-\[ 1, 2, 4, 7, 5, 6, 8, 3 ],
+\[ 1, 2, 8, 3, 5, 6, 4, 7 ],
 \[ 1, 6, 3, 8, 5, 2, 7, 4 ],
 \[ 6, 1, 8, 3, 2, 5, 4, 7 ],
 \[ 4, 3, 2, 1, 8, 7, 6, 5 ],
 \[ 3, 8, 1, 6, 7, 4, 5, 2 ]:
  Order := 64 >) |
 [ PermutationGroup<8 |  
-\[ 1, 2, 4, 7, 5, 6, 8, 3 ],
+\[ 1, 2, 8, 3, 5, 6, 4, 7 ],
 \[ 1, 6, 3, 8, 5, 2, 7, 4 ],
 \[ 6, 1, 8, 3, 2, 5, 4, 7 ],
 \[ 4, 3, 2, 1, 8, 7, 6, 5 ],

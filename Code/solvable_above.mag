@@ -51,54 +51,56 @@ end intrinsic;
 intrinsic SolvableAbove(s::SolvableDBObject) -> Any, Any
   {Given a solvableDBobj, find all Galois permutation triples "above" all permutation triples in the Galois orbit corresponding to s. Update the SolvableParents of s and return a SeqEnum of SolvableDBObjects covering s with their SolvableChildren updated accordingly.}
   pass := s`SolvableDBGaloisOrbit;
-  new_covers_ramified := [];
-  new_covers_unramified := [];
+  new_covers := [];
   for i := 1 to #pass do
     list0, list1, list_oo, all, possible, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriples(pass[i] : return_everything := true);
-    sorted_unramified := SolvablePassportSort(unramified);
-    sorted_ramified := SolvablePassportSort(covers);
+    sorted_covers := SolvablePassportSort(covers cat unramified);
     // assert #unramified := &+[#sorted_unramified[i] : i in [1..#sorted_unramified]];
     // assert #ramified := &+[#sorted_ramified[i] : i in [1..#sorted_ramified]];
-    for pass in sorted_unramified do
-      t := SolvableDBExample(pass);
-      // t needs some graph information to merge
-      t`SolvableDBChildren := [Sprintf("%o", s`SolvableDBName)]; // t should have s as a child
-      t`SolvableDBPathToPP1 := s`SolvableDBPathToPP1; // start path to t with s path
-      Append(~t`SolvableDBPathToPP1, t`SolvableDBName); // t is the end of path to t
-      t, is_new := SolvableDBMerge(t); // merge t with the database
-      if is_new then // t is new and merged with database
-        // update unramified parents of s
-        assert s`SolvableDBABC eq t`SolvableDBABC;
-        if not assigned s`SolvableDBParentsUnramified then
-          s`SolvableDBParentsUnramified := []; // initialize if not assigned
+    if #sorted_covers eq 0 then // if there are no covers
+      s`SolvableDBParents := [ "None" ]; // record that we checked for parents
+    else
+      for pass in sorted_covers do
+        t := SolvableDBExample(pass);
+        // t needs some graph information to merge
+        t`SolvableDBChildren := [Sprintf("%o", s`SolvableDBName)]; // t should have s as a child
+        t`SolvableDBPathToPP1 := s`SolvableDBPathToPP1; // start path to t with s path
+        Append(~t`SolvableDBPathToPP1, t`SolvableDBName); // t is the end of path to t
+        t, is_new := SolvableDBMerge(t); // merge t with the database
+        if is_new then // t is new and merged with database
+          // update parents of s
+          if not assigned s`SolvableDBParents then
+            s`SolvableDBParents := []; // initialize if not assigned
+          end if;
+          // s should have t as a parent
+          Append(~s`SolvableDBParents, Sprintf("%o", t`SolvableDBName));
+          SolvableDBWriteObject(s);
+          // assert t has s as a child
+          assert s`SolvableDBName in t`SolvableDBChildren;
+          Append(~new_covers, t);
         end if;
-        Append(~s`SolvableDBParentsUnramified, Sprintf("%o", t`SolvableDBName)); // s should have t as a parent
-        // TODO assertions before writing?
-        // t already written to file
-        SolvableDBWriteObject(s);
-        Append(~new_covers_unramified, t);
-      end if;
-    end for;
-    for pass in sorted_ramified do
-      t := SolvableDBExample(pass);
-      // t needs some graph information to merge
-      t`SolvableDBChildren := [Sprintf("%o", s`SolvableDBName)]; // t should have s as a child
-      t`SolvableDBPathToPP1 := s`SolvableDBPathToPP1; // start path to t with s path
-      Append(~t`SolvableDBPathToPP1, t`SolvableDBName); // t is the end of path to t
-      t, is_new := SolvableDBMerge(t); // merge t with the database
-      if is_new then // t is new and merged with database
-        // update ramified parents of s
-        assert s`SolvableDBABC ne t`SolvableDBABC;
-        if not assigned s`SolvableDBParents then
-          s`SolvableDBParents := []; // initialize if not assigned
-        end if;
-        Append(~s`SolvableDBParents, Sprintf("%o", t`SolvableDBName)); // s should have t as a parent
-        // TODO assertions before writing?
-        // t already written to file
-        SolvableDBWriteObject(s);
-        Append(~new_covers_ramified, t);
-      end if;
-    end for;
+      end for;
+    end if;
   end for;
-  return new_covers_ramified, new_covers_unramified;
+  return new_covers;
+end intrinsic;
+
+intrinsic SolvableLevel(l::RngIntElt) -> Any
+  {multiple calls to SolvableAbove so that we can update parents and children accordingly.}
+  if IsEven(l) and #Factorization(l) eq 1 then
+    l_below := l div 2;
+    filenames_below := SolvableDBFilenames(l_below);
+    if #filenames_below eq 0 then
+      error "we have not computed far enough to compute to this level yet!";
+    else
+      // make a bunch of files at level l by calling SolvableAbove a level below
+      for name in filenames_below do
+        s := SolvableDBAccessEntry(name);
+        SolvableAbove(s);
+      end for;
+      return Sprintf("SolvableDB computed up to level %o\n", l);
+    end if;
+  else
+    error "level is not valid";
+  end if;
 end intrinsic;
