@@ -7,7 +7,10 @@ intrinsic SolvablePassportSort(l::SeqEnum[SeqEnum[GrpPermElt]]) -> SeqEnum[SeqEn
   if #l eq 0 then
     return l;
   else
-    d := Degree(l[1][1]);
+    assert #l[1] eq 3;
+    // d := Degree(l[1][1]);
+    // they can't all be identity....
+    d := Max([Degree(l[1][1]), Degree(l[1][2]), Degree(l[1][3])]);
     m := l;
     sorted := [];
     while #m gt 0 do
@@ -44,6 +47,7 @@ intrinsic SolvablePassportSort(l::SeqEnum[SeqEnum[GrpPermElt]]) -> SeqEnum[SeqEn
         Append(~sorted, pass);
       end if;
     end while;
+    System("say 'fuck you drop box'");
     return sorted;
   end if;
 end intrinsic;

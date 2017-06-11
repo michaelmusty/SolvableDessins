@@ -35,36 +35,40 @@
       destroy();
       var nodes = [];
       var edges = [];
-      nodes.push({id: 'PP1', label: 'PP1', group: 'size1', title: 'complex projective line'});
-      nodes.push({id: '2t1', label: '2T1', group: 'size1', title: '2T1-[2,1,2]-2-11-2-g0'});
-      nodes.push({id: '4t1_1', label: '4T1_1', group: 'size1', title: '4T1-[4,1,4]-4-1111-4-g0'});
-      nodes.push({id: '4t1_2', label: '4T1_2', group: 'size1', title: '4T1-[4,2,4]-4-22-4-g1'});
-      nodes.push({id: '4t2_1', label: '4T2_1', group: 'size1', title: '4T2-[2,2,2]-22-22-22-g0'});
-      nodes.push({id: '8t1_1', label: '8T1_1', group: 'size1', title: '8T1-[8,1,8]-8-11111111-8-g0'});
-      nodes.push({id: '8t1_2', label: '8T1_2', group: 'size1', title: '8T1-[8,2,8]-8-2222-8-g2'});
-      nodes.push({id: '8t1_3', label: '8T1_3', group: 'sizeN', title: '8T1-[8,4,8]-8-44-8-g3'});
-      nodes.push({id: '8t2_1_a', label: '8T2_1_a', group: 'size1', title: '8T2-[2,4,4]-2222-44-44-g1'});
-      nodes.push({id: '8t2_1_b', label: '8T2_1_b', group: 'size1', title: '8T2-[4,2,4]-44-2222-44-g1'});
-      nodes.push({id: '8t2_1_c', label: '8T2_1_c', group: 'size1', title: '8T2-[4,4,2]-44-44-2222-g1'});
-      nodes.push({id: '8t4_1_a', label: '8T4_1_a', group: 'size1', title: '8T4-[2,2,4]-2222-2222-44-g0'});
-      nodes.push({id: '8t4_1_b', label: '8T4_1_b', group: 'size1', title: '8T4-[2,4,2]-2222-44-2222-g0'});
-      nodes.push({id: '8t4_1_c', label: '8T4_1_c', group: 'size1', title: '8T4-[4,2,2]-44-2222-2222-g0'});
-      nodes.push({id: '8t5_1', label: '8T5_1', group: 'size1', title: '8T5-[4,4,4]-44-44-44-g2'});
-        edges.push({from: '2t1', to: 'PP1'});
-        edges.push({from: '4t1_1', to: '2t1'});
-        edges.push({from: '4t1_2', to: '2t1'});
-        edges.push({from: '4t2_1', to: '2t1'});
-        edges.push({from: '8t1_1', to: '4t1_1'});
-        edges.push({from: '8t1_2', to: '4t1_1'});
-        edges.push({from: '8t2_1_b', to: '4t1_1'});
-        edges.push({from: '8t1_3', to: '4t1_2'});
-        edges.push({from: '8t2_1_a', to: '4t2_1'});
-        edges.push({from: '8t2_1_b', to: '4t2_1'});
-        edges.push({from: '8t2_1_c', to: '4t2_1'});
-        edges.push({from: '8t4_1_a', to: '4t2_1'});
-        edges.push({from: '8t4_1_b', to: '4t2_1'});
-        edges.push({from: '8t4_1_c', to: '4t2_1'});
-        edges.push({from: '8t5_1', to: '4t2_1'});
+      // degree 1 nodes
+        nodes.push({id: 'PP1', label: 'PP1', group: 'size1', title: 'complex projective line'});
+      // degree 2 nodes
+        nodes.push({id: '2T1-1-2-2-path1', label: '2T1-1-2-2-path1', group: 'size1', title: '2T1-[1,2,2]-11-2-2-g0-path1'});
+        nodes.push({id: '2T1-2-1-2-path1', label: '2T1-2-1-2-path1', group: 'size1', title: '2T1-[2,1,2]-2-11-2-g0-path1'});
+        nodes.push({id: '2T1-2-2-1-path1', label: '2T1-2-2-1-path1', group: 'size1', title: '2T1-[2,2,1]-2-2-11-g0-path1'});
+      // degree 4 nodes
+        nodes.push({id: '4T1-1-4-4-path1', label: '4T1-1-4-4-path1', group: 'size1', title: '4T1-[1,4,4]-1111-4-4-g0-path1'});
+        nodes.push({id: '4T1-4-1-4-path1', label: '4T1-4-1-4-path1', group: 'size1', title: '4T1-[4,1,4]-4-1111-4-g0-path1'});
+        nodes.push({id: '4T1-4-4-1-path1', label: '4T1-4-4-1-path1', group: 'size1', title: '4T1-[4,4,1]-4-4-1111-g0-path1'});
+        nodes.push({id: '4T1-2-4-4-path1', label: '4T1-2-4-4-path1', group: 'size1', title: '4T1-[2,4,4]-2222-4-4-g1-path1'});
+        nodes.push({id: '4T1-4-2-4-path1', label: '4T1-4-2-4-path1', group: 'size1', title: '4T1-[4,2,4]-4-2222-4-g1-path1'});
+        nodes.push({id: '4T1-4-4-2-path1', label: '4T1-4-4-2-path1', group: 'size1', title: '4T1-[4,4,2]-4-4-2222-g1-path1'});
+        nodes.push({id: '4T2-2-2-2-path1', label: '4T2-2-2-2-path1', group: 'size1', title: '4T2-[2,2,2]-2222-2222-2222-g0-path1'});
+        nodes.push({id: '4T2-2-2-2-path2', label: '4T2-2-2-2-path2', group: 'size1', title: '4T2-[2,2,2]-2222-2222-2222-g0-path2'});
+        nodes.push({id: '4T2-2-2-2-path3', label: '4T2-2-2-2-path3', group: 'size1', title: '4T2-[2,2,2]-2222-2222-2222-g0-path3'});
+      // degree 8 nodes
+      // degree 16 nodes
+      // degree 2 edges
+        edges.push({from: '2T1-1-2-2-path1', to: 'PP1'});
+        edges.push({from: '2T1-2-1-2-path1', to: 'PP1'});
+        edges.push({from: '2T1-2-2-1-path1', to: 'PP1'});
+      // degree 4 edges
+        edges.push({from: '4T1-1-4-4-path1', to: '2T1-1-2-2-path1'});
+        edges.push({from: '4T1-4-1-4-path1', to: '2T1-2-1-2-path1'});
+        edges.push({from: '4T1-4-4-1-path1', to: '2T1-2-2-1-path1'});
+        edges.push({from: '4T1-2-4-4-path1', to: '2T1-1-2-2-path1'});
+        edges.push({from: '4T1-4-2-4-path1', to: '2T1-2-1-2-path1'});
+        edges.push({from: '4T1-4-4-2-path1', to: '2T1-2-2-1-path1'});
+        edges.push({from: '4T2-2-2-2-path1', to: '2T1-1-2-2-path1'});
+        edges.push({from: '4T2-2-2-2-path2', to: '2T1-2-1-2-path1'});
+        edges.push({from: '4T2-2-2-2-path3', to: '2T1-2-2-1-path1'});
+      // degree 8 edges
+      // degree 16 edges
       // create a network
       var container = document.getElementById('mynetwork');
       var data = {

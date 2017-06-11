@@ -3,6 +3,7 @@
   solvable.mag
   solvable_above.mag
   solvableDB.mag
+  solvable_graph.mag
   solvableDBobj.mag
   solvable_maps.mag
 }

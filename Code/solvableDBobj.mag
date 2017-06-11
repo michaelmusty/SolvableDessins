@@ -37,14 +37,34 @@ declare attributes SolvableDBObject:
 intrinsic Print(s::SolvableDBObject)
   {Print SolvableDBObject}
   printf "SolvableDBObject %o:\n", s`SolvableDBName;
-  printf "  Degree %o\n", s`SolvableDBDegree;
-  printf "  Genus %o\n", s`SolvableDBGenus;
-  printf "  %o\n", s`SolvableDBType;
-  printf "  Galois Orbit Size %o\n", s`SolvableDBGaloisOrbitSize;
-  printf "  Passport Size %o\n", s`SolvableDBPassportSize;
-  printf "  Pointed Passport Size %o\n", s`SolvableDBPointedPassportSize;
+  printf "Degree %o\n", s`SolvableDBDegree;
+  printf "Genus %o\n", s`SolvableDBGenus;
+  printf "%o\n", s`SolvableDBType;
+  printf "Galois Orbit Size %o\n", s`SolvableDBGaloisOrbitSize;
+  printf "Passport Size %o\n", s`SolvableDBPassportSize;
+  printf "Pointed Passport Size %o\n", s`SolvableDBPointedPassportSize;
+  if assigned s`SolvableDBPathToPP1 then
+    printf "PathToPP1:\n";
+    printf "  %o\n", s`SolvableDBPathToPP1;
+  end if;
+  printf "Children:\n";
+  if assigned s`SolvableDBChildren and #s`SolvableDBChildren gt 0 then
+    for i in [1..#s`SolvableDBChildren] do
+      printf "  %o\n", s`SolvableDBChildren[i];
+    end for;
+  else
+    printf "  Children not computed yet :(\n";
+  end if;
+  printf "Parents:\n";
+  if assigned s`SolvableDBParents and #s`SolvableDBParents gt 0 then
+    for i in [1..#s`SolvableDBParents] do
+      printf "  %o\n", s`SolvableDBParents[i];
+    end for;
+  else
+    printf "  Parents not computed yet :(\n";
+  end if;
   if assigned s`SolvableDBBelyiCurve then
-    printf "  BelyiMap computed :)\n";
+    printf "BelyiMap computed :)\n";
     sane := true;
     pass := s`SolvableDBGaloisOrbit;
     curve := s`SolvableDBBelyiCurve;
@@ -53,32 +73,16 @@ intrinsic Print(s::SolvableDBObject)
       sane := false;
     end if;
     if sane then
-      printf "    BelyiMap passed sanity!\n";
+      printf "BelyiMap passed sanity :)\n";
     else
-      printf "    BelyiMap failed sanity!\n";
+      printf "BelyiMap failed sanity :(\n";
     end if;
   else
-    printf "  BelyiMap not computed yet :(\n";
+    printf "BelyiMap not computed yet :(\n";
   end if;
-  if assigned s`SolvableDBPathToPP1 then
-    printf "  PathToPP1:\n";
-    printf "    %o\n", s`SolvableDBPathToPP1;
-  end if;
-  printf "  Children:\n";
-  if assigned s`SolvableDBChildren and #s`SolvableDBChildren gt 0 then
-    for i in [1..#s`SolvableDBChildren] do
-      printf "    %o\n", s`SolvableDBChildren[i];
-    end for;
-  else
-    printf "    Children not computed yet :(\n";
-  end if;
-  printf "  Parents:\n";
-  if assigned s`SolvableDBParents and #s`SolvableDBParents gt 0 then
-    for i in [1..#s`SolvableDBParents] do
-      printf "    %o\n", s`SolvableDBParents[i];
-    end for;
-  else
-    printf "    Parents not computed yet :(\n";
+  if assigned s`SolvableDBBelyiCurve then
+    printf "BelyiCurve:\n";
+    printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
   end if;
 end intrinsic;
 

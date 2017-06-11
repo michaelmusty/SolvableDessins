@@ -1,17 +1,182 @@
-intrinsic SolvableBelyiMaps(s::SolvableDBObject) -> Any, Any, Any
-  {Given a SolvableDBObject return the passport, Belyi curves and Belyi maps. If not assigned, then tries to compute them.}
-  if assigned s`SolvableDBBelyiCurves and assigned s`SolvableDBBelyiMaps then
-    pass := s`SolvableDBPassport;
-    curves := s`SolvableDBBelyiCurves;
-    maps := s`SolvableDBBelyiMaps;
-    assert #pass eq #curves and #curves eq #maps;
-    for i in [1..#pass] do
-      assert BelyiMapSanityCheck(pass[i], curves[i], maps[i]);
+intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
+  {BelyiMapSanityCheck...solvableified.}
+  if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
+    pass := s`SolvableDBGaloisOrbit;
+    curve := s`SolvableDBBelyiCurve;
+    map := s`SolvableDBBelyiMap;
+    for i := 1 to #pass do
+      if not BelyiMapSanityCheck(pass[i], curve, map : lax := lax) then
+        // TODO print something?
+        return false;
+      end if;
     end for;
-    return pass, curves, maps;
+    // if we make it out of the loop return true
+    return true;
   else
-    d := s`SolvableDBDegree;
-    level := Floor(Log(d)/Log(2));
-    error "not implemented yet :(";
+    return false;
   end if;
+end intrinsic;
+
+intrinsic SolvableBaseChange(s::SolvableDBObject) -> SolvableDBObject
+  {}
+end intrinsic;
+
+intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject, Any
+  {computes BelyiMap for s and returns s.}
+  // assertions about children of s
+    assert assigned s`SolvableDBChildren;
+    assert #s`SolvableDBChildren ge 1;
+    for i := 1 to #s`SolvableDBChildren do
+      t := SolvableDBAccessEntry(s`SolvableDBChildren[i] cat ".m");
+      assert SolvableMapSanityCheck(t);
+    end for;
+  // compute BelyiMaps using each child
+  curve_list := [* *];
+  for i := 1 to #s`SolvableDBChildren do
+    // extract information from the child
+      t := SolvableDBAccessEntry(s`SolvableDBChildren[i] cat ".m");
+      F_below := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
+      PX_below := t`SolvableDBCurvePolynomialRingList[#t`SolvableDBCurvePolynomialRingList];
+      AA_below := t`SolvableDBCurveAmbientList[#t`SolvableDBCurveAmbientList];
+      I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
+      X_below := t`SolvableDBCurveList[#t`SolvableDBCurveList];
+      assert X_below eq t`SolvableDBBelyiCurve;
+      phi_below := t`SolvableDBBelyiMap;
+      abc_below := t`SolvableDBABC;
+      abc := s`SolvableDBABC;
+    // ramification above 0
+      if abc_below[1] eq abc[1] then
+        ram0 := false;
+      else
+        assert abc[1] eq 2*abc_below[1];
+        ram0 := true;
+      end if;
+    // ramification above 1
+      if abc_below[2] eq abc[2] then
+        ram1 := false;
+      else
+        assert abc[2] eq 2*abc_below[2];
+        ram1 := true;
+      end if;
+    // ramification above oo
+      if abc_below[3] eq abc[3] then
+        ramoo := false;
+      else
+        assert abc[3] eq 2*abc_below[3];
+        ramoo := true;
+      end if;
+    // D0
+    // TODO use built in functions instead
+      support0, multiplicities0 := Support(Divisor(phi_below));
+      D0 := DivisorGroup(X_below)!0;
+      for i := 1 to #support0 do
+        if multiplicities0[i] gt 0 then
+          D0 +:= Divisor(support0[i]);
+        end if;
+      end for;
+    // D1
+      support1, multiplicities1 := Support(Divisor(phi_below-1));
+      D1 := DivisorGroup(X_below)!0;
+      for i := 1 to #support1 do
+        if multiplicities1[i] gt 0 then
+          D1 +:= Divisor(support1[i]);
+        end if;
+      end for;
+    // Doo
+      supportoo, multiplicitiesoo := Support(Divisor(1/phi_below));
+      Doo := DivisorGroup(X_below)!0;
+      for i := 1 to #supportoo do
+        if multiplicitiesoo[i] gt 0 then
+          Doo +:= Divisor(supportoo[i]);
+        end if;
+      end for;
+    // make ramification divisor
+    // TODO make this better :(
+      if ram0 then
+        if ram1 then
+          if ramoo then
+            // 0,1,oo ramified
+            D := D0+D1-Doo;
+          else
+            // 0,1 ramified
+            D := D0-D1;
+          end if;
+        else
+          if ramoo then
+            // 0,oo ramified
+            D := D0-Doo;
+          else
+            // 0 ramified
+            D := -D0;
+          end if;
+        end if;
+      else
+        if ram1 then
+          if ramoo then
+            // 1,oo ramified
+            D := D1-Doo;
+          else
+            // 1 ramified
+            D := D1;
+          end if;
+        else
+          if ramoo then
+            // oo ramified
+            D := Doo;
+          else
+            // unramified
+            error "unramified";
+          end if;
+        end if;
+      end if;
+    // RiemannRoch
+      LD, mpLDtoKX := RiemannRochSpace(D);
+      assert Dimension(LD) eq 1;
+      f := mpLDtoKX(LD.1);
+      denom := Denominator(f);
+      numer := Numerator(f);
+      assert Parent(denom) eq Parent(numer);
+    // now make the map
+      AffAlg := Parent(denom);
+      F := F_below;
+      // TODO deal with field extensions..
+      l := s`SolvableDBLevel;
+      // polynomial ring
+      PX_below := t`SolvableDBCurvePolynomialRingList[#t`SolvableDBCurvePolynomialRingList];
+      PX := eval Sprintf("PX<%o> := PolynomialRing(F, %o); return PX;", VarText("x", 0, l), l+1);
+      // map from poly ring downstairs to poly ring upstairs
+      mpPX_belowToPX := eval Sprintf("mpPX_belowToPX := hom< PX_below -> PX | %o >; return mpPX_belowToPX;", HomText("PX", 1, l));
+      // map from parent(f) to poly ring upstairs
+      mpAffAlgToPX := eval Sprintf("mpAffAlgToPX := hom< AffAlg -> PX | %o >; return mpAffAlgToPX;", HomText("PX", 1, l));
+      // ideal downstairs
+      I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
+      basis_below := Basis(I_below);
+      // map basis into poly ring upstairs
+      basis := [];
+      for j := 1 to #basis_below do
+        Append(~basis, mpPX_belowToPX(basis_below[j]));
+      end for;
+      // append new poly to basis coming
+      Append(~basis, mpAffAlgToPX(denom)*PX.(l+1)^2-mpAffAlgToPX(numer));
+      // ideal upstairs
+      I := ideal< PX | basis >;
+      Qs, Ps := PrimaryDecomposition(I);
+      Ip := Ps[1];
+      // curve upstairs
+      AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
+      // X := eval Sprintf("X<%o> := Curve(AA, Ip); return X;", VarText("x", 0, l));
+      X := eval Sprintf("X<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return X;", VarText("x", 0, l));
+      KX := eval Sprintf("KX<%o> := FunctionField(X); return KX;", VarText("x", 0, l));
+      phi := KX.1;
+      Append(~curve_list, [* t`SolvableDBName, X, phi *]);
+  end for;
+  // assign information to s
+  s`SolvableDBCurveBaseFieldList := t`SolvableDBCurveBaseFieldList cat [* F *];
+  s`SolvableDBCurvePolynomialRingList := t`SolvableDBCurvePolynomialRingList cat [* PX *];
+  s`SolvableDBCurveAmbientList := t`SolvableDBCurveAmbientList cat [* AA *];
+  s`SolvableDBCurveIdealList := t`SolvableDBCurveIdealList cat [* I *];
+  s`SolvableDBCurveList := t`SolvableDBCurveList cat [* X *];
+  s`SolvableDBBelyiCurve := X;
+  s`SolvableDBBelyiMap := phi;
+  return s, curve_list;
 end intrinsic;

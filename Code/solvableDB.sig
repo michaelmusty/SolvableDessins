@@ -9,6 +9,7 @@ S,SolvableDBUnsolvableName,"given an obj s, return ""passport name"" instead of 
 S,SolvableDBFieldWriter,Given a field Flevel return a string to recreate the field,0,1,0,0,0,0,0,0,0,262,,298,-38,-38,-38,-38,-38
 S,SolvableDBFieldWriter,Given a field Flevel<nulevel> return a string to recreate the field,0,1,0,0,0,0,0,0,0,27,,298,-38,-38,-38,-38,-38
 S,VarText,"returns text ""varlower, varlower+1, ..., varupper-1, varupper""",0,3,0,0,0,0,0,0,0,148,,0,0,148,,0,0,298,,298,-38,-38,-38,-38,-38
+S,HomText,"returns text ""var.lower, var.lower+1, ..., var.upper""",0,3,0,0,0,0,0,0,0,148,,0,0,148,,0,0,298,,298,-38,-38,-38,-38,-38
 S,SolvableDBBelyiMapWriter,"Given a BelyiMap [X, phi] return text to recreate [X, phi]. This text (once loaded) makes X and phi available in the session",0,2,0,0,0,0,0,0,0,427,,0,0,371,,298,-38,-38,-38,-38,-38
 S,SolvableDBWriteObject,"Assuming working directory is repo i.e. /SolvableDessins, write a (magma loadable) SolvableDBObject s to filename.m in the appropriate directory",0,1,0,0,0,0,0,0,0,SolvableDBObject,,298,-38,-38,-38,-38,-38
 S,SolvableDBExample,Creates a SolvableDBObject corresponding to pass. This assumes the current directory is SolvableDessins,1,0,1,82,1,82,0,222,1,0,0,0,0,0,0,0,82,,SolvableDBObject,-38,-38,-38,-38,-38

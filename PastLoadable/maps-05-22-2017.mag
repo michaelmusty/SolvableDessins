@@ -1,6 +1,7 @@
 /*
 Front Matter
 */
+ChangeDirectory("~/GITHUB/SolvableDessins");
   // assumes current directory = repo directory
   dir := GetCurrentDirectory();
   parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
