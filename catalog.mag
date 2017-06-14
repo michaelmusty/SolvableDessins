@@ -116,7 +116,7 @@ SetVerbose("Solvable", 1);
     d16t4_4_4_4_path8 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path8.m");
     d16t4_4_4_4_path9 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path9.m");
   // 16T5
-    d16t5_2_8_8_path1 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path1.m");
+    d16t5_2_8_8_path1 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path1.m"); // long Ps computation
     d16t5_2_8_8_path2 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path2.m");
     d16t5_2_8_8_path3 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path3.m");
     d16t5_2_8_8_path4 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path4.m");
