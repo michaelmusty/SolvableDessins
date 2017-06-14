@@ -2,6 +2,7 @@
 Front Matter
 */
   // assumes current directory = repo directory
+  ChangeDirectory("~/GITHUB/SolvableDessins/");
   dir := GetCurrentDirectory();
   parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
   if parentdir eq "SolvableDessins\n" then
@@ -14,6 +15,7 @@ Front Matter
   db := repo cat "/SolvableDB/";
   profiler := repo cat "/Profiler/";
   examples := repo cat "/Examples/";
+  maps := repo cat "/Maps/";
   // spec files
   AttachSpec(code cat "spec");
   AttachSpec("~/Dropbox/belyi/Code/spec");

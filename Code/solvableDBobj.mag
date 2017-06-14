@@ -83,6 +83,12 @@ intrinsic Print(s::SolvableDBObject)
   if assigned s`SolvableDBBelyiCurve then
     printf "BelyiCurve:\n";
     printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
+    printf "BaseField:\n";
+    printf "%o\n", BaseField(s`SolvableDBBelyiCurve);
+    if ISA(Type(BaseField(s`SolvableDBBelyiCurve)), FldNum) then
+      printf "Generators:\n";
+      printf "%o\n", GeneratorsSequence(BaseField(s`SolvableDBBelyiCurve));
+    end if;
   end if;
 end intrinsic;
 

@@ -83,12 +83,9 @@ s`SolvableDBMonodromyGroup := PermutationGroup<8 |
 /*
 Curve FunctionField
 */
-
-
 /*
 Top Level Belyi Curve/Map
 */
-
 
 /*
 Graph Data

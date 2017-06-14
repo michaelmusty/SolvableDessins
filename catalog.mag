@@ -22,6 +22,7 @@ Front Matter
 MAIN
 */
 
+SetVerbose("Solvable", 1);
 
 // level 1, degree 2
   // 2T1
@@ -44,26 +45,26 @@ MAIN
 
 // level 3, degree 8
   // 8T1
-    d8t1_1_8_8_path1 := SolvableDBAccessEntry("8T1-[1,8,8]-11111111-8-8-g0-path1.m");
-    d8t1_2_8_8_path1 := SolvableDBAccessEntry("8T1-[2,8,8]-2222-8-8-g2-path1.m");
-    d8t1_4_8_8_path1 := SolvableDBAccessEntry("8T1-[4,8,8]-44-8-8-g3-path1.m");
-    d8t1_8_1_8_path1 := SolvableDBAccessEntry("8T1-[8,1,8]-8-11111111-8-g0-path1.m");
-    d8t1_8_2_8_path1 := SolvableDBAccessEntry("8T1-[8,2,8]-8-2222-8-g2-path1.m");
-    d8t1_8_4_8_path1 := SolvableDBAccessEntry("8T1-[8,4,8]-8-44-8-g3-path1.m");
-    d8t1_8_8_1_path1 := SolvableDBAccessEntry("8T1-[8,8,1]-8-8-11111111-g0-path1.m");
-    d8t1_8_8_2_path1 := SolvableDBAccessEntry("8T1-[8,8,2]-8-8-2222-g2-path1.m");
-    d8t1_8_8_4_path1 := SolvableDBAccessEntry("8T1-[8,8,4]-8-8-44-g3-path1.m");
+    d8t1_1_8_8_path1 := SolvableDBAccessEntry("8T1-[1,8,8]-11111111-8-8-g0-path1.m"); // YES
+    d8t1_2_8_8_path1 := SolvableDBAccessEntry("8T1-[2,8,8]-2222-8-8-g2-path1.m"); // $.1^2-$.1?
+    d8t1_4_8_8_path1 := SolvableDBAccessEntry("8T1-[4,8,8]-44-8-8-g3-path1.m"); // YES
+    d8t1_8_1_8_path1 := SolvableDBAccessEntry("8T1-[8,1,8]-8-11111111-8-g0-path1.m"); // failed
+    d8t1_8_2_8_path1 := SolvableDBAccessEntry("8T1-[8,2,8]-8-2222-8-g2-path1.m"); // YES
+    d8t1_8_4_8_path1 := SolvableDBAccessEntry("8T1-[8,4,8]-8-44-8-g3-path1.m"); // YES
+    d8t1_8_8_1_path1 := SolvableDBAccessEntry("8T1-[8,8,1]-8-8-11111111-g0-path1.m"); // failed
+    d8t1_8_8_2_path1 := SolvableDBAccessEntry("8T1-[8,8,2]-8-8-2222-g2-path1.m"); // YES
+    d8t1_8_8_4_path1 := SolvableDBAccessEntry("8T1-[8,8,4]-8-8-44-g3-path1.m"); // YES
   // 8T2
-    d8t2_2_4_4_path1 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path1.m");
-    d8t2_2_4_4_path2 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path2.m");
-    d8t2_2_4_4_path3 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path3.m");
-    d8t2_2_4_4_path4 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path4.m");
-    d8t2_2_4_4_path5 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path5.m");
-    d8t2_4_2_4_path1 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path1.m");
-    d8t2_4_2_4_path2 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path2.m");
-    d8t2_4_2_4_path3 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path3.m");
-    d8t2_4_2_4_path4 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path4.m");
-    d8t2_4_2_4_path5 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path5.m");
+    d8t2_2_4_4_path1 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path1.m"); // $.1^2-$.1?
+    d8t2_2_4_4_path2 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path2.m"); // unramified
+    d8t2_2_4_4_path3 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path3.m"); // failed
+    d8t2_2_4_4_path4 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path4.m"); // failed
+    d8t2_2_4_4_path5 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path5.m"); // failed
+    d8t2_4_2_4_path1 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path1.m"); // YES
+    d8t2_4_2_4_path2 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path2.m"); // unramified
+    d8t2_4_2_4_path3 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path3.m"); // failed
+    d8t2_4_2_4_path4 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path4.m"); // failed
+    d8t2_4_2_4_path5 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path5.m"); // YES fiddle with divisor
     d8t2_4_4_2_path1 := SolvableDBAccessEntry("8T2-[4,4,2]-44-44-2222-g1-path1.m");
     d8t2_4_4_2_path2 := SolvableDBAccessEntry("8T2-[4,4,2]-44-44-2222-g1-path2.m");
     d8t2_4_4_2_path3 := SolvableDBAccessEntry("8T2-[4,4,2]-44-44-2222-g1-path3.m");

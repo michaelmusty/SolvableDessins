@@ -68,11 +68,64 @@ s`SolvableDBMonodromyGroup := PermutationGroup<4 |
 Curve FunctionField
 */
 
+s`SolvableDBCurveBaseFieldList := [* *];
+s`SolvableDBCurvePolynomialRingList := [* *];
+s`SolvableDBCurveAmbientList := [* *];
+s`SolvableDBCurveIdealList := [* *];
+s`SolvableDBCurveList := [* *];
+F0 := Rationals();
+Append(~s`SolvableDBCurveBaseFieldList, F0);
+PX0<x0> := PolynomialRing(F0, 1);
+Append(~s`SolvableDBCurvePolynomialRingList, PX0);
+AA0<x0> := AffineSpace(PX0);
+Append(~s`SolvableDBCurveAmbientList, AA0);
+I0<x0> := ideal<PolynomialRing(RationalField(), 1) |
+>;
+Append(~s`SolvableDBCurveIdealList, I0);
+X0<x0> := Curve(A, I) where A := AffineSpace(Generic(I)) where I := ideal<PolynomialRing(RationalField(), 1) |
+>;
+Append(~s`SolvableDBCurveList, X0);
+F1 := Rationals();
+Append(~s`SolvableDBCurveBaseFieldList, F1);
+PX1<x0, x1> := PolynomialRing(F1, 2);
+Append(~s`SolvableDBCurvePolynomialRingList, PX1);
+AA1<x0, x1> := AffineSpace(PX1);
+Append(~s`SolvableDBCurveAmbientList, AA1);
+I1<x0, x1> := ideal<PolynomialRing(RationalField(), 2) |
+x0*x1^2 - x0 + 1
+>;
+Append(~s`SolvableDBCurveIdealList, I1);
+X1<x0, x1> := Curve(A, I) where A := AffineSpace(Generic(I)) where I := ideal<PolynomialRing(RationalField(), 2) |
+x0*x1^2 - x0 + 1
+>;
+Append(~s`SolvableDBCurveList, X1);
+F2 := Rationals();
+Append(~s`SolvableDBCurveBaseFieldList, F2);
+PX2<x0, x1, x2> := PolynomialRing(F2, 3);
+Append(~s`SolvableDBCurvePolynomialRingList, PX2);
+AA2<x0, x1, x2> := AffineSpace(PX2);
+Append(~s`SolvableDBCurveAmbientList, AA2);
+I2<x0, x1, x2> := ideal<PolynomialRing(RationalField(), 3) |
+x0*x1 - x0 - 1/2*x2^2 + 1/2,
+x0*x2^2 + 1/4*x2^4 - 1/2*x2^2 + 1/4,
+x1*x2^2 - x1 + x2^2 + 1
+>;
+Append(~s`SolvableDBCurveIdealList, I2);
+X2<x0, x1, x2> := Curve(A, I) where A := AffineSpace(Generic(I)) where I := ideal<PolynomialRing(RationalField(), 3) |
+x0*x1 - x0 - 1/2*x2^2 + 1/2,
+x0*x2^2 + 1/4*x2^4 - 1/2*x2^2 + 1/4,
+x1*x2^2 - x1 + x2^2 + 1
+>;
+Append(~s`SolvableDBCurveList, X2);
 
 /*
 Top Level Belyi Curve/Map
 */
 
+X<x0, x1, x2> := s`SolvableDBCurveList[3];
+s`SolvableDBBelyiCurve := X;
+KX<x0, x1, x2> := FunctionField(X);
+s`SolvableDBBelyiMap := KX.1;
 
 /*
 Graph Data

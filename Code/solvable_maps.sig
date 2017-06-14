@@ -1,4 +1,9 @@
 174,0
 S,SolvableMapSanityCheck,BelyiMapSanityCheck...solvableified,0,1,0,0,0,0,0,0,0,SolvableDBObject,,36,-38,-38,-38,-38,-38
-S,SolvableBaseChange,,0,1,0,0,0,0,0,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38
-S,SolvableBelyiMap,computes BelyiMap for s and returns s,0,1,0,0,0,0,0,0,0,SolvableDBObject,,SolvableDBObject,-1,-38,-38,-38,-38
+S,SolvableBaseChange,Extend base field of object to K,0,2,0,0,0,0,0,0,0,27,,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38
+S,SolvableCheckResidueFields,"Computes the residue fields at places in support of D. Returns false, FldRat if these are all trivial. Returns true, Compositum of all residue fields if any residue fields are not trivial",0,1,0,0,0,0,0,0,0,61,,36,-1,-38,-38,-38,-38
+S,SolvableSetToDivisor,"Given a set of places, return the divisor",1,0,1,83,0,232,1,0,0,0,0,0,0,0,83,,61,-38,-38,-38,-38,-38
+S,SolvableRamificationDivisorUsingAllPoints,Attempt to find 1 dimensional Lspace using all points in D,0,1,0,0,0,0,0,0,0,61,,36,61,-38,-38,-38,-38
+S,SolvableRamificationDivisor,Attempt to find D with 1 dimensional Lspace. Bool is to tell if successful,1,0,1,82,0,36,2,0,0,0,0,0,0,0,168,,0,0,82,,36,61,-38,-38,-38,-38
+S,SolvableBelyiMap,overloaded to just take first child,0,1,0,0,0,0,0,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38
+S,SolvableBelyiMap,computes BelyiMap for s and returns s. Optional to input a divisor for RiemannRoch and or an index to choose which Ps to take in the primary decomposition,0,2,0,0,0,0,0,0,0,148,,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38

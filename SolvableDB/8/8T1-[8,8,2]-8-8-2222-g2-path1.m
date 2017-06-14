@@ -85,11 +85,84 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<8 |
 Curve FunctionField
 */
 
+s`SolvableDBCurveBaseFieldList := [* *];
+s`SolvableDBCurvePolynomialRingList := [* *];
+s`SolvableDBCurveAmbientList := [* *];
+s`SolvableDBCurveIdealList := [* *];
+s`SolvableDBCurveList := [* *];
+F0 := Rationals();
+F := F0;
+Append(~s`SolvableDBCurveBaseFieldList, F0);
+PX0<x0> := PolynomialRing(F0, 1);
+Append(~s`SolvableDBCurvePolynomialRingList, PX0);
+AA0<x0> := AffineSpace(PX0);
+Append(~s`SolvableDBCurveAmbientList, AA0);
+I0<x0> := ideal< PX0 | [] >;
+Append(~s`SolvableDBCurveIdealList, I0);
+X0<x0> := Curve(AA0, ideal< PX0 | [] >);
+Append(~s`SolvableDBCurveList, X0);
+F1 := Rationals();
+F := F1;
+Append(~s`SolvableDBCurveBaseFieldList, F1);
+PX1<x0, x1> := PolynomialRing(F1, 2);
+Append(~s`SolvableDBCurvePolynomialRingList, PX1);
+AA1<x0, x1> := AffineSpace(PX1);
+Append(~s`SolvableDBCurveAmbientList, AA1);
+I1<x0, x1> := ideal< PX1 | [
+x0*x1^2 - x0 + 1
+] >;
+Append(~s`SolvableDBCurveIdealList, I1);
+X1<x0, x1> := Curve(AA1, ideal< PX1 | [
+x0*x1^2 - x0 + 1
+] >);
+Append(~s`SolvableDBCurveList, X1);
+F2 := Rationals();
+F := F2;
+Append(~s`SolvableDBCurveBaseFieldList, F2);
+PX2<x0, x1, x2> := PolynomialRing(F2, 3);
+Append(~s`SolvableDBCurvePolynomialRingList, PX2);
+AA2<x0, x1, x2> := AffineSpace(PX2);
+Append(~s`SolvableDBCurveAmbientList, AA2);
+I2<x0, x1, x2> := ideal< PX2 | [
+x0*x2^4 - x0 + 1,
+x1 - x2^2
+] >;
+Append(~s`SolvableDBCurveIdealList, I2);
+X2<x0, x1, x2> := Curve(AA2, ideal< PX2 | [
+x0*x2^4 - x0 + 1,
+x1 - x2^2
+] >);
+Append(~s`SolvableDBCurveList, X2);
+F3 := Rationals();
+F := F3;
+Append(~s`SolvableDBCurveBaseFieldList, F3);
+PX3<x0, x1, x2, x3> := PolynomialRing(F3, 4);
+Append(~s`SolvableDBCurvePolynomialRingList, PX3);
+AA3<x0, x1, x2, x3> := AffineSpace(PX3);
+Append(~s`SolvableDBCurveAmbientList, AA3);
+I3<x0, x1, x2, x3> := ideal< PX3 | [
+x0*x2^2 - x0 - 1/2*x2^2 + 1/2*x2*x3^2 + 1,
+x0*x3^2 + 1/4*x2^2*x3^2 - 1/4*x2*x3^4 + 1/4*x2 - 3/4*x3^2,
+x1 - x2^2,
+x2^3 - x2^2*x3^2 - x2 - x3^2
+] >;
+Append(~s`SolvableDBCurveIdealList, I3);
+X3<x0, x1, x2, x3> := Curve(AA3, ideal< PX3 | [
+x0*x2^2 - x0 - 1/2*x2^2 + 1/2*x2*x3^2 + 1,
+x0*x3^2 + 1/4*x2^2*x3^2 - 1/4*x2*x3^4 + 1/4*x2 - 3/4*x3^2,
+x1 - x2^2,
+x2^3 - x2^2*x3^2 - x2 - x3^2
+] >);
+Append(~s`SolvableDBCurveList, X3);
 
 /*
 Top Level Belyi Curve/Map
 */
 
+X<x0, x1, x2, x3> := s`SolvableDBCurveList[4];
+s`SolvableDBBelyiCurve := X;
+KX<x0, x1, x2, x3> := FunctionField(X);
+s`SolvableDBBelyiMap := KX.1;
 
 /*
 Graph Data

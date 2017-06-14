@@ -72,7 +72,6 @@ intrinsic SolvableCheckResidueFields(D::DivCrvElt) -> BoolElt, Any
   fields := [* *];
   non_trivial := false;
   for pt in supp do
-    // TODO hmmmmm
     field := ResidueClassField(FunctionFieldPlace(pt));
     if Degree(field) gt 1 then
       non_trivial := true;
@@ -383,73 +382,66 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject, child_index::RngIntElt : manual_
     vprintf Solvable: "Foo = %o\n", Foo;
   // first try manual entry divisor if available
     if not ISA(Type(manual_divisor), RngIntElt) then
-      vprintf Solvable: "Using manual divisor first:\n";
-      D := manual_divisor;
-      // TODO assert parent is correct?
-      if Dimension(RiemannRochSpace(D)) eq 1 then
-        vprintf Solvable: "Manual divisor yields 1 dimensional Lspace!\n";
-      else
-        error "Manual divisor does not appear to work.\n";
-      end if;
+      vprintf Solvable: "Trying manual divisor first:\n";
     else
-      // make ramification divisor before BaseChange
-        vprintf Solvable: "Try to find Ramification Divisor Before BaseChange:\n";
-        time_start := Cputime();
-        worked_before_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-        time_end := Cputime();
-      // update t with base change if necessary
-      // NOTE this does not update t in the database, just to be used for s later
-        if worked_before_basechange then
-          vprintf Solvable: "OK found Ramification Divisor! That took %o seconds.\n", time_end-time_start;
-          vprintf Solvable: "No need to BaseChange.\n";
-        else
-          vprintf Solvable: "BaseChanging...\n";
-          vprintf Solvable: "Updating curve base field:\n";
-          F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
-          vprintf Solvable: "Degree of current base field = %o\n", Degree(F);
-          newF := Compositum(F, F0);
-          vprintf Solvable: "Degree with F0 = %o.\n", Degree(newF);
-          newF := Compositum(newF, F1);
-          vprintf Solvable: "Degree with F1 = %o.\n", Degree(newF);
-          newF := Compositum(newF, Foo);
-          vprintf Solvable: "Degree with Foo = %o.\n", Degree(newF);
-          t := SolvableBaseChange(t, newF);
-          vprintf Solvable: "OK done. Here is the new field:\n%o\n", newF;
-          assert t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList] eq newF;
-          vprintf Solvable: "Now updating divisors D0, D1, Doo.\n";
-          // update D0, D1, Doo after base change
-          X_below := t`SolvableDBBelyiCurve;
-          phi_below := t`SolvableDBBelyiMap;
-          DivX_below := DivisorGroup(X_below);
-          if ram0 then
-            D0 := Numerator(Divisor(phi_below));
-            vprintf Solvable: "#supp(D0) after base change = %o.\n", #Support(D0);
-          else
-            D0 := DivX_below!0;
-          end if;
-          if ram1 then
-            D1 := Numerator(Divisor(phi_below-1));
-            vprintf Solvable: "#supp(D1) after base change = %o.\n", #Support(D1);
-          else
-            D1 := DivX_below!0;
-          end if;
-          if ramoo then
-            Doo := Denominator(Divisor(phi_below));
-            vprintf Solvable: "#supp(Doo) after base change = %o.\n", #Support(Doo);
-          else
-            Doo := DivX_below!0;
-          end if;
-          // make ramification divisor after BaseChange
-          vprintf Solvable: "Finding Ramification Divisor After BaseChange:\n";
-          time_start := Cputime();
-          worked_after_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-          time_end := Cputime();
-          if worked_after_basechange then
-            vprintf Solvable: "OK done! That took %o seconds.\n", time_end-time_start;
-          else
-            error "base change didn't help us find dimension 1 Lspace :(";
-          end if;
-        end if;
+    end if;
+  // make ramification divisor before BaseChange
+    vprintf Solvable: "Try to find Ramification Divisor Before BaseChange:\n";
+    time_start := Cputime();
+    worked_before_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+    time_end := Cputime();
+  // update t with base change if necessary
+  // NOTE this does not update t in the database, just to be used for s later
+    if worked_before_basechange then
+      vprintf Solvable: "OK found Ramification Divisor! That took %o seconds.\n", time_end-time_start;
+      vprintf Solvable: "No need to BaseChange.\n";
+    else
+      vprintf Solvable: "BaseChanging...\n";
+      vprintf Solvable: "Updating curve base field:\n";
+      F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
+      vprintf Solvable: "Degree of current base field = %o\n", Degree(F);
+      newF := Compositum(F, F0);
+      vprintf Solvable: "Degree with F0 = %o.\n", Degree(newF);
+      newF := Compositum(newF, F1);
+      vprintf Solvable: "Degree with F1 = %o.\n", Degree(newF);
+      newF := Compositum(newF, Foo);
+      vprintf Solvable: "Degree with Foo = %o.\n", Degree(newF);
+      t := SolvableBaseChange(t, newF);
+      vprintf Solvable: "OK done. Here is the new field:\n%o\n", newF;
+      assert t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList] eq newF;
+      vprintf Solvable: "Now updating divisors D0, D1, Doo.\n";
+      // update D0, D1, Doo after base change
+      X_below := t`SolvableDBBelyiCurve;
+      phi_below := t`SolvableDBBelyiMap;
+      DivX_below := DivisorGroup(X_below);
+      if ram0 then
+        D0 := Numerator(Divisor(phi_below));
+        vprintf Solvable: "#supp(D0) after base change = %o.\n", #Support(D0);
+      else
+        D0 := DivX_below!0;
+      end if;
+      if ram1 then
+        D1 := Numerator(Divisor(phi_below-1));
+        vprintf Solvable: "#supp(D1) after base change = %o.\n", #Support(D1);
+      else
+        D1 := DivX_below!0;
+      end if;
+      if ramoo then
+        Doo := Denominator(Divisor(phi_below));
+        vprintf Solvable: "#supp(Doo) after base change = %o.\n", #Support(Doo);
+      else
+        Doo := DivX_below!0;
+      end if;
+      // make ramification divisor after BaseChange
+      vprintf Solvable: "Finding Ramification Divisor After BaseChange:\n";
+      time_start := Cputime();
+      worked_after_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+      time_end := Cputime();
+      if worked_after_basechange then
+        vprintf Solvable: "OK done! That took %o seconds.\n", time_end-time_start;
+      else
+        error "base change didn't help us find dimension 1 Lspace :(";
+      end if;
     end if;
   // RiemannRoch
     vprintf Solvable: "Applying RiemannRoch to following divisor:\n";
@@ -465,7 +457,6 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject, child_index::RngIntElt : manual_
     vprintf Solvable: "Numerator(f) = %o.\n", numer;
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
   // now make the map
-    vprintf Solvable: "Now constructing the curve and map.\n";
     AffAlg := Parent(denom);
     F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
     l := s`SolvableDBLevel;
@@ -494,21 +485,15 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject, child_index::RngIntElt : manual_
     vprintf Solvable: "#Ps = %o:\n", #Ps;
     vprintf Solvable: "%o\n", Ps;
     // which Ps do you want?
-    vprintf Solvable: "Checking for optional index.\n";
-    if primary_index ne 0 then
-      Ps_index := primary_index;
-    else
-      vprintf Solvable: "No optional index given. Choosing automagically.\n";
-      Ps_index := 1;
-      // TODO automate this?
-      /*
-      for i := 1 to #Ps do
-        if Dimension(Ps[i]) eq 1 then
-          Ps_index := i;
-        end if;
-      end for;
-      */
-    end if;
+    // TODO just set this manually if necessary
+    Ps_index := 1;
+    /*
+    for i := 1 to #Ps do
+      if Dimension(Ps[i]) eq 1 then
+        Ps_index := i;
+      end if;
+    end for;
+    */
     Ip := Ps[Ps_index];
     vprintf Solvable: "We picked Ps[%o]:\n%o\n", Ps_index, Ps[Ps_index];
     // curve upstairs

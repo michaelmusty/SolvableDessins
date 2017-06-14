@@ -1,0 +1,24 @@
+ChangeDirectory("~/GITHUB/SolvableDessins/");
+load "catalog.mag";
+SetVerbose("Solvable", true);
+
+s := d8t1_2_8_8_path1;
+t := SolvableDBAccessEntry(s`SolvableDBChildren[1] cat ".m");
+
+phi := t`SolvableDBBelyiMap;
+D0 := Numerator(Divisor(phi));
+D1 := Numerator(Divisor(phi-1));
+Doo := Denominator(Divisor(phi));
+
+assert #Support(D0) eq 1;
+assert #Support(D1) eq 1;
+assert #Support(Doo) eq 1;
+pt0 := Support(D0)[1];
+pt1 := Support(D1)[1];
+ptoo := Support(Doo)[1];
+
+// D := pt0-2*pt1-2*ptoo;
+// SolvableBelyiMap(s : manual_divisor := D, primary_index := 1);
+
+// Residue Field F0
+F0 := ResidueClassField(FunctionFieldPlace(pt0));

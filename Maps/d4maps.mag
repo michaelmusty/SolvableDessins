@@ -1,0 +1,3 @@
+ChangeDirectory("~/GITHUB/SolvableDessins/");
+load "catalog.mag";
+SetVerbose("Solvable", true);

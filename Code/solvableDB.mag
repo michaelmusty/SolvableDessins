@@ -214,7 +214,7 @@ intrinsic SolvableDBFieldWriter(F::FldNum : level := 0) -> MonStgElt
     str *:= Sprintf("F%o<nu%o> := RationalsAsNumberField();\n", level, level);
   else
     minpolytext := Sprintf("%m", MinimalPolynomial(F.1));
-    str *:= Sprintf("K%o<nu%o> := NumberField(%o);\n", level, level, minpolytext);
+    str *:= Sprintf("F%o<nu%o> := NumberField(%o);\n", level, level, minpolytext);
   end if;
   return str;
 end intrinsic;
@@ -373,6 +373,7 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
         // SolvableDBCurveBaseFieldList level i
         F := s`SolvableDBCurveBaseFieldList[i+1];
         str *:= SolvableDBFieldWriter(F : level := i);
+        str *:= Sprintf("F := F%o;\n", i); // TODO weird...
         str *:= Sprintf("Append(~s`SolvableDBCurveBaseFieldList, F%o);\n", i);
         // SolvableDBCurvePolynomialRingList level i
         vartext := VarText("x", 0, i);
@@ -384,11 +385,14 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
         str *:= Sprintf("Append(~s`SolvableDBCurveAmbientList, AA%o);\n", i);
         // SolvableDBCurveIdealList level i
         vartext := VarText("x", 0, i);
-        str *:= Sprintf("I%o<%o> := %m;\n", i, vartext, s`SolvableDBCurveIdealList[i+1]);
+        // str *:= Sprintf("I%o<%o> := %m;\n", i, vartext, s`SolvableDBCurveIdealList[i+1]);
+        str *:= Sprintf("I%o<%o> := ideal< PX%o | %o >;\n", i, vartext, i, Basis(s`SolvableDBCurveIdealList[i+1]));
         str *:= Sprintf("Append(~s`SolvableDBCurveIdealList, I%o);\n", i);
         // SolvableDBCurveList level i
         vartext := VarText("x", 0, i);
-        str *:= Sprintf("X%o<%o> := %m;\n", i, vartext, s`SolvableDBCurveList[i+1]);
+        // str *:= Sprintf("X%o<%o> := %m;\n", i, vartext, s`SolvableDBCurveList[i+1]);
+        // str *:= Sprintf("X%o<%o> := Curve(AA%o, I%o);\n", i, vartext, i, i);
+        str *:= Sprintf("X%o<%o> := Curve(AA%o, ideal< PX%o | %o >);\n", i, vartext, i, i, Basis(Ideal(s`SolvableDBCurveList[i+1])));
         str *:= Sprintf("Append(~s`SolvableDBCurveList, X%o);\n", i);
       end for;
     end if;

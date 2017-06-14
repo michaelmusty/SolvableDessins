@@ -1,0 +1,14 @@
+X := Curve(A, I) where A := ProjectiveSpace(Generic(I)) where I :=
+ideal<PolynomialRing(RationalField(), 4, "grevlex") |
+$.1*$.3^2 - $.3^2*$.4 - $.2*$.4^2,
+$.2*$.3^2 - $.4^3,
+$.2^2 - $.1*$.4 + $.4^2
+>;
+
+KX<x0, x1, x2> := FunctionField(X);
+
+D := Numerator(Divisor(KX.1));
+assert #Support(D) eq 1;
+pt := Support(D)[1];
+
+ResidueClassField(FunctionFieldPlace(pt));
