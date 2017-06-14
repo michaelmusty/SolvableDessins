@@ -1,0 +1,16 @@
+// Success
+ChangeDirectory("~/GITHUB/SolvableDessins/");
+load "catalog.mag";
+SetVerbose("Solvable", true);
+
+s := d8t1_8_1_8_path1;
+t := SolvableDBAccessEntry(s`SolvableDBChildren[1] cat ".m");
+
+phi := t`SolvableDBBelyiMap;
+D1 := Numerator(Divisor(phi-1));
+Doo := Denominator(Divisor(phi));
+pt1 := Support(D1)[1];
+ptoo := Support(Doo)[1];
+
+// D := pt1-ptoo;
+// SolvableBelyiMap(s : manual_divisor := D, primary_index := 1);

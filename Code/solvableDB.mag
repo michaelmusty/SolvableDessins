@@ -374,6 +374,25 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
         F := s`SolvableDBCurveBaseFieldList[i+1];
         str *:= SolvableDBFieldWriter(F : level := i);
         str *:= Sprintf("F := F%o;\n", i); // TODO weird...
+        // check if Fi eq Fj for j<i
+        // came up during d8t2_2_4_4_path3
+          min_j := 0;
+          for j := 1 to i do
+            field_i := s`SolvableDBCurveBaseFieldList[i];
+            field_j := s`SolvableDBCurveBaseFieldList[j];
+            if Type(field_i) eq FldNum and Type(field_j) eq FldNum then
+              if IsIsomorphic(field_i, field_j) then
+                if min_j eq 0 then
+                  min_j := j;
+                else
+                  break j;
+                end if;
+              end if;
+            end if;
+          end for;
+          if min_j ne 0 then // Fi eq Fj for some j<i, with j minimal
+            str *:= Sprintf("F%o := F%o;\n", i, min_j);
+          end if;
         str *:= Sprintf("Append(~s`SolvableDBCurveBaseFieldList, F%o);\n", i);
         // SolvableDBCurvePolynomialRingList level i
         vartext := VarText("x", 0, i);

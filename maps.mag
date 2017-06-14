@@ -1,2 +1,5 @@
 ChangeDirectory("~/GITHUB/SolvableDessins/Maps/");
-load "d8t1_2_8_8_path1.mag";
+// load "d8t1_1_8_8_path1.mag";
+// load "d8t1_2_8_8_path1.mag";
+// load "d8t1_8_1_8_path1.mag";
+// load "d8t1_8_8_1_path1.mag";

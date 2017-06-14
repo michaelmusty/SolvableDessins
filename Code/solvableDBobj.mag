@@ -45,7 +45,9 @@ intrinsic Print(s::SolvableDBObject)
   printf "Pointed Passport Size %o\n", s`SolvableDBPointedPassportSize;
   if assigned s`SolvableDBPathToPP1 then
     printf "PathToPP1:\n";
-    printf "  %o\n", s`SolvableDBPathToPP1;
+    for i := #s`SolvableDBPathToPP1 to 1 by -1 do
+      printf "  %o\n", s`SolvableDBPathToPP1[i];
+    end for;
   end if;
   printf "Children:\n";
   if assigned s`SolvableDBChildren and #s`SolvableDBChildren gt 0 then
@@ -56,10 +58,14 @@ intrinsic Print(s::SolvableDBObject)
     printf "  Children not computed yet :(\n";
   end if;
   printf "Parents:\n";
-  if assigned s`SolvableDBParents and #s`SolvableDBParents gt 0 then
-    for i in [1..#s`SolvableDBParents] do
-      printf "  %o\n", s`SolvableDBParents[i];
-    end for;
+  if assigned s`SolvableDBParents then
+    if #s`SolvableDBParents gt 0 then
+      for i in [1..#s`SolvableDBParents] do
+        printf "  %o\n", s`SolvableDBParents[i];
+      end for;
+    else
+      printf "  None\n";
+    end if;
   else
     printf "  Parents not computed yet :(\n";
   end if;
@@ -78,9 +84,14 @@ intrinsic Print(s::SolvableDBObject)
       printf "BelyiMap failed sanity :(\n";
     end if;
   else
-    printf "BelyiMap not computed yet :(\n";
+    unram, child := SolvableIsUnramified(s);
+    if unram then
+      printf "Cover is unramified over child:\n  %o\n", child;
+    else
+      printf "BelyiMap not computed yet :(\n";
+    end if;
   end if;
-  if assigned s`SolvableDBBelyiCurve then
+  if assigned s`SolvableDBBelyiCurve and not SolvableIsUnramified(s) then
     printf "BelyiCurve:\n";
     printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
     printf "BaseField:\n";

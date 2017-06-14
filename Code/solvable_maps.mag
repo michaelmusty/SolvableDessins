@@ -22,6 +22,23 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
   end if;
 end intrinsic;
 
+intrinsic SolvableIsUnramified(s::SolvableDBObject) -> BoolElt, MonStgElt
+  {checks if s is unramified over any of its children and returns a bool and the child.}
+  assert assigned s`SolvableDBChildren;
+  assert #s`SolvableDBChildren gt 0;
+  children := s`SolvableDBChildren;
+  sABC := s`SolvableDBABC;
+  for i := 1 to #children do
+    t := SolvableDBAccessEntry(children[i] cat ".m");
+    tABC := t`SolvableDBABC;
+    if sABC eq tABC then
+      return true, children[i];
+    end if;
+  end for;
+  // if we make it out of the loop then s is not ramified over any children
+  return false, "None";
+end intrinsic;
+
 intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   {Extend base field of object to K.}
   assert SolvableMapSanityCheck(s);
@@ -72,7 +89,6 @@ intrinsic SolvableCheckResidueFields(D::DivCrvElt) -> BoolElt, Any
   fields := [* *];
   non_trivial := false;
   for pt in supp do
-    // TODO hmmmmm
     field := ResidueClassField(FunctionFieldPlace(pt));
     if Degree(field) gt 1 then
       non_trivial := true;
@@ -86,7 +102,7 @@ intrinsic SolvableCheckResidueFields(D::DivCrvElt) -> BoolElt, Any
     for i := 1 to #fields do
       return_field := Compositum(return_field, fields[i]);
     end for;
-    return true, return_field;
+    return true, AbsoluteField(return_field);
   end if;
 end intrinsic;
 
@@ -124,6 +140,7 @@ intrinsic SolvableRamificationDivisorUsingAllPoints(D::DivCrvElt) -> BoolElt, Di
   return false, Parent(D)!0;
 end intrinsic;
 
+/*
 intrinsic SolvableRamificationDivisor(ram::SeqEnum[BoolElt], Ds::List) -> BoolElt, DivCrvElt
   {Attempt to find D with 1 dimensional Lspace. Bool is to tell if successful.}
   vprintf Solvable: "Trying to find 1 dimensional Lspace:\n";
@@ -284,6 +301,52 @@ intrinsic SolvableRamificationDivisor(ram::SeqEnum[BoolElt], Ds::List) -> BoolEl
     end if;
   end if;
 end intrinsic;
+*/
+
+intrinsic SolvableRamificationToDivisor(ram::SeqEnum[BoolElt], Ds::List) -> DivCrvElt
+  {Given ramification data and [D0, D1, Doo], return corresponding divisor.}
+  assert #ram eq 3;
+  ram0, ram1, ramoo := Explode(ram);
+  assert #Ds eq 3;
+  D0, D1, Doo := Explode(Ds);
+  if ram0 then
+    if ram1 then
+      if ramoo then
+        // 0,1,oo ramified
+        return D0+D1+Doo;
+      else
+        // 0,1 ramified
+        return D0+D1;
+      end if;
+    else
+      if ramoo then
+        // 0,oo ramified
+        return D0+Doo;
+      else
+        // 0 ramified
+        return D0;
+      end if;
+    end if;
+  else
+    if ram1 then
+      if ramoo then
+        // 1,oo ramified
+        return D1+Doo;
+      else
+        // 1 ramified
+        return D1;
+      end if;
+    else
+      if ramoo then
+        // oo ramified
+        return Doo;
+      else
+        // unramified
+        error "unramified...what?";
+      end if;
+    end if;
+  end if;
+end intrinsic;
 
 intrinsic SolvableBelyiMap(s::SolvableDBObject : manual_divisor := 0, primary_index := 0) -> SolvableDBObject
   {overloaded to just take first child.}
@@ -395,7 +458,9 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject, child_index::RngIntElt : manual_
       // make ramification divisor before BaseChange
         vprintf Solvable: "Try to find Ramification Divisor Before BaseChange:\n";
         time_start := Cputime();
-        worked_before_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+        // worked_before_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+        Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+        worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
         time_end := Cputime();
       // update t with base change if necessary
       // NOTE this does not update t in the database, just to be used for s later
@@ -442,7 +507,9 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject, child_index::RngIntElt : manual_
           // make ramification divisor after BaseChange
           vprintf Solvable: "Finding Ramification Divisor After BaseChange:\n";
           time_start := Cputime();
-          worked_after_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+          // worked_after_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+          Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+          worked_after_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
           time_end := Cputime();
           if worked_after_basechange then
             vprintf Solvable: "OK done! That took %o seconds.\n", time_end-time_start;
