@@ -16,7 +16,6 @@ Front Matter
   examples := repo cat "/Examples/";
   // spec files
   AttachSpec(code cat "spec");
-  AttachSpec("~/Dropbox/belyi/Code/spec");
 
 /*
 MAIN
