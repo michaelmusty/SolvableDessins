@@ -1,0 +1,249 @@
+/*
+Front Matter
+*/
+  // assumes current directory = repo directory
+  dir := GetCurrentDirectory();
+  parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
+  if parentdir eq "SolvableDessins\n" then
+    repo := dir;
+  else
+    error "make sure your working directory is /SolvableDessins";
+  end if;
+  // directories in SolvableDessins repo
+  code := repo cat "/Code/";
+  db := repo cat "/SolvableDB/";
+  profiler := repo cat "/Profiler/";
+  examples := repo cat "/Examples/";
+  // spec files
+  AttachSpec(code cat "spec");
+  AttachSpec("~/Dropbox/belyi/Code/spec");
+
+/*
+MAIN
+*/
+
+SetVerbose("Solvable", 1);
+
+// level 1, degree 2
+  // 2T1
+    d2t1_1_2_2_path1 := SolvableDBAccessEntry("2T1-[1,2,2]-11-2-2-g0-path1.m");
+    d2t1_2_1_2_path1 := SolvableDBAccessEntry("2T1-[2,1,2]-2-11-2-g0-path1.m");
+    d2t1_2_2_1_path1 := SolvableDBAccessEntry("2T1-[2,2,1]-2-2-11-g0-path1.m");
+
+// level 2, degree 4
+  // 4T1
+    d4t1_1_4_4_path1 := SolvableDBAccessEntry("4T1-[1,4,4]-1111-4-4-g0-path1.m");
+    d4t1_4_1_4_path1 := SolvableDBAccessEntry("4T1-[4,1,4]-4-1111-4-g0-path1.m");
+    d4t1_4_4_1_path1 := SolvableDBAccessEntry("4T1-[4,4,1]-4-4-1111-g0-path1.m");
+    d4t1_2_4_4_path1 := SolvableDBAccessEntry("4T1-[2,4,4]-22-4-4-g1-path1.m");
+    d4t1_4_2_4_path1 := SolvableDBAccessEntry("4T1-[4,2,4]-4-22-4-g1-path1.m");
+    d4t1_4_4_2_path1 := SolvableDBAccessEntry("4T1-[4,4,2]-4-4-22-g1-path1.m");
+  // 4T2
+    d4t2_2_2_2_path1 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path1.m");
+    d4t2_2_2_2_path2 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path2.m");
+    d4t2_2_2_2_path3 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path3.m");
+
+// level 3, degree 8
+  // 8T1
+    d8t1_1_8_8_path1 := SolvableDBAccessEntry("8T1-[1,8,8]-11111111-8-8-g0-path1.m");
+    d8t1_2_8_8_path1 := SolvableDBAccessEntry("8T1-[2,8,8]-2222-8-8-g2-path1.m");
+    d8t1_4_8_8_path1 := SolvableDBAccessEntry("8T1-[4,8,8]-44-8-8-g3-path1.m");
+    d8t1_8_1_8_path1 := SolvableDBAccessEntry("8T1-[8,1,8]-8-11111111-8-g0-path1.m");
+    d8t1_8_2_8_path1 := SolvableDBAccessEntry("8T1-[8,2,8]-8-2222-8-g2-path1.m");
+    d8t1_8_4_8_path1 := SolvableDBAccessEntry("8T1-[8,4,8]-8-44-8-g3-path1.m");
+    d8t1_8_8_1_path1 := SolvableDBAccessEntry("8T1-[8,8,1]-8-8-11111111-g0-path1.m");
+    d8t1_8_8_2_path1 := SolvableDBAccessEntry("8T1-[8,8,2]-8-8-2222-g2-path1.m");
+    d8t1_8_8_4_path1 := SolvableDBAccessEntry("8T1-[8,8,4]-8-8-44-g3-path1.m");
+  // 8T2
+    d8t2_2_4_4_path1 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path1.m");
+    d8t2_2_4_4_path2 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path2.m"); // unramified
+    d8t2_2_4_4_path3 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path3.m");
+    d8t2_2_4_4_path4 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path4.m");
+    d8t2_2_4_4_path5 := SolvableDBAccessEntry("8T2-[2,4,4]-2222-44-44-g1-path5.m"); // failed
+    d8t2_4_2_4_path1 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path1.m");
+    d8t2_4_2_4_path2 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path2.m"); // unramified
+    d8t2_4_2_4_path3 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path3.m");
+    d8t2_4_2_4_path4 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path4.m");
+    d8t2_4_2_4_path5 := SolvableDBAccessEntry("8T2-[4,2,4]-44-2222-44-g1-path5.m");
+    d8t2_4_4_2_path1 := SolvableDBAccessEntry("8T2-[4,4,2]-44-44-2222-g1-path1.m");
+    d8t2_4_4_2_path2 := SolvableDBAccessEntry("8T2-[4,4,2]-44-44-2222-g1-path2.m"); // unramified
+    d8t2_4_4_2_path3 := SolvableDBAccessEntry("8T2-[4,4,2]-44-44-2222-g1-path3.m");
+    d8t2_4_4_2_path4 := SolvableDBAccessEntry("8T2-[4,4,2]-44-44-2222-g1-path4.m");
+    d8t2_4_4_2_path5 := SolvableDBAccessEntry("8T2-[4,4,2]-44-44-2222-g1-path5.m");
+  // 8T4
+    d8t4_2_2_4_path1 := SolvableDBAccessEntry("8T4-[2,2,4]-2222-2222-44-g0-path1.m");
+    d8t4_2_2_4_path2 := SolvableDBAccessEntry("8T4-[2,2,4]-2222-2222-44-g0-path2.m");
+    d8t4_2_2_4_path3 := SolvableDBAccessEntry("8T4-[2,2,4]-2222-2222-44-g0-path3.m");
+    d8t4_2_4_2_path1 := SolvableDBAccessEntry("8T4-[2,4,2]-2222-44-2222-g0-path1.m"); // parents!
+    d8t4_2_4_2_path2 := SolvableDBAccessEntry("8T4-[2,4,2]-2222-44-2222-g0-path2.m"); // parents!
+    d8t4_2_4_2_path3 := SolvableDBAccessEntry("8T4-[2,4,2]-2222-44-2222-g0-path3.m"); // parents!
+    d8t4_4_2_2_path1 := SolvableDBAccessEntry("8T4-[4,2,2]-44-2222-2222-g0-path1.m"); // parents!
+    d8t4_4_2_2_path2 := SolvableDBAccessEntry("8T4-[4,2,2]-44-2222-2222-g0-path2.m"); // parents!
+    d8t4_4_2_2_path3 := SolvableDBAccessEntry("8T4-[4,2,2]-44-2222-2222-g0-path3.m"); // parents!
+  // 8T5
+    d8t5_4_4_4_path1 := SolvableDBAccessEntry("8T5-[4,4,4]-44-44-44-g2-path1.m");
+    d8t5_4_4_4_path2 := SolvableDBAccessEntry("8T5-[4,4,4]-44-44-44-g2-path2.m");
+    d8t5_4_4_4_path3 := SolvableDBAccessEntry("8T5-[4,4,4]-44-44-44-g2-path3.m");
+
+// level 4, degree 16
+  // 16T1
+    d16t1_1_16_16_path1 := SolvableDBAccessEntry("16T1-[1,16,16]-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1-16-16-g0-path1.m");
+    d16t1_16_1_16_path1 := SolvableDBAccessEntry("16T1-[16,1,16]-16-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1-16-g0-path1.m");
+    d16t1_16_16_1_path1 := SolvableDBAccessEntry("16T1-[16,16,1]-16-16-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1-g0-path1.m");
+    d16t1_16_16_2_path1 := SolvableDBAccessEntry("16T1-[16,16,2]-16-16-2,2,2,2,2,2,2,2-g4-path1.m");
+    d16t1_16_16_4_path1 := SolvableDBAccessEntry("16T1-[16,16,4]-16-16-4,4,4,4-g6-path1.m");
+    d16t1_16_16_8_path1 := SolvableDBAccessEntry("16T1-[16,16,8]-16-16-8,8-g7-path1.m");
+    d16t1_16_2_16_path1 := SolvableDBAccessEntry("16T1-[16,2,16]-16-2,2,2,2,2,2,2,2-16-g4-path1.m");
+    d16t1_16_4_16_path1 := SolvableDBAccessEntry("16T1-[16,4,16]-16-4,4,4,4-16-g6-path1.m");
+    d16t1_16_8_16_path1 := SolvableDBAccessEntry("16T1-[16,8,16]-16-8,8-16-g7-path1.m");
+    d16t1_2_16_16_path1 := SolvableDBAccessEntry("16T1-[2,16,16]-2,2,2,2,2,2,2,2-16-16-g4-path1.m");
+    d16t1_4_16_16_path1 := SolvableDBAccessEntry("16T1-[4,16,16]-4,4,4,4-16-16-g6-path1.m");
+    d16t1_8_16_16_path1 := SolvableDBAccessEntry("16T1-[8,16,16]-8,8-16-16-g7-path1.m");
+  // 16T4
+    d16t4_4_4_4_path1 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path1.m");
+    d16t4_4_4_4_path10 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path10.m");
+    d16t4_4_4_4_path11 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path11.m");
+    d16t4_4_4_4_path12 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path12.m");
+    d16t4_4_4_4_path13 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path13.m");
+    d16t4_4_4_4_path14 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path14.m");
+    d16t4_4_4_4_path15 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path15.m");
+    d16t4_4_4_4_path2 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path2.m");
+    d16t4_4_4_4_path3 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path3.m");
+    d16t4_4_4_4_path4 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path4.m");
+    d16t4_4_4_4_path5 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path5.m");
+    d16t4_4_4_4_path6 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path6.m");
+    d16t4_4_4_4_path7 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path7.m");
+    d16t4_4_4_4_path8 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path8.m");
+    d16t4_4_4_4_path9 := SolvableDBAccessEntry("16T4-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path9.m");
+  // 16T5
+    d16t5_2_8_8_path1 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path1.m"); // long Ps computation
+    d16t5_2_8_8_path2 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path2.m");
+    d16t5_2_8_8_path3 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path3.m");
+    d16t5_2_8_8_path4 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path4.m");
+    d16t5_2_8_8_path5 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path5.m");
+    d16t5_2_8_8_path6 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path6.m");
+    d16t5_2_8_8_path7 := SolvableDBAccessEntry("16T5-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path7.m");
+    d16t5_4_8_8_path1 := SolvableDBAccessEntry("16T5-[4,8,8]-4,4,4,4-8,8-8,8-g5-path1.m");
+    d16t5_4_8_8_path2 := SolvableDBAccessEntry("16T5-[4,8,8]-4,4,4,4-8,8-8,8-g5-path2.m");
+    d16t5_4_8_8_path3 := SolvableDBAccessEntry("16T5-[4,8,8]-4,4,4,4-8,8-8,8-g5-path3.m");
+    d16t5_4_8_8_path4 := SolvableDBAccessEntry("16T5-[4,8,8]-4,4,4,4-8,8-8,8-g5-path4.m");
+    d16t5_4_8_8_path5 := SolvableDBAccessEntry("16T5-[4,8,8]-4,4,4,4-8,8-8,8-g5-path5.m");
+    d16t5_4_8_8_path6 := SolvableDBAccessEntry("16T5-[4,8,8]-4,4,4,4-8,8-8,8-g5-path6.m");
+    d16t5_8_2_8_path1 := SolvableDBAccessEntry("16T5-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path1.m");
+    d16t5_8_2_8_path2 := SolvableDBAccessEntry("16T5-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path2.m");
+    d16t5_8_2_8_path3 := SolvableDBAccessEntry("16T5-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path3.m");
+    d16t5_8_2_8_path4 := SolvableDBAccessEntry("16T5-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path4.m");
+    d16t5_8_2_8_path5 := SolvableDBAccessEntry("16T5-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path5.m");
+    d16t5_8_2_8_path6 := SolvableDBAccessEntry("16T5-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path6.m");
+    d16t5_8_2_8_path7 := SolvableDBAccessEntry("16T5-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path7.m");
+    d16t5_8_4_8_path1 := SolvableDBAccessEntry("16T5-[8,4,8]-8,8-4,4,4,4-8,8-g5-path1.m");
+    d16t5_8_4_8_path2 := SolvableDBAccessEntry("16T5-[8,4,8]-8,8-4,4,4,4-8,8-g5-path2.m");
+    d16t5_8_4_8_path3 := SolvableDBAccessEntry("16T5-[8,4,8]-8,8-4,4,4,4-8,8-g5-path3.m");
+    d16t5_8_4_8_path4 := SolvableDBAccessEntry("16T5-[8,4,8]-8,8-4,4,4,4-8,8-g5-path4.m");
+    d16t5_8_4_8_path5 := SolvableDBAccessEntry("16T5-[8,4,8]-8,8-4,4,4,4-8,8-g5-path5.m");
+    d16t5_8_4_8_path6 := SolvableDBAccessEntry("16T5-[8,4,8]-8,8-4,4,4,4-8,8-g5-path6.m");
+    d16t5_8_8_2_path1 := SolvableDBAccessEntry("16T5-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path1.m");
+    d16t5_8_8_2_path2 := SolvableDBAccessEntry("16T5-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path2.m");
+    d16t5_8_8_2_path3 := SolvableDBAccessEntry("16T5-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path3.m");
+    d16t5_8_8_2_path4 := SolvableDBAccessEntry("16T5-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path4.m");
+    d16t5_8_8_2_path5 := SolvableDBAccessEntry("16T5-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path5.m");
+    d16t5_8_8_2_path6 := SolvableDBAccessEntry("16T5-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path6.m");
+    d16t5_8_8_2_path7 := SolvableDBAccessEntry("16T5-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path7.m");
+    d16t5_8_8_4_path1 := SolvableDBAccessEntry("16T5-[8,8,4]-8,8-8,8-4,4,4,4-g5-path1.m");
+    d16t5_8_8_4_path2 := SolvableDBAccessEntry("16T5-[8,8,4]-8,8-8,8-4,4,4,4-g5-path2.m");
+    d16t5_8_8_4_path3 := SolvableDBAccessEntry("16T5-[8,8,4]-8,8-8,8-4,4,4,4-g5-path3.m");
+    d16t5_8_8_4_path4 := SolvableDBAccessEntry("16T5-[8,8,4]-8,8-8,8-4,4,4,4-g5-path4.m");
+    d16t5_8_8_4_path5 := SolvableDBAccessEntry("16T5-[8,8,4]-8,8-8,8-4,4,4,4-g5-path5.m");
+    d16t5_8_8_4_path6 := SolvableDBAccessEntry("16T5-[8,8,4]-8,8-8,8-4,4,4,4-g5-path6.m");
+  // 16T6
+    d16t6_2_8_8_path1 := SolvableDBAccessEntry("16T6-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path1.m");
+    d16t6_2_8_8_path2 := SolvableDBAccessEntry("16T6-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path2.m");
+    d16t6_2_8_8_path3 := SolvableDBAccessEntry("16T6-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path3.m");
+    d16t6_2_8_8_path4 := SolvableDBAccessEntry("16T6-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path4.m");
+    d16t6_2_8_8_path5 := SolvableDBAccessEntry("16T6-[2,8,8]-2,2,2,2,2,2,2,2-8,8-8,8-g3-path5.m");
+    d16t6_4_8_8_path1 := SolvableDBAccessEntry("16T6-[4,8,8]-4,4,4,4-8,8-8,8-g5-path1.m");
+    d16t6_4_8_8_path2 := SolvableDBAccessEntry("16T6-[4,8,8]-4,4,4,4-8,8-8,8-g5-path2.m");
+    d16t6_4_8_8_path3 := SolvableDBAccessEntry("16T6-[4,8,8]-4,4,4,4-8,8-8,8-g5-path3.m");
+    d16t6_4_8_8_path4 := SolvableDBAccessEntry("16T6-[4,8,8]-4,4,4,4-8,8-8,8-g5-path4.m");
+    d16t6_4_8_8_path5 := SolvableDBAccessEntry("16T6-[4,8,8]-4,4,4,4-8,8-8,8-g5-path5.m");
+    d16t6_8_2_8_path1 := SolvableDBAccessEntry("16T6-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path1.m");
+    d16t6_8_2_8_path2 := SolvableDBAccessEntry("16T6-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path2.m");
+    d16t6_8_2_8_path3 := SolvableDBAccessEntry("16T6-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path3.m");
+    d16t6_8_2_8_path4 := SolvableDBAccessEntry("16T6-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path4.m");
+    d16t6_8_2_8_path5 := SolvableDBAccessEntry("16T6-[8,2,8]-8,8-2,2,2,2,2,2,2,2-8,8-g3-path5.m");
+    d16t6_8_4_8_path1 := SolvableDBAccessEntry("16T6-[8,4,8]-8,8-4,4,4,4-8,8-g5-path1.m");
+    d16t6_8_4_8_path2 := SolvableDBAccessEntry("16T6-[8,4,8]-8,8-4,4,4,4-8,8-g5-path2.m");
+    d16t6_8_4_8_path3 := SolvableDBAccessEntry("16T6-[8,4,8]-8,8-4,4,4,4-8,8-g5-path3.m");
+    d16t6_8_4_8_path4 := SolvableDBAccessEntry("16T6-[8,4,8]-8,8-4,4,4,4-8,8-g5-path4.m");
+    d16t6_8_4_8_path5 := SolvableDBAccessEntry("16T6-[8,4,8]-8,8-4,4,4,4-8,8-g5-path5.m");
+    d16t6_8_8_2_path1 := SolvableDBAccessEntry("16T6-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path1.m");
+    d16t6_8_8_2_path2 := SolvableDBAccessEntry("16T6-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path2.m");
+    d16t6_8_8_2_path3 := SolvableDBAccessEntry("16T6-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path3.m");
+    d16t6_8_8_2_path4 := SolvableDBAccessEntry("16T6-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path4.m");
+    d16t6_8_8_2_path5 := SolvableDBAccessEntry("16T6-[8,8,2]-8,8-8,8-2,2,2,2,2,2,2,2-g3-path5.m");
+    d16t6_8_8_4_path1 := SolvableDBAccessEntry("16T6-[8,8,4]-8,8-8,8-4,4,4,4-g5-path1.m");
+    d16t6_8_8_4_path2 := SolvableDBAccessEntry("16T6-[8,8,4]-8,8-8,8-4,4,4,4-g5-path2.m");
+    d16t6_8_8_4_path3 := SolvableDBAccessEntry("16T6-[8,8,4]-8,8-8,8-4,4,4,4-g5-path3.m");
+    d16t6_8_8_4_path4 := SolvableDBAccessEntry("16T6-[8,8,4]-8,8-8,8-4,4,4,4-g5-path4.m");
+    d16t6_8_8_4_path5 := SolvableDBAccessEntry("16T6-[8,8,4]-8,8-8,8-4,4,4,4-g5-path5.m");
+  // 16T8
+    d16t8_4_4_4_path1 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path1.m");
+    d16t8_4_4_4_path10 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path10.m");
+    d16t8_4_4_4_path11 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path11.m");
+    d16t8_4_4_4_path12 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path12.m");
+    d16t8_4_4_4_path13 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path13.m");
+    d16t8_4_4_4_path14 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path14.m");
+    d16t8_4_4_4_path15 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path15.m");
+    d16t8_4_4_4_path16 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path16.m");
+    d16t8_4_4_4_path17 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path17.m");
+    d16t8_4_4_4_path18 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path18.m");
+    d16t8_4_4_4_path19 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path19.m");
+    d16t8_4_4_4_path2 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path2.m");
+    d16t8_4_4_4_path20 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path20.m");
+    d16t8_4_4_4_path21 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path21.m");
+    d16t8_4_4_4_path3 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path3.m");
+    d16t8_4_4_4_path4 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path4.m");
+    d16t8_4_4_4_path5 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path5.m");
+    d16t8_4_4_4_path6 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path6.m");
+    d16t8_4_4_4_path7 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path7.m");
+    d16t8_4_4_4_path8 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path8.m");
+    d16t8_4_4_4_path9 := SolvableDBAccessEntry("16T8-[4,4,4]-4,4,4,4-4,4,4,4-4,4,4,4-g3-path9.m");
+  // 16T10
+    d16t10_2_4_4_path1 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1-path1.m");
+    d16t10_2_4_4_path2 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1-path2.m");
+    d16t10_2_4_4_path3 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1-path3.m");
+    d16t10_2_4_4_path4 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1-path4.m");
+    d16t10_2_4_4_path5 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1-path5.m");
+    d16t10_2_4_4_path6 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1-path6.m");
+    d16t10_2_4_4_path7 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1-path7.m");
+    d16t10_2_4_4_path8 := SolvableDBAccessEntry("16T10-[2,4,4]-2,2,2,2,2,2,2,2-4,4,4,4-4,4,4,4-g1-path8.m");
+    d16t10_4_2_4_path1 := SolvableDBAccessEntry("16T10-[4,2,4]-4,4,4,4-2,2,2,2,2,2,2,2-4,4,4,4-g1-path1.m");
+    d16t10_4_2_4_path2 := SolvableDBAccessEntry("16T10-[4,2,4]-4,4,4,4-2,2,2,2,2,2,2,2-4,4,4,4-g1-path2.m");
+    d16t10_4_2_4_path3 := SolvableDBAccessEntry("16T10-[4,2,4]-4,4,4,4-2,2,2,2,2,2,2,2-4,4,4,4-g1-path3.m");
+    d16t10_4_2_4_path4 := SolvableDBAccessEntry("16T10-[4,2,4]-4,4,4,4-2,2,2,2,2,2,2,2-4,4,4,4-g1-path4.m");
+    d16t10_4_2_4_path5 := SolvableDBAccessEntry("16T10-[4,2,4]-4,4,4,4-2,2,2,2,2,2,2,2-4,4,4,4-g1-path5.m");
+    d16t10_4_2_4_path6 := SolvableDBAccessEntry("16T10-[4,2,4]-4,4,4,4-2,2,2,2,2,2,2,2-4,4,4,4-g1-path6.m");
+    d16t10_4_2_4_path7 := SolvableDBAccessEntry("16T10-[4,2,4]-4,4,4,4-2,2,2,2,2,2,2,2-4,4,4,4-g1-path7.m");
+    d16t10_4_2_4_path8 := SolvableDBAccessEntry("16T10-[4,2,4]-4,4,4,4-2,2,2,2,2,2,2,2-4,4,4,4-g1-path8.m");
+    d16t10_4_4_2_path1 := SolvableDBAccessEntry("16T10-[4,4,2]-4,4,4,4-4,4,4,4-2,2,2,2,2,2,2,2-g1-path1.m");
+    d16t10_4_4_2_path2 := SolvableDBAccessEntry("16T10-[4,4,2]-4,4,4,4-4,4,4,4-2,2,2,2,2,2,2,2-g1-path2.m");
+    d16t10_4_4_2_path3 := SolvableDBAccessEntry("16T10-[4,4,2]-4,4,4,4-4,4,4,4-2,2,2,2,2,2,2,2-g1-path3.m");
+    d16t10_4_4_2_path4 := SolvableDBAccessEntry("16T10-[4,4,2]-4,4,4,4-4,4,4,4-2,2,2,2,2,2,2,2-g1-path4.m");
+    d16t10_4_4_2_path5 := SolvableDBAccessEntry("16T10-[4,4,2]-4,4,4,4-4,4,4,4-2,2,2,2,2,2,2,2-g1-path5.m");
+  // 16T12
+    d16t12_2_4_8_path1 := SolvableDBAccessEntry("16T12-[2,4,8]-2,2,2,2,2,2,2,2-4,4,4,4-8,8-g2-path1.m");
+    d16t12_2_4_8_path2 := SolvableDBAccessEntry("16T12-[2,4,8]-2,2,2,2,2,2,2,2-4,4,4,4-8,8-g2-path2.m");
+    d16t12_2_4_8_path3 := SolvableDBAccessEntry("16T12-[2,4,8]-2,2,2,2,2,2,2,2-4,4,4,4-8,8-g2-path3.m");
+    d16t12_4_2_8_path1 := SolvableDBAccessEntry("16T12-[4,2,8]-4,4,4,4-2,2,2,2,2,2,2,2-8,8-g2-path1.m");
+    d16t12_4_2_8_path2 := SolvableDBAccessEntry("16T12-[4,2,8]-4,4,4,4-2,2,2,2,2,2,2,2-8,8-g2-path2.m");
+    d16t12_4_2_8_path3 := SolvableDBAccessEntry("16T12-[4,2,8]-4,4,4,4-2,2,2,2,2,2,2,2-8,8-g2-path3.m");
+  // 16T13
+    d16t13_2_2_8_path1 := SolvableDBAccessEntry("16T13-[2,2,8]-2,2,2,2,2,2,2,2-2,2,2,2,2,2,2,2-8,8-g0-path1.m");
+    d16t13_2_2_8_path2 := SolvableDBAccessEntry("16T13-[2,2,8]-2,2,2,2,2,2,2,2-2,2,2,2,2,2,2,2-8,8-g0-path2.m");
+    d16t13_2_2_8_path3 := SolvableDBAccessEntry("16T13-[2,2,8]-2,2,2,2,2,2,2,2-2,2,2,2,2,2,2,2-8,8-g0-path3.m");
+  // 16T14
+    d16t14_4_4_8_path1 := SolvableDBAccessEntry("16T14-[4,4,8]-4,4,4,4-4,4,4,4-8,8-g4-path1.m");
+    d16t14_4_4_8_path2 := SolvableDBAccessEntry("16T14-[4,4,8]-4,4,4,4-4,4,4,4-8,8-g4-path2.m");
+    d16t14_4_4_8_path3 := SolvableDBAccessEntry("16T14-[4,4,8]-4,4,4,4-4,4,4,4-8,8-g4-path3.m");
+
+// level 5, degree 32
