@@ -1,6 +1,9 @@
 /*
 Front Matter
 */
+  // sarunas install
+  a,b,c := GetVersion();
+  assert [a,b,c] eq [2,21,12];
   // assumes current directory = repo directory
   dir := GetCurrentDirectory();
   parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
