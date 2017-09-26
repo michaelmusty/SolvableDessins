@@ -25,19 +25,23 @@ end intrinsic;
 // TODO error when reading in PP1 if s has degree 2
 intrinsic SolvableIsUnramified(s::SolvableDBObject) -> BoolElt, MonStgElt
   {checks if s is unramified over any of its children and returns a bool and the child.}
-  assert assigned s`SolvableDBChildren;
-  assert #s`SolvableDBChildren gt 0;
-  children := s`SolvableDBChildren;
-  sABC := s`SolvableDBABC;
-  for i := 1 to #children do
-    t := SolvableDBAccessEntry(children[i] cat ".m");
-    tABC := t`SolvableDBABC;
-    if sABC eq tABC then
-      return true, children[i];
-    end if;
-  end for;
-  // if we make it out of the loop then s is not ramified over any children
-  return false, "None";
+  if s`SolvableDBDegree eq 2 then
+    return false, "None";
+  else
+    assert assigned s`SolvableDBChildren;
+    assert #s`SolvableDBChildren gt 0;
+    children := s`SolvableDBChildren;
+    sABC := s`SolvableDBABC;
+    for i := 1 to #children do
+      t := SolvableDBAccessEntry(children[i] cat ".m");
+      tABC := t`SolvableDBABC;
+      if sABC eq tABC then
+        return true, children[i];
+      end if;
+    end for;
+    // if we make it out of the loop then s is not ramified over any children
+    return false, "None";
+  end if;
 end intrinsic;
 
 intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject

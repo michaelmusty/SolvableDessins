@@ -11,10 +11,6 @@ intrinsic SolvableDBAccessEntry(filename::MonStgElt) -> Any
     for i in {1..#filename} do
       if filename[i] eq "T" then
         num_chars := i-1;
-      else // for filename = PP1
-        if filename[i] eq "P" and filename[i+1] eq "P" then
-          num_chars := 1;
-        end if;
       end if;
     end for;
     assert num_chars ne 0;
