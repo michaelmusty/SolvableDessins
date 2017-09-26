@@ -22,9 +22,9 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
   end if;
 end intrinsic;
 
-// TODO error when reading in PP1 if s has degree 2
 intrinsic SolvableIsUnramified(s::SolvableDBObject) -> BoolElt, MonStgElt
   {checks if s is unramified over any of its children and returns a bool and the child.}
+  // fixed error when reading in PP1 if s has degree 2
   if s`SolvableDBDegree eq 2 then
     return false, "None";
   else
