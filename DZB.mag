@@ -1,25 +1,53 @@
-d := 16;
-f := SolvableDBFilenames(d);
-directory := GetCurrentDirectory();
-DZB := [];
-for i := 1 to #f do
-  s := SolvableDBAccessEntry(f[i]);
-  if s`SolvableDBGenus in [2,3] then
-    Append(~DZB, s);
-  end if;
-end for;
-erroroutfile := directory cat "/d" cat IntegerToString(d) cat "g2-errors.out";
-SetLogFile(directory cat "/d" cat IntegerToString(d) cat "g2.log");
-for s in DZB do
-  printf "%o:\n", s`SolvableDBName;
-  try
-    SolvableBelyiMap(s);
-    if SolvableMapSanityCheck(s) then
-      SolvableDBWriteObject(s);
+load "doob.mag";
+// try/catch on doob
+/*
+  d := 16;
+  f := SolvableDBFilenames(d);
+  directory := GetCurrentDirectory();
+  DZB := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    if s`SolvableDBGenus in [2,3] then
+      Append(~DZB, s);
     end if;
-  catch e1
-    PrintFile(erroroutfile, Sprintf("Problem with %o\n", s`SolvableDBName));
-    PrintFile(erroroutfile, e1);
-  end try;
-end for;
+  end for;
+  erroroutfile := directory cat "/d" cat IntegerToString(d) cat "g2-errors.out";
+  SetLogFile(directory cat "/d" cat IntegerToString(d) cat "g2.log");
+  for s in DZB do
+    printf "%o:\n", s`SolvableDBName;
+    try
+      SolvableBelyiMap(s);
+      if SolvableMapSanityCheck(s) then
+        SolvableDBWriteObject(s);
+      end if;
+    catch e1
+      PrintFile(erroroutfile, Sprintf("Problem with %o\n", s`SolvableDBName));
+      PrintFile(erroroutfile, e1);
+    end try;
+  end for;
+*/
 
+// DZB status report
+  f := SolvableDBFilenames(8);
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+  end for;
+  computed := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    if s`SolvableDBGenus in [2,3] and assigned s`SolvableDBBelyiCurve and
+      SolvableMapSanityCheck(s) then
+      Append(~computed, s);
+    end if;
+  end for;
+  DZB := [* *];
+  for s in computed do
+    printf "%o: ", s`SolvableDBName;
+    curve := s`SolvableDBBelyiCurve;
+    map := s`SolvableDBBelyiMap;
+    bool, H := IsHyperelliptic(curve);
+    printf "%o\n", bool;
+    if bool then
+      Append(~DZB, [* s`SolvableDBName, H, curve, map *]);
+    end if;
+  end for;
