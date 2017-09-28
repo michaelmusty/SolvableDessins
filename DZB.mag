@@ -4,7 +4,7 @@ directory := GetCurrentDirectory();
 DZB := [];
 for i := 1 to #f do
   s := SolvableDBAccessEntry(f[i]);
-  if s`SolvableDBGenus ge 2 then
+  if s`SolvableDBGenus in [2,3] then
     Append(~DZB, s);
   end if;
 end for;
