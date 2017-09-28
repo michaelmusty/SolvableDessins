@@ -89,11 +89,112 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<16 |
 Curve FunctionField
 */
 
+s`SolvableDBCurveBaseFieldList := [* *];
+s`SolvableDBCurvePolynomialRingList := [* *];
+s`SolvableDBCurveAmbientList := [* *];
+s`SolvableDBCurveIdealList := [* *];
+s`SolvableDBCurveList := [* *];
+F0 := Rationals();
+F := F0;
+Append(~s`SolvableDBCurveBaseFieldList, F0);
+PX0<x0> := PolynomialRing(F0, 1);
+Append(~s`SolvableDBCurvePolynomialRingList, PX0);
+AA0<x0> := AffineSpace(PX0);
+Append(~s`SolvableDBCurveAmbientList, AA0);
+I0<x0> := ideal< PX0 | [] >;
+Append(~s`SolvableDBCurveIdealList, I0);
+X0<x0> := Curve(AA0, ideal< PX0 | [] >);
+Append(~s`SolvableDBCurveList, X0);
+F1<nu1> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+F := F1;
+Append(~s`SolvableDBCurveBaseFieldList, F1);
+PX1<x0, x1> := PolynomialRing(F1, 2);
+Append(~s`SolvableDBCurvePolynomialRingList, PX1);
+AA1<x0, x1> := AffineSpace(PX1);
+Append(~s`SolvableDBCurveAmbientList, AA1);
+I1<x0, x1> := ideal< PX1 | [
+-x0 + x1^2 + 1
+] >;
+Append(~s`SolvableDBCurveIdealList, I1);
+X1<x0, x1> := Curve(AA1, ideal< PX1 | [
+-x0 + x1^2 + 1
+] >);
+Append(~s`SolvableDBCurveList, X1);
+F2<nu2> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+F := F2;
+F2 := F2;
+Append(~s`SolvableDBCurveBaseFieldList, F2);
+PX2<x0, x1, x2> := PolynomialRing(F2, 3);
+Append(~s`SolvableDBCurvePolynomialRingList, PX2);
+AA2<x0, x1, x2> := AffineSpace(PX2);
+Append(~s`SolvableDBCurveAmbientList, AA2);
+I2<x0, x1, x2> := ideal< PX2 | [
+x0 - x1^2 - 1,
+x1*x2^2 - x1 + nu2*x2^2 + nu2
+] >;
+Append(~s`SolvableDBCurveIdealList, I2);
+X2<x0, x1, x2> := Curve(AA2, ideal< PX2 | [
+x0 - x1^2 - 1,
+x1*x2^2 - x1 + nu2*x2^2 + nu2
+] >);
+Append(~s`SolvableDBCurveList, X2);
+F3<nu3> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+F := F3;
+F3 := F2;
+Append(~s`SolvableDBCurveBaseFieldList, F3);
+PX3<x0, x1, x2, x3> := PolynomialRing(F3, 4);
+Append(~s`SolvableDBCurvePolynomialRingList, PX3);
+AA3<x0, x1, x2, x3> := AffineSpace(PX3);
+Append(~s`SolvableDBCurveAmbientList, AA3);
+I3<x0, x1, x2, x3> := ideal< PX3 | [
+x0 - x1^2 - 1,
+x1*x2 + x1 + nu2*x2 - x3^2,
+x1*x3^2 - 1/2*x3^4 + 1/2,
+x2*x3^2 + nu2*x2 - x3^2 + nu2
+] >;
+Append(~s`SolvableDBCurveIdealList, I3);
+X3<x0, x1, x2, x3> := Curve(AA3, ideal< PX3 | [
+x0 - x1^2 - 1,
+x1*x2 + x1 + nu2*x2 - x3^2,
+x1*x3^2 - 1/2*x3^4 + 1/2,
+x2*x3^2 + nu2*x2 - x3^2 + nu2
+] >);
+Append(~s`SolvableDBCurveList, X3);
+F4<nu4> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+F := F4;
+F4 := F2;
+Append(~s`SolvableDBCurveBaseFieldList, F4);
+PX4<x0, x1, x2, x3, x4> := PolynomialRing(F4, 5);
+Append(~s`SolvableDBCurvePolynomialRingList, PX4);
+AA4<x0, x1, x2, x3, x4> := AffineSpace(PX4);
+Append(~s`SolvableDBCurveAmbientList, AA4);
+I4<x0, x1, x2, x3, x4> := ideal< PX4 | [
+x0 - x1^2 - 1,
+x1*x2 + x1 + nu2*x2 - x3^2,
+x1*x3^2 - 1/2*x3^4 + 1/2,
+x2*x3^2 + nu2*x2 - x3^2 + nu2,
+1/2*(-nu2 - 1)*x1*x3 + x1*x4^2 - x3^2 + (nu2 - 1)*x3 + nu2
+] >;
+Append(~s`SolvableDBCurveIdealList, I4);
+X4<x0, x1, x2, x3, x4> := Curve(AA4, ideal< PX4 | [
+x0 - x1^2 - 1,
+x1*x2 + x1 + nu2*x2 - x3^2,
+x1*x3 + (nu2 - 1)*x1*x4^2 + (-nu2 + 1)*x3^2 - 2*nu2*x3 - nu2 - 1,
+x1*x4^4 - 1/2*x3^2*x4^4 - 1/2*x3^2*x4^2 - 1/4*x3^2 + 1/2*(-nu2 + 1)*x3*x4^4 + 1/2*(nu2 - 1)*x3*x4^2 + 1/4*(nu2 - 1)*x3 + 1/2*nu2*x4^4 + 3/2*nu2*x4^2 + 1/4*nu2,
+x2*x3 + 1/3*(nu2 - 1)*x2*x4^2 + 1/3*(-2*nu2 + 2)*x2 + 1/3*(nu2 + 1)*x3^2 - 2/3*x3*x4^2 + 1/3*x3 + 1/3*(-nu2 + 1)*x4^2 + 1/3*(-2*nu2 + 2),
+x2*x4^4 - 4*x2*x4^2 - 1/2*x2 - nu2*x3^2*x4^2 - nu2*x3^2 + (nu2 + 1)*x3*x4^4 + (-nu2 - 1)*x3*x4^2 + 1/2*(-nu2 - 1)*x3 - x4^4 - 3*x4^2 - 1/2,
+x3^3 + (nu2 - 1)*x3^2*x4^2 + (-nu2 + 1)*x3^2 - 2*nu2*x3*x4^2 - nu2*x3 + (nu2 + 1)*x4^2
+] >);
+Append(~s`SolvableDBCurveList, X4);
 
 /*
 Top Level Belyi Curve/Map
 */
 
+X<x0, x1, x2, x3, x4> := s`SolvableDBCurveList[5];
+s`SolvableDBBelyiCurve := X;
+KX<x0, x1, x2, x3, x4> := FunctionField(X);
+s`SolvableDBBelyiMap := KX.1;
 
 /*
 Graph Data
