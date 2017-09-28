@@ -27,27 +27,52 @@ load "doob.mag";
   end for;
 */
 
-// DZB status report
+// DZB8 status report
   f := SolvableDBFilenames(8);
   for i := 1 to #f do
     s := SolvableDBAccessEntry(f[i]);
   end for;
-  computed := [];
+  computed8 := [];
   for i := 1 to #f do
     s := SolvableDBAccessEntry(f[i]);
     if s`SolvableDBGenus in [2,3] and assigned s`SolvableDBBelyiCurve and
       SolvableMapSanityCheck(s) then
-      Append(~computed, s);
+      Append(~computed8, s);
     end if;
   end for;
-  DZB := [* *];
-  for s in computed do
+  DZB8 := [* *];
+  for s in computed8 do
     printf "%o: ", s`SolvableDBName;
     curve := s`SolvableDBBelyiCurve;
     map := s`SolvableDBBelyiMap;
     bool, H := IsHyperelliptic(curve);
     printf "%o\n", bool;
     if bool then
-      Append(~DZB, [* s`SolvableDBName, H, curve, map *]);
+      Append(~DZB8, [* s`SolvableDBName, H, curve, map *]);
+    end if;
+  end for;
+
+// DZB16 status report
+  f := SolvableDBFilenames(16);
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+  end for;
+  computed16 := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    if s`SolvableDBGenus in [2,3] and assigned s`SolvableDBBelyiCurve and
+      SolvableMapSanityCheck(s) then
+      Append(~computed16, s);
+    end if;
+  end for;
+  DZB8 := [* *];
+  for s in computed16 do
+    printf "%o: ", s`SolvableDBName;
+    curve := s`SolvableDBBelyiCurve;
+    map := s`SolvableDBBelyiMap;
+    bool, H := IsHyperelliptic(curve);
+    printf "%o\n", bool;
+    if bool then
+      Append(~DZB16, [* s`SolvableDBName, H, curve, map *]);
     end if;
   end for;
