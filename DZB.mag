@@ -1,5 +1,6 @@
 d := 16;
 f := SolvableDBFilenames(d);
+directory := GetCurrentDirectory();
 DZB := [];
 for i := 1 to #f do
   s := SolvableDBAccessEntry(f[i]);
