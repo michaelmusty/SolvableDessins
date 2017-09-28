@@ -15,13 +15,15 @@ erroroutfile := directory cat "/d" cat IntegerToString(d) cat "g2-errors.out";
 SetLogFile(directory cat "/d" cat IntegerToString(d) cat "g2.log");
 for s in DZB do
   printf "%o:\n", s`SolvableDBName;
-  try
-    SolvableBelyiMap(s);
-    if SolvableMapSanityCheck(s) then
-      SolvableDBWriteObject(s);
-    end if;
-  catch e1
-    PrintFile(erroroutfile, Sprintf("Problem with %o\n", s`SolvableDBName));
-    PrintFile(erroroutfile, e1);
-  end try;
+  if not assigned s`SolvableDBBelyiCurve then
+    try
+      SolvableBelyiMap(s);
+      if SolvableMapSanityCheck(s) then
+        SolvableDBWriteObject(s);
+      end if;
+    catch e1
+      PrintFile(erroroutfile, Sprintf("Problem with %o\n", s`SolvableDBName));
+      PrintFile(erroroutfile, e1);
+    end try;
+  end if;
 end for;
