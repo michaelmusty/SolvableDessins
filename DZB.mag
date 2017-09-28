@@ -61,8 +61,7 @@ load "doob.mag";
   for i := 1 to #f do
     s := SolvableDBAccessEntry(f[i]);
     printf "%o: DZB? ", s`SolvableDBName;
-    if s`SolvableDBGenus in [2,3] and assigned s`SolvableDBBelyiCurve and
-      SolvableMapSanityCheck(s) then
+    if s`SolvableDBGenus in [2,3] and assigned s`SolvableDBBelyiCurve then
       Append(~computed16, s);
       printf "Yes!\n";
     else
