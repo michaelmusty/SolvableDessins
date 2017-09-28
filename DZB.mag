@@ -68,7 +68,7 @@ load "doob.mag";
       printf "No.\n";
     end if;
   end for;
-  DZB8 := [* *];
+  DZB16 := [* *];
   for s in computed16 do
     printf "%o: Hyperelliptic? ", s`SolvableDBName;
     curve := s`SolvableDBBelyiCurve;
