@@ -12,8 +12,8 @@ for i := 1 to #f do
     Append(~DZB, s);
   end if;
 end for;
-erroroutfile := directory cat "/d" cat IntegerToString(d) cat "g2-errors.out";
-SetLogFile(directory cat "/d" cat IntegerToString(d) cat "g2.log");
+erroroutfile := directory cat "/d" cat IntegerToString(d) cat "g>3-errors.out";
+SetLogFile(directory cat "/d" cat IntegerToString(d) cat "g>3.log");
 for s in DZB do
   printf "%o:\n", s`SolvableDBName;
   if not assigned s`SolvableDBBelyiCurve then
