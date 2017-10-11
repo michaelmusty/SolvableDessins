@@ -40,6 +40,7 @@ load "doob.mag";
       Append(~computed8, s);
     end if;
   end for;
+  /*
   DZB8 := [* *];
   for s in computed8 do
     printf "%o: Hyperelliptic? ", s`SolvableDBName;
@@ -51,6 +52,7 @@ load "doob.mag";
       Append(~DZB8, [* s`SolvableDBName, H, curve, map *]);
     end if;
   end for;
+  */
 
 // DZB16 status report
   f := SolvableDBFilenames(16);
@@ -68,6 +70,7 @@ load "doob.mag";
       printf "No.\n";
     end if;
   end for;
+  /*
   DZB16 := [* *];
   for s in computed16 do
     printf "%o: Hyperelliptic? ", s`SolvableDBName;
@@ -79,3 +82,4 @@ load "doob.mag";
       Append(~DZB16, [* s`SolvableDBName, H, curve, map *]);
     end if;
   end for;
+  */
