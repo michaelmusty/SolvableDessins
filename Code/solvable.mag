@@ -504,24 +504,24 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
   d := Degree(Parent(sigma[1]));
   assert sigma[3]*sigma[2]*sigma[1] eq Id(Sym(d));
   // generate above each permutation
-  printf "\n";
-  printf "Generating possibilities above sigma0 = %o:\n", sigma[1];
-  time0_1 := Cputime();
-  list_0 := PossibleGaloisCoveringPermutations(sigma[1] : zentral := zentral);
-  time0_2 := Cputime();
-  printf "\tOK done! That took %o seconds.\n\n", time0_2 - time0_1;
-  printf "Generating possibilities above sigma1 = %o:\n", sigma[2];
-  time1_1 := Cputime();
-  list_1 := PossibleGaloisCoveringPermutations(sigma[2] : zentral := zentral);
-  time1_2 := Cputime();
-  printf "\tOK done! That took %o seconds.\n\n", time1_2 - time1_1;
-  printf "Generating possibilities above sigmaoo = %o:\n", sigma[3];
-  timeoo_1 := Cputime();
-  list_oo := PossibleGaloisCoveringPermutations(sigma[3] : zentral := zentral);
-  timeoo_2 := Cputime();
-  printf "\tOK done! That took %o seconds.\n\n", timeoo_2 - timeoo_1;
-  all := [];
-  possible := [];
+    printf "\n";
+    printf "Generating possibilities above sigma0 = %o:\n", sigma[1];
+    time0_1 := Cputime();
+    list_0 := PossibleGaloisCoveringPermutations(sigma[1] : zentral := zentral);
+    time0_2 := Cputime();
+    printf "\tOK done! That took %o seconds.\n\n", time0_2 - time0_1;
+    printf "Generating possibilities above sigma1 = %o:\n", sigma[2];
+    time1_1 := Cputime();
+    list_1 := PossibleGaloisCoveringPermutations(sigma[2] : zentral := zentral);
+    time1_2 := Cputime();
+    printf "\tOK done! That took %o seconds.\n\n", time1_2 - time1_1;
+    printf "Generating possibilities above sigmaoo = %o:\n", sigma[3];
+    timeoo_1 := Cputime();
+    list_oo := PossibleGaloisCoveringPermutations(sigma[3] : zentral := zentral);
+    timeoo_2 := Cputime();
+    printf "\tOK done! That took %o seconds.\n\n", timeoo_2 - timeoo_1;
+    all := [];
+    possible := [];
   // filter out triples that can be Belyi maps
   time2 := Cputime();
   if brutal then

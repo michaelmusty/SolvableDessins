@@ -47,7 +47,6 @@ intrinsic SolvablePassportSort(l::SeqEnum[SeqEnum[GrpPermElt]]) -> SeqEnum[SeqEn
         Append(~sorted, pass);
       end if;
     end while;
-    System("say 'fuck you drop box'");
     return sorted;
   end if;
 end intrinsic;
