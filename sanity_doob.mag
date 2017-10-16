@@ -10,7 +10,7 @@ for name in names4 do
   triples := s`SolvableDBGaloisOrbit;
   printf "%o:\n", s`SolvableDBName;
   for i := 1 to #triples do
-    printf "  i = %o\n";
+    printf "  i = %o\n", i;
     list0_b, list1_b, listoo_b, all_b, possible_b, justramified_b, unramified_b, correct_b := PossibleGaloisCoveringPermutationTriples(triples[i] : brutal := true, return_everything := true);
     list0, list1, listoo, all, possible, justramified, unramified, correct := PossibleGaloisCoveringPermutationTriples(triples[i] : return_everything := true);
     printf "    list_0: %o\n", #list0_b eq #list0;
