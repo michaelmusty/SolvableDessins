@@ -5,9 +5,10 @@ SetVerbose("Solvable", false);
 names2 := SolvableDBFilenames(2);
 names4 := SolvableDBFilenames(4);
 names8 := SolvableDBFilenames(8);
+names16 := SolvableDBFilenames(16);
 
 sanity := [* *];
-for name in names8 do
+for name in names16 do
   s := SolvableDBAccessEntry(name);
   triples := s`SolvableDBGaloisOrbit;
   printf "%o:\n", s`SolvableDBName;
