@@ -4,23 +4,27 @@ names2 := SolvableDBFilenames(2);
 names4 := SolvableDBFilenames(4);
 names8 := SolvableDBFilenames(8);
 
-// pick an example
-s := SolvableDBAccessEntry(names4[9]);
-
-pass := s`SolvableDBGaloisOrbit;
-ramified_covers := [];
-unramified_covers := [];
-for i := 1 to #pass do
-  list0, list1, listoo, all, possible, justramified, unramified, correct :=
-  PossibleGaloisCoveringPermutationTriples(pass[i] : return_everything := true);
-  // ramified := SolvablePassportSort(justramified);
-  ramified := justramified;
-  for j := 1 to #ramified do
-    Append(~ramified_covers, ramified[j]);
-  end for;
-  // unramified := SolvablePassportSort(unramified);
-  unramified := unramified;
-  for j := 1 to #unramified do
-    Append(~unramified_covers, unramified[j]);
+sanity := [* *];
+for s in names4 do
+  triples := s`SolvableDBGaloisOrbit;
+  printf "%o:\n", s`SolvableDBName;
+  for i := 1 to #triples do
+    printf "  i = %o\n";
+    list0_b, list1_b, listoo_b, all_b, possible_b, justramified_b, unramified_b, correct_b := PossibleGaloisCoveringPermutationTriples(triples[i] : brutal := true, return_everything := true);
+    list0, list1, listoo, all, possible, justramified, unramified, correct := PossibleGaloisCoveringPermutationTriples(triples[i] : return_everything := true);
+    printf "    list_0: %o\n", #list0_b eq #list0;
+    printf "    list_1: %o\n", #list1_b eq #list1;
+    printf "    list_oo: %o\n", #listoo_b eq #listoo;
+    printf "    #possible = %o\n", #possible;
+    printf "    #possible_b = %o\n", #possible_b;
+    printf "    #justramified = %o\n", #just_ramified;
+    printf "    #justramified_b = %o\n", #just_ramified_b;
+    printf "    #unramified = %o\n", #unramified;
+    printf "    #unramified_b = %o\n", #unramified_b;
+    printf "    #correct = %o\n", #correct;
+    printf "    #correct_b = %o\n", #correct_b;
+    if #correct_b ne #correct then
+      Append(~sanity, [s, i]);
+    end if;
   end for;
 end for;
