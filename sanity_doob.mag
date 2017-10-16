@@ -5,7 +5,8 @@ names4 := SolvableDBFilenames(4);
 names8 := SolvableDBFilenames(8);
 
 sanity := [* *];
-for s in names4 do
+for name in names4 do
+  s := SolvableDBAccessEntry(name);
   triples := s`SolvableDBGaloisOrbit;
   printf "%o:\n", s`SolvableDBName;
   for i := 1 to #triples do
