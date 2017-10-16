@@ -17,7 +17,7 @@ for s in names4 do
     printf "    list_oo: %o\n", #listoo_b eq #listoo;
     printf "    #possible = %o\n", #possible;
     printf "    #possible_b = %o\n", #possible_b;
-    printf "    #justramified = %o\n", #just_ramified;
+    printf "    #justramified = %o\n", #justramified;
     printf "    #justramified_b = %o\n", #justramified_b;
     printf "    #unramified = %o\n", #unramified;
     printf "    #unramified_b = %o\n", #unramified_b;
