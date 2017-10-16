@@ -13,9 +13,6 @@ for name in names4 do
     printf "  i = %o\n", i;
     list0_b, list1_b, listoo_b, all_b, possible_b, justramified_b, unramified_b, correct_b := PossibleGaloisCoveringPermutationTriples(triples[i] : brutal := true, return_everything := true);
     list0, list1, listoo, all, possible, justramified, unramified, correct := PossibleGaloisCoveringPermutationTriples(triples[i] : return_everything := true);
-    printf "    list_0: %o\n", #list0_b eq #list0;
-    printf "    list_1: %o\n", #list1_b eq #list1;
-    printf "    list_oo: %o\n", #listoo_b eq #listoo;
     printf "    #possible = %o\n", #possible;
     printf "    #possible_b = %o\n", #possible_b;
     printf "    #justramified = %o\n", #justramified;

@@ -504,8 +504,8 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
   d := Degree(Parent(sigma[1]));
   assert sigma[3]*sigma[2]*sigma[1] eq Id(Sym(d));
   // generate above each permutation
-    printf "\n";
-    printf "Generating possibilities above sigma0 = %o:\n", sigma[1];
+    vprintf Solvable : "\n";
+    vprintf Solvable : "Generating possibilities above sigma0 = %o:\n", sigma[1];
     time0_1 := Cputime();
     list_0 := PossibleGaloisCoveringPermutations(sigma[1] : zentral := zentral);
     time0_2 := Cputime();
