@@ -509,24 +509,24 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
     time0_1 := Cputime();
     list_0 := PossibleGaloisCoveringPermutations(sigma[1] : zentral := zentral);
     time0_2 := Cputime();
-    printf "\tOK done! That took %o seconds.\n\n", time0_2 - time0_1;
-    printf "Generating possibilities above sigma1 = %o:\n", sigma[2];
+    vprintf Solvable : "\tOK done! That took %o seconds.\n\n", time0_2 - time0_1;
+    vprintf Solvable : "Generating possibilities above sigma1 = %o:\n", sigma[2];
     time1_1 := Cputime();
     list_1 := PossibleGaloisCoveringPermutations(sigma[2] : zentral := zentral);
     time1_2 := Cputime();
-    printf "\tOK done! That took %o seconds.\n\n", time1_2 - time1_1;
-    printf "Generating possibilities above sigmaoo = %o:\n", sigma[3];
+    vprintf Solvable : "\tOK done! That took %o seconds.\n\n", time1_2 - time1_1;
+    vprintf Solvable : "Generating possibilities above sigmaoo = %o:\n", sigma[3];
     timeoo_1 := Cputime();
     list_oo := PossibleGaloisCoveringPermutations(sigma[3] : zentral := zentral);
     timeoo_2 := Cputime();
-    printf "\tOK done! That took %o seconds.\n\n", timeoo_2 - timeoo_1;
+    vprintf Solvable : "\tOK done! That took %o seconds.\n\n", timeoo_2 - timeoo_1;
     all := [];
     possible := [];
   // filter out triples that can be Belyi maps
   time2 := Cputime();
   if brutal then
-    printf "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
-    printf "\tChecking which ones can be Belyi maps...USING BRUTAL APPROACH\n";
+    vprintf Solvable : "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
+    vprintf Solvable : "\tChecking which ones can be Belyi maps...USING BRUTAL APPROACH\n";
     for i := 1 to #list_0 do
       for j := 1 to #list_1 do
         for k := 1 to #list_oo do
@@ -544,13 +544,13 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
       end for;
     end for;
   else // non-brutal
-    printf "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
+    vprintf Solvable : "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
     // sort lists so that we loop over the smaller ones
     l, perm := SortPermutationListsBySize([list_0, list_1, list_oo]);
     list_0, list_1, list_oo := Explode(l);
-    printf "Permuting the 3 lists by %o:\n", perm;
-    printf "Looping over %o*%o = %o pairs of permutations:\n", #list_0, #list_1, #list_0*#list_1;
-    printf "\tChecking which ones can be Belyi maps...USING LESS BRUTAL APPROACH\n";
+    vprintf Solvable : "Permuting the 3 lists by %o:\n", perm;
+    vprintf Solvable : "Looping over %o*%o = %o pairs of permutations:\n", #list_0, #list_1, #list_0*#list_1;
+    vprintf Solvable : "\tChecking which ones can be Belyi maps...USING LESS BRUTAL APPROACH\n";
     list_oo_inverses := [s^-1 : s in list_oo];
     for i := 1 to #list_0 do
       for j := 1 to #list_1 do
@@ -569,10 +569,10 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
     end for;
   end if;
   time3 := Cputime();
-  printf "\tOK done! That took %o seconds.\n", time3-time2;
-  printf "\tThere are %o possible covering triples that are Belyi maps.\n\n", #possible;
+  vprintf Solvable : "\tOK done! That took %o seconds.\n", time3-time2;
+  vprintf Solvable : "\tThere are %o possible covering triples that are Belyi maps.\n\n", #possible;
   // exclude unramified covers
-  printf "Now eliminate unramified covers:\n";
+  vprintf Solvable : "Now eliminate unramified covers:\n";
   unramified := [];
   justramified := possible;
   time4 := Cputime();
@@ -585,11 +585,11 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
     end if;
   end for;
   time5 := Cputime();
-  printf "\tOK done! That took %o seconds.\n", time5-time4;
-  printf "\tThere are %o covering triples remaining.\n\n", #justramified;
+  vprintf Solvable : "\tOK done! That took %o seconds.\n", time5-time4;
+  vprintf Solvable : "\tThere are %o covering triples remaining.\n\n", #justramified;
   correct := justramified;
   // exclude isomorphic redundancies
-  printf "Now eliminate redundancies:\n";
+  vprintf Solvable : "Now eliminate redundancies:\n";
   time6 := Cputime();
   for i := #correct to 1 by -1 do
     for j := 1 to i-1 do
@@ -607,8 +607,8 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
     end for;
   end for;
   time7 := Cputime();
-  printf "\tOK done! That took %o seconds.\n", time7-time6;
-  printf "\tThere are %o covering triples remaining.\n\n", #correct;
+  vprintf Solvable : "\tOK done! That took %o seconds.\n", time7-time6;
+  vprintf Solvable : "\tThere are %o covering triples remaining.\n\n", #correct;
   if return_everything then
     return list_0, list_1, list_oo, all, possible, justramified, unramified, correct;
   else
