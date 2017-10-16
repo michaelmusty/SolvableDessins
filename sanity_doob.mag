@@ -18,7 +18,7 @@ for s in names4 do
     printf "    #possible = %o\n", #possible;
     printf "    #possible_b = %o\n", #possible_b;
     printf "    #justramified = %o\n", #just_ramified;
-    printf "    #justramified_b = %o\n", #just_ramified_b;
+    printf "    #justramified_b = %o\n", #justramified_b;
     printf "    #unramified = %o\n", #unramified;
     printf "    #unramified_b = %o\n", #unramified_b;
     printf "    #correct = %o\n", #correct;
