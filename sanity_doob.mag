@@ -8,20 +8,34 @@ names8 := SolvableDBFilenames(8);
 names16 := SolvableDBFilenames(16);
 
 sanity := [* *];
+unram := [* *];
+timing := [* *];
 for name in names8 do
   s := SolvableDBAccessEntry(name);
   triples := s`SolvableDBGaloisOrbit;
   printf "%o:\n", s`SolvableDBName;
   for i := 1 to #triples do
     printf "  i = %o\n", i;
+    start_brutal := Cputime();
     list0_b, list1_b, listoo_b, all_b, possible_b, justramified_b, unramified_b, correct_b := PossibleGaloisCoveringPermutationTriples(triples[i] : brutal := true, return_everything := true);
+    end_brutal := Cputime();
+    brutal_time := end_brutal - start_brutal;
+    start_nonbrutal := Cputime();
     list0, list1, listoo, all, possible, justramified, unramified, correct := PossibleGaloisCoveringPermutationTriples(triples[i] : return_everything := true);
+    end_nonbrutal := Cputime();
+    nonbrutal_time := end_nonbrutal - start_nonbrutal;
+    if nonbrutal_time ge brutal_time then
+      Append(~timing, [s, i]);
+    end if;
     printf "    #possible = %o\n", #possible;
     printf "    #possible_b = %o\n", #possible_b;
     printf "    #justramified = %o\n", #justramified;
     printf "    #justramified_b = %o\n", #justramified_b;
     printf "    #unramified = %o\n", #unramified;
     printf "    #unramified_b = %o\n", #unramified_b;
+    if #unramified ne #unramified_b then
+      Append(~unram, [s, i]);
+    end if;
     printf "    #correct = %o\n", #correct;
     printf "    #correct_b = %o\n", #correct_b;
     if #correct_b ne #correct then
