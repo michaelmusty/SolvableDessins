@@ -554,17 +554,21 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
     vprintf Solvable : "There are %o*%o*%o = %o possible covering triples:\n", #list_0, #list_1, #list_oo, #list_0*#list_1*#list_oo;
     // sort lists so that we loop over the smaller ones
     l, perm := SortPermutationListsBySize([list_0, list_1, list_oo]);
-    list_0, list_1, list_oo := Explode(l);
+    assert #l eq 3;
+    // TODO
+    // list_0, list_1, list_oo := Explode(l);
     vprintf Solvable : "Permuting the 3 lists by %o:\n", perm;
-    vprintf Solvable : "Looping over %o*%o = %o pairs of permutations:\n", #list_0, #list_1, #list_0*#list_1;
+    // vprintf Solvable : "Looping over %o*%o = %o pairs of permutations:\n", #list_0, #list_1, #list_0*#list_1;
+    vprintf Solvable : "Looping over %o*%o = %o pairs of permutations:\n", #l[1], #l[2], #l[1]*#l[2];
     vprintf Solvable : "\tChecking which ones can be Belyi maps...USING LESS BRUTAL APPROACH\n";
-    list_oo_inverses := [s^-1 : s in list_oo];
-    for i := 1 to #list_0 do
-      for j := 1 to #list_1 do
-        wt0 := list_0[i];
-        wt1 := list_1[j];
+    list_oo_inverses := [s^-1 : s in l[3]];
+    for i := 1 to #l[1] do
+      for j := 1 to #l[2] do
+        wt0 := l[1][i];
+        wt1 := l[2][j];
         Append(~all, [wt0, wt1]);
-        if wt0*wt1 in list_oo_inverses then
+        // if wt0*wt1 in list_oo_inverses then
+        if wt1*wt0 in list_oo_inverses then
           wtoo := (wt1*wt0)^-1;
           wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
           if IsTransitive(wtG) and #wtG eq (2*d) then
