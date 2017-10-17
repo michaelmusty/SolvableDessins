@@ -569,11 +569,13 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
         Append(~all, [wt0, wt1]);
         // if wt0*wt1 in list_oo_inverses then
         if wt1*wt0 in list_oo_inverses then
-          wtoo := (wt1*wt0)^-1;
-          wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
+          wtsigma := [wt0, wt1, (wt1*wt0)^-1];
+          wtsigma := S3Action(perm^-1, wtsigma);
+          // wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
+          wtG := sub< Sym(2*d) | wtsigma >;
           if IsTransitive(wtG) and #wtG eq (2*d) then
-            // Append(~possible, [wt0, wt1, wtoo]);
-            Append(~possible, S3Action(perm^-1, [wt0, wt1, wtoo]));
+            Append(~possible, wtsigma);
+            // Append(~possible, S3Action(perm^-1, [wt0, wt1, wtoo]));
           end if;
         end if;
       end for;
