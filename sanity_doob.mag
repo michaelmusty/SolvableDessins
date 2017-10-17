@@ -25,7 +25,7 @@ for name in names8 do
     end_nonbrutal := Cputime();
     nonbrutal_time := end_nonbrutal - start_nonbrutal;
     if nonbrutal_time ge brutal_time then
-      Append(~timing, [s, i]);
+      Append(~timing, [* s, i *]);
     end if;
     printf "    #possible = %o\n", #possible;
     printf "    #possible_b = %o\n", #possible_b;
@@ -34,12 +34,12 @@ for name in names8 do
     printf "    #unramified = %o\n", #unramified;
     printf "    #unramified_b = %o\n", #unramified_b;
     if #unramified ne #unramified_b then
-      Append(~unram, [s, i]);
+      Append(~unram, [* s, i *]);
     end if;
     printf "    #correct = %o\n", #correct;
     printf "    #correct_b = %o\n", #correct_b;
     if #correct_b ne #correct then
-      Append(~sanity, [s, i]);
+      Append(~sanity, [* s, i *]);
     end if;
   end for;
 end for;
