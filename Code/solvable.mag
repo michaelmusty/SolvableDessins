@@ -568,7 +568,7 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
         wt1 := l[2][j];
         Append(~all, [wt0, wt1]);
         if IsOdd(perm) then
-          if wt1*wt0 in l[3] then
+          if wt1*wt0 in list_oo_inverses then
             wtsigma := [wt0, wt1, (wt1*wt0)^-1];
             wtsigma := S3Action(perm^-1, wtsigma);
             // wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
@@ -579,7 +579,7 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
             end if;
           end if;
         else
-          if (wt1*wt0)^-1 in l[3] then
+          if (wt1*wt0)^-1 in list_oo_inverses then
             wtsigma := [wt0, wt1, (wt1*wt0)^-1];
             wtsigma := S3Action(perm^-1, wtsigma);
             // wtG := sub< Sym(2*d) | wt0, wt1, wtoo >;
