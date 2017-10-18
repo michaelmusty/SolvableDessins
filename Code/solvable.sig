@@ -33,6 +33,7 @@ S,RamifiedPossibilities,all ramified permutations above perm,0,1,0,0,0,0,0,0,0,2
 S,PossibleGaloisCoveringPermutations,a sequence of degree 2 Galois covering permutations possible after identifying sheets via tau,0,1,0,0,0,0,0,0,0,222,,82,-38,-38,-38,-38,-38
 S,SortByPermutation,"Given 3 lists of permutations and an element of Sym(3), sort the 3 lists according to this permutation",1,0,1,82,1,82,0,222,2,0,0,0,0,0,0,0,222,,0,0,82,,82,-38,-38,-38,-38,-38
 S,SortPermutationListsBySize,"Given 3 lists of permutations, sort them by size. Return the permuted lists along with the Sym(3) element that permuted them",1,0,1,82,1,82,0,222,1,0,0,0,0,0,0,0,82,,82,222,-38,-38,-38,-38
+S,QuickPermutationMembership,Sort l and test membership of perm in l in big oh of log(#l) time,1,1,1,82,0,222,2,0,0,0,0,0,0,0,82,,0,0,222,,36,-38,-38,-38,-38,-38
 S,PossibleGaloisCoveringPermutationTriples,"return_everything yields: list_0, list_1, list_oo, all, possible, justramified, unramified, correct",1,0,1,82,0,222,1,0,0,0,0,0,0,0,82,,82,-38,-38,-38,-38,-38
 S,IsExtension,True if there is a normal order 2 subgroup K of G with G/K isomorphic to H,0,2,0,0,0,0,0,0,0,224,,0,0,224,,36,-38,-38,-38,-38,-38
 S,UniqueBelyiMaps,Given a list of permutation triples eliminate redundancies in the list,1,0,1,82,1,82,0,222,1,0,0,0,0,0,0,0,82,,82,-38,-38,-38,-38,-38
