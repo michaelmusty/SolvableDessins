@@ -697,8 +697,8 @@ end intrinsic;
 intrinsic SolvableDBStatusReport(d::RngIntElt) -> SeqEnum[SolvableDBObject], SeqEnum[SolvableDBObject]
   {}
   good := [];
-  unram := [];
   bad := [];
+  unram := [];
   f := SolvableDBFilenames(d);
   for i := 1 to #f do
     s := SolvableDBAccessEntry(f[i]);
@@ -721,7 +721,7 @@ intrinsic SolvableDBStatusReport(d::RngIntElt) -> SeqEnum[SolvableDBObject], Seq
   end for;
   vprintf Solvable : "d = %o:\n", d;
   vprintf Solvable : "  %o/%o computed\n", #good, #f;
-  vprintf Solvable : "  %o/%o unramified over child\n", #unram, #f;
   vprintf Solvable : "  %o/%o not computed\n", #bad, #f;
-  return good, unram, bad;
+  vprintf Solvable : "  %o/%o unramified over child\n", #unram, #f;
+  return good, bad, unram;
 end intrinsic;
