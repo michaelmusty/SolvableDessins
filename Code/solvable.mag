@@ -619,6 +619,7 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
   time6 := Cputime();
   for i := #correct to 1 by -1 do
     for j := 1 to i-1 do
+      vprintf Solvable : "i = %o, j = %o : i from %o to 1, j from 1 to i-1\n", i, j, #correct;
       if lax then
         if IsWeaklyIsomorphic(Sym(2*d), correct[i], correct[j]) then
           Remove(~correct, i);
