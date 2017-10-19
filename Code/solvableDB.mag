@@ -680,3 +680,48 @@ intrinsic SolvableDBFilenames(d::RngIntElt) -> SeqEnum[MonStgElt]
   filenames := Split(ls, "\n");
   return filenames;
 end intrinsic;
+
+intrinsic Child(s::SolvableDBObject) -> SolvableDBObject
+  {}
+  children := s`SolvableDBChildren;
+  assert #children eq 1;
+  return SolvableDBAccessEntry(children[1] cat ".m");
+end intrinsic;
+
+// TODO
+intrinsic SolvableDBSanityCheck(s::SolvableDBObject) -> MonStgElt
+  {}
+end intrinsic;
+
+// TODO add more sanity!
+intrinsic SolvableDBStatusReport(d::RngIntElt) -> SeqEnum[SolvableDBObject], SeqEnum[SolvableDBObject]
+  {}
+  good := [];
+  unram := [];
+  bad := [];
+  f := SolvableDBFilenames(d);
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    g, a := TransitiveGroupIdentification(s`SolvableDBMonodromyGroup);
+    assert a eq d;
+    vprintf Solvable : "%oT%o: example %o of %o\n", d, g, i, #f;
+    // if SolvableMapSanityCheck(s) then
+    if assigned s`SolvableDBBelyiCurve then
+      Append(~good, s);
+    else
+      child := s`SolvableDBChildren;
+      assert #child eq 1;
+      child := SolvableDBAccessEntry(child[1] cat ".m");
+      if SolvableIsUnramified(s) or SolvableIsUnramified(child) then
+        Append(~unram, s);
+      else
+        Append(~bad, s);
+      end if;
+    end if;
+  end for;
+  vprintf Solvable : "d = %o:\n", d;
+  vprintf Solvable : "  %o/%o computed\n", #good, #f;
+  vprintf Solvable : "  %o/%o unramified over child\n", #unram, #f;
+  vprintf Solvable : "  %o/%o not computed\n", #bad, #f;
+  return good, unram, bad;
+end intrinsic;

@@ -94,7 +94,7 @@ intrinsic SolvableCheckResidueFields(D::DivCrvElt) -> BoolElt, Any
   fields := [* *];
   non_trivial := false;
   for pt in supp do
-    field := ResidueClassField(FunctionFieldPlace(pt));
+    field := AbsoluteField(ResidueClassField(FunctionFieldPlace(pt)));
     if Degree(field) gt 1 then
       non_trivial := true;
     end if;
@@ -353,20 +353,26 @@ intrinsic SolvableRamificationToDivisor(ram::SeqEnum[BoolElt], Ds::List) -> DivC
   end if;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDBObject : manual_divisor := 0, primary_index := 0) -> SolvableDBObject
-  {overloaded to just take first child.}
-  return SolvableBelyiMap(s, 1 : manual_divisor := manual_divisor, primary_index := primary_index);
-end intrinsic;
-
-intrinsic SolvableBelyiMap(s::SolvableDBObject, child_index::RngIntElt : manual_divisor := 0, primary_index := 0) -> SolvableDBObject
+intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, child_index := 1, manual_divisor := 0, primary_index := 0) -> SolvableDBObject
   {computes BelyiMap for s and returns s. Optional to input a divisor for RiemannRoch and or an index to choose which Ps to take in the primary decomposition.}
+  // if s is unramified then stop and return s
+    isunram, unramchild := SolvableIsUnramified(s);
+    if isunram then
+      vprintf Solvable: "%o is unramified over %o\n", s`SolvableDBName, unramchild;
+      return s;
+    end if;
   // assertions about child of s
     vprintf Solvable: "So you want to compute a SolvableBelyiMap? Checking basic assertions.\n";
     time_start := Cputime();
     assert assigned s`SolvableDBChildren;
-    assert #s`SolvableDBChildren ge 1;
+    // assert #s`SolvableDBChildren ge 1;
+    assert #s`SolvableDBChildren eq 1;
     assert child_index le #s`SolvableDBChildren;
     t := SolvableDBAccessEntry(s`SolvableDBChildren[child_index] cat ".m");
+    if SolvableIsUnramified(t) then
+      vprintf Solvable: "%o is unramified child of %o\n", t`SolvableDBName, s`SolvableDBName;
+      return s;
+    end if;
     assert SolvableMapSanityCheck(t);
     time_end := Cputime();
     vprintf Solvable: "Done. That took %o seconds.\n", time_end-time_start;
@@ -451,21 +457,27 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject, child_index::RngIntElt : manual_
     vprintf Solvable: "Foo = %o\n", Foo;
   // first try manual entry divisor if available
     if not ISA(Type(manual_divisor), RngIntElt) then
-      vprintf Solvable: "Using manual divisor first:\n";
-      D := manual_divisor;
-      // TODO assert parent is correct?
-      if Dimension(RiemannRochSpace(D)) eq 1 then
-        vprintf Solvable: "Manual divisor yields 1 dimensional Lspace!\n";
-      else
-        error "Manual divisor does not appear to work.\n";
-      end if;
+      /*
+        vprintf Solvable: "Using manual divisor first:\n";
+        D := manual_divisor;
+        // TODO assert parent is correct?
+        if Dimension(RiemannRochSpace(D)) eq 1 then
+          vprintf Solvable: "Manual divisor yields 1 dimensional Lspace!\n";
+        else
+          error "Manual divisor does not appear to work.\n";
+        end if;
+      */
     else
       // make ramification divisor before BaseChange
         vprintf Solvable: "Try to find Ramification Divisor Before BaseChange:\n";
         time_start := Cputime();
         // worked_before_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
         Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-        worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
+        if force_basechange then
+          worked_before_basechange := false;
+        else
+          worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
+        end if;
         time_end := Cputime();
       // update t with base change if necessary
       // NOTE this does not update t in the database, just to be used for s later
@@ -571,24 +583,37 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject, child_index::RngIntElt : manual_
       Ps_index := primary_index;
     else
       vprintf Solvable: "No optional index given. Choosing automagically.\n";
-      Ps_index := 1;
-      // TODO automate this?
-      /*
+      Ps_index := -1;
       for i := 1 to #Ps do
-        if Dimension(Ps[i]) eq 1 then
-          Ps_index := i;
+        // TODO get a better idea about the curve...
+        P := Ps[i];
+        if Dimension(P) eq 1 then
+          A := Spec(Parent(P.1));
+          C := Curve(A,P);
+          if Genus(C) eq s`SolvableDBGenus then
+            Ps_index := i;
+            break i;
+          end if;
         end if;
       end for;
-      */
+      if Ps_index lt 0 then
+        error "No Ps worked with ease.";
+      end if;
     end if;
     Ip := Ps[Ps_index];
     vprintf Solvable: "We picked Ps[%o]:\n%o\n", Ps_index, Ps[Ps_index];
     // curve upstairs
+    vprintf Solvable : "Making ambient...";
     AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
+    vprintf Solvable : "done.\n";
+    vprintf Solvable : "Making curve...";
     // X := eval Sprintf("X<%o> := Curve(AA, Ip); return X;", VarText("x", 0, l));
     X := eval Sprintf("X<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return X;", VarText("x", 0, l));
+    vprintf Solvable : "done.\n";
+    vprintf Solvable : "Making function field...";
     KX := eval Sprintf("KX<%o> := FunctionField(X); return KX;", VarText("x", 0, l));
     phi := KX.1;
+    vprintf Solvable : "done.\n";
   // assign information to s
     s`SolvableDBCurveBaseFieldList := t`SolvableDBCurveBaseFieldList cat [* F *];
     s`SolvableDBCurvePolynomialRingList := t`SolvableDBCurvePolynomialRingList cat [* PX *];
