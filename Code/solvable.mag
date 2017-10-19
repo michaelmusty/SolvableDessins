@@ -563,8 +563,8 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
     vprintf Solvable : "\tChecking which ones can be Belyi maps...USING LESS BRUTAL APPROACH\n";
     list_oo_inverses := [s^-1 : s in l[3]];
     for i := 1 to #l[1] do
+      vprintf Solvable : "i = %o : i from 1 to %o\n", i, #l[1];
       for j := 1 to #l[2] do
-        vprintf Solvable : "i = %o : i from 1 to %o\n", i, #l[1];
         wt0 := l[1][i];
         wt1 := l[2][j];
         Append(~all, [wt0, wt1]);
@@ -618,8 +618,8 @@ intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : 
   vprintf Solvable : "Now eliminate redundancies:\n";
   time6 := Cputime();
   for i := #correct to 1 by -1 do
+    vprintf Solvable : "i = %o : i from %o to 1\n", i, #correct;
     for j := 1 to i-1 do
-      vprintf Solvable : "i = %o : i from %o to 1\n", i, #correct;
       if lax then
         if IsWeaklyIsomorphic(Sym(2*d), correct[i], correct[j]) then
           Remove(~correct, i);
