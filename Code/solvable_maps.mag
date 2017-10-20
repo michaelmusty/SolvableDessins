@@ -545,6 +545,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
     denom := Denominator(f);
     numer := Numerator(f);
     assert Parent(denom) eq Parent(numer);
+    vprintf Solvable: "Parent(f) =\n%o\n", Parent(f);
     vprintf Solvable: "f = %o.\n", f;
     vprintf Solvable: "Numerator(f) = %o.\n", numer;
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
@@ -570,6 +571,11 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
     end for;
     // append new poly to basis coming
     Append(~basis, mpAffAlgToPX(denom)*PX.(l+1)^2-mpAffAlgToPX(numer));
+    vprintf Solvable : "Polynomial ring upstairs:\n%o\n", PX;
+    vprintf Solvable : "Ideal generators upstairs:\n%o\n", basis;
+    vprintf Solvable : "extracted sqrt of:\n%o\n", f;
+    vprintf Solvable : "numerator: %o\n", Numerator(f);
+    vprintf Solvable : "denominator: %o\n", Denominator(f);
     // ideal upstairs
     vprintf Solvable: "Apply PrimaryDecomposition:\n";
     I := ideal< PX | basis >;
