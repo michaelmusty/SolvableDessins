@@ -545,11 +545,11 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
     denom := Denominator(f);
     numer := Numerator(f);
     AffAlg := Parent(numer);
-    AssignNames(~AffAlg, ["x0", "x1", "x2", "x3"]); // TODO
+    // AssignNames(~AffAlg, ["x0", "x1", "x2", "x3"]); // TODO
     assert Parent(denom) eq Parent(numer);
     vprintf Solvable: "Parent(f) =\n%o\n", Parent(f);
-    KX := Parent(f); // TODO
-    AssignNames(~KX, ["x0", "x1", "x2", "x3"]); // TODO
+    // KX := Parent(f); // TODO
+    // AssignNames(~KX, ["x0", "x1", "x2", "x3"]); // TODO
     vprintf Solvable: "f = \n%o\n", f;
     vprintf Solvable: "Numerator(f) = %o.\n", numer;
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
