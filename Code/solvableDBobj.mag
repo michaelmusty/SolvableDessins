@@ -24,6 +24,9 @@ declare attributes SolvableDBObject:
   SolvableDBCurveAmbientList, // [AA0, AA1]
   SolvableDBCurveIdealList, // [I0, I1]
   SolvableDBCurveList, // [X0, X1]
+  // extract attributes
+  SolvableDBExtractNumerator, // Numerator(f)
+  SolvableDBExtractDenominator, // Denominator(f)
   // Belyi map attributes
   SolvableDBBelyiCurve, // X
   SolvableDBBelyiMap, // phi

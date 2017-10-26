@@ -26,13 +26,8 @@ intrinsic SolvablePassportSort(l::SeqEnum[SeqEnum[GrpPermElt]]) -> SeqEnum[SeqEn
         for i := #m to 1 by -1 do
           potential := m[i];
           assert #potential eq 3;
-          if d gt 32 then
-            test_name := SolvableDBGenerateNameAboveTransitiveDatabaseLimit(test);
-            potential_name := SolvableDBGenerateNameAboveTransitiveDatabaseLimit(potential);
-          else
-            test_name := SolvableDBGenerateName(test);
-            potential_name := SolvableDBGenerateName(potential);
-          end if;
+          test_name := SolvableDBGenerateName(test);
+          potential_name := SolvableDBGenerateName(potential);
           if test_name eq potential_name then
             test_G := sub< Sym(d) | test >;
             potential_G := sub< Sym(d) | potential >;

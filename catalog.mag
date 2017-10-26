@@ -26,22 +26,11 @@ SetVerbose("Solvable", 1);
 
 // level 1, degree 2
   // 2T1
-    d2t1_1_2_2_path1 := SolvableDBAccessEntry("2T1-[1,2,2]-11-2-2-g0-path1.m");
-    d2t1_2_1_2_path1 := SolvableDBAccessEntry("2T1-[2,1,2]-2-11-2-g0-path1.m");
-    d2t1_2_2_1_path1 := SolvableDBAccessEntry("2T1-[2,2,1]-2-2-11-g0-path1.m");
+    d2t1_1_2_2_path1 := SolvableDBAccessEntry("2T1-1,2,2-g0-path1.m");
+    d2t1_2_1_2_path1 := SolvableDBAccessEntry("2T1-2,1,2-g0-path1.m");
+    d2t1_2_2_1_path1 := SolvableDBAccessEntry("2T1-2,2,1-g0-path1.m");
 
 // level 2, degree 4
-  // 4T1
-    d4t1_1_4_4_path1 := SolvableDBAccessEntry("4T1-[1,4,4]-1111-4-4-g0-path1.m");
-    d4t1_4_1_4_path1 := SolvableDBAccessEntry("4T1-[4,1,4]-4-1111-4-g0-path1.m");
-    d4t1_4_4_1_path1 := SolvableDBAccessEntry("4T1-[4,4,1]-4-4-1111-g0-path1.m");
-    d4t1_2_4_4_path1 := SolvableDBAccessEntry("4T1-[2,4,4]-22-4-4-g1-path1.m");
-    d4t1_4_2_4_path1 := SolvableDBAccessEntry("4T1-[4,2,4]-4-22-4-g1-path1.m");
-    d4t1_4_4_2_path1 := SolvableDBAccessEntry("4T1-[4,4,2]-4-4-22-g1-path1.m");
-  // 4T2
-    d4t2_2_2_2_path1 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path1.m");
-    d4t2_2_2_2_path2 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path2.m");
-    d4t2_2_2_2_path3 := SolvableDBAccessEntry("4T2-[2,2,2]-22-22-22-g0-path3.m");
 
 // level 3, degree 8
 
