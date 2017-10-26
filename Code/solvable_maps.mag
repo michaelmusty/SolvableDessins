@@ -353,8 +353,8 @@ intrinsic SolvableRamificationToDivisor(ram::SeqEnum[BoolElt], Ds::List) -> DivC
   end if;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, child_index := 1, manual_divisor := 0, primary_index := 0) -> SolvableDBObject
-  {computes BelyiMap for s and returns s. Optional to input a divisor for RiemannRoch and or an index to choose which Ps to take in the primary decomposition.}
+intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, child_index := 1, manual_divisor := 0, compute_primary_decomposition := false, primary_index := 0) -> SolvableDBObject
+  {computes BelyiMap for s and returns s. Optional to input a divisor for RiemannRoch. Optional to compute primary decomposition (instead of saturation) and the index to choose which Ps to take in the primary decomposition.}
   // if s is unramified then stop and return s
     isunram, unramchild := SolvableIsUnramified(s);
     if isunram then
@@ -550,77 +550,141 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
     vprintf Solvable: "f = \n%o\n", f;
     vprintf Solvable: "Numerator(f) = %o.\n", numer;
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
-  // now make the map
-    vprintf Solvable: "Now constructing the curve and map.\n";
-    AffAlg := Parent(denom);
-    F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
-    l := s`SolvableDBLevel;
-    // polynomial ring
-    PX_below := t`SolvableDBCurvePolynomialRingList[#t`SolvableDBCurvePolynomialRingList];
-    PX := eval Sprintf("PX<%o> := PolynomialRing(F, %o); return PX;", VarText("x", 0, l), l+1);
-    // map from poly ring downstairs to poly ring upstairs
-    mpPX_belowToPX := eval Sprintf("mpPX_belowToPX := hom< PX_below -> PX | %o >; return mpPX_belowToPX;", HomText("PX", 1, l));
-    // map from parent(f) to poly ring upstairs
-    mpAffAlgToPX := eval Sprintf("mpAffAlgToPX := hom< AffAlg -> PX | %o >; return mpAffAlgToPX;", HomText("PX", 1, l));
-    // ideal downstairs
-    I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
-    basis_below := Basis(I_below);
-    // map basis into poly ring upstairs
-    basis := [];
-    for j := 1 to #basis_below do
-      Append(~basis, mpPX_belowToPX(basis_below[j]));
-    end for;
-    // append new poly to basis coming
-    Append(~basis, mpAffAlgToPX(denom)*PX.(l+1)^2-mpAffAlgToPX(numer));
-    vprintf Solvable : "Polynomial ring upstairs:\n%o\n", PX;
-    vprintf Solvable : "Ideal generators upstairs:\n%o\n", basis;
-    vprintf Solvable : "extracted sqrt of:\n%o\n", f;
-    vprintf Solvable : "numerator: %o\n", Numerator(f);
-    vprintf Solvable : "denominator: %o\n", Denominator(f);
-    // ideal upstairs
-    vprintf Solvable: "Apply PrimaryDecomposition:\n";
-    I := ideal< PX | basis >;
-    vprintf Solvable: "Ideal to start with:\n%o\n", I;
-    Qs, Ps := PrimaryDecomposition(I);
-    vprintf Solvable: "#Ps = %o:\n", #Ps;
-    vprintf Solvable: "%o\n", Ps;
-    // which Ps do you want?
-    vprintf Solvable: "Checking for optional index.\n";
-    if primary_index ne 0 then
-      Ps_index := primary_index;
-    else
-      vprintf Solvable: "No optional index given. Choosing automagically.\n";
-      Ps_index := -1;
-      for i := 1 to #Ps do
-        // TODO get a better idea about the curve...
-        P := Ps[i];
-        if Dimension(P) eq 1 then
-          A := Spec(Parent(P.1));
-          C := Curve(A,P);
-          if Genus(C) eq s`SolvableDBGenus then
-            Ps_index := i;
-            break i;
-          end if;
-        end if;
+  // make the curve (brutal) using primary decomposition or (less brutal) use saturation
+    if compute_primary_decomposition then
+      vprintf Solvable: "Now constructing the curve and map.\n";
+      AffAlg := Parent(denom);
+      F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
+      l := s`SolvableDBLevel;
+      // polynomial ring
+      PX_below := t`SolvableDBCurvePolynomialRingList[#t`SolvableDBCurvePolynomialRingList];
+      PX := eval Sprintf("PX<%o> := PolynomialRing(F, %o); return PX;", VarText("x", 0, l), l+1);
+      // map from poly ring downstairs to poly ring upstairs
+      mpPX_belowToPX := eval Sprintf("mpPX_belowToPX := hom< PX_below -> PX | %o >; return mpPX_belowToPX;", HomText("PX", 1, l));
+      // map from parent(f) to poly ring upstairs
+      mpAffAlgToPX := eval Sprintf("mpAffAlgToPX := hom< AffAlg -> PX | %o >; return mpAffAlgToPX;", HomText("PX", 1, l));
+      // ideal downstairs
+      I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
+      basis_below := Basis(I_below);
+      // map basis into poly ring upstairs
+      basis := [];
+      for j := 1 to #basis_below do
+        Append(~basis, mpPX_belowToPX(basis_below[j]));
       end for;
-      if Ps_index lt 0 then
-        error "No Ps worked with ease.";
+      // append new poly to basis coming
+      Append(~basis, mpAffAlgToPX(denom)*PX.(l+1)^2-mpAffAlgToPX(numer));
+      vprintf Solvable : "Polynomial ring upstairs:\n%o\n", PX;
+      vprintf Solvable : "Ideal generators upstairs:\n%o\n", basis;
+      vprintf Solvable : "extracted sqrt of:\n%o\n", f;
+      vprintf Solvable : "numerator: %o\n", Numerator(f);
+      vprintf Solvable : "denominator: %o\n", Denominator(f);
+      // ideal upstairs
+      vprintf Solvable: "Apply PrimaryDecomposition:\n";
+      I := ideal< PX | basis >;
+      vprintf Solvable: "Ideal to start with:\n%o\n", I;
+      Qs, Ps := PrimaryDecomposition(I);
+      vprintf Solvable: "#Ps = %o:\n", #Ps;
+      vprintf Solvable: "%o\n", Ps;
+      // which Ps do you want?
+      vprintf Solvable: "Checking for optional index.\n";
+      if primary_index ne 0 then
+        Ps_index := primary_index;
+      else
+        vprintf Solvable: "No optional index given. Choosing automagically.\n";
+        Ps_index := -1;
+        for i := 1 to #Ps do
+          // TODO get a better idea about the curve...
+          P := Ps[i];
+          if Dimension(P) eq 1 then
+            A := Spec(Parent(P.1));
+            C := Curve(A,P);
+            if Genus(C) eq s`SolvableDBGenus then
+              Ps_index := i;
+              break i;
+            end if;
+          end if;
+        end for;
+        if Ps_index lt 0 then
+          error "No Ps worked with ease.";
+        end if;
       end if;
+      Ip := Ps[Ps_index];
+      vprintf Solvable: "We picked Ps[%o]:\n%o\n", Ps_index, Ps[Ps_index];
+      // curve upstairs
+      vprintf Solvable : "Making ambient...";
+      AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
+      vprintf Solvable : "done.\n";
+      vprintf Solvable : "Making curve...";
+      // X := eval Sprintf("X<%o> := Curve(AA, Ip); return X;", VarText("x", 0, l));
+      X := eval Sprintf("X<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return X;", VarText("x", 0, l));
+      vprintf Solvable : "done.\n";
+      vprintf Solvable : "Making function field...";
+      KX := eval Sprintf("KX<%o> := FunctionField(X); return KX;", VarText("x", 0, l));
+      phi := KX.1;
+      vprintf Solvable : "done.\n";
+    else
+      vprintf Solvable: "Now constructing the curve and map.\n";
+      AffAlg := Parent(denom);
+      F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
+      l := s`SolvableDBLevel;
+      // polynomial ring
+      PX_below := t`SolvableDBCurvePolynomialRingList[#t`SolvableDBCurvePolynomialRingList];
+      PX := eval Sprintf("PX<%o> := PolynomialRing(F, %o); return PX;", VarText("x", 0, l), l+1);
+      // map from poly ring downstairs to poly ring upstairs
+      mpPX_belowToPX := eval Sprintf("mpPX_belowToPX := hom< PX_below -> PX | %o >; return mpPX_belowToPX;", HomText("PX", 1, l));
+      // map from parent(f) to poly ring upstairs
+      mpAffAlgToPX := eval Sprintf("mpAffAlgToPX := hom< AffAlg -> PX | %o >; return mpAffAlgToPX;", HomText("PX", 1, l));
+      // ideal downstairs
+      I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
+      basis_below := Basis(I_below);
+      // map basis into poly ring upstairs
+      basis := [];
+      for j := 1 to #basis_below do
+        Append(~basis, mpPX_belowToPX(basis_below[j]));
+      end for;
+      // append new poly to basis coming
+      Append(~basis, mpAffAlgToPX(denom)*PX.(l+1)^2-mpAffAlgToPX(numer));
+      vprintf Solvable : "Polynomial ring upstairs:\n%o\n", PX;
+      vprintf Solvable : "Ideal generators upstairs:\n%o\n", basis;
+      vprintf Solvable : "extracted sqrt of:\n%o\n", f;
+      vprintf Solvable : "numerator: %o\n", Numerator(f);
+      vprintf Solvable : "denominator: %o\n", Denominator(f);
+      // ideal upstairs
+      vprintf Solvable: "Apply Saturation:\n";
+      I := ideal< PX | basis >;
+      vprintf Solvable : "Ideal to start with:\n%o\n", I;
+      vprintf Solvable : "Saturating:\n";
+      a := Numerator(f);
+      b := Denominator(f);
+      a_poly := mpAffAlgToPX(a);
+      b_poly := mpAffAlgToPX(b);
+      vprintf Solvable : "numerator = %o\n", a;
+      vprintf Solvable : "num poly  = %o\n", a_poly;
+      vprintf Solvable : "denominator = %o\n", b;
+      vprintf Solvable : "denom poly  = %o\n", b_poly;
+      vprintf Solvable : "computing saturation at numerator...";
+      time S_num := Saturation(I, a_poly);
+      vprintf Solvable : "done.\n";
+      vprintf Solvable : "I : numerator =\n%o\n", S_num;
+      vprintf Solvable : "computing saturation at denominator...";
+      time S_den := Saturation(I, b_poly); // TODO don't do both of these...for testing
+      vprintf Solvable : "done.\n";
+      vprintf Solvable : "I : numerator =\n%o\n", S_num;
+      // TODO assertions?
+      Ip := S_num; // pick one
+      // curve upstairs
+      vprintf Solvable : "Making ambient...";
+      AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
+      vprintf Solvable : "done.\n";
+      vprintf Solvable : "Making curve...";
+      // X := eval Sprintf("X<%o> := Curve(AA, Ip); return X;", VarText("x", 0, l));
+      X := eval Sprintf("X<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return X;", VarText("x", 0, l));
+      vprintf Solvable : "done.\n";
+      vprintf Solvable : "Making function field...";
+      KX := eval Sprintf("KX<%o> := FunctionField(X); return KX;", VarText("x", 0, l));
+      phi := KX.1;
+      vprintf Solvable : "done.\n";
     end if;
-    Ip := Ps[Ps_index];
-    vprintf Solvable: "We picked Ps[%o]:\n%o\n", Ps_index, Ps[Ps_index];
-    // curve upstairs
-    vprintf Solvable : "Making ambient...";
-    AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
-    vprintf Solvable : "done.\n";
-    vprintf Solvable : "Making curve...";
-    // X := eval Sprintf("X<%o> := Curve(AA, Ip); return X;", VarText("x", 0, l));
-    X := eval Sprintf("X<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return X;", VarText("x", 0, l));
-    vprintf Solvable : "done.\n";
-    vprintf Solvable : "Making function field...";
-    KX := eval Sprintf("KX<%o> := FunctionField(X); return KX;", VarText("x", 0, l));
-    phi := KX.1;
-    vprintf Solvable : "done.\n";
   // assign information to s
     s`SolvableDBCurveBaseFieldList := t`SolvableDBCurveBaseFieldList cat [* F *];
     s`SolvableDBCurvePolynomialRingList := t`SolvableDBCurvePolynomialRingList cat [* PX *];
