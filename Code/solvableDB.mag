@@ -605,9 +605,15 @@ intrinsic SolvableDBStatusReport(d::RngIntElt) -> SeqEnum[SolvableDBObject], Seq
   f := SolvableDBFilenames(d);
   for i := 1 to #f do
     s := SolvableDBAccessEntry(f[i]);
-    g, a := TransitiveGroupIdentification(s`SolvableDBMonodromyGroup);
-    assert a eq d;
-    vprintf Solvable : "%oT%o: example %o of %o\n", d, g, i, #f;
+    if d gt 16 then
+      a, g := IdentifyGroup(s`SolvableDBMonodromyGroup);
+      assert a eq d;
+      vprintf Solvable : "%oS%o: example %o of %o\n", d, g, i, #f;
+    else
+      g, a := TransitiveGroupIdentification(s`SolvableDBMonodromyGroup);
+      assert a eq d;
+      vprintf Solvable : "%oT%o: example %o of %o\n", d, g, i, #f;
+    end if;
     // if SolvableMapSanityCheck(s) then
     if assigned s`SolvableDBBelyiCurve then
       Append(~good, s);
