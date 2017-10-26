@@ -669,7 +669,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       vprintf Solvable : "computing saturation at denominator...";
       time S_den := Saturation(I, b_poly); // TODO don't do both of these...for testing
       vprintf Solvable : "done.\n";
-      vprintf Solvable : "I : numerator =\n%o\n", S_num;
+      vprintf Solvable : "I : denominator =\n%o\n", S_den;
       // TODO assertions?
       assert IsPrime(S_num);
       Ip := S_num; // pick one
