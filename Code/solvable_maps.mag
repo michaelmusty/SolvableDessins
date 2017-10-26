@@ -671,6 +671,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       vprintf Solvable : "done.\n";
       vprintf Solvable : "I : numerator =\n%o\n", S_num;
       // TODO assertions?
+      assert IsPrime(S_num);
       Ip := S_num; // pick one
       // curve upstairs
       vprintf Solvable : "Making ambient...";
