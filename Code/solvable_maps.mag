@@ -635,7 +635,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
 end intrinsic;
 
 intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
-  {}
+  {Multiple calls to SolvableBelyiMap (singular) and returns the errors.}
   f := SolvableDBFilenames(d);
   errors := [];
   for i := 1 to #f do
