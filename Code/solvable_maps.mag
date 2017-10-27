@@ -674,7 +674,9 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       if IsPrime(S_num) then
         Ip := S_num;
       else
-        vprintf Solvable : "Saturation didn't work >_<...computing primary decomposition...\n";
+        vprintf Solvable : "Saturation didn't work >_<...analyzing primary decomposition...\n";
+        QsI, PsI := PrimaryDecomposition(I);
+        vprintf Solvable : "#Ps of I = %o\n", #PsI;
         Qs, Ps := PrimaryDecomposition(S_num);
         for i := 1 to #Ps do
           vprintf Solvable : "Ps[%o] (of %o) = \n%o\n", i, #Ps, Ps[i];
