@@ -724,13 +724,14 @@ intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
       if (not SolvableIsUnramified(s)) and (not (assigned s`SolvableDBBelyiCurve)) then
         assert not assigned s`SolvableDBBelyiMap;
         SolvableBelyiMap(s);
+        vprintf Solvable : "%o sanity check...", s`SolvableDBName;
+        if SolvableMapSanityCheck(s) then
+          SolvableDBWriteObject(s);
+        end if;
+        vprintf Solvable : "done.\n"
       end if;
       time_end := Cputime();
-      vprintf Solvable : "%o computed time: %o\n", s`SolvableDBName, time_end-time_start;
-      vprintf Solvable : "Now sanity check...\n";
-      if SolvableMapSanityCheck(s) then
-        SolvableDBWriteObject(s);
-      end if;
+      vprintf Solvable : "%o time: %o\n", s`SolvableDBName, time_end-time_start;
     catch e
       print e;
       Append(~errors, e);
