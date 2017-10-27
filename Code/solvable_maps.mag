@@ -670,9 +670,17 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       time S_den := Saturation(I, b_poly); // TODO don't do both of these...for testing
       vprintf Solvable : "done.\n";
       vprintf Solvable : "I : denominator =\n%o\n", S_den;
-      // TODO assertions?
-      assert IsPrime(S_num);
-      Ip := S_num; // pick one
+      // FIXME
+      if IsPrime(S_num) then
+        Ip := S_num;
+      else
+        vprintf Solvable : "Saturation didn't work >_<...computing primary decomposition...\n";
+        Qs, Ps := PrimaryDecomposition(S_num);
+        for i := 1 to #Ps do
+          vprintf Solvable : "Ps[%o] (of %o) = \n%o\n", i, #Ps, Ps[i];
+        end for;
+        error "Saturation didn't work!";
+      end if;
       // curve upstairs
       vprintf Solvable : "Making ambient...";
       AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
