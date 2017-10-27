@@ -564,7 +564,9 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       // map from parent(f) to poly ring upstairs
       mpAffAlgToPX := eval Sprintf("mpAffAlgToPX := hom< AffAlg -> PX | %o >; return mpAffAlgToPX;", HomText("PX", 1, l));
       // ideal downstairs
-      I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
+      I_below := Ideal(t`SolvableDBBelyiCurve);
+      assert IsPrime(I_below);
+      // I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
       basis_below := Basis(I_below);
       // map basis into poly ring upstairs
       basis := [];
@@ -635,7 +637,9 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       // map from parent(f) to poly ring upstairs
       mpAffAlgToPX := eval Sprintf("mpAffAlgToPX := hom< AffAlg -> PX | %o >; return mpAffAlgToPX;", HomText("PX", 1, l));
       // ideal downstairs
-      I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
+      I_below := Ideal(t`SolvableDBBelyiCurve);
+      assert IsPrime(I_below);
+      // I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
       basis_below := Basis(I_below);
       // map basis into poly ring upstairs
       basis := [];
