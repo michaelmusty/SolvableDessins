@@ -726,9 +726,9 @@ intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
         SolvableBelyiMap(s);
         vprintf Solvable : "%o sanity check...", s`SolvableDBName;
         if SolvableMapSanityCheck(s) then
+          vprintf Solvable : "done.\n";
           SolvableDBWriteObject(s);
         end if;
-        vprintf Solvable : "done.\n";
       end if;
       time_end := Cputime();
       vprintf Solvable : "%o time: %o\n", s`SolvableDBName, time_end-time_start;
