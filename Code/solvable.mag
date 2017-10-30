@@ -677,6 +677,7 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
     vprintf Solvable : "Looping over %o*%o = %o pairs of permutations:\n", #l[1], #l[2], #l[1]*#l[2];
     vprintf Solvable : "Checking which ones can be Belyi maps...USING LESS BRUTAL APPROACH\n";
     list_oo_inverses := [s^-1 : s in l[3]];
+    list_oo_inverses_ordered := [PermutationToCode(list_oo_inverses[i]) : i in [1..#list_oo_inverses]];
     for i := 1 to #l[1] do
       vprintf Solvable : "i = %o : i from 1 to %o\n", i, #l[1];
       for j := 1 to #l[2] do

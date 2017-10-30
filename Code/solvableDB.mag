@@ -9,7 +9,7 @@ intrinsic SolvableDBAccessEntry(filename::MonStgElt) -> Any
   // extract d from filename
     num_chars := 0;
     for i in {1..#filename} do
-      if filename[i] eq "T" then
+      if filename[i] eq "T" or filename[i] eq "S" then
         num_chars := i-1;
       end if;
     end for;
