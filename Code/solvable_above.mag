@@ -51,7 +51,8 @@ intrinsic SolvableAbove(s::SolvableDBObject) -> Any, Any
   pass := s`SolvableDBGaloisOrbit;
   new_covers := [];
   for i := 1 to #pass do
-    list0, list1, list_oo, all, possible, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriples(pass[i] : return_everything := true);
+    // list0, list1, list_oo, all, possible, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriples(pass[i] : return_everything := true);
+    list0, list1, list_oo, all, possible, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriplesRedux(pass[i] : return_everything := true);
     sorted_covers := SolvablePassportSort(covers cat unramified);
     // assert #unramified := &+[#sorted_unramified[i] : i in [1..#sorted_unramified]];
     // assert #ramified := &+[#sorted_ramified[i] : i in [1..#sorted_ramified]];
