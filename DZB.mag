@@ -5,19 +5,31 @@ good4, bad4, unram4 := SolvableDBStatusReport(4);
 good2, bad2, unram2 := SolvableDBStatusReport(2);
 good := good2 cat good4 cat good8 cat good16;
 DZB := [* *];
-for s in good do
-  printf "%o: ", s`SolvableDBName;
+for i := 1 to #good do
+  s := good[i];
+  printf "%o: (%o of %o)\n", s`SolvableDBName, i, #good;
+  printf "  IsHyperelliptic? ";
   t0 := Cputime();
   b, H := IsHyperelliptic(s`SolvableDBBelyiCurve);
   t1 := Cputime();
-  printf "that took %o seconds.\n", t1-t0;
+  printf "%o. That took %o seconds.\n", b, t1-t0;
   if b then
     name := s`SolvableDBName;
     galoisorbit := s`SolvableDBGaloisOrbit;
     curve := s`SolvableDBBelyiCurve;
     hyp := H;
+    basefield := BaseField(hyp);
+    printf "  support(div(phi)): ";
+    t0 := Cputime();
     suppdivphi := Support(Divisor(s`SolvableDBBelyiMap));
+    t1 := Cputime();
+    printf "that took %o seconds.\n", t1-t0;
+    printf "  support(div(phi-1)): ";
+    t0 := Cputime();
     suppdivphi1 := Support(Divisor(s`SolvableDBBelyiMap - 1));
-    Append(~DZB, [* name, galoisorbit, curve, hyp, suppdivphi, suppdivphi1 *]);
+    t1 := Cputime();
+    printf "that took %o seconds.\n", t1-t0;
+    Append(~DZB, [* name, galoisorbit, curve, hyp, basefield, suppdivphi, suppdivphi1 *]);
+    printf "  #DZB = %o\n", #DZB;
   end if;
 end for;
