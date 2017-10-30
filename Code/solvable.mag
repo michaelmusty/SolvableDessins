@@ -743,7 +743,7 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
     vprintf Solvable : "There are %o covering triples remaining.\n\n", #justramified;
     correct := justramified;
   // exclude isomorphic redundancies
-    vprintf Solvable : "Now eliminate redundancies:\n";
+    vprintf Solvable : "Now eliminate redundancies (HINT: there shouldn't be any!):\n";
     time6 := Cputime();
     for i := #correct to 1 by -1 do
       vprintf Solvable : "i = %o : i from %o to 1\n", i, #correct;
