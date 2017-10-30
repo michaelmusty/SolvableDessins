@@ -748,16 +748,9 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
     for i := #correct to 1 by -1 do
       vprintf Solvable : "i = %o : i from %o to 1\n", i, #correct;
       for j := 1 to i-1 do
-        if lax then
-          if IsWeaklyIsomorphic(Sym(2*d), correct[i], correct[j]) then
-            Remove(~correct, i);
-            break j;
-          end if;
-        else
-          if IsConjugate(Sym(2*d), correct[i], correct[j]) then
-            Remove(~correct, i);
-            break j;
-          end if;
+        if IsConjugate(Sym(2*d), correct[i], correct[j]) then
+          Remove(~correct, i);
+          break j;
         end if;
       end for;
     end for;
