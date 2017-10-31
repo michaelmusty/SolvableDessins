@@ -13,9 +13,7 @@ for i := 1 to #good do
   X := s`SolvableDBBelyiCurve;
   // b, H := IsHyperelliptic(s`SolvableDBBelyiCurve);
   g, b, mp := GenusAndCanonicalMap(X);
-  if b and (g ge 2) then
-    canonical_img, ishyp := CanonicalImage(s`SolvableDBBelyiCurve, mp);
-  end if;
+  // canonical_img, ishyp := CanonicalImage(s`SolvableDBBelyiCurve, mp);
   t1 := Cputime();
   printf "%o. That took %o seconds.\n", b, t1-t0;
   if b and (g ge 2) then
@@ -34,7 +32,7 @@ for i := 1 to #good do
     t1 := Cputime();
     printf "that took %o seconds.\n", t1-t0;
     // Append(~DZB, [* name, galoisorbit, curve, hyp, basefield, suppdivphi, suppdivphi1 *]);
-    Append(~DZB, [* name, galoisorbit, curve, canonical_img, basefield, suppdivphi, suppdivphi1 *]);
+    Append(~DZB, [* name, galoisorbit, curve, basefield, suppdivphi, suppdivphi1 *]);
     printf "  #DZB = %o\n", #DZB;
   end if;
 end for;
