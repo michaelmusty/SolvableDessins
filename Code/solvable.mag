@@ -712,8 +712,8 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
         wt1 := l[2][j];
         Append(~all, [wt0, wt1]);
         if IsOdd(perm) then
-          // if wt0*wt1 in list_oo_inverses then
-          if Eltseq(wt0*wt1) in list_oo_inverses_ordered then
+          if wt0*wt1 in list_oo_inverses then
+          // if Eltseq(wt0*wt1) in list_oo_inverses_ordered then
           // if QuickPermutationMembership(wt0*wt1, list_oo_inverses_ordered) then
             wtsigma := [wt0, wt1, (wt1*wt0)^-1];
             wtsigma := S3Action(perm^-1, wtsigma);
@@ -732,8 +732,8 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
             end if;
           end if;
         else
-          // if wt1*wt0 in list_oo_inverses then
-          if Eltseq(wt0*wt1) in list_oo_inverses_ordered then
+          if wt1*wt0 in list_oo_inverses then
+          // if Eltseq(wt0*wt1) in list_oo_inverses_ordered then
           // if QuickPermutationMembership(wt0*wt1, list_oo_inverses_ordered) then
             wtsigma := [wt0, wt1, (wt1*wt0)^-1];
             wtsigma := S3Action(perm^-1, wtsigma);
