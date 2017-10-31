@@ -10,7 +10,8 @@ for i := 1 to #good do
   printf "%o: (%o of %o)\n", s`SolvableDBName, i, #good;
   printf "  IsHyperelliptic? ";
   t0 := Cputime();
-  b, H := IsHyperelliptic(s`SolvableDBBelyiCurve);
+  // b, H := IsHyperelliptic(s`SolvableDBBelyiCurve);
+  g, b, mp := IsHyperelliptic(s`SolvableDBBelyiCurve);
   t1 := Cputime();
   printf "%o. That took %o seconds.\n", b, t1-t0;
   if b then
@@ -29,7 +30,8 @@ for i := 1 to #good do
     suppdivphi1 := Support(Divisor(s`SolvableDBBelyiMap - 1));
     t1 := Cputime();
     printf "that took %o seconds.\n", t1-t0;
-    Append(~DZB, [* name, galoisorbit, curve, hyp, basefield, suppdivphi, suppdivphi1 *]);
+    // Append(~DZB, [* name, galoisorbit, curve, hyp, basefield, suppdivphi, suppdivphi1 *]);
+    Append(~DZB, [* name, galoisorbit, curve, basefield, suppdivphi, suppdivphi1 *]);
     printf "  #DZB = %o\n", #DZB;
   end if;
 end for;
