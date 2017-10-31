@@ -15,13 +15,10 @@ for i := 1 to #good do
   g, b, mp := GenusAndCanonicalMap(X);
   if b and (g ge 2) then
     canonical_img, ishyp := CanonicalImage(s`SolvableDBBelyiCurve, mp);
-  else
-    ishyp := false;
   end if;
-  assert b eq ishyp;
   t1 := Cputime();
   printf "%o. That took %o seconds.\n", b, t1-t0;
-  if b then
+  if b and (g ge 2) then
     name := s`SolvableDBName;
     galoisorbit := s`SolvableDBGaloisOrbit;
     curve := s`SolvableDBBelyiCurve;
@@ -37,7 +34,7 @@ for i := 1 to #good do
     t1 := Cputime();
     printf "that took %o seconds.\n", t1-t0;
     // Append(~DZB, [* name, galoisorbit, curve, hyp, basefield, suppdivphi, suppdivphi1 *]);
-    Append(~DZB, [* name, galoisorbit, curve, basefield, suppdivphi, suppdivphi1 *]);
+    Append(~DZB, [* name, galoisorbit, curve, canonical_img, basefield, suppdivphi, suppdivphi1 *]);
     printf "  #DZB = %o\n", #DZB;
   end if;
 end for;
