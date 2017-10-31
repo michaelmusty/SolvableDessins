@@ -733,7 +733,8 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
           end if;
         else
           // if wt1*wt0 in list_oo_inverses then
-          if QuickPermutationMembership(wt0*wt1, list_oo_inverses_ordered) then
+          if Eltseq(wt0*wt1) in list_oo_inverses_ordered then
+          // if QuickPermutationMembership(wt0*wt1, list_oo_inverses_ordered) then
             wtsigma := [wt0, wt1, (wt1*wt0)^-1];
             wtsigma := S3Action(perm^-1, wtsigma);
             wtG := sub< Sym(2*d) | wtsigma >;
