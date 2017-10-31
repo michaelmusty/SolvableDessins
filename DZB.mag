@@ -11,15 +11,15 @@ for i := 1 to #good do
   printf "  IsHyperelliptic? ";
   t0 := Cputime();
   // b, H := IsHyperelliptic(s`SolvableDBBelyiCurve);
-  g, b, mp := IsHyperelliptic(s`SolvableDBBelyiCurve);
+  g, b, mp := GenusAndCanonicalMap(s`SolvableDBBelyiCurve);
+  canonical_img, ishyp := CanonicalImage(s`SolvableDBBelyiCurve, mp);
+  assert b eq ishyp;
   t1 := Cputime();
   printf "%o. That took %o seconds.\n", b, t1-t0;
   if b then
     name := s`SolvableDBName;
     galoisorbit := s`SolvableDBGaloisOrbit;
     curve := s`SolvableDBBelyiCurve;
-    // hyp := H;
-    // basefield := BaseField(hyp);
     basefield := BaseField(curve);
     printf "  support(div(phi)): ";
     t0 := Cputime();
