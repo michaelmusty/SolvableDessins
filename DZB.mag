@@ -19,7 +19,8 @@ for i := 1 to #good do
     galoisorbit := s`SolvableDBGaloisOrbit;
     curve := s`SolvableDBBelyiCurve;
     // hyp := H;
-    basefield := BaseField(hyp);
+    // basefield := BaseField(hyp);
+    basefield := BaseField(curve);
     printf "  support(div(phi)): ";
     t0 := Cputime();
     suppdivphi := Support(Divisor(s`SolvableDBBelyiMap));
