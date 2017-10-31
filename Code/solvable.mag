@@ -499,11 +499,36 @@ intrinsic SortPermutationListsBySize(l::SeqEnum[SeqEnum[GrpPermElt]]) -> SeqEnum
   return l, perm;
 end intrinsic;
 
-intrinsic QuickPermutationMembership(perm::GrpPermElt, l::SeqEnum[GrpPermElt]) -> BoolElt
-  {Sort l and test membership of perm in l in big oh of log(#l) time.}
+intrinsic QuickPermutationMembership(perm::GrpPermElt, l::SeqEnum) -> BoolElt
+  {test membership of perm in l in big oh of log(#l) time.}
+  // TODO check sort? without sorting? possible?
   G := Parent(perm);
   perm := Eltseq(perm);
-  // TODO
+  while #l gt 1 do
+    if IsOdd(#l) then // there is a middle element
+      if perm eq l[Floor(#l/2)+1] then // check if perm equal to middle element
+        return true;
+      end if;
+      middle := l[Floor(#l/2)+1]; // = Ceiling(#l/2)
+      if perm lt middle then // take bottom half of list
+        l := l[1..Floor(#l/2)];
+      else // take top half of list
+        l := l[Ceiling(#l/2)+1..#l];
+      end if;
+    else // #l is even so no middle element
+      if perm le l[#l/2] then // take bottom half
+        l := l[1..#l/2];
+      else // take top half
+        l := l[#l/2+1..#l];
+      end if;
+    end if;
+  end while;
+  assert #l eq 1;
+  if perm eq l[1] then
+    return true;
+  else
+    return false;
+  end if;
 end intrinsic;
 
 intrinsic PossibleGaloisCoveringPermutationTriples(sigma::SeqEnum[GrpPermElt] : zentral := true, brutal := false, lax := false, return_everything := false) -> SeqEnum[SeqEnum[GrpPermElt]]
@@ -677,7 +702,9 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
     vprintf Solvable : "Looping over %o*%o = %o pairs of permutations:\n", #l[1], #l[2], #l[1]*#l[2];
     vprintf Solvable : "Checking which ones can be Belyi maps...USING LESS BRUTAL APPROACH\n";
     list_oo_inverses := [s^-1 : s in l[3]];
-    list_oo_inverses_ordered := [PermutationToCode(list_oo_inverses[i]) : i in [1..#list_oo_inverses]];
+    // list_oo_inverses_ordered := [PermutationToCode(list_oo_inverses[i]) : i in [1..#list_oo_inverses]];
+    list_oo_inverses_ordered := [Eltseq(list_oo_inverses[i]) : i in [1..#list_oo_inverses]];
+    list_oo_inverses_ordered := Sort(list_oo_inverses_ordered); // BEFORE loop
     for i := 1 to #l[1] do
       vprintf Solvable : "i = %o : i from 1 to %o\n", i, #l[1];
       for j := 1 to #l[2] do
@@ -685,8 +712,9 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
         wt1 := l[2][j];
         Append(~all, [wt0, wt1]);
         if IsOdd(perm) then
-          if wt0*wt1 in list_oo_inverses then // TODO make faster log
-          // if QuickPermutationMembership(wt0*wt1, list_oo_inverses_ then // TODO make faster log
+          // if wt0*wt1 in list_oo_inverses then
+          if Eltseq(wt0*wt1) in list_oo_inverses_ordered then
+          // if QuickPermutationMembership(wt0*wt1, list_oo_inverses_ordered) then
             wtsigma := [wt0, wt1, (wt1*wt0)^-1];
             wtsigma := S3Action(perm^-1, wtsigma);
             wtG := sub< Sym(2*d) | wtsigma >;
@@ -704,7 +732,8 @@ intrinsic PossibleGaloisCoveringPermutationTriplesRedux(sigma::SeqEnum[GrpPermEl
             end if;
           end if;
         else
-          if wt1*wt0 in list_oo_inverses then // TODO make faster log
+          // if wt1*wt0 in list_oo_inverses then
+          if QuickPermutationMembership(wt0*wt1, list_oo_inverses_ordered) then
             wtsigma := [wt0, wt1, (wt1*wt0)^-1];
             wtsigma := S3Action(perm^-1, wtsigma);
             wtG := sub< Sym(2*d) | wtsigma >;
