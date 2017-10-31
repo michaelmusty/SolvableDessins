@@ -10,9 +10,10 @@ for i := 1 to #good do
   printf "%o: (%o of %o)\n", s`SolvableDBName, i, #good;
   printf "  IsHyperelliptic? ";
   t0 := Cputime();
+  X := s`SolvableDBBelyiCurve;
   // b, H := IsHyperelliptic(s`SolvableDBBelyiCurve);
-  g, b, mp := GenusAndCanonicalMap(s`SolvableDBBelyiCurve);
-  if b then
+  g, b, mp := GenusAndCanonicalMap(X);
+  if b and (g ge 2) then
     canonical_img, ishyp := CanonicalImage(s`SolvableDBBelyiCurve, mp);
   else
     ishyp := false;
