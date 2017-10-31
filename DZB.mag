@@ -18,7 +18,7 @@ for i := 1 to #good do
     name := s`SolvableDBName;
     galoisorbit := s`SolvableDBGaloisOrbit;
     curve := s`SolvableDBBelyiCurve;
-    hyp := H;
+    // hyp := H;
     basefield := BaseField(hyp);
     printf "  support(div(phi)): ";
     t0 := Cputime();
