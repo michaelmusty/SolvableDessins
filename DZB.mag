@@ -12,7 +12,11 @@ for i := 1 to #good do
   t0 := Cputime();
   // b, H := IsHyperelliptic(s`SolvableDBBelyiCurve);
   g, b, mp := GenusAndCanonicalMap(s`SolvableDBBelyiCurve);
-  canonical_img, ishyp := CanonicalImage(s`SolvableDBBelyiCurve, mp);
+  if b then
+    canonical_img, ishyp := CanonicalImage(s`SolvableDBBelyiCurve, mp);
+  else
+    ishyp := false;
+  end if;
   assert b eq ishyp;
   t1 := Cputime();
   printf "%o. That took %o seconds.\n", b, t1-t0;
