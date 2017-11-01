@@ -33,6 +33,7 @@ intrinsic ExtractRoot(X::Crv, g::FldFunFracSchElt, m::RngIntElt, genus::RngIntEl
   // sanity
     printf "Checking some basic assertions...";
     assert FunctionField(X) eq Parent(g);
+    assert IsPrime(Ideal(X));
     if m le 1 then
       return "must have m > 1";
     end if;
@@ -56,44 +57,44 @@ intrinsic ExtractRoot(X::Crv, g::FldFunFracSchElt, m::RngIntElt, genus::RngIntEl
   // append the one new equation
     basis := Basis(mpPXtoPXt(I));
     printf "Generators of ideal downstairs in new polynomial ring:\n%o\n", basis;
-    printf "den(g)*(newvar)^m-num(g) = %o\n", mpPXtoPXt(mpAffAlgtoPX(den))*PXt.l^m-mpPXtoPXt(mpAffAlgtoPX(num)); // new variable at end
-    printf "den(g) = %o\n", den;
-    printf "num(g) = %o\n", num;
+    // printf "den(g)*(newvar)^m-num(g) = %o\n", mpPXtoPXt(mpAffAlgtoPX(den))*PXt.l^m-mpPXtoPXt(mpAffAlgtoPX(num)); // new variable at end
+    // printf "den(g) = %o\n", den;
+    // printf "num(g) = %o\n", num;
     Append(~basis, mpPXtoPXt(mpAffAlgtoPX(den))*PXt.l^m-mpPXtoPXt(mpAffAlgtoPX(num)));
     It := ideal< PXt | basis >;
     printf "Ideal upstairs in new polynomial ring:\n%o\n", It;
-  // primary decomposition for now
-  // TODO make this more efficient
-    printf "Apply PrimaryDecomposition:\n";
-    Qs, Ps := PrimaryDecomposition(It);
-    printf "#Ps = %o:\n", #Ps;
-    printf "%o\n", Ps;
-    // which Ps do you want?
-    printf "Checking for optional index.\n";
-    if primary_index ne 0 then
-      Ps_index := primary_index;
+  // saturation
+    printf "Ideal to start with:\n%o\n", It;
+    printf "Saturating:\n";
+    a := Numerator(g);
+    b := Denominator(g);
+    a_poly := mpPXtoPXt(mpAffAlgToPX(a));
+    b_poly := mpPXtoPXt(mpAffAlgToPX(b));
+    printf "numerator = %o\n", a;
+    printf "num poly  = %o\n", a_poly;
+    printf "denominator = %o\n", b;
+    printf "denom poly  = %o\n", b_poly;
+    printf "computing saturation at numerator...";
+    time S_num := Saturation(It, a_poly);
+    printf "done.\n";
+    printf "(It : numerator) =\n%o\n", S_num;
+    printf "computing saturation at denominator...";
+    time S_den := Saturation(It, b_poly); // TODO don't do both of these...for testing
+    printf "done.\n";
+    printf "(It : denominator) =\n%o\n", S_den;
+    // check and assign Ip for new curve
+    if IsPrime(S_num) then
+      Ip := S_num;
     else
-      printf "No optional index given. Choosing automagically.\n";
-      Ps_index := -1;
+      printf "Saturation didn't work >_<...analyzing primary decomposition...\n";
+      QsIt, PsIt := PrimaryDecomposition(It);
+      printf "#Ps of It = %o\n", #PsIt;
+      Qs, Ps := PrimaryDecomposition(S_num);
       for i := 1 to #Ps do
-        // TODO get a better idea about the curve...
-        P := Ps[i];
-        if Dimension(P) eq 1 then
-          A := Spec(Parent(P.1));
-          C := Curve(A,P);
-          printf "Ps[%o] has genus %o\n", i, Genus(C);
-          if Genus(C) eq genus then
-            Ps_index := i;
-            break i;
-          end if;
-        end if;
+        printf "Ps[%o] (of %o) = \n%o\n", i, #Ps, Ps[i];
       end for;
-      if Ps_index lt 0 then
-        error "No Ps worked!";
-      end if;
+      error "Saturation didn't work!";
     end if;
-    Ip := Ps[Ps_index];
-    printf "We picked Ps[%o]:\n%o\n", Ps_index, Ps[Ps_index];
   // curve upstairs
     printf "Making ambient...";
     AA := eval Sprintf("AA<%o> := AffineSpace(PXt); return AA;", VarText("x", 1, Rank(PXt)));
