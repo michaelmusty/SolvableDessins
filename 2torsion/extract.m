@@ -57,9 +57,6 @@ intrinsic ExtractRoot(X::Crv, g::FldFunFracSchElt, m::RngIntElt, genus::RngIntEl
   // append the one new equation
     basis := Basis(mpPXtoPXt(I));
     printf "Generators of ideal downstairs in new polynomial ring:\n%o\n", basis;
-    // printf "den(g)*(newvar)^m-num(g) = %o\n", mpPXtoPXt(mpAffAlgtoPX(den))*PXt.l^m-mpPXtoPXt(mpAffAlgtoPX(num)); // new variable at end
-    // printf "den(g) = %o\n", den;
-    // printf "num(g) = %o\n", num;
     Append(~basis, mpPXtoPXt(mpAffAlgtoPX(den))*PXt.l^m-mpPXtoPXt(mpAffAlgtoPX(num)));
     It := ideal< PXt | basis >;
     printf "Ideal upstairs in new polynomial ring:\n%o\n", It;
@@ -68,8 +65,8 @@ intrinsic ExtractRoot(X::Crv, g::FldFunFracSchElt, m::RngIntElt, genus::RngIntEl
     printf "Saturating:\n";
     a := Numerator(g);
     b := Denominator(g);
-    a_poly := mpPXtoPXt(mpAffAlgToPX(a));
-    b_poly := mpPXtoPXt(mpAffAlgToPX(b));
+    a_poly := mpPXtoPXt(mpAffAlgtoPX(a));
+    b_poly := mpPXtoPXt(mpAffAlgtoPX(b));
     printf "numerator = %o\n", a;
     printf "num poly  = %o\n", a_poly;
     printf "denominator = %o\n", b;
