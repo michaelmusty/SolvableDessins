@@ -67,6 +67,11 @@
   PX<x,y,z> := Generic(I);
   PXt, mpPXtoPXt:= VariableExtension(PX, 1, false, "lex"); // t for "tilde", false means new variable after
   AssignNames(~PXt, ["x", "y", "z", "w"]);
+  mpAffAlgToPXt := hom< AffAlg -> PXt | [PXt.1, PXt.2] >;
+  basis := Basis(I);
+  basis_t := [ mpPXtoPXt(basis[i]) : i in [1..#basis] ];
+  Append(~basis_t, mpAffAlgToPXt(b)*PXt.4^2-mpAffAlgToPXt(a));
+  It := ideal< PXt | basis_t >;
 
 /*
 // Extract Root
