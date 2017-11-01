@@ -63,10 +63,10 @@
   AffAlg := Parent(a);
   assert AffAlg eq Parent(b);
   K<nu> := BaseField(E);
-  PXt<x,y,z,w> := PolynomialRing(K, 4);
   I<x,y,z> := Ideal(E);
   PX<x,y,z> := Generic(I);
-  mpPXtoPXt := hom< PX -> PXt | [PX.1, PX.2, PX.3] >;
+  PXt, mpPXtoPXt:= VariableExtension(PX, 1, false, "lex"); // t for "tilde", false means new variable after
+  AssignNames(~PXt, ["x", "y", "z", "w"]);
 
 /*
 // Extract Root
