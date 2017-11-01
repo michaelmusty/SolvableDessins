@@ -701,7 +701,9 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       vprintf Solvable : "done.\n";
     end if;
   // assertions
+    vprintf Solvable : "Checking genus of curve...";
     assert s`SolvableDBGenus eq Genus(X);
+    vprintf Solvable : "done.\n";
   // assign information to s
     s`SolvableDBCurveBaseFieldList := t`SolvableDBCurveBaseFieldList cat [* F *];
     s`SolvableDBCurvePolynomialRingList := t`SolvableDBCurvePolynomialRingList cat [* PX *];
