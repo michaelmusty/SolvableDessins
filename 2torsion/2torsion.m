@@ -57,9 +57,11 @@
   LD, mp := RiemannRochSpace(D);
   g := mp(LD.1);
 
+/*
 // Extract Root
   Xt := ExtractRoot(E, g, 2, 2);
 
 // sanity
   KXt := FunctionField(Xt);
   BelyiMapSanityCheck(sigmat, Xt, KXt.1);
+*/
