@@ -97,7 +97,8 @@ intrinsic ExtractRoot(X::Crv, g::FldFunFracSchElt, m::RngIntElt, genus::RngIntEl
     AA := eval Sprintf("AA<%o> := AffineSpace(PXt); return AA;", VarText("x", 1, Rank(PXt)));
     printf "done.\n";
     printf "Making curve...";
-    Xt := eval Sprintf("Xt<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return Xt;", VarText("x", 0, Rank(PXt)-1));
+    // Xt := eval Sprintf("Xt<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return Xt;", VarText("x", 0, Rank(PXt)-1));
+    Xt := eval Sprintf("Xt<%o> := Scheme(AA, Ip : Reduced := true, Irreducible := true); return Xt;", VarText("x", 0, Rank(PXt)-1));
     printf "done.\n";
   // return
     return Xt;
