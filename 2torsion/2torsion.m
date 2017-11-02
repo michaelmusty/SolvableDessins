@@ -72,12 +72,14 @@
   basis_t := [ mpPXtoPXt(basis[i]) : i in [1..#basis] ];
   Append(~basis_t, mpAffAlgToPXt(b)*PXt.4^2-mpAffAlgToPXt(a));
   It := ideal< PXt | basis_t >;
+  Ip := Saturation(It, mpAffAlgToPXt(a));
+  Xt := Scheme(AffineSpace(PXt), Ip);
 
 /*
-// Extract Root
-  Xt := ExtractRoot(E, g, 2, 2);
+  // Extract Root
+    Xt := ExtractRoot(E, g, 2, 2);
 
-// sanity
-  KXt := FunctionField(Xt);
-  BelyiMapSanityCheck(sigmat, Xt, KXt.1);
+  // sanity
+    KXt := FunctionField(Xt);
+    BelyiMapSanityCheck(sigmat, Xt, KXt.1);
 */
