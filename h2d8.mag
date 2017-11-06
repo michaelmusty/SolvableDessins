@@ -1,0 +1,24 @@
+load "catalog.mag";
+sigma := [ PermutationGroup<8 |
+\[ 6, 1, 4, 7, 2, 5, 8, 3 ],
+\[ 3, 4, 1, 2, 7, 8, 5, 6 ],
+\[ 4, 7, 6, 1, 8, 3, 2, 5 ]:
+ Order := 8 > |
+[ 6, 1, 4, 7, 2, 5, 8, 3 ],
+[ 3, 4, 1, 2, 7, 8, 5, 6 ],
+[ 4, 7, 6, 1, 8, 3, 2, 5 ]
+];
+sigmap := [ PermutationGroup<16 |
+\[ 10, 5, 12, 7, 6, 9, 16, 3, 2, 13, 4, 15, 14, 1, 8, 11 ],
+\[ 12, 11, 6, 13, 16, 7, 10, 9, 4, 3, 14, 5, 8, 15, 2, 1 ],
+\[ 11, 8, 13, 2, 15, 12, 9, 14, 3, 16, 5, 10, 7, 4, 1, 6 ]:
+ Order := 16 > |
+[ 10, 5, 12, 7, 6, 9, 16, 3, 2, 13, 4, 15, 14, 1, 8, 11 ],
+[ 12, 11, 6, 13, 16, 7, 10, 9, 4, 3, 14, 5, 8, 15, 2, 1 ],
+[ 11, 8, 13, 2, 15, 12, 9, 14, 3, 16, 5, 10, 7, 4, 1, 6 ]
+]; // degree8, good[29]
+G := sub< Parent(sigma[1]) | sigma >;
+tau := IdentifyingTau(4);
+H := sub< Parent(tau) | tau >;
+S := ExtensionsOfSolubleGroup(H, G);
+Gps := [CosetTableToPermutationGroup(S[i], CosetTable(S[i], sub<S[i]|Id(S[i])>)) : i in [1..#S]];
