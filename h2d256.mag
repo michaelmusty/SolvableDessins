@@ -112,8 +112,11 @@ sigma := sigma; // 256S61-16,16,4-size4 just took first one
 G := sub< Parent(sigma[1]) | sigma >;
 tau := IdentifyingTau(9);
 H := sub< Parent(tau) | tau >;
+He := Sym(2);
 S := ExtensionsOfSolubleGroup(H, G);
+Se := ExtensionsOfSolubleGroup(He, G);
 Gps := [CosetTableToPermutationGroup(S[i], CosetTable(S[i], sub<S[i]|Id(S[i])>)) : i in [1..#S]];
+Gpse := [CosetTableToPermutationGroup(Se[i], CosetTable(Se[i], sub<Se[i]|Id(Se[i])>)) : i in [1..#Se]];
 // now just call PassportReps on these
 
 // options to try to find covering triples
