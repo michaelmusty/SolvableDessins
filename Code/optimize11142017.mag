@@ -1,0 +1,325 @@
+intrinsic PermutationToCode(perm::GrpPermElt) -> SeqEnum[SeqEnum[RngIntElt]]
+  {list encoding cycles of perm.}
+  d := Degree(Parent(perm));
+  fact := Factorization(d);
+  assert IsDivisibleBy(d, 2) and #fact eq 1;
+  cycles := CycleDecomposition(perm);
+  code := [];
+  for i in [1..#cycles] do
+    cycle_code := [];
+    for j in [1..#cycles[i]] do
+      Append(~cycle_code, cycles[i][j]);
+    end for;
+    Append(~code, cycle_code);
+  end for;
+  return code;
+end intrinsic;
+
+intrinsic CodeToPermutation(code::SeqEnum[SeqEnum[RngIntElt]]) -> GrpPermElt
+  {returns permutation corresponding to given code.}
+  // find d and max length
+  d := 1;
+  max_length := 1;
+  for i in [1..#code] do
+    if #code[i] gt max_length then
+      max_length := #code[i];
+    end if;
+    for j in [1..#code[i]] do
+      if code[i][j] gt d then
+        d := code[i][j];
+      end if;
+    end for;
+  end for;
+  // now we have d and max_length of a cycle
+  fact := Factorization(d);
+  assert IsDivisibleBy(d, 2) and #fact eq 1;
+  // now we can construct the permutation from the code
+  if max_length eq 1 then
+    return Id(Sym(d));
+  else
+    SetColumns(0);
+    str := "";
+    for i in [1..#code] do
+      str *:= "(";
+      for j in [1..#code[i]-1] do
+        str *:= Sprintf("%o, ", code[i][j]);
+      end for;
+      str *:= Sprintf("%o)", code[i][#code[i]]);
+    end for;
+    perm := eval Sprintf("Sym(%o)!%o", d, str);
+    return perm;
+  end if;
+end intrinsic;
+
+intrinsic IdentifyingTauH2(n::RngIntElt) -> GrpPermElt
+  {For n ge 2, returns tau identifying 2^n sheets to 2^(n-1) sheets}
+  assert n gt 1;
+  S := Sym(2^n);
+  tau := Id(S);
+  for i in [1..2^(n-1)] do
+    tau := tau*S!(i,i+2^(n-1));
+  end for;
+  return tau;
+end intrinsic;
+
+intrinsic IdentifyingBlocks(n::RngIntElt) -> GrpPermElt
+  {For n ge 2, returns identifying 2^n sheets to 2^(n-1) sheets}
+  assert n gt 1;
+  return {@ {i, i+2^(n-1)} : i in [1..2^(n-1)] @};
+end intrinsic;
+
+// TODO IsConjugate does not return deterministic conj
+/*
+intrinsic MakeConjugate(a::GrpPermElt) -> GrpPermElt
+  {Given an order 2 a (the generator of ZZ/2 in Gt_p), return c so that a^c = IdentifyingTau.}
+  assert Order(a) eq 2 and #CycleStructure(a) eq 1; // a is product of transpositions
+  l := Floor(Log(2, Degree(Parent(a))));
+  tau := IdentifyingTau(l);
+  assert IsConjugate(a, tau);
+  code := PermutationToCode(a);
+  c := Id(Sym(2^l));
+  for i := 1 to #code do
+    assert #code[i] eq 2;
+  end for;
+end intrinsic;
+*/
+
+intrinsic CompareBlockAction(G::GrpPerm, H::GrpPerm) -> BoolElt, GSet
+  {G acts on blocks in the desired way. Test if H acts on the same blocks in the same way.}
+  assert #GeneratorsSequence(G) eq 3;
+  assert #GeneratorsSequence(H) ge 3;
+  l := Floor(Log(2, Degree(G)));
+  blocks := IdentifyingBlocks(l);
+  assert #blocks eq #GSet(G, blocks);
+  vprintf Solvable : "blocks:\n%o\n", blocks;
+  if Generic(G) ne Generic(H) then
+    return false, blocks;
+  end if;
+  for block in blocks do
+    if not IsBlock(H, block) then
+      return false, blocks;
+    else
+      vprintf Solvable : "block %o:\n", block;
+      for j := 1 to 3 do
+        vprintf Solvable : "  desired action:\n";
+        vprintf Solvable : "    %o^%o = %o\n", block, G.j, block^G.j;
+        vprintf Solvable : "  test action:\n";
+        vprintf Solvable : "    %o^%o = %o\n", block, H.j, block^H.j;
+      end for;
+      if not BlocksImage(G, block) eq BlocksImage(H, block) then
+        return false, blocks;
+      end if;
+    end if;
+  end for;
+  return true, blocks;
+end intrinsic;
+
+intrinsic TestBlockAction(above::SeqEnum[GrpPermElt], below::SeqEnum[GrpPermElt]) -> BoolElt
+  {true if the action of above[i] on blocks defined by the (standard) identification of sheets agrees with below[i].}
+  assert #above eq #below;
+  assert #above eq 3;
+  d := Degree(Parent(below[1]));
+  G := sub<Sym(2*d)|above>;
+  G_below := sub<Sym(d)|below>;
+  l := Floor(Log(2, d)); // level_below
+  tau := IdentifyingTau(l+1);
+  blocks := IdentifyingBlocks(l+1);
+  vprintf Solvable : "blocks:\n%o\n", blocks;
+  gset := GSet(G, blocks);
+  vprintf Solvable : "gset:\n%o\n", gset;
+  if #blocks ne #gset then
+    return false;
+  end if;
+  induced_permutations := [];
+  for j := 1 to 3 do
+    if j eq 1 then
+      vprintf Solvable : "0:\n";
+    else
+      if j eq 2 then
+        vprintf Solvable : "1:\n";
+      else
+        vprintf Solvable : "oo:\n";
+      end if;
+    end if;
+    induced_permutation_one_line := [];
+    for block in blocks do
+      assert #block eq 2;
+      if not IsBlock(G, block) then
+        vprintf Solvable : "block %o is not a block of group:\n%o\n", block, G;
+        return false;
+      end if;
+      // assert IsBlock(G, block);
+      vprintf Solvable : "  %o:\n", block;
+      vprintf Solvable : "    above = %o\n", above[j];
+      vprintf Solvable : "    below = %o\n", below[j];
+      vprintf Solvable : "    %o -> %o\n", block, block^above[j];
+      Append(~induced_permutation_one_line, Min(block^above[j]));
+    end for;
+    vprintf Solvable : "  induced = %o\n", induced_permutation_one_line;
+    Append(~induced_permutations, Sym(d)!induced_permutation_one_line);
+  end for;
+  induced := induced_permutations;
+  below_generic := [Sym(d)!below[i] : i in [1..3]];
+  if below_generic eq induced then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
+intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
+  {Let A be the trivial G-module for sigma. Computes H^2(G, A) and returns list of extensions 1->A->E->G->1.}
+  // setup
+  G := Parent(sigma[1]);
+  assert IsTransitive(G);
+  d := Degree(G);
+  assert #G eq d; // Galois
+  l := Floor(Log(2,Degree(G)));
+  assert 2^l eq d;
+  // G-module
+  triv := Matrix(GF(2), [[1]]);
+  trivs := [ triv : i in [1..#Generators(G)] ];
+  A := GModule(G, trivs);
+  // H^2
+  CM := CohomologyModule(G, A);
+  H2 := CohomologyGroup(CM, 2);
+  extensions := [* *];
+  for h in H2 do
+    E_fp, pi_fp, iota_fp := Extension(CM, h);
+    // ct := CosetTable(E_fp, sub<E_fp|Id(E_fp)>);
+    // iso, E := CosetTableToRepresentation(E_fp, ct);
+    iso, E, K := CosetAction(E_fp, sub<E_fp|Id(E_fp)>);
+    iotaE := iota_fp*iso;
+    piE := (iso^-1)*pi_fp;
+    assert Image(iotaE) eq Kernel(piE);
+    assert Image(iotaE).1 in Center(E);
+    Append(~extensions, [* E, iotaE, piE *]);
+  end for;
+  return extensions;
+end intrinsic;
+
+/*
+intrinsic RandomMap(G::GrpPerm, A::ModGrp) -> MonStgElt
+  {}
+  str := "[";
+  test := 0;
+  for s in ["Id(G)", "G.1", "G.2", "G.3"] do
+    for t in ["Id(G)", "G.1", "G.2", "G.3"] do
+      zero := Random(0,1);
+      if zero eq 0 then
+        a := "Zero(A)";
+      else
+        a := "A.1";
+      end if;
+      if test eq 15 then
+        str *:= Sprintf("<%o,%o>->%o]", s, t, a);
+      else
+        str *:= Sprintf("<%o,%o>->%o,", s, t, a);
+        test +:= 1;
+      end if;
+    end for;
+  end for;
+  return str;
+end intrinsic;
+*/
+
+intrinsic ConjugateExtension(extension::List, c::GrpPermElt) -> Any
+  {Given an extension [* E, iotaE, piE *] and an element c of Generic(E), return the equivalent extension obtained by conjugating E, as well as the isomorphism of extensions.}
+  assert #extension eq 3;
+  E, iotaE, piE := Explode(extension);
+  assert Type(E) eq GrpPerm;
+  assert IsTransitive(E);
+  d := Degree(E);
+  l := Floor(Log(2,Degree(E)));
+  assert 2^l eq d;
+  assert Parent(c) eq Generic(E);
+  Gt := Conjugate(E, c);
+  b, beta := IsIsomorphic(E, Gt);
+  // mp := hom<E->Gt|[E.i^conj : i in [1..#Generators(E)]]>;
+  assert b;
+  iota := iotaE*beta;
+  pi := beta^-1*piE;
+  assert Image(iota) eq Kernel(pi);
+  assert IsCentral(Gt, Image(iota));
+  return [* Gt, iota, pi *], beta;
+end intrinsic;
+
+/*
+    // now conjugate to get iota(A) = <IdentifyingTau>
+      b1, conj := IsConjugate(Sym(2*d), Sym(2*d)!Image(iota_p).1, Sym(2*d)!IdentifyingTau(l+1));
+      assert b1;
+      Gt := Conjugate(Gt_p, conj);
+      b2, mp := IsIsomorphic(Gt_p, Gt); // TODO this might take time?
+      assert b2;
+      // mp := hom<Gt_p->Gt|[Gt_p.i^conj : i in [1..#Generators(Gt_p)]]>;
+      iota := iota_p*mp;
+      pi := mp^-1*pi_p;
+      assert Image(iota) eq Kernel(pi);
+      conjA := sub<Sym(2*d)|IdentifyingTau(l+1)>;
+      assert conjA eq Image(iota);
+*/
+
+// TODO
+/*
+intrinsic SolvableAboveH2(s::SolvableDBObject) -> SeqEnum[SolvableDBObject]
+  {Given a solvableDBobj with monodromy G, find all central ZZ/2ZZ extensions of G (call such an extension Gt) and return a list of solvableDBobjects above s.}
+  G := s`SolvableDBMonodromyGroup;
+  Gts := [];
+  // FIXME
+  for i := 1 to #pass do
+    // list0, list1, list_oo, all, possible, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriples(pass[i] : return_everything := true);
+    list0, list1, list_oo, all, possible, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriplesRedux(pass[i] : return_everything := true);
+    sorted_covers := SolvablePassportSort(covers cat unramified);
+    // assert #unramified := &+[#sorted_unramified[i] : i in [1..#sorted_unramified]];
+    // assert #ramified := &+[#sorted_ramified[i] : i in [1..#sorted_ramified]];
+    if #sorted_covers eq 0 then // if there are no covers
+      s`SolvableDBParents := [ "None" ]; // record that we checked for parents
+    else
+      for pass in sorted_covers do
+        t := SolvableDBExample(pass);
+        // t needs some graph information to merge
+        t`SolvableDBChildren := [Sprintf("%o", s`SolvableDBName)]; // t should have s as a child
+        t`SolvableDBPathToPP1 := s`SolvableDBPathToPP1; // start path to t with s path
+        Append(~t`SolvableDBPathToPP1, t`SolvableDBName); // t is the end of path to t
+        t, is_new := SolvableDBMerge(t); // merge t with the database
+        if is_new then // t is new and merged with database
+          // update parents of s
+          if not assigned s`SolvableDBParents then
+            s`SolvableDBParents := []; // initialize if not assigned
+          end if;
+          // s should have t as a parent
+          Append(~s`SolvableDBParents, Sprintf("%o", t`SolvableDBName));
+          SolvableDBWriteObject(s);
+          // assert t has s as a child
+          assert s`SolvableDBName in t`SolvableDBChildren;
+          Append(~new_covers, t);
+        end if;
+      end for;
+    end if;
+  end for;
+  return new_covers;
+end intrinsic;
+*/
+
+// TODO
+/*
+intrinsic SolvableLevelH2(l::RngIntElt) -> Any
+  {multiple calls to SolvableAboveH2 so that we can update parents and children accordingly.}
+  if IsEven(l) and #Factorization(l) eq 1 then
+    l_below := l div 2;
+    filenames_below := SolvableDBFilenames(l_below);
+    if #filenames_below eq 0 then
+      error "we have not computed far enough to compute to this level yet!";
+    else
+      // make a bunch of files at level l by calling SolvableAbove a level below
+      for name in filenames_below do
+        s := SolvableDBAccessEntry(name);
+        SolvableAbove(s);
+      end for;
+      return Sprintf("SolvableDB computed up to level %o\n", l);
+    end if;
+  else
+    error "level is not valid";
+  end if;
+end intrinsic;
+*/

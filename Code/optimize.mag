@@ -1,4 +1,8 @@
-intrinsic IdentifyingTauH2(n::RngIntElt) -> GrpPermElt
+// user defined verbose flags for vprintf
+  declare verbose Solvable, 2;
+  declare verbose SolvableTime, 1;
+
+intrinsic IdentifyingTau(n::RngIntElt) -> GrpPermElt
   {For n ge 2, returns tau identifying 2^n sheets to 2^(n-1) sheets}
   assert n gt 1;
   S := Sym(2^n);
@@ -9,19 +13,198 @@ intrinsic IdentifyingTauH2(n::RngIntElt) -> GrpPermElt
   return tau;
 end intrinsic;
 
-// TODO
-/*
-intrinsic SolvableAboveH2(s::SolvableDBObject) -> SeqEnum[SolvableDBObject]
-  {Given a solvableDBobj with monodromy G, find all central ZZ/2ZZ extensions of G (call such an extension Gt) and return a list of solvableDBobjects above s.}
-  G := s`SolvableDBMonodromyGroup;
-  Gts := [];
-  // FIXME
-  for i := 1 to #pass do
-    // list0, list1, list_oo, all, possible, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriples(pass[i] : return_everything := true);
-    list0, list1, list_oo, all, possible, justramified, unramified, covers := PossibleGaloisCoveringPermutationTriplesRedux(pass[i] : return_everything := true);
-    sorted_covers := SolvablePassportSort(covers cat unramified);
-    // assert #unramified := &+[#sorted_unramified[i] : i in [1..#sorted_unramified]];
-    // assert #ramified := &+[#sorted_ramified[i] : i in [1..#sorted_ramified]];
+intrinsic IdentifyingBlocks(n::RngIntElt) -> GrpPermElt
+  {For n ge 2, returns identifying 2^n sheets to 2^(n-1) sheets}
+  assert n gt 1;
+  return {@ {i, i+2^(n-1)} : i in [1..2^(n-1)] @};
+end intrinsic;
+
+intrinsic TestBlockAction(above::SeqEnum[GrpPermElt], below::SeqEnum[GrpPermElt]) -> BoolElt
+  {true if the action of above[i] on blocks defined by the (standard) identification of sheets agrees with below[i].}
+  assert #above eq #below;
+  assert #above eq 3;
+  d := Degree(Parent(below[1]));
+  G := sub<Sym(2*d)|above>;
+  G_below := sub<Sym(d)|below>;
+  l := Floor(Log(2, d)); // level_below
+  tau := IdentifyingTau(l+1);
+  blocks := IdentifyingBlocks(l+1);
+  vprintf Solvable : "blocks:\n%o\n", blocks;
+  gset := GSet(G, blocks);
+  vprintf Solvable : "gset:\n%o\n", gset;
+  if #blocks ne #gset then
+    return false;
+  end if;
+  induced_permutations := [];
+  for j := 1 to 3 do
+    if j eq 1 then
+      vprintf Solvable : "0:\n";
+    else
+      if j eq 2 then
+        vprintf Solvable : "1:\n";
+      else
+        vprintf Solvable : "oo:\n";
+      end if;
+    end if;
+    induced_permutation_one_line := [];
+    for block in blocks do
+      assert #block eq 2;
+      if not IsBlock(G, block) then
+        vprintf Solvable : "block %o is not a block of group:\n%o\n", block, G;
+        return false;
+      end if;
+      // assert IsBlock(G, block);
+      vprintf Solvable : "  %o:\n", block;
+      vprintf Solvable : "    above = %o\n", above[j];
+      vprintf Solvable : "    below = %o\n", below[j];
+      vprintf Solvable : "    %o -> %o\n", block, block^above[j];
+      Append(~induced_permutation_one_line, Min(block^above[j]));
+    end for;
+    vprintf Solvable : "  induced = %o\n", induced_permutation_one_line;
+    Append(~induced_permutations, Sym(d)!induced_permutation_one_line);
+  end for;
+  induced := induced_permutations;
+  below_generic := [Sym(d)!below[i] : i in [1..3]];
+  if below_generic eq induced then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
+intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
+  {Let A be the trivial G-module for sigma. Computes H^2(G, A) and returns list of extensions 1->A->E->G->1.}
+  // setup
+  G := Parent(sigma[1]);
+  assert IsTransitive(G);
+  d := Degree(G);
+  assert #G eq d; // Galois
+  l := Floor(Log(2,Degree(G)));
+  assert 2^l eq d;
+  // G-module
+  triv := Matrix(GF(2), [[1]]);
+  trivs := [ triv : i in [1..#Generators(G)] ];
+  A := GModule(G, trivs);
+  // H^2
+  CM := CohomologyModule(G, A);
+  H2 := CohomologyGroup(CM, 2);
+  extensions := [* *];
+  for h in H2 do
+    E_fp, pi_fp, iota_fp := Extension(CM, h);
+    // ct := CosetTable(E_fp, sub<E_fp|Id(E_fp)>);
+    // iso, E := CosetTableToRepresentation(E_fp, ct);
+    iso, E, K := CosetAction(E_fp, sub<E_fp|Id(E_fp)>);
+    iotaE := iota_fp*iso;
+    piE := (iso^-1)*pi_fp;
+    assert Image(iotaE) eq Kernel(piE);
+    assert Image(iotaE).1 in Center(E);
+    Append(~extensions, [* E, iotaE, piE *]);
+  end for;
+  return extensions;
+end intrinsic;
+
+intrinsic AllCoverings(below::SeqEnum[GrpPermElt]) -> SeqEnum
+  {finds all possible covering triples of below (including unramified).}
+  // setup
+  assert #below eq 3;
+  G := Parent(below[1]);
+  S := Generic(G);
+  assert G eq sub<S|below>;
+  assert IsTransitive(G);
+  assert below[3]*below[2]*below[1] eq Id(G);
+  d := Degree(G);
+  assert #G eq d; // Galois
+  l := Floor(Log(2,Degree(G)));
+  assert 2^l eq d;
+  tau := IdentifyingTau(l+1);
+  // extensions
+  vprintf Solvable : "Computing extensions...";
+  t0 := Cputime();
+  extensions := Extensions(below);
+  t1 := Cputime();
+  vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
+  // make covers
+  covers := [];
+  for i := 1 to #extensions do
+    extension := extensions[i];
+    vprintf Solvable : "extension %o/%o:\n", i, #extensions;
+    t0 := Cputime();
+    E, iotaE, piE := Explode(extension);
+    if IsTransitive(E) then
+      g := Image(iotaE).1;
+      b1, c := IsConjugate(Sym(2*d), g, tau); // FIXME choice of c determines induced action
+      Gt := Conjugate(E, c);
+      H := sub<Gt|tau>;
+      assert tau in Center(Gt); // TODO investigate
+      assert b1; // TODO investigate
+      above := [ (below[i] @@ piE)^c : i in [1..3] ]; // 8 lifts, 2 simultaneous conjugacy classes
+      a1, a2, a3 := Explode(above);
+      assert a1 in Gt and a2 in Gt and a3 in Gt and tau*a1 in Gt;
+      assert Gt/H eq G;
+      assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
+      assert CycleStructure(a1) eq CycleStructure(tau*a1);
+      cover := [];
+      if a3*a2*a1 eq Id(Gt) then
+        Append(~cover, [a1, a2, a3]);
+      end if;
+      if tau*a3*a2*a1 eq Id(Gt) then
+        Append(~cover, [tau*a1, a2, a3]);
+      end if;
+      if #cover eq 0 then
+        vprintf Solvable : "no cover for this extension.\n";
+      else
+        if #cover eq 1 then
+          vprintf Solvable : "found %o cover.\n", #cover;
+        else
+          vprintf Solvable : "found %o covers.\n", #cover;
+        end if;
+        Append(~covers, cover);
+      end if;
+      t1 := Cputime();
+      vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
+    else
+      vprintf Solvable : "covering group is not transitive.\n";
+    end if;
+  end for;
+  return covers;
+end intrinsic;
+
+intrinsic SolvableCycleStructure(triple::SeqEnum[GrpPermElt]) -> SeqEnum
+  {returns sequence of 3 cycle structures for triple.}
+  assert #triple eq 3;
+  return [ CycleStructure(triple[i]) : i in [1..3] ];
+end intrinsic;
+
+intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> SeqEnum, SeqEnum
+  {returns covers and unramified calling AllCoverings. Also does some sanity checking.}
+  orders_below := [ Order(below[i]) : i in [1..3] ];
+  allcovers := AllCoverings(below);
+  covers := [];
+  unramified := [];
+  for pass in allcovers do
+    assert #pass ge 1;
+    cycle_structure_test := SolvableCycleStructure(pass[1]);
+    for sigma in pass do
+      assert SolvableCycleStructure(sigma) eq cycle_structure_test;
+    end for;
+    orders_above := [ Order(pass[1][i]) : i in [1..3] ];
+    if orders_above[1] gt orders_below[1] or orders_above[2] gt orders_below[2] or orders_above[3] gt orders_below[3] then
+      Append(~covers, pass);
+    else
+      Append(~unramified, pass);
+    end if;
+  end for;
+  return covers, unramified;
+end intrinsic;
+
+intrinsic SolvableAbove(s::SolvableDBObject) -> Any, Any
+  {Given a solvableDBobj, find all Galois permutation triples "above" all permutation triples in the Galois orbit corresponding to s. Update the SolvableParents of s and return a SeqEnum of SolvableDBObjects covering s with their SolvableChildren updated accordingly.}
+  gal_orbit := s`SolvableDBGaloisOrbit;
+  new_covers := [];
+  for i := 1 to #gal_orbit do
+    below := gal_orbit[i];
+    covers, unram := Coverings(below);
+    sorted_covers := covers cat unram;
     if #sorted_covers eq 0 then // if there are no covers
       s`SolvableDBParents := [ "None" ]; // record that we checked for parents
     else
@@ -49,12 +232,9 @@ intrinsic SolvableAboveH2(s::SolvableDBObject) -> SeqEnum[SolvableDBObject]
   end for;
   return new_covers;
 end intrinsic;
-*/
 
-// TODO
-/*
-intrinsic SolvableLevelH2(l::RngIntElt) -> Any
-  {multiple calls to SolvableAboveH2 so that we can update parents and children accordingly.}
+intrinsic SolvableLevel(l::RngIntElt) -> Any
+  {multiple calls to SolvableAbove so that we can update parents and children accordingly.}
   if IsEven(l) and #Factorization(l) eq 1 then
     l_below := l div 2;
     filenames_below := SolvableDBFilenames(l_below);
@@ -72,4 +252,3 @@ intrinsic SolvableLevelH2(l::RngIntElt) -> Any
     error "level is not valid";
   end if;
 end intrinsic;
-*/
