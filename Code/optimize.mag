@@ -243,6 +243,7 @@ intrinsic SolvableLevel(l::RngIntElt) -> Any
     else
       // make a bunch of files at level l by calling SolvableAbove a level below
       for name in filenames_below do
+        vprintf Solvable : "%o:\n\n", name;
         s := SolvableDBAccessEntry(name);
         SolvableAbove(s);
       end for;
