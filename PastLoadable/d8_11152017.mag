@@ -1,0 +1,48 @@
+load "catalog.mag";
+SetVerbose("Solvable", 0);
+below := [ PermutationGroup<4 |
+\[ 3, 4, 1, 2 ],
+\[ 2, 1, 4, 3 ],
+\[ 4, 3, 2, 1 ]:
+ Order := 4 > |
+[ 3, 4, 1, 2 ],
+[ 2, 1, 4, 3 ],
+[ 4, 3, 2, 1 ]
+];
+G := sub<Sym(4)|below>;
+extensions := Extensions(below);
+extension := extensions[2];
+E, iotaE, piE := Explode(extension);
+g := Image(iotaE).1; // element of E conjugate to tau
+tau := IdentifyingTau(3);
+blocks := IdentifyingBlocks(3);
+b, c := IsConjugate(Sym(8), g, tau);
+Ec := Conjugate(E, c);
+Ecblocks := GSet(Ec, blocks);
+assert IsIsomorphic(G, ActionImage(Ec, Ecblocks));
+above := [(below[i] @@ piE)^c : i in [1..3]];
+above;
+blocks;
+ActionImage(Ec, Ecblocks);
+below;
+TestBlockAction(above, below);
+
+C := Centralizer(Sym(8), tau);
+worked := [];
+for d in C do
+  above_d := [ above[i]^d : i in [1..3]];
+  if TestBlockAction(above_d, below) then
+    Append(~worked, d);
+  end if;
+end for;
+above_new := [above[i]^worked[1] : i in [1..3]];
+H := sub<Sym(8)|above_new>;
+above_new := [H!above_new[i] : i in [1..3]];
+
+Gt := sub<Sym(8)|above_new>;
+Gtblocks := GSet(Gt, blocks);
+above_new;
+blocks;
+ActionImage(Gt, Gtblocks);
+below;
+TestBlockAction(above_new, below);

@@ -12,6 +12,7 @@ declare attributes SolvableDBObject:
   SolvableDBPassportSize,
   SolvableDBPointedPassportSize,
   SolvableDBLevel,
+  SolvableDBBlocks, // TODO
   // permutation attributes
   SolvableDBGaloisOrbit,
   SolvableDBPassport,
