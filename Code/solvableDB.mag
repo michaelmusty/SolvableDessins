@@ -80,7 +80,6 @@ intrinsic SolvableDBGenerateName(sigma::SeqEnum[GrpPermElt]) -> MonStgElt
   return name;
 end intrinsic;
 
-
 intrinsic SolvableDBUnsolvableName(s::SolvableDBObject) -> MonStgElt
   {given an obj s, return "passport name" instead of "solvable name" ugh.}
   return SolvableDBGenerateName(s`SolvableDBGaloisOrbit[1]);

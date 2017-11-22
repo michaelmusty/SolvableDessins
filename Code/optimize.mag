@@ -2,126 +2,181 @@
   declare verbose Solvable, 2;
   declare verbose SolvableTime, 1;
 
-/*
-intrinsic IdentifyingTau(n::RngIntElt) -> GrpPermElt
-  {For n ge 2, returns tau identifying 2^n sheets to 2^(n-1) sheets}
-  assert n gt 1;
-  S := Sym(2^n);
-  tau := Id(S);
-  for i in [1..2^(n-1)] do
-    tau := tau*S!(i,i+2^(n-1));
-  end for;
-  return tau;
-end intrinsic;
-intrinsic IdentifyingBlocks(n::RngIntElt) -> GrpPermElt
-  {For n ge 2, returns identifying 2^n sheets to 2^(n-1) sheets}
-  assert n gt 1;
-  return {@ {i, i+2^(n-1)} : i in [1..2^(n-1)] @};
-end intrinsic;
-intrinsic TestBlockAction(above::SeqEnum[GrpPermElt], below::SeqEnum[GrpPermElt], blocks::SetIndx) -> BoolElt
-  {true if the action of above[i] on blocks defined by the identification of sheets (given by blocks) agrees with below[i].}
-  assert #above eq #below;
-  assert #above eq 3;
-  d := Degree(Parent(below[1]));
-  G := sub<Sym(2*d)|above>;
-  G_below := sub<Sym(d)|below>;
-  l := Floor(Log(2, d)); // level_below
-  vprintf Solvable : "blocks:\n%o\n", blocks;
-  gset := GSet(G, blocks);
-  vprintf Solvable : "gset:\n%o\n", gset;
-  if #blocks ne #gset then
-    return false;
-  end if;
-  induced_permutations := [];
-  for j := 1 to 3 do
-    if j eq 1 then
-      vprintf Solvable : "0:\n";
-    else
-      if j eq 2 then
-        vprintf Solvable : "1:\n";
-      else
-        vprintf Solvable : "oo:\n";
-      end if;
-    end if;
-    induced_permutation_one_line := [];
-    for block in blocks do
-      assert #block eq 2;
-      if not IsBlock(G, block) then
-        vprintf Solvable : "block %o is not a block of group:\n%o\n", block, G;
-        return false;
-      end if;
-      // assert IsBlock(G, block);
-      vprintf Solvable : "  %o:\n", block;
-      vprintf Solvable : "    above = %o\n", above[j];
-      vprintf Solvable : "    below = %o\n", below[j];
-      vprintf Solvable : "    %o -> %o\n", block, block^above[j];
-      Append(~induced_permutation_one_line, Min(block^above[j]));
+/* OLD
+  intrinsic IdentifyingTau(n::RngIntElt) -> GrpPermElt
+    {For n ge 2, returns tau identifying 2^n sheets to 2^(n-1) sheets}
+    assert n gt 1;
+    S := Sym(2^n);
+    tau := Id(S);
+    for i in [1..2^(n-1)] do
+      tau := tau*S!(i,i+2^(n-1));
     end for;
-    vprintf Solvable : "  induced = %o\n", induced_permutation_one_line;
-    Append(~induced_permutations, Sym(d)!induced_permutation_one_line);
-  end for;
-  induced := induced_permutations;
-  below_generic := [Sym(d)!below[i] : i in [1..3]];
-  if below_generic eq induced then
-    return true;
-  else
-    return false;
-  end if;
-end intrinsic;
+    return tau;
+  end intrinsic;
+  intrinsic IdentifyingBlocks(n::RngIntElt) -> GrpPermElt
+    {For n ge 2, returns identifying 2^n sheets to 2^(n-1) sheets}
+    assert n gt 1;
+    return {@ {i, i+2^(n-1)} : i in [1..2^(n-1)] @};
+  end intrinsic;
+  intrinsic TestBlockAction(above::SeqEnum[GrpPermElt], below::SeqEnum[GrpPermElt], blocks::SetIndx) -> BoolElt
+    {true if the action of above[i] on blocks defined by the identification of sheets (given by blocks) agrees with below[i].}
+    assert #above eq #below;
+    assert #above eq 3;
+    d := Degree(Parent(below[1]));
+    G := sub<Sym(2*d)|above>;
+    G_below := sub<Sym(d)|below>;
+    l := Floor(Log(2, d)); // level_below
+    vprintf Solvable : "blocks:\n%o\n", blocks;
+    gset := GSet(G, blocks);
+    vprintf Solvable : "gset:\n%o\n", gset;
+    if #blocks ne #gset then
+      return false;
+    end if;
+    induced_permutations := [];
+    for j := 1 to 3 do
+      if j eq 1 then
+        vprintf Solvable : "0:\n";
+      else
+        if j eq 2 then
+          vprintf Solvable : "1:\n";
+        else
+          vprintf Solvable : "oo:\n";
+        end if;
+      end if;
+      induced_permutation_one_line := [];
+      for block in blocks do
+        assert #block eq 2;
+        if not IsBlock(G, block) then
+          vprintf Solvable : "block %o is not a block of group:\n%o\n", block, G;
+          return false;
+        end if;
+        // assert IsBlock(G, block);
+        vprintf Solvable : "  %o:\n", block;
+        vprintf Solvable : "    above = %o\n", above[j];
+        vprintf Solvable : "    below = %o\n", below[j];
+        vprintf Solvable : "    %o -> %o\n", block, block^above[j];
+        Append(~induced_permutation_one_line, Min(block^above[j]));
+      end for;
+      vprintf Solvable : "  induced = %o\n", induced_permutation_one_line;
+      Append(~induced_permutations, Sym(d)!induced_permutation_one_line);
+    end for;
+    induced := induced_permutations;
+    below_generic := [Sym(d)!below[i] : i in [1..3]];
+    if below_generic eq induced then
+      return true;
+    else
+      return false;
+    end if;
+  end intrinsic;
+  intrinsic TestBlockAction(above::SeqEnum[GrpPermElt], below::SeqEnum[GrpPermElt], blocks::SetIndx) -> BoolElt
+    {true if the action of above[i] on blocks defined by the identification of sheets (given by blocks) agrees with below[i].}
+    assert #above eq #below;
+    assert #above eq 3;
+    d := Degree(Parent(below[1]));
+    G := sub<Sym(2*d)|above>;
+    G_below := sub<Sym(d)|below>;
+    l := Floor(Log(2, d)); // level_below
+    vprintf Solvable : "blocks:\n%o\n", blocks;
+    gset := GSet(G, blocks);
+    vprintf Solvable : "gset:\n%o\n", gset;
+    if #blocks ne #gset then
+      return false;
+    end if;
+    induced_permutations := [];
+    for j := 1 to 3 do
+      if j eq 1 then
+        vprintf Solvable : "0:\n";
+      else
+        if j eq 2 then
+          vprintf Solvable : "1:\n";
+        else
+          vprintf Solvable : "oo:\n";
+        end if;
+      end if;
+      induced_permutation_one_line := [];
+      for block in blocks do
+        assert #block eq 2;
+        if not IsBlock(G, block) then
+          vprintf Solvable : "block %o is not a block of group:\n%o\n", block, G;
+          return false;
+        end if;
+        // assert IsBlock(G, block);
+        vprintf Solvable : "  %o:\n", block;
+        vprintf Solvable : "    above = %o\n", above[j];
+        vprintf Solvable : "    below = %o\n", below[j];
+        vprintf Solvable : "    %o -> %o\n", block, block^above[j];
+        Append(~induced_permutation_one_line, Min(block^above[j]));
+      end for;
+      vprintf Solvable : "  induced = %o\n", induced_permutation_one_line;
+      Append(~induced_permutations, Sym(d)!induced_permutation_one_line);
+    end for;
+    induced := induced_permutations;
+    below_generic := [Sym(d)!below[i] : i in [1..3]];
+    if below_generic eq induced then
+      return true;
+    else
+      return false;
+    end if;
+  end intrinsic;
+  intrinsic CorrectInducedActions(extension::List, below::SeqEnum[GrpPermElt]) -> BoolElt, Any
+    {true if the labeling given by iota(A) in E }
+    // setup
+    d := Degree(Parent(below[1]));
+    G := sub<Sym(d)|below>; // below
+    l := Floor(Log(2, d)); // level below
+    E, iota, pi := Explode(extension);
+    A := Image(iota);
+    assert #A eq 2;
+    assert IsIsomorphic(E/A, G);
+    above := [ below[i] @@ pi : i in [1..3] ];
+    // make blocks as determined by A...can't be married to labels!
+    blocks := PermutationToBlocks(A.1);
+    // test
+    return TestBlockAction(above, below, blocks), blocks; // FIXME labels?
+  end intrinsic;
+  intrinsic SortLifts(a::SeqEnum[GrpPermElt]) -> SeqEnum
+    {sort 8 lifts given by above and tau (made in function) into passports.}
+    // setup
+    assert #a eq 3;
+    G := Parent(a[1]);
+    S := Generic(G);
+    assert G eq sub<S|a>;
+    assert IsTransitive(G);
+    a1, a2, a3 := Explode(a);
+    assert a3*a2*a1 eq Id(G);
+    d := Degree(G);
+    assert #G eq d; // Galois
+    l := Floor(Log(2,Degree(G)));
+    assert 2^l eq d;
+    tau := IdentifyingTau(l);
+    // lifts
+    lifts := [a];
+    Append(~lifts, [tau*a1, a2, a3]);
+    Append(~lifts, [a1, tau*a2, a3]);
+    Append(~lifts, [a1, a2, tau*a3]);
+    Append(~lifts, [a1, tau*a2, tau*a3]);
+    Append(~lifts, [tau*a1, a2, tau*a3]);
+    Append(~lifts, [tau*a1, tau*a2, a3]);
+    Append(~lifts, [tau*a1, tau*a2, tau*a3]);
+    // sort by cycle structure
+    sorted_cs := [[a]];
+    for i := 2 to #lifts do
+      is_new := true;
+      for j := 1 to #sorted_cs do
+        if SolvableCycleStructure(sorted_cs[j][1]) eq SolvableCycleStructure(lifts[i]) then
+          Append(~sorted_cs[j], lifts[i]);
+          is_new := false;
+        end if;
+      end for;
+      if is_new then
+        Append(~sorted_cs, [lifts[i]]);
+      end if;
+    end for;
+    // eliminate simultaneous conjugation
+    sorted := sorted_cs;
+    // TODO
+  end intrinsic;
 */
-
-intrinsic TestBlockAction(above::SeqEnum[GrpPermElt], below::SeqEnum[GrpPermElt], blocks::SetIndx) -> BoolElt
-  {true if the action of above[i] on blocks defined by the identification of sheets (given by blocks) agrees with below[i].}
-  assert #above eq #below;
-  assert #above eq 3;
-  d := Degree(Parent(below[1]));
-  G := sub<Sym(2*d)|above>;
-  G_below := sub<Sym(d)|below>;
-  l := Floor(Log(2, d)); // level_below
-  vprintf Solvable : "blocks:\n%o\n", blocks;
-  gset := GSet(G, blocks);
-  vprintf Solvable : "gset:\n%o\n", gset;
-  if #blocks ne #gset then
-    return false;
-  end if;
-  induced_permutations := [];
-  for j := 1 to 3 do
-    if j eq 1 then
-      vprintf Solvable : "0:\n";
-    else
-      if j eq 2 then
-        vprintf Solvable : "1:\n";
-      else
-        vprintf Solvable : "oo:\n";
-      end if;
-    end if;
-    induced_permutation_one_line := [];
-    for block in blocks do
-      assert #block eq 2;
-      /*
-      if not IsBlock(G, block) then
-        vprintf Solvable : "block %o is not a block of group:\n%o\n", block, G;
-        return false;
-      end if;
-      */
-      // assert IsBlock(G, block);
-      vprintf Solvable : "  %o:\n", block;
-      vprintf Solvable : "    above = %o\n", above[j];
-      vprintf Solvable : "    below = %o\n", below[j];
-      vprintf Solvable : "    %o -> %o\n", block, block^above[j];
-      Append(~induced_permutation_one_line, Min(block^above[j]));
-    end for;
-    vprintf Solvable : "  induced = %o\n", induced_permutation_one_line;
-    Append(~induced_permutations, Sym(d)!induced_permutation_one_line);
-  end for;
-  induced := induced_permutations;
-  below_generic := [Sym(d)!below[i] : i in [1..3]];
-  if below_generic eq induced then
-    return true;
-  else
-    return false;
-  end if;
-end intrinsic;
 
 intrinsic PermutationToCode(perm::GrpPermElt) -> SeqEnum[SeqEnum[RngIntElt]]
   {list encoding cycles of perm.}
@@ -158,21 +213,10 @@ intrinsic PermutationToBlocks(perm::GrpPermElt) -> SetIndx
   return CodeToBlocks(PermutationToCode(perm));
 end intrinsic;
 
-intrinsic CorrectInducedActions(extension::List, below::SeqEnum[GrpPermElt]) -> BoolElt, Any
-  {true if the labeling given by iota(A) in E }
-  // setup
-  d := Degree(Parent(below[1]));
-  G := sub<Sym(d)|below>; // below
-  l := Floor(Log(2, d)); // level below
-  E, iota, pi := Explode(extension);
-  A := Image(iota);
-  assert #A eq 2;
-  assert IsIsomorphic(E/A, G);
-  above := [ below[i] @@ pi : i in [1..3] ];
-  // make blocks as determined by A...can't be married to labels!
-  blocks := PermutationToBlocks(A.1);
-  // test
-  return TestBlockAction(above, below, blocks), blocks; // FIXME labels?
+intrinsic SolvableCycleStructure(triple::SeqEnum[GrpPermElt]) -> SeqEnum
+  {returns sequence of 3 cycle structures for triple.}
+  assert #triple eq 3;
+  return [ CycleStructure(triple[i]) : i in [1..3] ];
 end intrinsic;
 
 intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
@@ -207,51 +251,61 @@ intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
   return extensions;
 end intrinsic;
 
-intrinsic SortLifts(a::SeqEnum[GrpPermElt]) -> SeqEnum
-  {sort 8 lifts given by above and tau (made in function) into passports.}
+intrinsic ExtensionToPassport(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEnum
+  {}
   // setup
-  assert #a eq 3;
-  G := Parent(a[1]);
-  S := Generic(G);
-  assert G eq sub<S|a>;
-  assert IsTransitive(G);
-  a1, a2, a3 := Explode(a);
-  assert a3*a2*a1 eq Id(G);
-  d := Degree(G);
-  assert #G eq d; // Galois
-  l := Floor(Log(2,Degree(G)));
-  assert 2^l eq d;
-  tau := IdentifyingTau(l);
-  // lifts
-  lifts := [a];
-  Append(~lifts, [tau*a1, a2, a3]);
-  Append(~lifts, [a1, tau*a2, a3]);
-  Append(~lifts, [a1, a2, tau*a3]);
-  Append(~lifts, [a1, tau*a2, tau*a3]);
-  Append(~lifts, [tau*a1, a2, tau*a3]);
-  Append(~lifts, [tau*a1, tau*a2, a3]);
-  Append(~lifts, [tau*a1, tau*a2, tau*a3]);
-  // sort by cycle structure
-  sorted_cs := [[a]];
-  for i := 2 to #lifts do
-    is_new := true;
-    for j := 1 to #sorted_cs do
-      if SolvableCycleStructure(sorted_cs[j][1]) eq SolvableCycleStructure(lifts[i]) then
-        Append(~sorted_cs[j], lifts[i]);
-        is_new := false;
-      end if;
-    end for;
-    if is_new then
-      Append(~sorted_cs, [lifts[i]]);
+    assert #below eq 3;
+    G := Parent(below[1]);
+    S := Generic(G);
+    assert G eq sub<S|below>;
+    assert IsTransitive(G);
+    assert below[3]*below[2]*below[1] eq Id(G);
+    d := Degree(G);
+    assert #G eq d; // Galois
+    l := Floor(Log(2,Degree(G)));
+    assert 2^l eq d;
+  // setup
+  E, iotaE, piE := Explode(extension);
+  assert IsTransitive(E); // TODO we don't need this?
+  tau := Image(iotaE).1;
+  H := sub<E|tau>;
+  assert tau in Center(E); // TODO investigate
+  above := [ (below[i] @@ piE) : i in [1..3] ]; // 8 lifts, 4 multiply to 1, 4 multiply to tau
+  a1, a2, a3 := Explode(above);
+  assert a1 in E and a2 in E and a3 in E and tau*a1 in E;
+  assert IsIsomorphic(E/H, G);
+  assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
+  // which set of 4 lifts multiplies to identity?
+  multiply_by_tau := false;
+  orbit := [];
+  if a3*a2*a1 eq Id(E) then
+    Append(~orbit, [E!a1, E!a2, E!a3]);
+  else
+    multiply_by_tau := true;
+    Append(~orbit, [E!tau*a1, E!a2, E!a3]);
+    assert tau*a3*a2*a1 eq Id(E);
+  end if;
+  // check the other 3 lifts to see if we have gt 1 Galois orbit
+  other_lifts := [];
+  if multiply_by_tau then // [tau*a1, a2, a3] already in orbit
+    Append(~other_lifts, [E!a1, E!tau*a2, E!a3]);
+    Append(~other_lifts, [E!a1, E!a2, E!tau*a3]);
+    Append(~other_lifts, [E!tau*a1, E!tau*a2, E!tau*a3]);
+  else // [a1, a2, a3] already in orbit
+    Append(~other_lifts, [E!a1, E!tau*a2, E!tau*a3]);
+    Append(~other_lifts, [E!tau*a1, E!a2, E!tau*a3]);
+    Append(~other_lifts, [E!tau*a1, E!tau*a2, E!a3]);
+  end if;
+  for lift in other_lifts do
+    if not IsConjugate(Sym(2*d), orbit[1], lift) then // lift not simultaneously conjugate so increase Galois orbit size
+      Append(~orbit, lift);
     end if;
   end for;
-  // eliminate simultaneous conjugation
-  sorted := sorted_cs;
-  // TODO
+  return orbit;
 end intrinsic;
 
-intrinsic AllCoverings(below::SeqEnum[GrpPermElt]) -> SeqEnum
-  {finds all possible covering triples of below (including unramified).}
+intrinsic AllCoveringPassports(below::SeqEnum[GrpPermElt]) -> SeqEnum
+  {finds all possible covering triples of below coming from extensions.}
   // setup
     assert #below eq 3;
     G := Parent(below[1]);
@@ -274,71 +328,41 @@ intrinsic AllCoverings(below::SeqEnum[GrpPermElt]) -> SeqEnum
   covers := [];
   for i := 1 to #extensions do
     extension := extensions[i];
-    vprintf Solvable : "extension %o/%o:\n", i, #extensions;
+    vprintf Solvable : "extension %o/%o: ", i, #extensions;
     t0 := Cputime();
-    E, iotaE, piE := Explode(extension);
-    if IsTransitive(E) then
-      g := Image(iotaE).1;
-      b1, c := IsConjugate(Sym(2*d), g, tau); // FIXME choice of c determines induced action
-      Gt := Conjugate(E, c);
-      H := sub<Gt|tau>;
-      assert tau in Center(Gt); // TODO investigate
-      assert b1; // TODO investigate
-      above := [ (below[i] @@ piE)^c : i in [1..3] ]; // 8 lifts, 2 simultaneous conjugacy classes
-      a1, a2, a3 := Explode(above);
-      assert a1 in Gt and a2 in Gt and a3 in Gt and tau*a1 in Gt;
-      assert Gt/H eq G;
-      assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
-      assert CycleStructure(a1) eq CycleStructure(tau*a1);
-      cover := [];
-      if a3*a2*a1 eq Id(Gt) then
-        Append(~cover, [a1, a2, a3]);
-      end if;
-      if tau*a3*a2*a1 eq Id(Gt) then
-        Append(~cover, [tau*a1, a2, a3]);
-      end if;
-      if #cover eq 0 then
-        vprintf Solvable : "no cover for this extension.\n";
-      else
-        if #cover eq 1 then
-          vprintf Solvable : "found %o cover.\n", #cover;
-        else
-          vprintf Solvable : "found %o covers.\n", #cover;
-        end if;
-        Append(~covers, cover);
-      end if;
-      t1 := Cputime();
-      vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
-    else
-      vprintf Solvable : "covering group is not transitive.\n";
-    end if;
+    // TODO
+    pass := ExtensionToPassport(extension, below);
+    t1 := Cputime();
+    vprintf Solvable : "%o seconds.\n", t1-t0;
+    Append(~covers, pass);
   end for;
   return covers;
-end intrinsic;
-
-intrinsic SolvableCycleStructure(triple::SeqEnum[GrpPermElt]) -> SeqEnum
-  {returns sequence of 3 cycle structures for triple.}
-  assert #triple eq 3;
-  return [ CycleStructure(triple[i]) : i in [1..3] ];
 end intrinsic;
 
 intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> SeqEnum, SeqEnum
   {returns covers and unramified calling AllCoverings. Also does some sanity checking.}
   orders_below := [ Order(below[i]) : i in [1..3] ];
-  allcovers := AllCoverings(below);
+  allcovers := AllCoveringPassports(below);
   covers := [];
   unramified := [];
   for pass in allcovers do
+    printf "%o\n", pass;
     assert #pass ge 1;
     cycle_structure_test := SolvableCycleStructure(pass[1]);
     for sigma in pass do
       assert SolvableCycleStructure(sigma) eq cycle_structure_test;
     end for;
     orders_above := [ Order(pass[1][i]) : i in [1..3] ];
-    if orders_above[1] gt orders_below[1] or orders_above[2] gt orders_below[2] or orders_above[3] gt orders_below[3] then
+    if (orders_above[1] gt orders_below[1]) or (orders_above[2] gt orders_below[2]) or (orders_above[3] gt orders_below[3]) then
+      printf "ramified\n";
       Append(~covers, pass);
     else
-      Append(~unramified, pass);
+      if (orders_above[1] eq orders_below[1]) or (orders_above[2] eq orders_below[2]) or (orders_above[3] eq orders_below[3]) then
+        printf "unramified\n";
+        Append(~unramified, pass);
+      else
+        printf "bad!\n";
+      end if;
     end if;
   end for;
   return covers, unramified;

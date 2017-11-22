@@ -3,11 +3,3 @@ SetVerbose("Solvable", 1);
 f := SolvableDBFilenames(2);
 s := SolvableDBAccessEntry(f[1]);
 below := s`SolvableDBGaloisOrbit[1];
-// covers := AllCoverings(below);
-
-a :=
-[ Sym(4) |
-[ 1, 2, 3, 4 ],
-[ 2, 1, 4, 3 ],
-[ 2, 1, 4, 3 ]
-];

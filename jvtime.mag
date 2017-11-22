@@ -17,8 +17,8 @@ E, iota, pi := Explode(extension);
 A := Image(iota);
 tau := A.1;
 above := [ below[i] @@ pi : i in [1..3] ];
-blocks := PermutationToBlocks(A.1);
-blocks := GSet(E, blocks);
+blocks1 := PermutationToBlocks(A.1);
+blocks2 := GSet(E, blocks1);
 
 a1, a2, a3 := Explode(above);
 covers := [above];
