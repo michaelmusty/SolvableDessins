@@ -231,6 +231,7 @@ intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
   assert 2^l eq d;
   // G-module
   triv := Matrix(GF(2), [[1]]);
+  // FIXME?
   // trivs := [ triv : i in [1..#Generators(G)] ];
   trivs := [ triv : i in [1..3] ];
   A := GModule(G, trivs);
@@ -252,6 +253,39 @@ intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
   return extensions;
 end intrinsic;
 
+/*
+intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
+  {}
+  // setup
+    assert #below eq 3;
+    G := Parent(below[1]);
+    S := Generic(G);
+    assert G eq sub<S|below>;
+    assert IsTransitive(G);
+    assert below[3]*below[2]*below[1] eq Id(G);
+    d := Degree(G);
+    assert #G eq d; // Galois
+    l := Floor(Log(2,Degree(G)));
+    assert 2^l eq d;
+  // extension
+    vprintf Solvable : "Computing extensions...";
+    t0 := Cputime();
+    extensions := Extensions(below);
+    t1 := Cputime();
+    vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
+    E, iotaE, piE := Explode(extension);
+    assert IsTransitive(E); // TODO we don't need this?
+    tau := Image(iotaE).1;
+    H := sub<E|tau>;
+    assert tau in Center(E); // TODO investigate
+    above := [ (below[i] @@ piE) : i in [1..3] ]; // 8 lifts, 4 multiply to 1, 4 multiply to tau
+    a1, a2, a3 := Explode(above);
+    assert a1 in E and a2 in E and a3 in E and tau*a1 in E;
+    assert IsIsomorphic(E/H, G);
+    assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
+end intrinsic;
+*/
+
 intrinsic ExtensionToPassport(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEnum
   {}
   // setup
@@ -266,16 +300,16 @@ intrinsic ExtensionToPassport(extension::List, below::SeqEnum[GrpPermElt]) -> Se
     l := Floor(Log(2,Degree(G)));
     assert 2^l eq d;
   // setup
-  E, iotaE, piE := Explode(extension);
-  assert IsTransitive(E); // TODO we don't need this?
-  tau := Image(iotaE).1;
-  H := sub<E|tau>;
-  assert tau in Center(E); // TODO investigate
-  above := [ (below[i] @@ piE) : i in [1..3] ]; // 8 lifts, 4 multiply to 1, 4 multiply to tau
-  a1, a2, a3 := Explode(above);
-  assert a1 in E and a2 in E and a3 in E and tau*a1 in E;
-  assert IsIsomorphic(E/H, G);
-  assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
+    E, iotaE, piE := Explode(extension);
+    assert IsTransitive(E); // TODO we don't need this?
+    tau := Image(iotaE).1;
+    H := sub<E|tau>;
+    assert tau in Center(E); // TODO investigate
+    above := [ (below[i] @@ piE) : i in [1..3] ]; // 8 lifts, 4 multiply to 1, 4 multiply to tau
+    a1, a2, a3 := Explode(above);
+    assert a1 in E and a2 in E and a3 in E and tau*a1 in E;
+    assert IsIsomorphic(E/H, G);
+    assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
   // which set of 4 lifts multiplies to identity?
   multiply_by_tau := false;
   orbit := [];
@@ -304,7 +338,6 @@ intrinsic ExtensionToPassport(extension::List, below::SeqEnum[GrpPermElt]) -> Se
   end for;
   return orbit;
 end intrinsic;
-
 intrinsic AllCoveringPassports(below::SeqEnum[GrpPermElt]) -> SeqEnum
   {finds all possible covering triples of below coming from extensions.}
   // setup
@@ -320,11 +353,11 @@ intrinsic AllCoveringPassports(below::SeqEnum[GrpPermElt]) -> SeqEnum
     assert 2^l eq d;
     tau := IdentifyingTau(l+1);
   // extensions
-  vprintf Solvable : "Computing extensions...";
-  t0 := Cputime();
-  extensions := Extensions(below);
-  t1 := Cputime();
-  vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
+    vprintf Solvable : "Computing extensions...";
+    t0 := Cputime();
+    extensions := Extensions(below);
+    t1 := Cputime();
+    vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
   // make covers
   covers := [];
   for i := 1 to #extensions do
@@ -339,7 +372,6 @@ intrinsic AllCoveringPassports(below::SeqEnum[GrpPermElt]) -> SeqEnum
   end for;
   return covers;
 end intrinsic;
-
 intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> SeqEnum, SeqEnum
   {returns covers and unramified calling AllCoverings. Also does some sanity checking.}
   orders_below := [ Order(below[i]) : i in [1..3] ];
