@@ -293,7 +293,7 @@ intrinsic ExtensionToCover(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEn
       Append(~lifts, [tau*a1, tau*a2, tau*a3]);
     end if;
   // check for size greater than 1 passport
-    cover := lifts[1];
+    cover := [lifts[1]];
     for lift in lifts do
       if not IsConjugate(Sym(2*d), cover[1], lift) then // not simultaneously conjugate
         Append(~cover, lift);
