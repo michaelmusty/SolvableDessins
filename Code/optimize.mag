@@ -253,7 +253,71 @@ intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
   return extensions;
 end intrinsic;
 
-/*
+intrinsic ExtensionToCover(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEnum[GrpPermElt]
+  {}
+  // setup
+    assert #below eq 3;
+    G := Parent(below[1]);
+    S := Generic(G);
+    assert G eq sub<S|below>;
+    assert IsTransitive(G);
+    assert below[3]*below[2]*below[1] eq Id(G);
+    d := Degree(G);
+    assert #G eq d; // Galois
+    l := Floor(Log(2,Degree(G)));
+    assert 2^l eq d;
+  // lift below via the extension
+    E, iotaE, piE := Explode(extension);
+    assert IsTransitive(E); // TODO we don't need this?
+    tau := Image(iotaE).1;
+    H := sub<E|tau>;
+    assert tau in Center(E); // TODO investigate
+    above := [ (below[i] @@ piE) : i in [1..3] ]; // 8 lifts, 4 multiply to 1, 4 multiply to tau
+    a1, a2, a3 := Explode(above);
+    assert a1 in E and a2 in E and a3 in E and tau*a1 in E;
+    assert IsIsomorphic(E/H, G);
+    assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
+    a1 := E!a1; a2 := E!a2; a3 := E!a3; tau := E!tau;
+  // make the lifts
+    lifts := [];
+    if a3*a2*a1 eq Id(E) then
+      Append(~lifts, [a1, a2, a3]);
+      Append(~lifts, [a1, tau*a2, tau*a3]);
+      Append(~lifts, [tau*a1, a2, tau*a3]);
+      Append(~lifts, [tau*a1, tau*a2, a3]);
+    else
+      assert tau*a3*a2*a1 eq Id(E);
+      Append(~lifts, [tau*a1, a2, a3]);
+      Append(~lifts, [a1, tau*a2, a3]);
+      Append(~lifts, [a1, a2, tau*a3]);
+      Append(~lifts, [tau*a1, tau*a2, tau*a3]);
+    end if;
+  // check for size greater than 1 passport
+    cover := lift[1];
+    for lift in lifts do
+      if not IsConjugate(Sym(2*d), cover[1], lift) then // not simultaneously conjugate
+        Append(~cover, lift);
+      end if;
+    end for;
+  // return
+    return cover;
+end intrinsic;
+
+intrinsic RamificationType(above::SeqEnum[GrpPermElt], below::SeqEnum[GrpPermElt]) -> MonStgElt
+  {returns a string "unramified", "ramified", or "impossible" according to the orders.}
+  a, b, c := Explode([Orders(below[i]) : i in [1..3]]);
+  A, B, C := Explode([Orders(above[i]) : i in [1..3]]);
+  if (A ge a) and (B ge b) and (C ge c) then
+    if (A eq a) and (B eq b) and (C eq c) then
+      return "unramified";
+    else
+      return "ramified";
+    end if;
+  else
+    return "impossible";
+  end if;
+end intrinsic;
+
 intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
   {}
   // setup
@@ -267,25 +331,40 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
     assert #G eq d; // Galois
     l := Floor(Log(2,Degree(G)));
     assert 2^l eq d;
-  // extension
+  // extensions
     vprintf Solvable : "Computing extensions...";
     t0 := Cputime();
     extensions := Extensions(below);
     t1 := Cputime();
     vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
-    E, iotaE, piE := Explode(extension);
-    assert IsTransitive(E); // TODO we don't need this?
-    tau := Image(iotaE).1;
-    H := sub<E|tau>;
-    assert tau in Center(E); // TODO investigate
-    above := [ (below[i] @@ piE) : i in [1..3] ]; // 8 lifts, 4 multiply to 1, 4 multiply to tau
-    a1, a2, a3 := Explode(above);
-    assert a1 in E and a2 in E and a3 in E and tau*a1 in E;
-    assert IsIsomorphic(E/H, G);
-    assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
+  // initial lists for return
+    ramified := [];
+    unramified := [];
+    impossible := [];
+  // loop over extensions
+    for extension in extensions do
+      cover := ExtensionToCover(extension);
+      ram_types := [];
+      for above in cover do
+        Append(~ram_types, RamificationType(above, below));
+      end for;
+      assert #SequenceToSet(ram_types) eq 1;
+      ram_type := ram_types[1];
+      if ram_type eq "ramified" then
+        Append(~ramified, cover);
+      end if;
+      if ram_type eq "unramified" then
+        Append(~unramified, cover);
+      end if;
+      if ram_type eq "impossible" then
+        Append(~impossible, cover);
+      end if;
+    end for;
+  // return
+    return ramified, unramified, impossible;
 end intrinsic;
-*/
 
+/*
 intrinsic ExtensionToPassport(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEnum
   {}
   // setup
@@ -311,15 +390,15 @@ intrinsic ExtensionToPassport(extension::List, below::SeqEnum[GrpPermElt]) -> Se
     assert IsIsomorphic(E/H, G);
     assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
   // which set of 4 lifts multiplies to identity?
-  multiply_by_tau := false;
-  orbit := [];
-  if a3*a2*a1 eq Id(E) then
-    Append(~orbit, [E!a1, E!a2, E!a3]);
-  else
-    multiply_by_tau := true;
-    Append(~orbit, [E!tau*a1, E!a2, E!a3]);
-    assert tau*a3*a2*a1 eq Id(E);
-  end if;
+    multiply_by_tau := false;
+    orbit := [];
+    if a3*a2*a1 eq Id(E) then
+      Append(~orbit, [E!a1, E!a2, E!a3]);
+    else
+      multiply_by_tau := true;
+      Append(~orbit, [E!tau*a1, E!a2, E!a3]);
+      assert tau*a3*a2*a1 eq Id(E);
+    end if;
   // check the other 3 lifts to see if we have gt 1 Galois orbit
   other_lifts := [];
   if multiply_by_tau then // [tau*a1, a2, a3] already in orbit
@@ -400,6 +479,7 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> SeqEnum, SeqEnum
   end for;
   return covers, unramified;
 end intrinsic;
+*/
 
 intrinsic SolvableAbove(s::SolvableDBObject) -> Any, Any
   {Given a solvableDBobj, find all Galois permutation triples "above" all permutation triples in the Galois orbit corresponding to s. Update the SolvableParents of s and return a SeqEnum of SolvableDBObjects covering s with their SolvableChildren updated accordingly.}
