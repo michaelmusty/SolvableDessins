@@ -281,11 +281,13 @@ intrinsic ExtensionToCover(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEn
   // make the lifts
     lifts := [];
     if a3*a2*a1 eq Id(E) then
+      printf "No tau\n";
       Append(~lifts, [a1, a2, a3]);
       Append(~lifts, [a1, tau*a2, tau*a3]);
       Append(~lifts, [tau*a1, a2, tau*a3]);
       Append(~lifts, [tau*a1, tau*a2, a3]);
     else
+      printf "Yes tau\n";
       assert tau*a3*a2*a1 eq Id(E);
       Append(~lifts, [tau*a1, a2, a3]);
       Append(~lifts, [a1, tau*a2, a3]);
