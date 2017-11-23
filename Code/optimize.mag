@@ -294,8 +294,10 @@ intrinsic ExtensionToCover(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEn
     end if;
   // check for size greater than 1 passport
     cover := [lifts[1]];
+    printf "initial cover = %o\n", cover;
     for lift in lifts do
       if not IsConjugate(Sym(2*d), cover[1], lift) then // not simultaneously conjugate
+        printf "appending %o\n", lift;
         Append(~cover, lift);
       end if;
     end for;
