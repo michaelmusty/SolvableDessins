@@ -343,7 +343,7 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
     impossible := [];
   // loop over extensions
     for extension in extensions do
-      cover := ExtensionToCover(extension);
+      cover := ExtensionToCover(extension, below);
       ram_types := [];
       for above in cover do
         Append(~ram_types, RamificationType(above, below));
