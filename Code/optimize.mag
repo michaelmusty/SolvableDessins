@@ -342,6 +342,8 @@ intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> S
       end for;
       cover1 := EliminateRedundancies(cover1);
       cover2 := EliminateRedundancies(cover2);
+      print cover1;
+      print cover2;
       return [cover1, cover2];
     end if;
 end intrinsic;
