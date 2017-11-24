@@ -312,6 +312,9 @@ intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> S
         Remove(~lifts, i);
       end if;
     end for;
+    if #lifts eq 0 then
+      return [];
+    end if;
   // sort by cycle structure
     assert #lifts gt 0;
     cycle_structures := [SolvableCycleStructure(lifts[i]) : i in [1..#lifts]];
@@ -390,7 +393,7 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
   // loop over extensions
     for extension in extensions do
       passports := ExtensionToPassports(extension, below); // [ [triple,triple],[triple,triple] ]
-      assert #passports in [1,2];
+      assert #passports in [0, 1, 2];
       for passport in passports do
         ram_types := [];
         for above in passport do
