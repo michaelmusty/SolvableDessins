@@ -253,6 +253,20 @@ intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
   return extensions;
 end intrinsic;
 
+intrinsic EliminateRedundancies(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SeqEnum[SeqEnum[GrpPermElt]]
+  {eliminate simultaneuous conjugation}
+  S := Generic(Parent(pass[1][1]));
+  for i := #pass to 1 by -1 do
+    for j := 1 to i-1 do
+      if IsConjugate(S, pass[i], pass[j]) then
+        Remove(~pass, i);
+        break j;
+      end if;
+    end for;
+  end for;
+  return pass;
+end intrinsic;
+
 intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEnum[GrpPermElt]
   {}
   // setup
@@ -292,15 +306,39 @@ intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> S
       Append(~lifts, [a1, a2, tau*a3]);
       Append(~lifts, [tau*a1, tau*a2, tau*a3]);
     end if;
-  // check for size greater than 1 passport
-    cover := [lifts[1]];
-    for lift in lifts do
-      if not IsConjugate(Sym(2*d), cover[1], lift) then // not simultaneously conjugate
-        Append(~cover, lift);
-      end if;
-    end for;
-  // return
-    return cover;
+  // sort by cycle structure
+    assert #lifts eq 4;
+    cycle_structures := [SolvableCycleStructure(lifts[i]) : i in [1..#lifts]];
+    unique_cycle_structures := SetToSequence(SequenceToSet(cycle_structures));
+    assert #unique_cycle_structures in [1, 2];
+    if #unique_cycle_structures eq 1 then
+      // check for size greater than 1 passport
+      cover := [lifts[1]];
+      for lift in lifts do
+        if not IsConjugate(Sym(2*d), cover[1], lift) then // not simultaneously conjugate
+          Append(~cover, lift);
+        end if;
+      end for;
+      // return
+      return [cover];
+    else // 2 unique cycle structures
+      cover1 := [];
+      cover2 := [];
+      for lift in lifts do
+        if SolvableCycleStructure(lift) eq unique_cycle_structures[1] then
+          Append(~cover1, lift);
+        else
+          if SolvableCycleStructure(lift) eq unique_cycle_structures[2] then
+            Append(~cover2, lift);
+          else
+            error "ERROR!";
+          end if;
+        end if;
+        cover1 := EliminateRedundancies(cover1);
+        cover2 := EliminateRedundancies(cover2);
+        return [cover1, cover2];
+      end for;
+    end if;
 end intrinsic;
 
 intrinsic RamificationType(above::SeqEnum[GrpPermElt], below::SeqEnum[GrpPermElt]) -> MonStgElt
