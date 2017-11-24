@@ -253,7 +253,7 @@ intrinsic Extensions(sigma::SeqEnum[GrpPermElt]) -> Any
   return extensions;
 end intrinsic;
 
-intrinsic ExtensionToCover(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEnum[GrpPermElt]
+intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEnum[GrpPermElt]
   {}
   // setup
     assert #below eq 3;
@@ -281,13 +281,11 @@ intrinsic ExtensionToCover(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEn
   // make the lifts
     lifts := [];
     if a3*a2*a1 eq Id(E) then
-      printf "No tau\n";
       Append(~lifts, [a1, a2, a3]);
       Append(~lifts, [a1, tau*a2, tau*a3]);
       Append(~lifts, [tau*a1, a2, tau*a3]);
       Append(~lifts, [tau*a1, tau*a2, a3]);
     else
-      printf "Yes tau\n";
       assert tau*a3*a2*a1 eq Id(E);
       Append(~lifts, [tau*a1, a2, a3]);
       Append(~lifts, [a1, tau*a2, a3]);
@@ -296,10 +294,8 @@ intrinsic ExtensionToCover(extension::List, below::SeqEnum[GrpPermElt]) -> SeqEn
     end if;
   // check for size greater than 1 passport
     cover := [lifts[1]];
-    printf "initial cover = %o\n", cover;
     for lift in lifts do
       if not IsConjugate(Sym(2*d), cover[1], lift) then // not simultaneously conjugate
-        printf "appending %o\n", lift;
         Append(~cover, lift);
       end if;
     end for;
@@ -347,22 +343,25 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
     impossible := [];
   // loop over extensions
     for extension in extensions do
-      cover := ExtensionToCover(extension, below);
-      ram_types := [];
-      for above in cover do
-        Append(~ram_types, RamificationType(above, below));
+      passports := ExtensionToPassports(extension, below); // [ [triple,triple],[triple,triple] ]
+      assert #passports in [1,2];
+      for passport in passports do
+        ram_types := [];
+        for above in passport do
+          Append(~ram_types, RamificationType(above, below));
+        end for;
+        assert #SequenceToSet(ram_types) eq 1;
+        ram_type := ram_types[1];
+        if ram_type eq "ramified" then
+          Append(~ramified, passport);
+        end if;
+        if ram_type eq "unramified" then
+          Append(~unramified, passport);
+        end if;
+        if ram_type eq "impossible" then
+          Append(~impossible, passport);
+        end if;
       end for;
-      assert #SequenceToSet(ram_types) eq 1;
-      ram_type := ram_types[1];
-      if ram_type eq "ramified" then
-        Append(~ramified, cover);
-      end if;
-      if ram_type eq "unramified" then
-        Append(~unramified, cover);
-      end if;
-      if ram_type eq "impossible" then
-        Append(~impossible, cover);
-      end if;
     end for;
   // return
     return ramified, unramified, impossible;
