@@ -216,7 +216,6 @@ end intrinsic;
 intrinsic SolvableCycleStructure(triple::SeqEnum[GrpPermElt]) -> SeqEnum
   {returns sequence of 3 cycle structures for triple.}
   assert #triple eq 3;
-  print [ CycleStructure(triple[i]) : i in [1..3] ];
   return [ CycleStructure(triple[i]) : i in [1..3] ];
 end intrinsic;
 
@@ -256,6 +255,7 @@ end intrinsic;
 
 intrinsic EliminateRedundancies(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SeqEnum[SeqEnum[GrpPermElt]]
   {eliminate simultaneuous conjugation}
+  print pass;
   S := Generic(Parent(pass[1][1]));
   for i := #pass to 1 by -1 do
     for j := 1 to i-1 do
