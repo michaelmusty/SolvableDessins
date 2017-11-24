@@ -306,15 +306,14 @@ intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> S
       Append(~lifts, [a1, a2, tau*a3]);
       Append(~lifts, [tau*a1, tau*a2, tau*a3]);
     end if;
-    print lifts;
-    /*
-    for lift in lifts do
-      print lift;
-      assert IsIsomorphic(sub<Sym(2*d)|lift>, E);
+    for i := #lifts to 1 by -1 do
+      lift := lifts[i];
+      if not IsIsomorphic(E, sub<Sym(2*d)|lift>) then
+        Remove(~lifts, i);
+      end if;
     end for;
-    */
   // sort by cycle structure
-    assert #lifts eq 4;
+    assert #lifts gt 0;
     cycle_structures := [SolvableCycleStructure(lifts[i]) : i in [1..#lifts]];
     unique_cycle_structures := SetToSequence(SequenceToSet(cycle_structures));
     assert #unique_cycle_structures in [1, 2];
