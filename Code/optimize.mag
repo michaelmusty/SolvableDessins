@@ -376,9 +376,9 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
     t1 := Cputime();
     vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
   // initial lists for return
-    ramified := [];
-    unramified := [];
-    impossible := [];
+    ramified := [* *];
+    unramified := [* *];
+    impossible := [* *];
   // loop over extensions
     for extension in extensions do
       passports := ExtensionToPassports(extension, below); // [ [triple,triple],[triple,triple] ]
