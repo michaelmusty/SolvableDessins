@@ -291,16 +291,17 @@ intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> S
     assert a1 in E and a2 in E and a3 in E and tau*a1 in E;
     assert IsIsomorphic(E/H, G);
     assert not IsConjugate(Sym(2*d), [a1, a2, a3], [tau*a1, a2, a3]);
-    a1 := E!a1; a2 := E!a2; a3 := E!a3; tau := E!tau;
+    // a1 := E!a1; a2 := E!a2; a3 := E!a3; tau := E!tau;
+    a1 := S!a1; a2 := S!a2; a3 := S!a3; tau := S!tau;
   // make the lifts
     lifts := [];
-    if a3*a2*a1 eq Id(E) then
+    if a3*a2*a1 eq Id(S) then
       Append(~lifts, [a1, a2, a3]);
       Append(~lifts, [a1, tau*a2, tau*a3]);
       Append(~lifts, [tau*a1, a2, tau*a3]);
       Append(~lifts, [tau*a1, tau*a2, a3]);
     else
-      assert tau*a3*a2*a1 eq Id(E);
+      assert tau*a3*a2*a1 eq Id(S);
       Append(~lifts, [tau*a1, a2, a3]);
       Append(~lifts, [a1, tau*a2, a3]);
       Append(~lifts, [a1, a2, tau*a3]);
@@ -308,7 +309,7 @@ intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> S
     end if;
     for i := #lifts to 1 by -1 do
       lift := lifts[i];
-      if not IsIsomorphic(E, sub<Sym(2*d)|lift>) then
+      if not IsIsomorphic(E, sub<S|lift>) then
         Remove(~lifts, i);
       end if;
     end for;
