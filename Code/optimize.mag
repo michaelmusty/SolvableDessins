@@ -306,6 +306,7 @@ intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> S
       Append(~lifts, [a1, a2, tau*a3]);
       Append(~lifts, [tau*a1, tau*a2, tau*a3]);
     end if;
+    print lifts;
     for lift in lifts do
       print lift;
       assert IsIsomorphic(sub<Sym(2*d)|lift>, E);
