@@ -382,6 +382,7 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
   // loop over extensions
     for extension in extensions do
       passports := ExtensionToPassports(extension, below); // [ [triple,triple],[triple,triple] ]
+      print passports;
       assert #passports in [1,2];
       for passport in passports do
         ram_types := [];
