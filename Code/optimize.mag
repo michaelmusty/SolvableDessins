@@ -374,7 +374,7 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
     assert #below eq 3;
     G := Parent(below[1]);
     S := Generic(G);
-    assert G eq sub<S|below>;
+    G := sub<S|below>;
     assert IsTransitive(G);
     assert below[3]*below[2]*below[1] eq Id(G);
     d := Degree(G);
