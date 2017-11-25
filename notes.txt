@@ -5,3 +5,9 @@ d16: 102
 d32: 800
 d64:
 d128:
+
+
+make sure new passportreps is working
+automorphisms/pointedautomorphisms
+write blocks to database
+

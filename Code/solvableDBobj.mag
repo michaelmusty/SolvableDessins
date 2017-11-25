@@ -18,7 +18,8 @@ declare attributes SolvableDBObject:
   SolvableDBPassport,
   SolvableDBPointedPassport,
   SolvableDBMonodromyGroup,
-  SolvableDBAutomorphismGroup,
+  SolvableDBAutomorphismGroup, // TODO new
+  SolvableDBPointedAutomorphismGroup, // TODO new
   // curve function fields
   SolvableDBCurveBaseFieldList, // [F0, F1]
   SolvableDBCurvePolynomialRingList, // [PX0, PX1]
@@ -35,8 +36,6 @@ declare attributes SolvableDBObject:
   SolvableDBPathToPP1,
   SolvableDBParents,
   SolvableDBChildren;
-  // dessin attributes
-  // SolvableDBDessinCode;
 
 intrinsic Print(s::SolvableDBObject)
   {Print SolvableDBObject}

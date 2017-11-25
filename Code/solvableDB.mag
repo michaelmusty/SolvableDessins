@@ -199,12 +199,14 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     Append(~easy_attrs, "SolvableDBPassportSize");
     Append(~easy_attrs, "SolvableDBPointedPassportSize");
     Append(~easy_attrs, "SolvableDBLevel");
+    Append(~easy_attrs, "SolvableDBBlocks");
     permutation_attrs := [];
     Append(~permutation_attrs, "SolvableDBGaloisOrbit");
     Append(~permutation_attrs, "SolvableDBPassport");
     Append(~permutation_attrs, "SolvableDBPointedPassport");
     Append(~permutation_attrs, "SolvableDBMonodromyGroup");
     Append(~permutation_attrs, "SolvableDBAutomorphismGroup");
+    Append(~permutation_attrs, "SolvableDBPointedAutomorphismGroup");
     curve_function_field_attrs := [];
     Append(~curve_function_field_attrs, "SolvableDBCurveBaseFieldList");
     Append(~curve_function_field_attrs, "SolvableDBCurvePolynomialRingList");
@@ -221,8 +223,6 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     Append(~graph_attrs, "SolvableDBPathToPP1");
     Append(~graph_attrs, "SolvableDBParents");
     Append(~graph_attrs, "SolvableDBChildren");
-    // dessin_attrs := [];
-    // Append(~dessin_attrs, "SolvableDBDessinCode");
   /*
   write easy attributes with magma printing
   */
@@ -460,17 +460,18 @@ intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SolvableDBObj
     s`SolvableDBMonodromyGroup := G;
   // SolvableDBAutomorphismGroup and SolvableDBDessinCode
     if s`SolvableDBType eq "Hyperbolic" then
-      lcm := LeastCommonMultiple([a,b,c]);
-      vprint Shimura : Sprintf("\nComputing Gamma with LCM(a,b,c) = %o...\n", lcm);
-      if lcm lt 100 then
-        Gamma := TriangleSubgroup(sigma);
-      else
-        Gamma := TriangleSubgroup(sigma : Simplify := 0);
-      end if;
-      s`SolvableDBAutomorphismGroup := AutomorphismGroup(Gamma);
-      s`SolvableDBDessinCode := SolvableDBStringToCode(TriangleDrawDessin(Gamma));
-    else
-      s`SolvableDBDessinCode := [];
+      s`SolvableDBAutomorphismGroup := AutomorphismGroup(sigma);
+      s`SolvableDBPointedAutomorphismGroup := PointedAutomorphismGroup(sigma);
+      /* OLD way
+        lcm := LeastCommonMultiple([a,b,c]);
+        vprint Shimura : Sprintf("\nComputing Gamma with LCM(a,b,c) = %o...\n", lcm);
+        if lcm lt 100 then
+          Gamma := TriangleSubgroup(sigma);
+        else
+          Gamma := TriangleSubgroup(sigma : Simplify := 0);
+        end if;
+        s`SolvableDBAutomorphismGroup := AutomorphismGroup(Gamma);
+      */
     end if;
   // (DO NOT) write the object to file
   /*
