@@ -221,8 +221,8 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     Append(~graph_attrs, "SolvableDBPathToPP1");
     Append(~graph_attrs, "SolvableDBParents");
     Append(~graph_attrs, "SolvableDBChildren");
-    dessin_attrs := [];
-    Append(~dessin_attrs, "SolvableDBDessinCode");
+    // dessin_attrs := [];
+    // Append(~dessin_attrs, "SolvableDBDessinCode");
   /*
   write easy attributes with magma printing
   */
@@ -344,16 +344,6 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
   */
     str *:= "\n/*\nGraph Data\n*/\n\n";
     for attr in graph_attrs do
-      if assigned s``attr then
-        str *:= Sprintf("s`%o := ", attr);
-        str *:= Sprintf("%m;\n", s``attr);
-      end if;
-    end for;
-  /*
-  write dessin_attrs using magma printing
-  */
-    str *:= "\n/*\nDrawDessin Code\n*/\n\n";
-    for attr in dessin_attrs do
       if assigned s``attr then
         str *:= Sprintf("s`%o := ", attr);
         str *:= Sprintf("%m;\n", s``attr);

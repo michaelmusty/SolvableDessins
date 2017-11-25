@@ -34,9 +34,9 @@ declare attributes SolvableDBObject:
   // graph attributes
   SolvableDBPathToPP1,
   SolvableDBParents,
-  SolvableDBChildren,
+  SolvableDBChildren;
   // dessin attributes
-  SolvableDBDessinCode;
+  // SolvableDBDessinCode;
 
 intrinsic Print(s::SolvableDBObject)
   {Print SolvableDBObject}
