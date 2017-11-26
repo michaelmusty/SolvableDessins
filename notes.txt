@@ -1,13 +1,13 @@
 d2:  3
 d4:  9
 d8:  33
-d16: 102
-d32: 800
+d16: 150/198 (122 seconds)
+d32: 800/1391 (4963 seconds)
 d64:
 d128:
+d256:
 
 
-make sure new passportreps is working
-automorphisms/pointedautomorphisms
 write blocks to database
+update 3 degree 2 DBobjs
 
