@@ -588,6 +588,14 @@ intrinsic Parent(s::SolvableDBObject, i::RngIntElt) -> SolvableDBObject
   return SolvableDBAccessEntry(parents[i] cat ".m");
 end intrinsic;
 
+intrinsic ParentName(s::SolvableDBObject, i::RngIntElt) -> MonStgElt
+  {}
+  parents := s`SolvableDBParents;
+  assert i le #parents;
+  t := SolvableDBAccessEntry(parents[i] cat ".m");
+  return t`SolvableDBName;
+end intrinsic;
+
 intrinsic Parents(s::SolvableDBObject) -> SeqEnum[SolvableDBObject]
   {}
   parents := s`SolvableDBParents;
@@ -597,6 +605,17 @@ intrinsic Parents(s::SolvableDBObject) -> SeqEnum[SolvableDBObject]
     Append(~parentss, SolvableDBAccessEntry(parents[i] cat ".m"));
   end for;
   return parentss;
+end intrinsic;
+
+intrinsic ParentsNames(s::SolvableDBObject) -> SeqEnum[MonStgElt]
+  {}
+  parents := s`SolvableDBParents;
+  names := [];
+  for i := 1 to #parents do
+    assert i le #parents;
+    Append(~names, ParentName(s, i));
+  end for;
+  return names;
 end intrinsic;
 
 // TODO
