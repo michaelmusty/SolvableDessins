@@ -588,6 +588,17 @@ intrinsic Parent(s::SolvableDBObject, i::RngIntElt) -> SolvableDBObject
   return SolvableDBAccessEntry(parents[i] cat ".m");
 end intrinsic;
 
+intrinsic Parents(s::SolvableDBObject) -> SeqEnum[SolvableDBObject]
+  {}
+  parents := s`SolvableDBParents;
+  parentss := [];
+  for i := 1 to #parents do
+    assert i le #parents;
+    Append(~parentss, SolvableDBAccessEntry(parents[i] cat ".m"));
+  end for;
+  return parentss;
+end intrinsic;
+
 // TODO
 intrinsic SolvableDBSanityCheck(s::SolvableDBObject) -> MonStgElt
   {}
