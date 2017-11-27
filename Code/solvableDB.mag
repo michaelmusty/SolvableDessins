@@ -581,6 +581,13 @@ intrinsic Child(s::SolvableDBObject) -> SolvableDBObject
   return SolvableDBAccessEntry(children[1] cat ".m");
 end intrinsic;
 
+intrinsic Parent(s::SolvableDBObject, i::RngIntElt) -> SolvableDBObject
+  {}
+  parents := s`SolvableDBParents;
+  assert i le #parents;
+  return SolvableDBAccessEntry(parents[i] cat ".m");
+end intrinsic;
+
 // TODO
 intrinsic SolvableDBSanityCheck(s::SolvableDBObject) -> MonStgElt
   {}
