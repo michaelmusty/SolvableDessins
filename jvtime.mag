@@ -1,0 +1,10 @@
+load "doob.mag";
+s := SolvableDBAccessEntry("8T1-4,8,8-g3-path1.m");
+SolvableMapSanityCheck(s);
+X := s`SolvableDBBelyiCurve;
+phi := s`SolvableDBBelyiMap;
+Z := ProjectiveClosure(X);
+Degree(Z);
+kappa := CanonicalMap(Z);
+C := CanonicalImage(Z, kappa);
+Degree(C);
