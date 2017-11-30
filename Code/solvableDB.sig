@@ -15,5 +15,9 @@ S,SolvableDBExample,Creates a SolvableDBObject corresponding to pass. This assum
 S,SolvableDBMerge,"Given s, search the database for same name if there is none just returns s and writes s to file. If an object with the same name already appears in the database, then we check to see if the one in the database has the same PathToPP1. If both have the same PathToPP1, then we assume the one in the database has more information so we want to just take the one in the database, but first we check if s has nonconjugate triples (it should NOT!!). Lastly, if both have the same name but different PathToPP1, then we check PathNumber of the (obj in the database) and make the PathNumber of s that plus 1. Then update SolvableDBFilename, PathNumber, PathToPP1, Children, Parents, and write s to file. Also rewrite the ones with same SolvableDBName",0,1,0,0,0,0,0,0,0,SolvableDBObject,,SolvableDBObject,36,-38,-38,-38,-38
 S,SolvableDBFilenames,Returns the filenames (MonStgElts) in SolvableDB/d as a SeqEnum. This assumes the current directory is SolvableDessins,0,1,0,0,0,0,0,0,0,148,,82,-38,-38,-38,-38,-38
 S,Child,,0,1,0,0,0,0,0,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38
+S,Parent,,0,2,0,0,0,0,0,0,0,148,,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38
+S,ParentName,,0,2,0,0,0,0,0,0,0,148,,0,0,SolvableDBObject,,298,-38,-38,-38,-38,-38
+S,Parents,,0,1,0,0,0,0,0,0,0,SolvableDBObject,,82,-38,-38,-38,-38,-38
+S,ParentsNames,,0,1,0,0,0,0,0,0,0,SolvableDBObject,,82,-38,-38,-38,-38,-38
 S,SolvableDBSanityCheck,,0,1,0,0,0,0,0,0,0,SolvableDBObject,,298,-38,-38,-38,-38,-38
 S,SolvableDBStatusReport,,0,1,0,0,0,0,0,0,0,148,,82,82,-38,-38,-38,-38

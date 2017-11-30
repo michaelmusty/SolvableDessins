@@ -58,6 +58,12 @@ s`SolvableDBMonodromyGroup := PermutationGroup<2 |
 \[ 2, 1 ],
 \[ 1, 2 ]:
  Order := 2 >;
+s`SolvableDBAutomorphismGroup := PermutationGroup<2 |  
+\[ 2, 1 ]:
+ Order := 2 >;
+s`SolvableDBPointedAutomorphismGroup := PermutationGroup<2 |  
+\[ 2, 1 ]:
+ Order := 2 >;
 
 /*
 Curve FunctionField
@@ -115,12 +121,6 @@ Graph Data
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1" ];
 s`SolvableDBChildren := [ Strings() | "PP1" ];
-
-/*
-DrawDessin Code
-*/
-
-s`SolvableDBDessinCode := [];
 
 /*
 Return for eval
