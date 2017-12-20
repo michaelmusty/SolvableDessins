@@ -8,3 +8,5 @@ Degree(Z);
 kappa := CanonicalMap(Z);
 C<c0,c1,c2> := CanonicalImage(Z, kappa);
 Degree(C);
+for i := 1 to 3 do
+end for;
