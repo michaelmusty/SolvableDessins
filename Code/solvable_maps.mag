@@ -743,3 +743,64 @@ intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
   end for;
   return errors;
 end intrinsic;
+
+// update 2018
+intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject
+  {Naively try to reduce the degree of the BelyiCurve.}
+  vprintf Solvable : "%o:\n", s`SolvableDBName;
+  curve_assigned := assigned s`SolvableDBBelyiCurve;
+  map_assigned := assigned s`SolvableDBBelyiMap;
+  if curve_assigned and map_assigned then
+    vprintf Solvable : "Belyi curve and map assigned";
+    X := s`SolvableDBBelyiCurve;
+    Xt := ProjectiveClosure(X);
+    f := s`SolvableDBBelyiMap;
+    degree_start := Degree(Xt);
+    vprintf Solvable : "Degree of Belyi curve = %o\n", degree_start;
+    vprintf Solvable : "Checking Canonical map...";
+    t0 := Cputime();
+    g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
+    t1 := Cputime();
+    vprintf Solvable : "done. %o seconds.\n", t1-t0;
+    if is_low_genus_or_hyp then // g = 0,1 or hyperelliptic
+      if g eq 0 then
+        vprintf Solvable : "Curve is genus 0. Do nothing for now.\n";
+        return s;
+      else // g = 1 or hyperelliptic
+        if g eq 1 then
+          vprintf Solvable : "Curve is genus 1. Do nothing for now.\n";
+          return s;
+        else // hyperelliptic
+          vprintf Solvable : "Curve is hyperelliptic.\n";
+          vprintf Solvable : "IsHyperelliptic...";
+          t0 := Cputime();
+          hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
+          t1 := Cputime();
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          vprintf Solvable : "IsGeometricallyHyperelliptic...";
+          t0 := Cputime();
+          geom_bool, geom_H, geom_mp := IsGeometricallyHyperelliptic(X);
+          t1 := Cputime();
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          K<nu> := BaseField(hyp_H);
+          g := Pushforward(hyp_mp, f);
+          KH<z0, z1> := Parent(g);
+          s`SolvableDBBelyiCurve := hyp_H;
+          s`SolvableDBBelyiMap := g;
+          vprintf Solvable : "Sanity checking...";
+          t0 := Cputime();
+          assert SolvableMapSanityCheck(s);
+          t1 := Cputime();
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          return s;
+        end if;
+      end if;
+    else // g > 1 and curve is not hyperelliptic
+      // TODO
+      return s;
+    end if;
+  else
+    vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
+    return s;
+  end if;
+end intrinsic;
