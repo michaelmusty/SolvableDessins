@@ -768,7 +768,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
       Xt := ProjectiveClosure(X);
       f := before`SolvableDBBelyiMap;
       degree_start := Degree(Xt);
-      vprintf Solvable : "  Degree of Belyi curve = %o\n", degree_start;
+      vprintf Solvable : "  Degree of Belyi curve = %o.\n", degree_start;
       vprintf Solvable : "  Checking Canonical map...";
       t0 := Cputime();
       g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
@@ -799,7 +799,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
             KH<x0, x1> := Parent(g);
             H<x0, x1> := AffinePatch(hyp_H, 3);
             K<nu1> := BaseField(H);
-            vprintf Solvable : "  Degree of new Belyi curve = %o\n", Degree(hyp_H);
+            vprintf Solvable : "  Degree of new Belyi curve = %o.\n", Degree(hyp_H);
           // bookkeeping and return
             // after object
             after`SolvableDBBelyiCurve := H;
