@@ -745,16 +745,19 @@ intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
 end intrinsic;
 
 // update 2018
-intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject
+intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, SolvableDBObject
   {Naively try to reduce the degree of the BelyiCurve.}
   vprintf Solvable : "%o:\n", s`SolvableDBName;
   curve_assigned := assigned s`SolvableDBBelyiCurve;
   map_assigned := assigned s`SolvableDBBelyiMap;
   if curve_assigned and map_assigned then
+    before := s; // object before
+    after := s; // object after
     vprintf Solvable : "Belyi curve and map assigned.\n";
-    X := s`SolvableDBBelyiCurve;
+    X := before`SolvableDBBelyiCurve;
+    assert IsAffine(X);
     Xt := ProjectiveClosure(X);
-    f := s`SolvableDBBelyiMap;
+    f := before`SolvableDBBelyiMap;
     degree_start := Degree(Xt);
     vprintf Solvable : "Degree of Belyi curve = %o\n", degree_start;
     vprintf Solvable : "Checking Canonical map...";
