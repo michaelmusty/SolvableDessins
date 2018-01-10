@@ -796,7 +796,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
             vprintf Solvable : "done. %o seconds.\n", t1-t0;
             g := Pushforward(hyp_mp, f);
             KH<x0, x1> := Parent(g);
-            H := AffinePatch(hyp_H, 3);
+            H<x0, x1> := AffinePatch(hyp_H, 3);
             K<nu1> := BaseField(H);
           // bookkeeping and return
             // after object
