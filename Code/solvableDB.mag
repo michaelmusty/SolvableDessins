@@ -249,6 +249,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
     str *:= "\n/*\nCurve FunctionField\n*/\n\n";
     // level := s`SolvableDBLevel; // not compatible with new model code
     if assigned s`SolvableDBCurveBaseFieldList and assigned s`SolvableDBCurvePolynomialRingList and assigned s`SolvableDBCurveAmbientList and assigned s`SolvableDBCurveIdealList and assigned s`SolvableDBCurveList then
+      print "HAHAHA";
       level := Dimension(Ambient(s`SolvableDBBelyiCurve)); // update
       level_old := s`SolvableDBLevel; // just depends on degree of Belyi map
       assert #s`SolvableDBCurveBaseFieldList eq level_old+1;
