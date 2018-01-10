@@ -289,9 +289,15 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
           end if;
         str *:= Sprintf("Append(~s`SolvableDBCurveBaseFieldList, F%o);\n", i);
         // SolvableDBCurvePolynomialRingList level i
+        num_vars := Rank(after`SolvableDBCurvePolynomialList[i]);
+        vartext := VarText("x", 0, num_vars);
+        str *:= Sprintf("PX%o<%o> := PolynomialRing(F%o, %o);\n", i, vartext, i, num_vars);
+        str *:= Sprintf("Append(~s`SolvableDBCurvePolynomialRingList, PX%o);\n", i);
+        /* incompatible with new model code
         vartext := VarText("x", 0, i);
         str *:= Sprintf("PX%o<%o> := PolynomialRing(F%o, %o);\n", i, vartext, i, i+1);
         str *:= Sprintf("Append(~s`SolvableDBCurvePolynomialRingList, PX%o);\n", i);
+        */
         // SolvableDBCurveAmbientList level i
         vartext := VarText("x", 0, i);
         str *:= Sprintf("AA%o<%o> := AffineSpace(PX%o);\n", i, vartext, i);
