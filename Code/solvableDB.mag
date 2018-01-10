@@ -347,9 +347,9 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       */
       Pextract := s`SolvableDBCurvePolynomialRingList[level-1];
       extract_rank := Rank(Pextract);
-      Pex := eval Sprintf("Pex<%o> := Pextract; return Pex;", VarText("x", 0, extract_rank-1));
-      str *:= Sprintf("s`SolvableDBExtractNumerator := PX%o!(%o);\n", level, s`SolvableDBExtractNumerator);
-      str *:= Sprintf("s`SolvableDBExtractDenominator := PX%o!(%o);\n", level, s`SolvableDBExtractDenominator);
+      // Pex := eval Sprintf("Pex<%o> := Pextract; return Pex;", VarText("x", 0, extract_rank-1));
+      str *:= Sprintf("s`SolvableDBExtractNumerator := PX%o!(%o);\n", level-1, s`SolvableDBExtractNumerator);
+      str *:= Sprintf("s`SolvableDBExtractDenominator := PX%o!(%o);\n", level-1, s`SolvableDBExtractDenominator);
     end if;
   /*
   write list of BelyiMaps with custom printing
