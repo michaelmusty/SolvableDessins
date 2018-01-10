@@ -753,13 +753,14 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
   if curve_assigned and map_assigned then
     // make before and after objects
       before := SolvableDBObjectInitialize();
+      after := SolvableDBObjectInitialize();
       attrs := GetAttributes(Type(s));
       for attr in attrs do
         if assigned s``attr then
           before``attr := s``attr;
+          after``attr := s``attr;
         end if;
       end for;
-      after := s; // this one gets updated
     // setup for various cases
       vprintf Solvable : "Belyi curve and map assigned.\n";
       X := before`SolvableDBBelyiCurve;
