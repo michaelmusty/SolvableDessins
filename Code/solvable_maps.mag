@@ -555,7 +555,8 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       vprintf Solvable: "Now constructing the curve and map.\n";
       AffAlg := Parent(denom);
       F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
-      l := s`SolvableDBLevel;
+      // l := s`SolvableDBLevel; // not compatible with new model code
+      l := Dimension(Ambient(t`SolvableDBBelyiCurve));
       // polynomial ring
       PX_below := t`SolvableDBCurvePolynomialRingList[#t`SolvableDBCurvePolynomialRingList];
       PX := eval Sprintf("PX<%o> := PolynomialRing(F, %o); return PX;", VarText("x", 0, l), l+1);
@@ -795,6 +796,8 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
             geom_bool, geom_H, geom_mp := IsGeometricallyHyperelliptic(X);
             t1 := Cputime();
             vprintf Solvable : "done. %o seconds.\n", t1-t0;
+            vprintf Solvable : "  Degree of new Belyi curve = %o.\n", Degree(hyp_H);
+          // make new Belyi map, curve, and base field, assign to after object
             g := Pushforward(hyp_mp, f);
             KH<x0, x1> := Parent(g);
             H<x0, x1> := AffinePatch(hyp_H, 3);
@@ -802,11 +805,27 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
             if Type(K) eq FldNum then
               K<nu1> := BaseField(H);
             end if;
-            vprintf Solvable : "  Degree of new Belyi curve = %o.\n", Degree(hyp_H);
-          // bookkeeping and return
-            // after object
+            after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
             after`SolvableDBBelyiCurve := H;
             after`SolvableDBBelyiMap := g;
+          // make new polynomial ring, ambient, ideal and curve, assign to after object
+            assert IsAffine(H);
+            AA<x0, x1> := Ambient(H);
+            I<x0, x1> := Ideal(H);
+            P<x0, x1> := Generic(I);
+            assert BaseField(H) eq K;
+            after`SolvableDBCurvePolynomialRingList[#after`SolvableDBPolynomialRingList] := P;
+            after`SolvableDBCurveAmbientList[#after`SolvableDBCurveAmbientList] := AA;
+            after`SolvableDBCurveIdealList[#after`SolvableDBCurveIdealList] := I;
+            after`SolvableDBCurveList[#after`SolvableDBCurveList] := H;
+          // make new extracted numerator and denominator, assign to after object
+          // don't need this to go up a level, nice to keep them instead
+          // attributes TODO
+            /*
+              s`SolvableDBExtractNumerator := mpAffAlgToPX(numer);
+              s`SolvableDBExtractDenominator := mpAffAlgToPX(denom);
+            */
+          // bookkeeping and return
             // sanity checks
             assert Parent(g) eq FunctionField(H);
             vprintf Solvable : "  Sanity checking...";
@@ -819,6 +838,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
         end if;
       end if;
     else // g > 1 and curve is not hyperelliptic
+      // TODO
       // computing new model
         vprintf Solvable : "  Computing canonical image...";
         t0 := Cputime();
@@ -829,21 +849,6 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
         KH<x0, x1> := Parent(g);
         H := AffinePatch(hyp_H, 3);
         K<nu> := BaseField(H);
-      // bookkeeping and return
-        // before object
-        before`SolvableDBBelyiCurve := s`SolvableDBBelyiCurve;
-        before`SolvableDBBelyiCurve := s`SolvableDBBelyiMap;
-        // after object
-        after`SolvableDBBelyiCurve := H;
-        after`SolvableDBBelyiMap := g;
-        // sanity checks
-        assert Parent(g) eq FunctionField(H);
-        vprintf Solvable : "Sanity checking...";
-        t0 := Cputime();
-        assert SolvableMapSanityCheck(before);
-        assert SolvableMapSanityCheck(after);
-        t1 := Cputime();
-        vprintf Solvable : "done. %o seconds.\n", t1-t0;
     end if;
   else
     vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
