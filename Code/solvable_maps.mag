@@ -767,58 +767,73 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
     if is_low_genus_or_hyp then // g = 0,1 or hyperelliptic
       if g eq 0 then
-        vprintf Solvable : "Curve is genus 0. Do nothing for now.\n";
+        vprintf Solvable : "Curve is genus 0. Do nothing.\n";
         return s;
       else // g = 1 or hyperelliptic
         if g eq 1 then
-          vprintf Solvable : "Curve is genus 1. Do nothing for now.\n";
+          vprintf Solvable : "Curve is genus 1 and point finding is hard. Do nothing.\n";
           return s;
         else // hyperelliptic
-          vprintf Solvable : "Curve is hyperelliptic.\n";
-          vprintf Solvable : "IsHyperelliptic...";
-          t0 := Cputime();
-          hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
-          t1 := Cputime();
-          vprintf Solvable : "done. %o seconds.\n", t1-t0;
-          vprintf Solvable : "IsGeometricallyHyperelliptic...";
-          t0 := Cputime();
-          geom_bool, geom_H, geom_mp := IsGeometricallyHyperelliptic(X);
-          t1 := Cputime();
-          vprintf Solvable : "done. %o seconds.\n", t1-t0;
-          g := Pushforward(hyp_mp, f);
-          KH<x0, x1> := Parent(g);
-          H := AffinePatch(hyp_H, 3);
-          K<nu> := BaseField(H);
-          s`SolvableDBBelyiCurve := H;
-          s`SolvableDBBelyiMap := g;
-          assert Parent(g) eq FunctionField(H);
-          vprintf Solvable : "Sanity checking...";
-          t0 := Cputime();
-          assert SolvableMapSanityCheck(s);
-          t1 := Cputime();
-          vprintf Solvable : "done. %o seconds.\n", t1-t0;
-          return s;
+          // computing hyperelliptic model
+            vprintf Solvable : "Curve is hyperelliptic.\n";
+            vprintf Solvable : "asserting IsHyperelliptic...";
+            t0 := Cputime();
+            hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
+            t1 := Cputime();
+            vprintf Solvable : "done. %o seconds.\n", t1-t0;
+            vprintf Solvable : "asserting IsGeometricallyHyperelliptic...";
+            t0 := Cputime();
+            geom_bool, geom_H, geom_mp := IsGeometricallyHyperelliptic(X);
+            t1 := Cputime();
+            vprintf Solvable : "done. %o seconds.\n", t1-t0;
+            g := Pushforward(hyp_mp, f);
+            KH<x0, x1> := Parent(g);
+            H := AffinePatch(hyp_H, 3);
+            K<nu1> := BaseField(H);
+          // bookkeeping and return
+            // before object
+            before`SolvableDBBelyiCurve := s`SolvableDBBelyiCurve;
+            before`SolvableDBBelyiCurve := s`SolvableDBBelyiMap;
+            // after object
+            after`SolvableDBBelyiCurve := H;
+            after`SolvableDBBelyiMap := g;
+            // sanity checks
+            assert Parent(g) eq FunctionField(H);
+            vprintf Solvable : "Sanity checking...";
+            t0 := Cputime();
+            assert SolvableMapSanityCheck(before);
+            assert SolvableMapSanityCheck(after);
+            t1 := Cputime();
+            vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          return before, after;
         end if;
       end if;
     else // g > 1 and curve is not hyperelliptic
-      vprintf Solvable : "Computing canonical image...";
-      t0 := Cputime();
-      C := CanonicalImage(X, mp);
-      t1 := Cputime();
-      g := Pushforward(mp, f);
-      // TODO might not be a plane curve
-      KH<x0, x1> := Parent(g);
-      H := AffinePatch(hyp_H, 3);
-      K<nu> := BaseField(H);
-      s`SolvableDBBelyiCurve := H;
-      s`SolvableDBBelyiMap := g;
-      assert Parent(g) eq FunctionField(H);
-      vprintf Solvable : "Sanity checking...";
-      t0 := Cputime();
-      assert SolvableMapSanityCheck(s);
-      t1 := Cputime();
-      vprintf Solvable : "done. %o seconds.\n", t1-t0;
-      return s;
+      // computing new model
+        vprintf Solvable : "Computing canonical image...";
+        t0 := Cputime();
+        C := CanonicalImage(X, mp);
+        t1 := Cputime();
+        g := Pushforward(mp, f);
+        // TODO might not be a plane curve
+        KH<x0, x1> := Parent(g);
+        H := AffinePatch(hyp_H, 3);
+        K<nu> := BaseField(H);
+      // bookkeeping and return
+        // before object
+        before`SolvableDBBelyiCurve := s`SolvableDBBelyiCurve;
+        before`SolvableDBBelyiCurve := s`SolvableDBBelyiMap;
+        // after object
+        after`SolvableDBBelyiCurve := H;
+        after`SolvableDBBelyiMap := g;
+        // sanity checks
+        assert Parent(g) eq FunctionField(H);
+        vprintf Solvable : "Sanity checking...";
+        t0 := Cputime();
+        assert SolvableMapSanityCheck(before);
+        assert SolvableMapSanityCheck(after);
+        t1 := Cputime();
+        vprintf Solvable : "done. %o seconds.\n", t1-t0;
     end if;
   else
     vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
