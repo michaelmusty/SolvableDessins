@@ -247,8 +247,9 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
   write curve function field attrs using custom printing
   */
     str *:= "\n/*\nCurve FunctionField\n*/\n\n";
-    level := s`SolvableDBLevel;
+    // level := s`SolvableDBLevel; // not compatible with new model code
     if assigned s`SolvableDBCurveBaseFieldList and assigned s`SolvableDBCurvePolynomialRingList and assigned s`SolvableDBCurveAmbientList and assigned s`SolvableDBCurveIdealList and assigned s`SolvableDBCurveList then
+      level := Dimension(Ambient(s`SolvableDBBelyiCurve)); // update
       assert #s`SolvableDBCurveBaseFieldList eq level+1;
       assert #s`SolvableDBCurvePolynomialRingList eq level+1;
       assert #s`SolvableDBCurveAmbientList eq level+1;
@@ -259,10 +260,13 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       str *:= Sprintf("s`SolvableDBCurveAmbientList := [* *];\n");
       str *:= Sprintf("s`SolvableDBCurveIdealList := [* *];\n");
       str *:= Sprintf("s`SolvableDBCurveList := [* *];\n");
-      for i := 0 to level do
+      level_old := s`SolvableDBLevel; // just depends on degree of Belyi map
+      for i := 0 to level_old do
         // SolvableDBCurveBaseFieldList level i
         F := s`SolvableDBCurveBaseFieldList[i+1];
-        str *:= SolvableDBFieldWriter(F : level := i);
+        // str *:= SolvableDBFieldWriter(F : level := i); // not compatible with new model code
+        level_pass := Dimension(Ambient(s`SolvableDBCurveList[i+1]));
+        str *:= SolvableDBFieldWriter(F : level := level_pass);
         str *:= Sprintf("F := F%o;\n", i); // TODO weird...
         // check if Fi eq Fj for j<i
         // came up during d8t2_2_4_4_path3
