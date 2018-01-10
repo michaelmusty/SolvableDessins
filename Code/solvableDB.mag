@@ -347,7 +347,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       */
       Pextract := s`SolvableDBCurvePolynomialRingList[level-1];
       extract_rank := Rank(Pextract);
-      Pextract := eval Sprintf("Pextract<%o> := Pextract; return Pextract;", VarText("x", 0, extract_rank-1));
+      Pex := eval Sprintf("Pex<%o> := Pextract; return Pex;", VarText("x", 0, extract_rank-1));
       str *:= Sprintf("s`SolvableDBExtractNumerator := PX%o!(%o);\n", level, s`SolvableDBExtractNumerator);
       str *:= Sprintf("s`SolvableDBExtractDenominator := PX%o!(%o);\n", level, s`SolvableDBExtractDenominator);
     end if;
