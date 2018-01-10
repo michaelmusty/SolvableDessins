@@ -165,7 +165,7 @@ intrinsic SolvableDBBelyiMapWriter(X::Crv, phi::FldFunFracSchElt : level := 0, i
 end intrinsic;
 
 intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
-  {same as SolvableDBWriteObject but just return the text.}
+  {same as SolvableDBWriteObject but just return the text without writing to file.}
   // directory stuff
     dir := GetCurrentDirectory();
     parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
@@ -349,16 +349,10 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         str *:= Sprintf("%m;\n", s``attr);
       end if;
     end for;
-  // return statement for eval fuction
+  // return statement for eval
     str *:= "\n/*\nReturn for eval\n*/\n\n";
     str *:= Sprintf("return s;");
-  // write to file
-  // TODO requires degree directory to exist before writing
-    Write(savedir, str : Overwrite := true);
-    // System(Sprintf("chmod 666 %o", filename)); // set file permissions
-    // returnText := Sprintf("%o written in directory %o\n", filename, savedir);
-    returnText := Sprintf("%o written in directory %o/SolvableDB/%o\n", filename, GetCurrentDirectory(), d);
-    return returnText;
+  return str;
 end intrinsic;
 
 intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
