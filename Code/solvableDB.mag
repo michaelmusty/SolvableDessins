@@ -264,9 +264,8 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       for i := 0 to level_old do
         // SolvableDBCurveBaseFieldList level i
         F := s`SolvableDBCurveBaseFieldList[i+1];
-        // str *:= SolvableDBFieldWriter(F : level := i); // not compatible with new model code
+        str *:= SolvableDBFieldWriter(F : level := i);
         level_pass := Dimension(Ambient(s`SolvableDBCurveList[i+1]));
-        str *:= SolvableDBFieldWriter(F : level := level_pass);
         str *:= Sprintf("F := F%o;\n", i); // TODO weird...
         // check if Fi eq Fj for j<i
         // came up during d8t2_2_4_4_path3
