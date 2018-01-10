@@ -746,7 +746,7 @@ intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
 end intrinsic;
 
 // update 2018
-intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, SolvableDBObject
+intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
   {Naively try to reduce the degree of the BelyiCurve.}
   vprintf Solvable : "%o LowDegreeAttempt :\n", s`SolvableDBName;
   curve_assigned := assigned s`SolvableDBBelyiCurve;
