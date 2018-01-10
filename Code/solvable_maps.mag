@@ -783,7 +783,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
           g := Pushforward(hyp_mp, f);
-          KH<z0, z1> := Parent(g);
+          KH<x0, x1> := Parent(g);
           H := AffinePatch(hyp_H, 3);
           K<nu> := BaseField(H);
           s`SolvableDBBelyiCurve := H;
@@ -798,7 +798,23 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject
         end if;
       end if;
     else // g > 1 and curve is not hyperelliptic
-      // TODO
+      vprintf Solvable : "Computing canonical image...";
+      t0 := Cputime();
+      C := CanonicalImage(X, mp);
+      t1 := Cputime();
+      g := Pushforward(mp, f);
+      // TODO might not be a plane curve
+      KH<x0, x1> := Parent(g);
+      H := AffinePatch(hyp_H, 3);
+      K<nu> := BaseField(H);
+      s`SolvableDBBelyiCurve := H;
+      s`SolvableDBBelyiMap := g;
+      assert Parent(g) eq FunctionField(H);
+      vprintf Solvable : "Sanity checking...";
+      t0 := Cputime();
+      assert SolvableMapSanityCheck(s);
+      t1 := Cputime();
+      vprintf Solvable : "done. %o seconds.\n", t1-t0;
       return s;
     end if;
   else
