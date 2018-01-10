@@ -762,35 +762,35 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
         end if;
       end for;
     // setup for various cases
-      vprintf Solvable : "Belyi curve and map assigned.\n";
+      vprintf Solvable : "  Belyi curve and map assigned.\n";
       X := before`SolvableDBBelyiCurve;
       assert IsAffine(X);
       Xt := ProjectiveClosure(X);
       f := before`SolvableDBBelyiMap;
       degree_start := Degree(Xt);
-      vprintf Solvable : "Degree of Belyi curve = %o\n", degree_start;
-      vprintf Solvable : "Checking Canonical map...";
+      vprintf Solvable : "  Degree of Belyi curve = %o\n", degree_start;
+      vprintf Solvable : "  Checking Canonical map...";
       t0 := Cputime();
       g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
       t1 := Cputime();
       vprintf Solvable : "done. %o seconds.\n", t1-t0;
     if is_low_genus_or_hyp then // g = 0,1 or hyperelliptic
       if g eq 0 then
-        vprintf Solvable : "Curve is genus 0. Do nothing.\n";
+        vprintf Solvable : "  Curve is genus 0. Do nothing.\n";
         return s;
       else // g = 1 or hyperelliptic
         if g eq 1 then
-          vprintf Solvable : "Curve is genus 1 and point finding is hard. Do nothing.\n";
+          vprintf Solvable : "  Curve is genus 1 and point finding is hard. Do nothing.\n";
           return s;
         else // hyperelliptic
           // computing hyperelliptic model
-            vprintf Solvable : "Curve is hyperelliptic.\n";
-            vprintf Solvable : "asserting IsHyperelliptic...";
+            vprintf Solvable : "  Curve is hyperelliptic.\n";
+            vprintf Solvable : "  asserting IsHyperelliptic...";
             t0 := Cputime();
             hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
             t1 := Cputime();
             vprintf Solvable : "done. %o seconds.\n", t1-t0;
-            vprintf Solvable : "asserting IsGeometricallyHyperelliptic...";
+            vprintf Solvable : "  asserting IsGeometricallyHyperelliptic...";
             t0 := Cputime();
             geom_bool, geom_H, geom_mp := IsGeometricallyHyperelliptic(X);
             t1 := Cputime();
@@ -799,14 +799,14 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
             KH<x0, x1> := Parent(g);
             H<x0, x1> := AffinePatch(hyp_H, 3);
             K<nu1> := BaseField(H);
-            vprintf Solvable : "Degree of new Belyi curve = %o\n", Degree(hyp_H);
+            vprintf Solvable : "  Degree of new Belyi curve = %o\n", Degree(hyp_H);
           // bookkeeping and return
             // after object
             after`SolvableDBBelyiCurve := H;
             after`SolvableDBBelyiMap := g;
             // sanity checks
             assert Parent(g) eq FunctionField(H);
-            vprintf Solvable : "Sanity checking...";
+            vprintf Solvable : "  Sanity checking...";
             t0 := Cputime();
             assert SolvableMapSanityCheck(before);
             assert SolvableMapSanityCheck(after);
@@ -817,7 +817,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
       end if;
     else // g > 1 and curve is not hyperelliptic
       // computing new model
-        vprintf Solvable : "Computing canonical image...";
+        vprintf Solvable : "  Computing canonical image...";
         t0 := Cputime();
         C := CanonicalImage(X, mp);
         t1 := Cputime();
