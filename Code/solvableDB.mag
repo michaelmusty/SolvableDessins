@@ -346,6 +346,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       assert PolyRing eq Parent(b);
       assert Rank(PolyRing) eq level+1;
       */
+      print level;
       Pextract := s`SolvableDBCurvePolynomialRingList[level-2];
       extract_rank := Rank(Pextract);
       // Pex := eval Sprintf("Pex<%o> := Pextract; return Pex;", VarText("x", 0, extract_rank-1));
