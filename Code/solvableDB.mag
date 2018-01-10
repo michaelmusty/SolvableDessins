@@ -333,6 +333,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
   /*
   write extract attrs using custom printing
   */
+  // TODO TODO
     str *:= "\n/*\nExtracted Numerator/Denominator Polynomials\n*/\n\n";
     level := s`SolvableDBLevel;
     if assigned s`SolvableDBExtractNumerator then
