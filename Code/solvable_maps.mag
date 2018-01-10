@@ -814,7 +814,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
             I<x0, x1> := Ideal(H);
             P<x0, x1> := Generic(I);
             assert BaseField(H) eq K;
-            after`SolvableDBCurvePolynomialRingList[#after`SolvableDBPolynomialRingList] := P;
+            after`SolvableDBCurvePolynomialRingList[#after`SolvableDBCurvePolynomialRingList] := P;
             after`SolvableDBCurveAmbientList[#after`SolvableDBCurveAmbientList] := AA;
             after`SolvableDBCurveIdealList[#after`SolvableDBCurveIdealList] := I;
             after`SolvableDBCurveList[#after`SolvableDBCurveList] := H;
