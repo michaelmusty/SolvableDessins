@@ -783,9 +783,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
           g := Pushforward(hyp_mp, f);
-          K<nu> := BaseField(H);
           KH<z0, z1> := Parent(g);
           H := AffinePatch(hyp_H, 3);
+          K<nu> := BaseField(H);
           s`SolvableDBBelyiCurve := H;
           s`SolvableDBBelyiMap := g;
           assert Parent(g) eq FunctionField(H);
