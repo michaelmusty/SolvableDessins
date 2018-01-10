@@ -357,6 +357,23 @@ end intrinsic;
 
 intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
   {Assuming working directory is repo i.e. /SolvableDessins, write a (magma loadable) SolvableDBObject s to filename.m in the appropriate directory.}
+  // directory stuff
+    dir := GetCurrentDirectory();
+    parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
+    if parentdir ne "SolvableDessins\n" then
+      error "make sure your working directory is /SolvableDessins";
+    end if;
+    if (not assigned s`SolvableDBDegree) or (not assigned s`SolvableDBName) then
+      error "this SolvableDB object does not have enough information worth saving!";
+    else
+      d := s`SolvableDBDegree;
+      name := s`SolvableDBName;
+      filename := s`SolvableDBFilename;
+    end if;
+    SetColumns(0);
+    // savedir := Sprintf(dir cat "/SolvableDB/%o/%o" cat ".m", d, name);
+    savedir := Sprintf(dir cat "/SolvableDB/%o/%o", d, filename);
+    str := "";
   // TODO TODO TODO update from SolvableDBWriteObjectText
   // write to file
   // TODO requires degree directory to exist before writing
