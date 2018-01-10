@@ -799,6 +799,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
             KH<x0, x1> := Parent(g);
             H<x0, x1> := AffinePatch(hyp_H, 3);
             K<nu1> := BaseField(H);
+            vprintf Solvable : "Degree of new Belyi curve = %o\n", Degree(hyp_H);
           // bookkeeping and return
             // after object
             after`SolvableDBBelyiCurve := H;
