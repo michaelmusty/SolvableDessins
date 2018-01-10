@@ -290,6 +290,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         str *:= Sprintf("Append(~s`SolvableDBCurveBaseFieldList, F%o);\n", i);
         // SolvableDBCurvePolynomialRingList level i
         num_vars := Rank(s`SolvableDBCurvePolynomialRingList[i+1]);
+        printf "i=%o, num_vars=%o\n", i, num_vars;
         vartext := VarText("x", 0, num_vars);
         str *:= Sprintf("PX%o<%o> := PolynomialRing(F%o, %o);\n", i, vartext, i, num_vars);
         str *:= Sprintf("Append(~s`SolvableDBCurvePolynomialRingList, PX%o);\n", i);
