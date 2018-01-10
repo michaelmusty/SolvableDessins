@@ -347,8 +347,6 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       */
       Pextract := s`SolvableDBCurvePolynomialRingList[level];
       extract_rank := Rank(Pextract);
-      print extract_rank;
-      // Pex := eval Sprintf("Pex<%o> := Pextract; return Pex;", VarText("x", 0, extract_rank-1));
       vartext := VarText("x", 0, extract_rank-1);
       str *:= Sprintf("Pextract<%o> := PX%o;\n", vartext, level-1);
       str *:= Sprintf("s`SolvableDBExtractNumerator := Pextract!(%o);\n", s`SolvableDBExtractNumerator);
@@ -366,7 +364,9 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       assert ISA(Type(curve), Crv);
       assert ISA(Type(map), FldFunFracSchElt);
       assert s`SolvableDBCurveList[level+1] eq curve;
-      vartext := VarText("x", 0, level);
+      Ptop := s`SolvableDBCurvePolynomialRingList[level+1];
+      top_rank := Rank(Ptop);
+      vartext := VarText("x", 0, top_rank-1);
       str *:= Sprintf("X<%o> := s`SolvableDBCurveList[%o];\n", vartext, level+1);
       str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
       str *:= Sprintf("KX<%o> := FunctionField(X);\n", vartext);
