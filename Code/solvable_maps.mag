@@ -751,20 +751,28 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
   curve_assigned := assigned s`SolvableDBBelyiCurve;
   map_assigned := assigned s`SolvableDBBelyiMap;
   if curve_assigned and map_assigned then
-    before := s; // object before
-    after := s; // object after
-    vprintf Solvable : "Belyi curve and map assigned.\n";
-    X := before`SolvableDBBelyiCurve;
-    assert IsAffine(X);
-    Xt := ProjectiveClosure(X);
-    f := before`SolvableDBBelyiMap;
-    degree_start := Degree(Xt);
-    vprintf Solvable : "Degree of Belyi curve = %o\n", degree_start;
-    vprintf Solvable : "Checking Canonical map...";
-    t0 := Cputime();
-    g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
-    t1 := Cputime();
-    vprintf Solvable : "done. %o seconds.\n", t1-t0;
+    // make before and after objects
+      before := SolvableDBObjectInitialize();
+      attrs := GetAttributes(Type(s));
+      for attr in attrs do
+        if assigned s``attr then
+          before``attr := s``attr;
+        end if;
+      end for;
+      after := s; // this one gets updated
+    // setup for various cases
+      vprintf Solvable : "Belyi curve and map assigned.\n";
+      X := before`SolvableDBBelyiCurve;
+      assert IsAffine(X);
+      Xt := ProjectiveClosure(X);
+      f := before`SolvableDBBelyiMap;
+      degree_start := Degree(Xt);
+      vprintf Solvable : "Degree of Belyi curve = %o\n", degree_start;
+      vprintf Solvable : "Checking Canonical map...";
+      t0 := Cputime();
+      g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
+      t1 := Cputime();
+      vprintf Solvable : "done. %o seconds.\n", t1-t0;
     if is_low_genus_or_hyp then // g = 0,1 or hyperelliptic
       if g eq 0 then
         vprintf Solvable : "Curve is genus 0. Do nothing.\n";
@@ -791,9 +799,6 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> SolvableDBObject, Solva
             H := AffinePatch(hyp_H, 3);
             K<nu1> := BaseField(H);
           // bookkeeping and return
-            // before object
-            before`SolvableDBBelyiCurve := s`SolvableDBBelyiCurve;
-            before`SolvableDBBelyiCurve := s`SolvableDBBelyiMap;
             // after object
             after`SolvableDBBelyiCurve := H;
             after`SolvableDBBelyiMap := g;
