@@ -778,11 +778,11 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
     if is_low_genus_or_hyp then // g = 0,1 or hyperelliptic
       if g eq 0 then
         vprintf Solvable : "  Curve is genus 0. Do nothing.\n";
-        return s;
+        return before, after;
       else // g = 1 or hyperelliptic
         if g eq 1 then
           vprintf Solvable : "  Curve is genus 1 and point finding is hard. Do nothing.\n";
-          return s;
+          return before, after;
         else // hyperelliptic
           // computing hyperelliptic model
             vprintf Solvable : "  Curve is hyperelliptic.\n";
