@@ -374,6 +374,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
   write graph attributes using magma printing
   */
     str *:= "\n/*\nGraph Data\n*/\n\n";
+    print "fuckyoudropbox.m initialized and written";
     for attr in graph_attrs do
       if assigned s``attr then
         str *:= Sprintf("s`%o := ", attr);
