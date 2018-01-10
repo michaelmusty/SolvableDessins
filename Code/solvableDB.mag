@@ -333,7 +333,6 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
   /*
   write extract attrs using custom printing
   */
-  // TODO TODO
     str *:= "\n/*\nExtracted Numerator/Denominator Polynomials\n*/\n\n";
     level := s`SolvableDBLevel;
     if assigned s`SolvableDBExtractNumerator then
@@ -366,7 +365,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       level := s`SolvableDBLevel;
       assert ISA(Type(curve), Crv);
       assert ISA(Type(map), FldFunFracSchElt);
-      // assert s`SolvableDBCurveList[level+1] eq curve; // incompatible with new model code
+      assert s`SolvableDBCurveList[level+1] eq curve;
       vartext := VarText("x", 0, level);
       str *:= Sprintf("X<%o> := s`SolvableDBCurveList[%o];\n", vartext, level+1);
       str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
