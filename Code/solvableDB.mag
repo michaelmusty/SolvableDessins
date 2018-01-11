@@ -367,6 +367,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       if IsHyperelliptic(curve) then // hyperelliptic case
         _, H := IsHyperelliptic(curve);
         assert curve eq H;
+        assert IsPlaneCurve(H);
         f, g := HyperellipticPolynomials(H);
         str *:= Sprintf("f, g := Explode(%m);\n", [f, g]);
         str *:= Sprintf("X := HyperellipticCurve([f, g]);\n");
@@ -375,7 +376,6 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         end if;
         str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
         str *:= Sprintf("KX<x0, x1> := FunctionField(X);\n");
-        assert Parent(map).1 eq x0 and Parent(map).2 eq x1;
         str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n");
       else // general case
         assert s`SolvableDBCurveList[level+1] eq curve;
