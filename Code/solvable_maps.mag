@@ -847,7 +847,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
         P := Generic(I);
         num_vars := Rank(P);
         Ceval := C;
-        C := eval Sprintf("C<%o> := Ceval; return Ceval;", VarText("z", 0, num_vars-1));
+        C := eval Sprintf("C<%o> := Ceval; return C;", VarText("z", 0, num_vars-1));
         KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 0, num_vars-2));
         K := BaseField(C);
         if ISA(Type(K), FldNum) then
@@ -866,8 +866,10 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
         I := Ideal(C_affine);
         P := Generic(I);
         num_vars := Rank(P);
-        AA := eval Sprintf("AA<%o> := AA; return AA;", VarText("x", 0, num_vars-1));
-        P := eval Sprintf("P<%o> := P; return P;", VarText("x", 0, num_vars-1));
+        AAeval := AA;
+        AA := eval Sprintf("AA<%o> := AAeval; return AA;", VarText("x", 0, num_vars-1));
+        Peval := P;
+        P := eval Sprintf("P<%o> := Peval; return P;", VarText("x", 0, num_vars-1));
         assert BaseField(H_affine) eq K;
         after`SolvableDBCurvePolynomialRingList[#after`SolvableDBCurvePolynomialRingList] := P;
         after`SolvableDBCurveAmbientList[#after`SolvableDBCurveAmbientList] := AA;
