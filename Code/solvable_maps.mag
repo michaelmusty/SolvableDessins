@@ -858,6 +858,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
         after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
         after`SolvableDBBelyiCurve := C;
         after`SolvableDBBelyiMap := g;
+        vprintf Solvable : "  Degree of new model = %o.\n", Degree(C);
       // make new polynomial ring, ambient, ideal and curve, assign to after object
         level := s`SolvableDBLevel; // need this?
         I_projective := Ideal(C);
