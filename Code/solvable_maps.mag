@@ -772,7 +772,8 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
       vprintf Solvable : "  Degree of Belyi curve = %o.\n", degree_start;
       vprintf Solvable : "  Checking Canonical map...";
       t0 := Cputime();
-      g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
+      // g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
+      g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(ProjectiveClosure(X)); // better to take projective closure?
       t1 := Cputime();
       vprintf Solvable : "done. %o seconds.\n", t1-t0;
     if is_low_genus_or_hyp then // g = 0,1 or hyperelliptic
