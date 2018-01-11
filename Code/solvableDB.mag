@@ -364,14 +364,29 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       level := s`SolvableDBLevel;
       assert ISA(Type(curve), Crv);
       assert ISA(Type(map), FldFunFracSchElt);
-      assert s`SolvableDBCurveList[level+1] eq curve;
-      Ptop := s`SolvableDBCurvePolynomialRingList[level+1];
-      top_rank := Rank(Ptop);
-      vartext := VarText("x", 0, top_rank-1);
-      str *:= Sprintf("X<%o> := s`SolvableDBCurveList[%o];\n", vartext, level+1);
-      str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
-      str *:= Sprintf("KX<%o> := FunctionField(X);\n", vartext);
-      str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
+      if IsHyperelliptic(curve) then // hyperelliptic case
+        _, H := IsHyperelliptic(curve);
+        assert curve eq H;
+        f, g := HyperellipticPolynomials(H);
+        str *:= Sprintf("f, g := Explode(%m);\n", [f, g]);
+        str *:= Sprintf("X := HyperellipticCurve([f, g]);\n");
+        if ISA(Type(BaseField(H)), FldNum) then
+          str *:= Sprintf("K<nu> := BaseField(X);\n");
+        end if;
+        str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
+        str *:= Sprintf("KX<x0, x1> := FunctionField(X);\n");
+        assert Parent(map).1 eq x0 and Parent(map).2 eq x1;
+        str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n");
+      else // general case
+        assert s`SolvableDBCurveList[level+1] eq curve;
+        Ptop := s`SolvableDBCurvePolynomialRingList[level+1];
+        top_rank := Rank(Ptop);
+        vartext := VarText("x", 0, top_rank-1);
+        str *:= Sprintf("X<%o> := s`SolvableDBCurveList[%o];\n", vartext, level+1);
+        str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
+        str *:= Sprintf("KX<%o> := FunctionField(X);\n", vartext);
+        str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
+      end if;
     end if;
   /*
   write graph attributes using magma printing
