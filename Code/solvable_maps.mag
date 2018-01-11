@@ -801,7 +801,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           // make new Belyi map, curve, and base field, assign to after object
             g := Pushforward(hyp_mp, f);
             KH<x0, x1> := Parent(g);
-            H := hyp_H;
+            H<z0,z1,z2> := hyp_H;
             K := BaseField(H);
             level := s`SolvableDBLevel;
             if Type(K) eq FldNum then
