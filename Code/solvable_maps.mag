@@ -802,8 +802,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
             KH<x0, x1> := Parent(g);
             H<x0, x1> := AffinePatch(hyp_H, 3);
             K := BaseField(H);
+            level := s`SolvableDBLevel;
             if Type(K) eq FldNum then
-              K<nu0> := BaseField(H);
+              K := eval Sprintf("K<nu%o> := BaseField(H); return K;", level);
             end if;
             after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
             after`SolvableDBBelyiCurve := H;
