@@ -842,7 +842,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
         t1 := Cputime();
         vprintf Solvable : "  done. %o seconds.\n", t1-t0;
         g := Pushforward(mp, f); // why can't we use mp????!?
-        g := Pushforward(can, f); // why can't we use mp????!?
+        // g := Pushforward(can, f); // why can't we use mp????!?
         I := Ideal(C);
         P := Generic(I);
         num_vars := Rank(P);
