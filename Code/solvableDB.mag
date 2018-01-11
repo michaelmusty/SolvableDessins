@@ -371,7 +371,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       str *:= Sprintf("X<%o> := s`SolvableDBCurveList[%o];\n", vartext, level+1);
       str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
       str *:= Sprintf("KX<%o> := FunctionField(X);\n", vartext);
-      str *:= Sprintf("s`SolvableDBBelyiMap := KX.1;\n");
+      str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
     end if;
   /*
   write graph attributes using magma printing
