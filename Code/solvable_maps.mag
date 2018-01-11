@@ -821,13 +821,6 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
             after`SolvableDBCurveAmbientList[#after`SolvableDBCurveAmbientList] := AA;
             after`SolvableDBCurveIdealList[#after`SolvableDBCurveIdealList] := I;
             after`SolvableDBCurveList[#after`SolvableDBCurveList] := H_affine;
-          // make new extracted numerator and denominator, assign to after object
-          // don't need this to go up a level, nice to keep them instead
-          // attributes TODO
-            /*
-              s`SolvableDBExtractNumerator := mpAffAlgToPX(numer);
-              s`SolvableDBExtractDenominator := mpAffAlgToPX(denom);
-            */
           // bookkeeping and return
             // sanity checks
             assert Parent(g) eq FunctionField(H);
@@ -841,18 +834,53 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
         end if;
       end if;
     else // g > 1 and curve is not hyperelliptic
-      // TODO
       // computing new model
         vprintf Solvable : "  Computing canonical image...";
         t0 := Cputime();
-        can := CanonicalMap(X); // why can't I use mp????!?
-        C := CanonicalImage(X, can);
+        can := CanonicalMap(X); // TODO why can't I use mp????!?
+        C := CanonicalImage(X, can); // TODO make this better for genus < 6
         t1 := Cputime();
-        g := Pushforward(mp, f);
-        // TODO might not be a plane curve
-        KH<x0, x1> := Parent(g);
-        H := AffinePatch(hyp_H, 3);
-        K<nu> := BaseField(H);
+        vprintf Solvable : "  done. %o seconds.\n", t1-t0;
+        g := Pushforward(mp, f); // why can't we use mp????!?
+        g := Pushforward(can, f); // why can't we use mp????!?
+        I := Ideal(C);
+        P := Generic(I);
+        num_vars := Rank(P);
+        C := eval Sprintf("C<%o> := C; return C;", VarText("z", 0, num_vars-1));
+        KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 0, num_vars-2));
+        K := BaseField(C);
+        if ISA(Type(K), FldNum) then
+          K<nu> := BaseField(C);
+        end if;
+        after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
+        after`SolvableDBBelyiCurve := C;
+        after`SolvableDBBelyiMap := g;
+      // make new polynomial ring, ambient, ideal and curve, assign to after object
+        level := s`SolvableDBLevel; // need this?
+        I_projective := Ideal(C);
+        P_projective := Generic(I_projective);
+        num_vars_projective := Rank(P_projective);
+        C_affine := AffinePatch(C, num_vars_projective);
+        AA := Ambient(C_affine);
+        I := Ideal(C_affine);
+        P := Generic(I);
+        num_vars := Rank(P);
+        AA := eval Sprintf("AA<%o> := AA; return AA;", VarText("x", 0, num_vars-1));
+        P := eval Sprintf("P<%o> := P; return P;", VarText("x", 0, num_vars-1));
+        assert BaseField(H_affine) eq K;
+        after`SolvableDBCurvePolynomialRingList[#after`SolvableDBCurvePolynomialRingList] := P;
+        after`SolvableDBCurveAmbientList[#after`SolvableDBCurveAmbientList] := AA;
+        after`SolvableDBCurveIdealList[#after`SolvableDBCurveIdealList] := I;
+        after`SolvableDBCurveList[#after`SolvableDBCurveList] := C_affine;
+      // bookkeeping and return
+        // sanity checks
+        assert Parent(g) eq FunctionField(C);
+        vprintf Solvable : "  Sanity checking...";
+        t0 := Cputime();
+        assert SolvableMapSanityCheck(before);
+        assert SolvableMapSanityCheck(after);
+        t1 := Cputime();
+        vprintf Solvable : "done. %o seconds.\n", t1-t0;
     end if;
   else
     vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
