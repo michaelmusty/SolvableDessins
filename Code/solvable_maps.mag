@@ -845,7 +845,8 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
       // computing new model
         vprintf Solvable : "  Computing canonical image...";
         t0 := Cputime();
-        C := CanonicalImage(X, mp);
+        can := CanonicalMap(X); // why can't I use mp????!?
+        C := CanonicalImage(X, can);
         t1 := Cputime();
         g := Pushforward(mp, f);
         // TODO might not be a plane curve
