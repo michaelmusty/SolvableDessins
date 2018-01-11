@@ -886,6 +886,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
         assert SolvableMapSanityCheck(after);
         t1 := Cputime();
         vprintf Solvable : "done. %o seconds.\n", t1-t0;
+        return before, after;
     end if;
   else
     vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
