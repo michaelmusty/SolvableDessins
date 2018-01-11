@@ -838,8 +838,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
       // computing new model
         vprintf Solvable : "  Computing canonical image...";
         t0 := Cputime();
-        can := CanonicalMap(X); // TODO why can't I use mp????!?
-        C := CanonicalImage(X, can); // TODO make this better for genus < 6
+        // can := CanonicalMap(X); // TODO why can't I use mp????!?
+        // C := CanonicalImage(X, mp); // TODO make this better for genus < 6
+        C := Codomain(mp);
         t1 := Cputime();
         vprintf Solvable : "  done. %o seconds.\n", t1-t0;
         g := Pushforward(mp, f); // why can't we use mp????!?
