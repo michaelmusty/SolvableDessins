@@ -782,6 +782,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
       else // g = 1 or hyperelliptic
         if g eq 1 then
           vprintf Solvable : "  Curve is genus 1 and point finding is hard. Do nothing.\n";
+          // maybe use point in support of canonical divisor?
           return before, after;
         else // hyperelliptic
           // computing hyperelliptic model
@@ -801,6 +802,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
             g := Pushforward(hyp_mp, f);
             KH<x0, x1> := Parent(g);
             H<x0, x1> := AffinePatch(hyp_H, 3);
+            time _, H := IsHyperelliptic(H);
             K := BaseField(H);
             level := s`SolvableDBLevel;
             if Type(K) eq FldNum then
@@ -811,6 +813,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
             after`SolvableDBBelyiMap := g;
           // make new polynomial ring, ambient, ideal and curve, assign to after object
             assert IsAffine(H);
+            assert IsPlaneCurve(H);
             AA<x0, x1> := Ambient(H);
             I<x0, x1> := Ideal(H);
             P<x0, x1> := Generic(I);
