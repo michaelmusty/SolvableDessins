@@ -373,7 +373,8 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       vprintf Solvable: "%o is unramified child of %o\n", t`SolvableDBName, s`SolvableDBName;
       return s;
     end if;
-    assert SolvableMapSanityCheck(t);
+    // TODO reinstate this after done testing
+    // assert SolvableMapSanityCheck(t);
     time_end := Cputime();
     vprintf Solvable: "Done. That took %o seconds.\n", time_end-time_start;
   // [ram0, ram1, ramoo] a sequence of bools
