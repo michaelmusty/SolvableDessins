@@ -805,7 +805,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
             K := BaseField(H);
             level := s`SolvableDBLevel;
             if Type(K) eq FldNum then
-              K<nu> := BaseField(K);
+              K<nu> := BaseField(H);
               // K := eval Sprintf("K<nu%o> := BaseField(H); return K;", level);
             end if;
             after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
