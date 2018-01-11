@@ -370,7 +370,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         assert IsPlaneCurve(H);
         f, g := HyperellipticPolynomials(H);
         str *:= Sprintf("f, g := Explode(%m);\n", [f, g]);
-        str *:= Sprintf("X := HyperellipticCurve([f, g]);\n");
+        str *:= Sprintf("X<z0,z1,z2> := HyperellipticCurve([f, g]);\n");
         if ISA(Type(BaseField(H)), FldNum) then
           str *:= Sprintf("K<nu> := BaseField(X);\n");
         end if;
