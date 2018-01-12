@@ -851,7 +851,6 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           if ISA(Type(K), FldNum) then
             K<nu> := BaseField(C);
           end if;
-          after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
           after`SolvableDBBelyiCurve := C;
           after`SolvableDBBelyiMap := g;
           assert Parent(g) eq KC;
