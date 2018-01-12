@@ -781,135 +781,93 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
     // setup for various cases
       vprintf Solvable : "  Belyi curve and map assigned.\n";
       X := before`SolvableDBBelyiCurve;
-      // assert IsAffine(X);
-      // Xt := ProjectiveClosure(X);
-      Xt := X;
+      assert IsProjective(X);
       f := before`SolvableDBBelyiMap;
-      degree_start := Degree(Xt);
+      degree_start := Degree(X);
       vprintf Solvable : "  Degree of Belyi curve = %o.\n", degree_start;
       vprintf Solvable : "  Checking Canonical map...";
       t0 := Cputime();
-      // g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
       g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
       t1 := Cputime();
       vprintf Solvable : "done. %o seconds.\n", t1-t0;
-    if is_low_genus_or_hyp then // g = 0,1 or hyperelliptic
-      if g eq 0 then
-        vprintf Solvable : "  Curve is genus 0. Do nothing.\n";
+    // cases
+      if IsHyperelliptic(X) then
+        assert is_low_genus_or_hyp;
+        // computing hyperelliptic model
+          vprintf Solvable : "  Curve is hyperelliptic.\n";
+          vprintf Solvable : "  asserting IsHyperelliptic...";
+          t0 := Cputime();
+          hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
+          t1 := Cputime();
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          vprintf Solvable : "  asserting IsGeometricallyHyperelliptic...";
+          t0 := Cputime();
+          geom_bool, geom_H, geom_mp := IsGeometricallyHyperelliptic(X);
+          t1 := Cputime();
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          vprintf Solvable : "  Degree of new Belyi curve = %o.\n", Degree(hyp_H);
+        // make new Belyi map, curve, and base field, assign to after object
+          g := Pushforward(hyp_mp, f);
+          X<x1,x2,x3> := hyp_H;
+          KX<x1, x2> := FunctionField(X);
+          assert KX eq Parent(g);
+          K := BaseField(X);
+          if Type(K) eq FldNum then
+            K<nu> := BaseField(X);
+          end if;
+          after`SolvableDBBelyiCurve := X;
+          after`SolvableDBBelyiMap := g; // not necessarily KX.1
+        // bookkeeping and return
+          // sanity checks
+          vprintf Solvable : "  Sanity checking...";
+          t0 := Cputime();
+          assert SolvableMapSanityCheck(before);
+          assert SolvableMapSanityCheck(after);
+          t1 := Cputime();
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
         return before, after;
-      else // g = 1 or hyperelliptic
-        if g eq 1 then
-          vprintf Solvable : "  Curve is genus 1 and point finding is hard. Do nothing.\n";
-          // maybe use point in support of canonical divisor?
+      else // g > 1 and curve is not hyperelliptic
+        // computing new model
+          vprintf Solvable : "  Curve is not hyperelliptic.\n";
+          vprintf Solvable : "  Projecting to PP3...";
+          t0 := Cputime();
+          Sc, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
+          C := Curve(Sc);
+          assert IsProjective(Ambient(C));
+          dim := Dimension(Ambient(C))+1; // projective
+          Sctext := IsoText("Sc", 1, dim);
+          Ctext := IsoText("C", 1, dim);
+          id := eval Sprintf("id := iso< Sc -> C | [%o], [%o] >; return id;", Sctext, Ctext);
+          g := Pushforward(mp*id, f);
+          t1 := Cputime();
+          vprintf Solvable : "  done. %o seconds.\n", t1-t0;
+          I := Ideal(C);
+          P := Generic(I);
+          num_vars := Rank(P);
+          Ceval := C;
+          C := eval Sprintf("C<%o> := Ceval; return C;", VarText("z", 0, num_vars-1));
+          KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 0, num_vars-2));
+          K := BaseField(C);
+          if ISA(Type(K), FldNum) then
+            K<nu> := BaseField(C);
+          end if;
+          after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
+          after`SolvableDBBelyiCurve := C;
+          after`SolvableDBBelyiMap := g;
+          assert Parent(g) eq KC;
+          assert g eq KC.1;
+          vprintf Solvable : "  Degree of new model = %o.\n", Degree(C);
+        // bookkeeping and return
+          // sanity checks
+          assert Parent(g) eq FunctionField(C);
+          vprintf Solvable : "  Sanity checking...";
+          t0 := Cputime();
+          assert SolvableMapSanityCheck(before);
+          assert SolvableMapSanityCheck(after);
+          t1 := Cputime();
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
           return before, after;
-        else // hyperelliptic
-          // computing hyperelliptic model
-            vprintf Solvable : "  Curve is hyperelliptic.\n";
-            vprintf Solvable : "  asserting IsHyperelliptic...";
-            t0 := Cputime();
-            hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
-            t1 := Cputime();
-            vprintf Solvable : "done. %o seconds.\n", t1-t0;
-            vprintf Solvable : "  asserting IsGeometricallyHyperelliptic...";
-            t0 := Cputime();
-            geom_bool, geom_H, geom_mp := IsGeometricallyHyperelliptic(X);
-            t1 := Cputime();
-            vprintf Solvable : "done. %o seconds.\n", t1-t0;
-            vprintf Solvable : "  Degree of new Belyi curve = %o.\n", Degree(hyp_H);
-          // make new Belyi map, curve, and base field, assign to after object
-            g := Pushforward(hyp_mp, f);
-            KH<x0, x1> := Parent(g);
-            H<z0,z1,z2> := hyp_H;
-            K := BaseField(H);
-            level := s`SolvableDBLevel;
-            if Type(K) eq FldNum then
-              K<nu> := BaseField(H);
-              // K := eval Sprintf("K<nu%o> := BaseField(H); return K;", level);
-            end if;
-            after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
-            after`SolvableDBBelyiCurve := H;
-            after`SolvableDBBelyiMap := g;
-          // make new polynomial ring, ambient, ideal and curve, assign to after object
-            H_affine := AffinePatch(H, 3);
-            AA<x0, x1> := Ambient(H_affine);
-            I<x0, x1> := Ideal(H_affine);
-            P<x0, x1> := Generic(I);
-            assert BaseField(H_affine) eq K;
-            after`SolvableDBCurvePolynomialRingList[#after`SolvableDBCurvePolynomialRingList] := P;
-            after`SolvableDBCurveAmbientList[#after`SolvableDBCurveAmbientList] := AA;
-            after`SolvableDBCurveIdealList[#after`SolvableDBCurveIdealList] := I;
-            after`SolvableDBCurveList[#after`SolvableDBCurveList] := H_affine;
-          // bookkeeping and return
-            // sanity checks
-            assert Parent(g) eq FunctionField(H);
-            vprintf Solvable : "  Sanity checking...";
-            t0 := Cputime();
-            assert SolvableMapSanityCheck(before);
-            assert SolvableMapSanityCheck(after);
-            t1 := Cputime();
-            vprintf Solvable : "done. %o seconds.\n", t1-t0;
-          return before, after;
-        end if;
       end if;
-    else // g > 1 and curve is not hyperelliptic
-      // computing new model
-        vprintf Solvable : "  Curve is not hyperelliptic.\n";
-        vprintf Solvable : "  Projecting to PP3...";
-        t0 := Cputime();
-        Sc, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
-        C := Curve(Sc);
-        assert IsProjective(Ambient(C));
-        dim := Dimension(Ambient(C))+1; // projective
-        Sctext := IsoText("Sc", 1, dim);
-        Ctext := IsoText("C", 1, dim);
-        id := eval Sprintf("id := iso< Sc -> C | [%o], [%o] >; return id;", Sctext, Ctext);
-        g := Pushforward(mp*id, f);
-        t1 := Cputime();
-        vprintf Solvable : "  done. %o seconds.\n", t1-t0;
-        I := Ideal(C);
-        P := Generic(I);
-        num_vars := Rank(P);
-        Ceval := C;
-        C := eval Sprintf("C<%o> := Ceval; return C;", VarText("z", 0, num_vars-1));
-        KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 0, num_vars-2));
-        K := BaseField(C);
-        if ISA(Type(K), FldNum) then
-          K<nu> := BaseField(C);
-        end if;
-        after`SolvableDBCurveBaseFieldList[#after`SolvableDBCurveBaseFieldList] := K;
-        after`SolvableDBBelyiCurve := C;
-        after`SolvableDBBelyiMap := g;
-        vprintf Solvable : "  Degree of new model = %o.\n", Degree(C);
-      // make new polynomial ring, ambient, ideal and curve, assign to after object
-        level := s`SolvableDBLevel; // need this?
-        I_projective := Ideal(C);
-        P_projective := Generic(I_projective);
-        num_vars_projective := Rank(P_projective);
-        C_affine := AffinePatch(C, num_vars_projective);
-        AA := Ambient(C_affine);
-        I := Ideal(C_affine);
-        P := Generic(I);
-        num_vars := Rank(P);
-        AAeval := AA;
-        AA := eval Sprintf("AA<%o> := AAeval; return AA;", VarText("x", 0, num_vars-1));
-        Peval := P;
-        P := eval Sprintf("P<%o> := Peval; return P;", VarText("x", 0, num_vars-1));
-        assert BaseField(C_affine) eq K;
-        after`SolvableDBCurvePolynomialRingList[#after`SolvableDBCurvePolynomialRingList] := P;
-        after`SolvableDBCurveAmbientList[#after`SolvableDBCurveAmbientList] := AA;
-        after`SolvableDBCurveIdealList[#after`SolvableDBCurveIdealList] := I;
-        after`SolvableDBCurveList[#after`SolvableDBCurveList] := C_affine;
-      // bookkeeping and return
-        // sanity checks
-        assert Parent(g) eq FunctionField(C);
-        vprintf Solvable : "  Sanity checking...";
-        t0 := Cputime();
-        // assert SolvableMapSanityCheck(before);
-        assert SolvableMapSanityCheck(after);
-        t1 := Cputime();
-        vprintf Solvable : "done. %o seconds.\n", t1-t0;
-        return before, after;
-    end if;
   else
     vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
     return s;
