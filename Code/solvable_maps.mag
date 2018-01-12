@@ -843,7 +843,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           fix := map< X -> C | DefiningEquations(mp) >;
           g := Pushforward(fix, f);
           t1 := Cputime();
-          vprintf Solvable : "  done. %o seconds.\n", t1-t0;
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
           I := Ideal(C);
           P := Generic(I);
           num_vars := Rank(P);
@@ -857,7 +857,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           after`SolvableDBBelyiCurve := C;
           after`SolvableDBBelyiMap := g;
           assert Parent(g) eq KC;
-          assert g eq KC.1;
+          if not g eq KC.1 then
+            vprintf Solvable : "  WARNING! new Belyi map is no longer KX.1\n";
+          end if;
           vprintf Solvable : "  Degree of new model = %o.\n", Degree(C);
         // bookkeeping and return
           // sanity checks
