@@ -615,6 +615,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, chil
       vprintf Solvable: "We picked Ps[%o]:\n%o\n", Ps_index, Ps[Ps_index];
       // curve upstairs
       vprintf Solvable : "Making ambient...";
+      // AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
       AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
       vprintf Solvable : "done.\n";
       vprintf Solvable : "Making curve...";
@@ -780,7 +781,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
     // setup for various cases
       vprintf Solvable : "  Belyi curve and map assigned.\n";
       X := before`SolvableDBBelyiCurve;
-      assert IsAffine(X);
+      // assert IsAffine(X);
       Xt := ProjectiveClosure(X);
       f := before`SolvableDBBelyiMap;
       degree_start := Degree(Xt);
