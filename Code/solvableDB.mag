@@ -85,12 +85,20 @@ intrinsic SolvableDBUnsolvableName(s::SolvableDBObject) -> MonStgElt
   return SolvableDBGenerateName(s`SolvableDBGaloisOrbit[1]);
 end intrinsic;
 
+/*
 intrinsic SolvableDBFieldWriter(F::FldRat : level := 0) -> MonStgElt
   {Given a field Flevel return a string to recreate the field.}
   str := Sprintf("F%o := Rationals();\n", level);
   return str;
 end intrinsic;
+*/
+// simplified 2017/01/12
+intrinsic SolvableDBFieldWriter(K::FldRat) -> MonStgElt
+  {Given a field Flevel return a string to recreate the field.}
+  return Sprintf("K := Rationals();\n");
+end intrinsic;
 
+/*
 intrinsic SolvableDBFieldWriter(F::FldNum : level := 0) -> MonStgElt
   {Given a field Flevel<nulevel> return a string to recreate the field.}
   SetColumns(0);
@@ -102,6 +110,22 @@ intrinsic SolvableDBFieldWriter(F::FldNum : level := 0) -> MonStgElt
   else
     minpolytext := Sprintf("%m", MinimalPolynomial(F.1));
     str *:= Sprintf("F%o<nu%o> := NumberField(%o);\n", level, level, minpolytext);
+  end if;
+  return str;
+end intrinsic;
+*/
+// simplified 2017/01/12
+intrinsic SolvableDBFieldWriter(K::FldNum) -> MonStgElt
+  {Given a field K<nu> return a string to recreate the field.}
+  SetColumns(0);
+  str := "";
+  gens := GeneratorsSequence(K);
+  assert #gens eq 1;
+  if Degree(K) eq 1 then
+    str *:= Sprintf("K<nu> := RationalsAsNumberField();\n");
+  else
+    minpolytext := Sprintf("%m", MinimalPolynomial(K.1));
+    str *:= Sprintf("K<nu> := NumberField(%o);\n", minpolytext);
   end if;
   return str;
 end intrinsic;
@@ -244,147 +268,68 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
       end if;
     end for;
   /*
+  Deleted this 2017/01/12: still lives in backup
   write curve function field attrs using custom printing
   */
-    str *:= "\n/*\nCurve FunctionField\n*/\n\n";
-    // level := s`SolvableDBLevel; // not compatible with new model code
-    if assigned s`SolvableDBCurveBaseFieldList and assigned s`SolvableDBCurvePolynomialRingList and assigned s`SolvableDBCurveAmbientList and assigned s`SolvableDBCurveIdealList and assigned s`SolvableDBCurveList then
-      level := Dimension(Ambient(s`SolvableDBBelyiCurve)); // update
-      level_old := s`SolvableDBLevel; // just depends on degree of Belyi map
-      assert #s`SolvableDBCurveBaseFieldList eq level_old+1;
-      assert #s`SolvableDBCurvePolynomialRingList eq level_old+1;
-      assert #s`SolvableDBCurveAmbientList eq level_old+1;
-      assert #s`SolvableDBCurveIdealList eq level_old+1;
-      assert #s`SolvableDBCurveList eq level_old+1;
-      str *:= Sprintf("s`SolvableDBCurveBaseFieldList := [* *];\n");
-      str *:= Sprintf("s`SolvableDBCurvePolynomialRingList := [* *];\n");
-      str *:= Sprintf("s`SolvableDBCurveAmbientList := [* *];\n");
-      str *:= Sprintf("s`SolvableDBCurveIdealList := [* *];\n");
-      str *:= Sprintf("s`SolvableDBCurveList := [* *];\n");
-      for i := 0 to level_old do
-        // SolvableDBCurveBaseFieldList level i
-        F := s`SolvableDBCurveBaseFieldList[i+1];
-        str *:= SolvableDBFieldWriter(F : level := i);
-        level_pass := Dimension(Ambient(s`SolvableDBCurveList[i+1]));
-        str *:= Sprintf("F := F%o;\n", i); // TODO weird...
-        // check if Fi eq Fj for j<i
-        // came up during d8t2_2_4_4_path3
-          min_j := 0;
-          for j := 1 to i do
-            field_i := s`SolvableDBCurveBaseFieldList[i];
-            field_j := s`SolvableDBCurveBaseFieldList[j];
-            if Type(field_i) eq FldNum and Type(field_j) eq FldNum then
-              if IsIsomorphic(field_i, field_j) then
-                if min_j eq 0 then
-                  min_j := j;
-                else
-                  break j;
-                end if;
-              end if;
-            end if;
-          end for;
-          if min_j ne 0 then // Fi eq Fj for some j<i, with j minimal
-            str *:= Sprintf("F%o := F%o;\n", i, min_j);
-          end if;
-        str *:= Sprintf("Append(~s`SolvableDBCurveBaseFieldList, F%o);\n", i);
-        // SolvableDBCurvePolynomialRingList level i
-          num_vars := Rank(s`SolvableDBCurvePolynomialRingList[i+1]);
-          vartext := VarText("x", 0, num_vars-1);
-          str *:= Sprintf("PX%o<%o> := PolynomialRing(F%o, %o);\n", i, vartext, i, num_vars);
-          str *:= Sprintf("Append(~s`SolvableDBCurvePolynomialRingList, PX%o);\n", i);
-          /* incompatible with new model code
-          vartext := VarText("x", 0, i);
-          str *:= Sprintf("PX%o<%o> := PolynomialRing(F%o, %o);\n", i, vartext, i, i+1);
-          str *:= Sprintf("Append(~s`SolvableDBCurvePolynomialRingList, PX%o);\n", i);
-          */
-        // SolvableDBCurveAmbientList level i
-          vartext := VarText("x", 0, num_vars-1);
-          str *:= Sprintf("AA%o<%o> := AffineSpace(PX%o);\n", i, vartext, i);
-          str *:= Sprintf("Append(~s`SolvableDBCurveAmbientList, AA%o);\n", i);
-          /* incompatible with new model code
-          vartext := VarText("x", 0, i);
-          str *:= Sprintf("AA%o<%o> := AffineSpace(PX%o);\n", i, vartext, i);
-          str *:= Sprintf("Append(~s`SolvableDBCurveAmbientList, AA%o);\n", i);
-          */
-        // SolvableDBCurveIdealList level i
-          vartext := VarText("x", 0, num_vars-1);
-          str *:= Sprintf("I%o<%o> := ideal< PX%o | %o >;\n", i, vartext, i, Basis(s`SolvableDBCurveIdealList[i+1]));
-          str *:= Sprintf("Append(~s`SolvableDBCurveIdealList, I%o);\n", i);
-          /*
-            vartext := VarText("x", 0, i);
-            // str *:= Sprintf("I%o<%o> := %m;\n", i, vartext, s`SolvableDBCurveIdealList[i+1]);
-            str *:= Sprintf("I%o<%o> := ideal< PX%o | %o >;\n", i, vartext, i, Basis(s`SolvableDBCurveIdealList[i+1]));
-            str *:= Sprintf("Append(~s`SolvableDBCurveIdealList, I%o);\n", i);
-          */
-        // SolvableDBCurveList level i
-          vartext := VarText("x", 0, num_vars-1);
-          str *:= Sprintf("X%o<%o> := Curve(AA%o, ideal< PX%o | %o >);\n", i, vartext, i, i, Basis(Ideal(s`SolvableDBCurveList[i+1])));
-          str *:= Sprintf("Append(~s`SolvableDBCurveList, X%o);\n", i);
-          /*
-            vartext := VarText("x", 0, i);
-            // str *:= Sprintf("X%o<%o> := %m;\n", i, vartext, s`SolvableDBCurveList[i+1]);
-            // str *:= Sprintf("X%o<%o> := Curve(AA%o, I%o);\n", i, vartext, i, i);
-            str *:= Sprintf("X%o<%o> := Curve(AA%o, ideal< PX%o | %o >);\n", i, vartext, i, i, Basis(Ideal(s`SolvableDBCurveList[i+1])));
-            str *:= Sprintf("Append(~s`SolvableDBCurveList, X%o);\n", i);
-          */
-      end for;
-    end if;
   /*
+  Deleted this 2017/01/12: still lives in backup
   write extract attrs using custom printing
   */
-    str *:= "\n/*\nExtracted Numerator/Denominator Polynomials\n*/\n\n";
-    level := s`SolvableDBLevel;
-    if assigned s`SolvableDBExtractNumerator then
-      assert assigned s`SolvableDBExtractDenominator;
-      // these will live in the polynomial ring at level minus 1 (previous level)
-      a := s`SolvableDBExtractNumerator;
-      b := s`SolvableDBExtractDenominator;
-      /* incompatible with new model code
-      PolyRing := Parent(a);
-      assert PolyRing eq Parent(b);
-      assert Rank(PolyRing) eq level+1;
-      */
-      Pextract := s`SolvableDBCurvePolynomialRingList[level];
-      extract_rank := Rank(Pextract);
-      vartext := VarText("x", 0, extract_rank-1);
-      F := s`SolvableDBCurveBaseFieldList[level];
-      str *:= SolvableDBFieldWriter(F : level := level);
-      str *:= Sprintf("Pextract<%o> := PolynomialRing(F%o, %o);\n", vartext, level, extract_rank);
-      str *:= Sprintf("s`SolvableDBExtractNumerator := Pextract!(%o);\n", s`SolvableDBExtractNumerator);
-      str *:= Sprintf("s`SolvableDBExtractDenominator := Pextract!(%o);\n", s`SolvableDBExtractDenominator);
-    end if;
   /*
-  write list of BelyiMaps with custom printing
+  Updated 2017/01/12 for simplicity...things were getting out of hand
+  write top level BelyiMap with custom printing
   */
     str *:= "\n/*\nTop Level Belyi Curve/Map\n*/\n\n";
     if assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
-      assert assigned s`SolvableDBCurveList;
       curve := s`SolvableDBBelyiCurve;
       map := s`SolvableDBBelyiMap;
-      level := s`SolvableDBLevel;
+      assert IsProjective(curve);
+      assert Parent(map) eq FunctionField(curve);
       assert ISA(Type(curve), Crv);
       assert ISA(Type(map), FldFunFracSchElt);
+      // TODO elliptic case?
       if IsHyperelliptic(curve) then // hyperelliptic case
-        _, H := IsHyperelliptic(curve);
-        assert curve eq H;
-        assert IsPlaneCurve(H);
-        f, g := HyperellipticPolynomials(H);
+        _, X := IsHyperelliptic(curve);
+        assert curve eq X;
+        assert IsPlaneCurve(X);
+        f, g := HyperellipticPolynomials(X);
         str *:= Sprintf("f, g := Explode(%m);\n", [f, g]);
-        str *:= Sprintf("X<z0,z1,z2> := HyperellipticCurve([f, g]);\n");
-        if ISA(Type(BaseField(H)), FldNum) then
+        str *:= Sprintf("X<x1,x2,x3> := HyperellipticCurve([f, g]);\n");
+        if ISA(Type(BaseField(X)), FldNum) then
           str *:= Sprintf("K<nu> := BaseField(X);\n");
+        else
+          assert ISA(Type(BaseField(X)), FldRat);
         end if;
         str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
-        str *:= Sprintf("KX<x0, x1> := FunctionField(X);\n");
+        str *:= Sprintf("KX<x1, x2> := FunctionField(X);\n");
         str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
       else // general case
-        // assert s`SolvableDBCurveList[level+1] eq curve;
-        Ptop := s`SolvableDBCurvePolynomialRingList[level+1];
-        top_rank := Rank(Ptop);
-        vartext := VarText("x", 0, top_rank-1);
-        str *:= Sprintf("X<%o> := s`SolvableDBCurveList[%o];\n", vartext, level+1);
+        K := BaseField(curve);
+        num_vars := Rank(Generic(Ideal(curve)));
+        X_vars := VarText("x", 1, num_vars);
+        X := eval Sprintf("X<%o> := curve; return X;", X_vars); // sets variable names x1,x2,x3,...
+        KX := FunctionField(X);
+        I := Ideal(X);
+        P := Generic(I);
+        // write base field in file
+        str *:= SolvableDBFieldWriter(K); // base field in file is called K or K<nu>
+        // write polynomial ring in file
+        PX_vars := VarText("x", 1, num_vars);
+        str *:= Sprintf("PX<%o> := PolynomialRing(K, %o);\n", PX_vars, num_vars);
+        // write ambient in file
+        PP_vars := VarText("x", 1, num_vars);
+        str *:= Sprintf("PP<%o> := ProjectiveSpace(PX);\n", PP_vars);
+        // write ideal in file
+        I_vars := VarText("x", 1, num_vars);
+        str *:= Sprintf("I<%o> := ideal< PX | %o >;\n", I_vars, Basis(I));
+        // write curve in file
+        X_vars := VarText("x", 1, num_vars);
+        str *:= Sprintf("X<%o> := Curve(PP, I);\n", X_vars);
+        // write function field in file
+        KX_vars := VarText("x", 1, num_vars-1);
+        str *:= Sprintf("KX<%o> := FunctionField(X);\n", KX_vars);
+        // assign curve and map to object in file
         str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
-        str *:= Sprintf("KX<%o> := FunctionField(X);\n", vartext);
         str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
       end if;
     end if;
@@ -422,8 +367,8 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     SetColumns(0);
     // savedir := Sprintf(dir cat "/SolvableDB/%o/%o" cat ".m", d, name);
     savedir := Sprintf(dir cat "/SolvableDB/%o/%o", d, filename);
-    str := "";
-  // TODO TODO TODO update from SolvableDBWriteObjectText
+  // get str from SolvableDBWriteObjectText
+    str := SolvableDBWriteObjectText(s);
   // write to file
   // TODO requires degree directory to exist before writing
     Write(savedir, str : Overwrite := true);
