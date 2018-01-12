@@ -902,7 +902,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
         assert Parent(g) eq FunctionField(C);
         vprintf Solvable : "  Sanity checking...";
         t0 := Cputime();
-        assert SolvableMapSanityCheck(before);
+        // assert SolvableMapSanityCheck(before);
         assert SolvableMapSanityCheck(after);
         t1 := Cputime();
         vprintf Solvable : "done. %o seconds.\n", t1-t0;
