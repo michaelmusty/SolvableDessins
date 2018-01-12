@@ -241,8 +241,8 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
     Append(~extract_attrs, "SolvableDBExtractNumerator");
     Append(~extract_attrs, "SolvableDBExtractDenominator");
     belyimaps_attrs := [];
-    Append(~belyimaps_attrs, "SolvableDBBelyiCurves");
-    Append(~belyimaps_attrs, "SolvableDBBelyiMaps");
+    Append(~belyimaps_attrs, "SolvableDBBelyiCurve");
+    Append(~belyimaps_attrs, "SolvableDBBelyiMap");
     graph_attrs := [];
     Append(~graph_attrs, "SolvableDBPathToPP1");
     Append(~graph_attrs, "SolvableDBParents");
@@ -329,9 +329,10 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         KX_vars := VarText("x", 1, num_vars-1);
         str *:= Sprintf("KX<%o> := FunctionField(X);\n", KX_vars);
         // assign curve and map to object in file
+        assert KX.1 eq map;
         str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
-        print map;
-        str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
+        // str *:= Sprintf("s`SolvableDBBelyiMap := KX(%o);\n", map);
+        str *:= Sprintf("s`SolvableDBBelyiMap := KX.1;\n");
       end if;
     end if;
   /*
