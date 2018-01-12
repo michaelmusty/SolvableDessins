@@ -831,14 +831,17 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           vprintf Solvable : "  Curve is not hyperelliptic.\n";
           vprintf Solvable : "  Projecting to PP3...";
           t0 := Cputime();
-          Sc, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
-          C := Curve(Sc);
+          C, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
           assert IsProjective(Ambient(C));
+          assert Curve(C) eq C;
+          /*
           dim := Dimension(Ambient(C))+1; // projective
           Sctext := IsoText("Sc", 1, dim);
           Ctext := IsoText("C", 1, dim);
           id := eval Sprintf("id := iso< Sc -> C | [%o], [%o] >; return id;", Sctext, Ctext);
-          g := Pushforward(mp*id, f);
+          */
+          fix := map< X -> C | DefiningEquations(mp) >;
+          g := Pushforward(fix, f);
           t1 := Cputime();
           vprintf Solvable : "  done. %o seconds.\n", t1-t0;
           I := Ideal(C);
