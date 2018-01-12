@@ -782,7 +782,8 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
       vprintf Solvable : "  Belyi curve and map assigned.\n";
       X := before`SolvableDBBelyiCurve;
       // assert IsAffine(X);
-      Xt := ProjectiveClosure(X);
+      // Xt := ProjectiveClosure(X);
+      Xt := X;
       f := before`SolvableDBBelyiMap;
       degree_start := Degree(Xt);
       vprintf Solvable : "  Degree of Belyi curve = %o.\n", degree_start;
