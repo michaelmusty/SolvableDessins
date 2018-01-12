@@ -378,7 +378,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         str *:= Sprintf("KX<x0, x1> := FunctionField(X);\n");
         str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
       else // general case
-        assert s`SolvableDBCurveList[level+1] eq curve;
+        // assert s`SolvableDBCurveList[level+1] eq curve;
         Ptop := s`SolvableDBCurvePolynomialRingList[level+1];
         top_rank := Rank(Ptop);
         vartext := VarText("x", 0, top_rank-1);
