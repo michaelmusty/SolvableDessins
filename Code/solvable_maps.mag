@@ -845,8 +845,8 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           P := Generic(I);
           num_vars := Rank(P);
           Ceval := C;
-          C := eval Sprintf("C<%o> := Ceval; return C;", VarText("z", 0, num_vars-1));
-          KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 0, num_vars-2));
+          C := eval Sprintf("C<%o> := Ceval; return C;", VarText("x", 1, num_vars));
+          KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 1, num_vars-1));
           K := BaseField(C);
           if ISA(Type(K), FldNum) then
             K<nu> := BaseField(C);
