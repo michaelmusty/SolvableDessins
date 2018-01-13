@@ -778,6 +778,11 @@ end intrinsic;
 // assign names here or somewhere else?
 intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
   {Given a curve Y, and f in KY the function field of Y, return a new curve X with function field KX where KX = KY(mthroot(f)).}
+  // assertions
+    assert IsProjective(Y);
+    KY := FunctionField(Y);
+    assert Parent(f) eq KY;
+  //
 end intrinsic;
 
 // 2018/01/11 updated version of SolvableBelyiMap that makes better choices
@@ -978,7 +983,8 @@ intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := fa
     t1 := Cputime();
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
     vprintf Solvable : "Making new Belyi map...";
-    // TODO KX.1 with variables named? maybe names come from X?
+    KX := FunctionField(X);
+    phi := KX.1;
     vprintf Solvable : "done.\n";
   // assertions
     vprintf Solvable : "Checking genus of curve...";
