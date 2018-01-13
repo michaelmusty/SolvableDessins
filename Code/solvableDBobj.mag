@@ -97,7 +97,7 @@ intrinsic Print(s::SolvableDBObject)
       printf "BelyiMap not computed yet :(\n";
     end if;
   end if;
-  if assigned s`SolvableDBBelyiCurve and not SolvableIsRamifiedAtEveryLevel(s) then
+  if assigned s`SolvableDBBelyiCurve and SolvableIsRamifiedAtEveryLevel(s) then
     printf "BelyiCurve:\n";
     printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
     printf "BaseField:\n";

@@ -776,25 +776,17 @@ end intrinsic;
 
 // 2018/01/11 updated version of SolvableBelyiMap that makes better choices
 intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := false, child_index := 1, manual_divisor := 0, compute_primary_decomposition := false, primary_index := 0) -> SolvableDBObject
-  {computes BelyiMap for s and returns s. Optional to input a divisor for RiemannRoch. Optional to compute primary decomposition (instead of saturation) and the index to choose which Ps to take in the primary decomposition.}
+  {}
   // if s is unramified then stop and return s
-    isunram, unramchild := SolvableIsUnramified(s);
+    isunram := not SolvableIsRamifiedAtEveryLevel(s);
     if isunram then
-      vprintf Solvable: "%o is unramified over %o\n", s`SolvableDBName, unramchild;
+      vprintf Solvable: "%o is unramified at some level.\n", s`SolvableDBName;
       return s;
     end if;
   // assertions about child of s
     vprintf Solvable: "So you want to compute a SolvableBelyiMap? Checking basic assertions.\n";
     time_start := Cputime();
-    assert assigned s`SolvableDBChildren;
-    // assert #s`SolvableDBChildren ge 1;
-    assert #s`SolvableDBChildren eq 1;
-    assert child_index le #s`SolvableDBChildren;
-    t := SolvableDBAccessEntry(s`SolvableDBChildren[child_index] cat ".m");
-    if SolvableIsUnramified(t) then
-      vprintf Solvable: "%o is unramified child of %o\n", t`SolvableDBName, s`SolvableDBName;
-      return s;
-    end if;
+    t := Child(s);
     assert SolvableMapSanityCheck(t);
     time_end := Cputime();
     vprintf Solvable: "Done. That took %o seconds.\n", time_end-time_start;
@@ -877,7 +869,7 @@ intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := fa
     vprintf Solvable: "F0 = %o\n", F0;
     vprintf Solvable: "F1 = %o\n", F1;
     vprintf Solvable: "Foo = %o\n", Foo;
-  // first try manual entry divisor if available
+  // make divisor D (first try manual entry divisor if available)
     if not ISA(Type(manual_divisor), RngIntElt) then
       /*
         vprintf Solvable: "Using manual divisor first:\n";
