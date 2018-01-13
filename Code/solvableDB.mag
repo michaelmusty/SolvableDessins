@@ -697,7 +697,7 @@ intrinsic SolvableDBStatus(d::RngIntElt) -> SeqEnum[SolvableDBObject], SeqEnum[S
       assert #child eq 1;
       child := SolvableDBAccessEntry(child[1] cat ".m");
       if not SolvableIsRamifiedAtEveryLevel(s) then
-        vprintf Solvable : "unramified.\n";
+        vprintf Solvable : "unramified somewhere.\n";
         Append(~unram, s);
       else
         vprintf Solvable : "ramified at every level.\n";
