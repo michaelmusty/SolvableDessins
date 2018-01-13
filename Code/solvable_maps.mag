@@ -44,6 +44,34 @@ intrinsic SolvableIsUnramified(s::SolvableDBObject) -> BoolElt, MonStgElt
   end if;
 end intrinsic;
 
+intrinsic SolvableIsRamifiedAtEveryLevel(s::SolvableDBObject) -> BoolElt
+  {true if s is ramified (at at least one point) at every intermediate level.}
+  if s`SolvableDBDegree eq 2 then
+    return true;
+  else
+    path := s`SolvableDBPathToPP1; // PP1, degree 2, degree 4, etc
+    path_filenames := [];
+    for i := #path to 2 by -1 do
+      Append(~path_filenames, path[i] cat ".m");
+    end for;
+    unramified_bool := false;
+    for i := 1 to #path_filenames-1 do
+      top := SolvableDBAccessEntry(path_filenames[i]);
+      bottom := SolvableDBAccessEntry(path_filenames[i+1]);
+      topABC := top`SolvableDBABC;
+      bottomABC := bottom`SolvableDBABC;
+      if topABC eq bottomABC then
+        unramified_bool := true;
+      end if;
+    end for;
+    if unramified_bool then
+      return false;
+    else
+      return true;
+    end if;
+  end if;
+end intrinsic;
+
 intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   {Extend base field of object to K.}
   assert SolvableMapSanityCheck(s);
