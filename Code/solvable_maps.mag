@@ -782,11 +782,27 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     assert IsProjective(Y);
     KY := FunctionField(Y);
     assert Parent(f) eq KY;
-  //
+  // ambient, ideal, polynomial ring of Y
+    IY := Ideal(Y);
+    PY := Generic(I);
+    PPY := Ambient(Y);
+  // dimensions, ranks, etc
+    num_vars_Y := Rank(PY);
+    num_vars_PY := num_vars_Y;
+    num_vars_KY := num_vars_Y - 1;
+    num_vars_PPY := num_vars_Y; // dimension of projective ambient + 1
+  // polynomial ring and ideal upstairs
+    IX, mp := VariableExtension(IY, 1, false); // mp: PY -> PX
+    PX := Codomain(mp);
+    assert PX eq Generic(IX);
+    // TODO eval to name the variables of PX
+  // map numerator and denominator of f into PX
+    numer := mp(Numerator(f, Y));
+    denom := mp(Denominator(f, Y));
 end intrinsic;
 
 // 2018/01/11 updated version of SolvableBelyiMap that makes better choices
-intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := false, manual_divisor := 0, compute_primary_decomposition := false, primary_index := 0) -> SolvableDBObject
+intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := false, manual_divisor := 0) -> SolvableDBObject
   {}
   // if s is unramified then stop and return s
     isunram := not SolvableIsRamifiedAtEveryLevel(s);
@@ -967,9 +983,8 @@ intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := fa
     LD, mpLDtoKX := RiemannRochSpace(D);
     assert Dimension(LD) eq 1;
     f := mpLDtoKX(LD.1);
-    denom := Denominator(f);
-    numer := Numerator(f);
-    AffAlg := Parent(numer);
+    denom := Denominator(f, X_below);
+    numer := Numerator(f, X_below);
     assert Parent(denom) eq Parent(numer);
     vprintf Solvable: "Parent(f) =\n%o\n", Parent(f);
     vprintf Solvable: "f = \n%o\n", f;
