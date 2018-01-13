@@ -90,14 +90,14 @@ intrinsic Print(s::SolvableDBObject)
     end if;
     */
   else
-    unram, child := SolvableIsUnramified(s);
+    unram := not SolvableIsRamifiedAtEveryLevel(s);
     if unram then
-      printf "Cover is unramified over child:\n  %o\n", child;
+      printf "Cover is unramified at some level.\n";
     else
       printf "BelyiMap not computed yet :(\n";
     end if;
   end if;
-  if assigned s`SolvableDBBelyiCurve and not SolvableIsUnramified(s) then
+  if assigned s`SolvableDBBelyiCurve and not SolvableIsRamifiedAtEveryLevel(s) then
     printf "BelyiCurve:\n";
     printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
     printf "BaseField:\n";
