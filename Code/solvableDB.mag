@@ -644,7 +644,6 @@ intrinsic SolvableDBSanityCheck(s::SolvableDBObject) -> MonStgElt
   {}
 end intrinsic;
 
-// TODO add more sanity!
 intrinsic SolvableDBStatusReport(d::RngIntElt) -> SeqEnum[SolvableDBObject], SeqEnum[SolvableDBObject]
   {}
   good := [];
@@ -669,6 +668,39 @@ intrinsic SolvableDBStatusReport(d::RngIntElt) -> SeqEnum[SolvableDBObject], Seq
         Append(~unram, s);
       else
         vprintf Solvable : "bad.\n";
+        Append(~bad, s);
+      end if;
+    end if;
+  end for;
+  vprintf Solvable : "d = %o:\n", d;
+  vprintf Solvable : "  %o/%o computed\n", #good, #f;
+  vprintf Solvable : "  %o/%o not computed\n", #bad, #f;
+  vprintf Solvable : "  %o/%o unramified\n", #unram, #f;
+  return good, bad, unram;
+end intrinsic;
+
+// update 2018/01/12
+intrinsic SolvableDBStatus(d::RngIntElt) -> SeqEnum[SolvableDBObject], SeqEnum[SolvableDBObject]
+  {}
+  good := [];
+  bad := [];
+  unram := [];
+  f := SolvableDBFilenames(d);
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
+    if assigned s`SolvableDBBelyiCurve then
+      vprintf Solvable : "good.\n";
+      Append(~good, s);
+    else
+      child := s`SolvableDBChildren;
+      assert #child eq 1;
+      child := SolvableDBAccessEntry(child[1] cat ".m");
+      if not SolvableIsRamifiedAtEveryLevel(s) then
+        vprintf Solvable : "unramified.\n";
+        Append(~unram, s);
+      else
+        vprintf Solvable : "ramified at every level.\n";
         Append(~bad, s);
       end if;
     end if;
