@@ -786,19 +786,20 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     IY := Ideal(Y);
     PY := Generic(I);
     PPY := Ambient(Y);
-  // dimensions, ranks, etc
-    num_vars_Y := Rank(PY);
-    num_vars_PY := num_vars_Y;
-    num_vars_KY := num_vars_Y - 1;
-    num_vars_PPY := num_vars_Y; // dimension of projective ambient + 1
   // polynomial ring and ideal upstairs
-    IX, mp := VariableExtension(IY, 1, false); // mp: PY -> PX
+    IYext, mp := VariableExtension(IY, 1, false); // mp: PY -> PX
     PX := Codomain(mp);
-    assert PX eq Generic(IX);
-    // TODO eval to name the variables of PX
+    assert PX eq Generic(IYext);
+    AssignNames(~PX, VarSeq("x", 1, Rank(PX)));
   // map numerator and denominator of f into PX
     numer := mp(Numerator(f, Y));
     denom := mp(Denominator(f, Y));
+  // basis of new ideal
+    basis := Basis(IYext);
+    new_equation := denom*PX.Rank(PX)-numer;
+    Append(~basis, new_equation);
+  // new ambient
+    PPX := ProjectiveSpace(PX);
 end intrinsic;
 
 // 2018/01/11 updated version of SolvableBelyiMap that makes better choices
