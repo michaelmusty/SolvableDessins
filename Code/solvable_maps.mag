@@ -798,6 +798,7 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     basis := Basis(IYext);
     new_equation := denom*PX.Rank(PX)-numer;
     Append(~basis, new_equation);
+    IX := ideal< PX | basis >;
   // new ambient
     PPX := ProjectiveSpace(PX);
   // make curve
