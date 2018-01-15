@@ -1143,15 +1143,12 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           g := Pushforward(fix, f);
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          C := AffinePatch(C, 1); // TODO not pick blindly?
           I := Ideal(C);
           P := Generic(I);
           num_vars := Rank(P);
           Ceval := C;
-          print C;
           C := eval Sprintf("C<%o> := Ceval; return C;", VarText("x", 1, num_vars));
-          print C;
-          C := AffinePatch(C, 1); // TODO not pick blindly?
-          print C;
           KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 1, num_vars-1));
           assert Parent(g) eq KC;
           K := BaseField(C);
