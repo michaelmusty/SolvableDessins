@@ -779,13 +779,13 @@ end intrinsic;
 intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
   {Given a curve Y, and f in KY the function field of Y, return a new curve X with function field KX where KX = KY(mthroot(f)).}
   // assertions
-    assert IsProjective(Y);
+    assert IsAffine(Y);
     KY := FunctionField(Y);
     assert Parent(f) eq KY;
   // ambient, ideal, polynomial ring of Y
     IY := Ideal(Y);
     PY := Generic(IY);
-    PPY := Ambient(Y);
+    AAY := Ambient(Y);
   // polynomial ring and ideal upstairs
     IYext, mp := VariableExtension(IY, 1, false); // mp: PY -> PX
     PX := Codomain(mp);
@@ -800,9 +800,9 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     Append(~basis, new_equation);
     IX := ideal< PX | basis >;
   // new ambient
-    PPX := ProjectiveSpace(PX);
+    AAX := AffineSpace(PX);
   // make curve
-    X := Curve(PPX, IX);
+    X := Curve(AAX, IX);
     return X;
 end intrinsic;
 

@@ -293,7 +293,6 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
     if assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
       curve := s`SolvableDBBelyiCurve;
       map := s`SolvableDBBelyiMap;
-      assert IsProjective(curve);
       assert Parent(map) eq FunctionField(curve);
       assert ISA(Type(curve), Crv);
       assert ISA(Type(map), FldFunFracSchElt);
@@ -314,6 +313,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         str *:= Sprintf("KX<x1, x2> := FunctionField(X);\n");
         str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
       else // general case
+        assert IsAffine(curve);
         K := BaseField(curve);
         num_vars := Rank(Generic(Ideal(curve)));
         X_vars := VarText("x", 1, num_vars);
@@ -331,13 +331,13 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         str *:= Sprintf("PX<%o> := PolynomialRing(K, %o);\n", PX_vars, num_vars);
         // write ambient in file
         PP_vars := VarText("x", 1, num_vars);
-        str *:= Sprintf("PP<%o> := ProjectiveSpace(PX);\n", PP_vars);
+        str *:= Sprintf("AA<%o> := AffineSpace(PX);\n", AA_vars);
         // write ideal in file
         I_vars := VarText("x", 1, num_vars);
         str *:= Sprintf("I<%o> := ideal< PX | %o >;\n", I_vars, Basis(I));
         // write curve in file
         X_vars := VarText("x", 1, num_vars);
-        str *:= Sprintf("X<%o> := Curve(PP, I);\n", X_vars);
+        str *:= Sprintf("X<%o> := Curve(AA, I);\n", X_vars);
         // write function field in file
         KX_vars := VarText("x", 1, num_vars-1);
         str *:= Sprintf("KX<%o> := FunctionField(X);\n", KX_vars);
