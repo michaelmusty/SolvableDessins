@@ -799,10 +799,11 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     new_equation := denom*PX.Rank(PX)^2-numer;
     Append(~basis, new_equation);
     IX := ideal< PX | basis >;
+    S := Saturation(IX, numer); // saturate at numerator
   // new ambient
     AAX := AffineSpace(PX);
-  // make curve
-    X := Curve(AAX, IX);
+  // make curve by saturating at numerator
+    X := Curve(AAX, S);
     return X;
 end intrinsic;
 
