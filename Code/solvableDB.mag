@@ -316,34 +316,27 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         assert IsAffine(curve);
         K := BaseField(curve);
         num_vars := Rank(Generic(Ideal(curve)));
-        X_vars := VarText("x", 1, num_vars);
-        // X := eval Sprintf("X<%o> := curve; return X;", X_vars); // sets variable names x1,x2,x3,...
+        vars := VarSeq("x", 1, num_vars);
         X := curve;
         KX := FunctionField(X);
-        AssignNames(~X, X_vars);
-        AssignNames(~KX, X_vars);
+        AssignNames(~X, vars);
+        AssignNames(~KX, vars);
         assert Parent(map) eq KX;
-        // maybe print names of variables?
-        // TODO order of variables seem to be getting messed up...
         I := Ideal(X);
         P := Generic(I);
         // write base field in file
         str *:= SolvableDBFieldWriter(K); // base field in file is called K or K<nu>
         // write polynomial ring in file
-        PX_vars := VarText("x", 1, num_vars);
-        str *:= Sprintf("PX<%o> := PolynomialRing(K, %o);\n", PX_vars, num_vars);
+        var_text := VarText("x", 1, num_vars);
+        str *:= Sprintf("PX<%o> := PolynomialRing(K, %o);\n", var_text, num_vars);
         // write ambient in file
-        AA_vars := VarText("x", 1, num_vars);
-        str *:= Sprintf("AA<%o> := AffineSpace(PX);\n", AA_vars);
+        str *:= Sprintf("AA<%o> := AffineSpace(PX);\n", var_text);
         // write ideal in file
-        I_vars := VarText("x", 1, num_vars);
-        str *:= Sprintf("I<%o> := ideal< PX | %o >;\n", I_vars, Basis(I));
+        str *:= Sprintf("I<%o> := ideal< PX | %o >;\n", var_text, Basis(I));
         // write curve in file
-        X_vars := VarText("x", 1, num_vars);
-        str *:= Sprintf("X<%o> := Curve(AA, I);\n", X_vars);
+        str *:= Sprintf("X<%o> := Curve(AA, I);\n", var_text);
         // write function field in file
-        KX_vars := VarText("x", 1, num_vars);
-        str *:= Sprintf("KX<%o> := FunctionField(X);\n", KX_vars);
+        str *:= Sprintf("KX<%o> := FunctionField(X);\n", var_text);
         // assign curve and map to object in file
         str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
         str *:= Sprintf("s`SolvableDBBelyiMap := KX!(%o);\n", map);
