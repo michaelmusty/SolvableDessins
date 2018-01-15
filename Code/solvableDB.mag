@@ -330,7 +330,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         PX_vars := VarText("x", 1, num_vars);
         str *:= Sprintf("PX<%o> := PolynomialRing(K, %o);\n", PX_vars, num_vars);
         // write ambient in file
-        PP_vars := VarText("x", 1, num_vars);
+        AA_vars := VarText("x", 1, num_vars);
         str *:= Sprintf("AA<%o> := AffineSpace(PX);\n", AA_vars);
         // write ideal in file
         I_vars := VarText("x", 1, num_vars);
