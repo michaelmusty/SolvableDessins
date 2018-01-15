@@ -339,7 +339,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
         X_vars := VarText("x", 1, num_vars);
         str *:= Sprintf("X<%o> := Curve(AA, I);\n", X_vars);
         // write function field in file
-        KX_vars := VarText("x", 1, num_vars-1);
+        KX_vars := VarText("x", 1, num_vars);
         str *:= Sprintf("KX<%o> := FunctionField(X);\n", KX_vars);
         // assign curve and map to object in file
         str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
