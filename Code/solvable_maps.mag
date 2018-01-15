@@ -1149,6 +1149,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           Ceval := C;
           print C;
           C := eval Sprintf("C<%o> := Ceval; return C;", VarText("x", 1, num_vars));
+          print C;
           C := AffinePatch(C, 1); // TODO not pick blindly?
           KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 1, num_vars-1));
           assert Parent(g) eq KC;
