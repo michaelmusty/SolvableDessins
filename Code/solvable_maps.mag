@@ -1080,8 +1080,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
       vprintf Solvable : "  Belyi curve and map assigned.\n";
       X := before`SolvableDBBelyiCurve;
       assert IsAffine(X);
+      X_proj := ProjectiveClosure(X);
       f := before`SolvableDBBelyiMap;
-      degree_start := Degree(X);
+      degree_start := Degree(X_proj);
       vprintf Solvable : "  Degree of Belyi curve = %o.\n", degree_start;
       vprintf Solvable : "  Checking Canonical map...";
       t0 := Cputime();
@@ -1138,7 +1139,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           Ctext := IsoText("C", 1, dim);
           id := eval Sprintf("id := iso< Sc -> C | [%o], [%o] >; return id;", Sctext, Ctext);
           */
-          fix := map< ProjectiveClosure(X) -> C | DefiningEquations(mp) >;
+          fix := map< X_proj -> C | DefiningEquations(mp) >;
           g := Pushforward(fix, f);
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
