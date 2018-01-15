@@ -1132,14 +1132,13 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           C, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
           assert IsProjective(Ambient(C));
           assert Curve(C) eq C;
-          C := AffinePatch(C, 1); // TODO not pick blindly?
           /*
           dim := Dimension(Ambient(C))+1; // projective
           Sctext := IsoText("Sc", 1, dim);
           Ctext := IsoText("C", 1, dim);
           id := eval Sprintf("id := iso< Sc -> C | [%o], [%o] >; return id;", Sctext, Ctext);
           */
-          fix := map< X -> C | DefiningEquations(mp) >;
+          fix := map< ProjectiveClosure(X) -> C | DefiningEquations(mp) >;
           g := Pushforward(fix, f);
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
@@ -1148,7 +1147,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           num_vars := Rank(P);
           Ceval := C;
           C := eval Sprintf("C<%o> := Ceval; return C;", VarText("x", 1, num_vars));
+          C := AffinePatch(C, 1); // TODO not pick blindly?
           KC := eval Sprintf("KC<%o> := FunctionField(C); return KC;", VarText("x", 1, num_vars-1));
+          assert Parent(g) eq KC;
           K := BaseField(C);
           if ISA(Type(K), FldNum) then
             K<nu> := BaseField(C);
