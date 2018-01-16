@@ -389,7 +389,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
       Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]); // divisor without basechange
       vprintf Solvable : "Initial ramification divisor computed. Do we need to base change?\n";
       vprintf Solvable : "First try initial ramification divisor.\n";
-      vprintf Solvable : "#supp(Divisor) = %o\n", #Support(D);
+      vprintf Solvable : "#supp(Divisor) = %o\n", #Support(Dinitial);
       vprintf Solvable : "Trying all combinations...";
       t0 := Cputime();
       // worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
