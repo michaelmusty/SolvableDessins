@@ -78,16 +78,16 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   {Extend base field of object to K.}
   // curve
   X := s`SolvableDBBelyiCurve;
-  s`SolvableDBBelyiCurve := BaseChange(X, K);
+  X := BaseChange(X, K);
+  vars := VarSeq("x", 1, Rank(Generic(Ideal(X))));
+  AssigneNames(~X, vars);
+  s`SolvableDBBelyiCurve := X;
   // map
   map := s`SolvableDBBelyiMap;
   KX := FunctionField(X);
-  X := BaseChange(X, K);
-  KX := FunctionField(X);
-  vars := VarSeq("x", 1, Rank(Generic(Ideal(X))));
-  print vars;
   AssignNames(~KX, vars);
   phi := eval Sprintf("phi := KX!(%o); return phi;", map);
+  s`SolvableDBBelyiMap := phi;
   // sanity and return
   assert SolvableMapSanityCheck(s);
   return s;
