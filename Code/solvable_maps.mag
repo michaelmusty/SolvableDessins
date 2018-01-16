@@ -435,8 +435,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false) -> S
     return s;
 end intrinsic;
 
-// 2018/01/11 updated version of SolvableBelyiMaps that makes better choices
-intrinsic SolvableBelyiMapsOptimized(d::RngIntElt) -> Any
+intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
   {Multiple calls to SolvableBelyiMapOptimized (singular) and returns the errors.}
   f := SolvableDBFilenames(d);
   errors := [];
@@ -446,7 +445,7 @@ intrinsic SolvableBelyiMapsOptimized(d::RngIntElt) -> Any
       time_start := Cputime();
       if (not SolvableIsUnramified(s)) and (not (assigned s`SolvableDBBelyiCurve)) then
         assert not assigned s`SolvableDBBelyiMap;
-        s := SolvableBelyiMapOptimized(s);
+        s := SolvableBelyiMap(s);
         vprintf Solvable : "%o sanity check...", s`SolvableDBName;
         if SolvableMapSanityCheck(s) then
           vprintf Solvable : "done.\n";
