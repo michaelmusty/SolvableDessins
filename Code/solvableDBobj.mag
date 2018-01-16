@@ -43,6 +43,8 @@ declare attributes SolvableDBObject:
   SolvableDBDivisor0,
   SolvableDBDivisor1,
   SolvableDBDivisoroo,
+  SolvableDBDimensionOneLspacesBeforeBaseChange,
+  SolvableDBDimensionOneLspacesAfterBaseChange,
   SolvableDBRamification; // [ram0, ram1, ramoo]
 
 intrinsic Print(s::SolvableDBObject)
