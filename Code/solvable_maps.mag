@@ -85,6 +85,7 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   // map
   map := s`SolvableDBBelyiMap;
   KX := FunctionField(X);
+  AssignNames(~KX, vars);
   phi := KX!map;
   s`SolvableDBBelyiMap := phi;
   // sanity and return
