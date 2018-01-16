@@ -260,7 +260,9 @@ end intrinsic;
 
 intrinsic SolvableAssignResidueFields(s::SolvableDBObject) -> SolvableDBObject
   {assigns F0, F1, Foo to s.}
+  assert assigned s`SolvableDBRamification;
   t := Child(s);
+  ram0, ram1, ramoo := Explode(s`SolvableDBRamification);
   X_below := t`SolvableDBBelyiCurve;
   phi_below := t`SolvableDBBelyiMap;
   DivX_below := DivisorGroup(X_below);
