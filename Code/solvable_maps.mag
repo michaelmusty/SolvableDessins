@@ -82,9 +82,10 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   // map
   map := s`SolvableDBBelyiMap;
   KX := FunctionField(X);
-  assert map eq KX.1;
   X := BaseChange(X, K);
   KX := FunctionField(X);
+  vars := VarSeq("x", 1, Rank(Generic(Ideal(X))));
+  AssignNames(~KX, vars);
   phi := eval Sprintf("phi := KX!(%o); return phi;", map);
   // sanity and return
   assert SolvableMapSanityCheck(s);
