@@ -37,6 +37,9 @@ declare attributes SolvableDBObject:
   SolvableDBParents,
   SolvableDBChildren,
   // temporary attributes (not saved to database)
+  SolvableDBResidueField0,
+  SolvableDBResidueField1,
+  SolvableDBResidueFieldoo,
   SolvableDBRamification; // [ram0, ram1, ramoo]
 
 intrinsic Print(s::SolvableDBObject)

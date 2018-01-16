@@ -227,7 +227,7 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     return X;
 end intrinsic;
 
-intrinsic SolvableRamification(s::SolvableDBObject) -> SolvableDBObject
+intrinsic SolvableAssignRamification(s::SolvableDBObject) -> SolvableDBObject
   {assigns [ram0, ram1, ramoo] to s.}
   t := Child(s);
   abc_below := t`SolvableDBABC;
@@ -258,6 +258,65 @@ intrinsic SolvableRamification(s::SolvableDBObject) -> SolvableDBObject
   return s;
 end intrinsic;
 
+intrinsic SolvableAssignResidueFields(s::SolvableDBObject) -> SolvableDBObject
+  {assigns F0, F1, Foo to s.}
+  t := Child(s);
+  X_below := t`SolvableDBBelyiCurve;
+  phi_below := t`SolvableDBBelyiMap;
+  DivX_below := DivisorGroup(X_below);
+  // ram0
+    if ram0 then
+      D0 := Numerator(Divisor(phi_below));
+      _, F0 := SolvableCheckResidueFields(D0);
+      vprintf Solvable: "D0 divisor:\n";
+      supp0, mult0 := Support(D0);
+      vprintf Solvable: "%o\n%o\n", supp0, mult0;
+      vprintf Solvable: "D0 degree of residue fields: %o\n", Degree(F0);
+      vprintf Solvable: "#supp(D0) before base change = %o.\n", #Support(D0);
+    else
+      vprintf Solvable: "D0 nothing to do.\n";
+      D0 := DivX_below!0;
+      F0 := Rationals();
+    end if;
+  // ram1
+    if ram1 then
+      D1 := Numerator(Divisor(phi_below-1));
+      _, F1 := SolvableCheckResidueFields(D1);
+      vprintf Solvable: "D1 divisor:\n";
+      supp1, mult1 := Support(D1);
+      vprintf Solvable: "%o\n%o\n", supp1, mult1;
+      vprintf Solvable: "D1 degree of residue fields: %o\n", Degree(F1);
+      vprintf Solvable: "#supp(D1) before base change = %o.\n", #Support(D1);
+    else
+      vprintf Solvable: "D1 nothing to do.\n";
+      D1 := DivX_below!0;
+      F1 := Rationals();
+    end if;
+  // ramoo
+    if ramoo then
+      Doo := Denominator(Divisor(phi_below));
+      _, Foo := SolvableCheckResidueFields(Doo);
+      vprintf Solvable: "Doo divisor:\n";
+      suppoo, multoo := Support(Doo);
+      vprintf Solvable: "%o\n%o\n", suppoo, multoo;
+      vprintf Solvable: "Doo degree of residue fields: %o\n", Degree(Foo);
+      vprintf Solvable: "#supp(Doo) before base change = %o.\n", #Support(Doo);
+    else
+      vprintf Solvable: "Doo nothing to do.\n";
+      Doo := DivX_below!0;
+      Foo := Rationals();
+    end if;
+  // assign and return
+    vprintf Solvable: "ResidueFields:\n";
+    vprintf Solvable: "F0 = %o\n", F0;
+    vprintf Solvable: "F1 = %o\n", F1;
+    vprintf Solvable: "Foo = %o\n", Foo;
+    s`SolvableDBResidueField0 := F0;
+    s`SolvableDBResidueField1 := F1;
+    s`SolvableDBResidueFieldoo := Foo;
+    return s;
+end intrinsic;
+
 intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false) -> SolvableDBObject
   {}
   // if s is unramified then stop and return s
@@ -277,63 +336,20 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false) -> S
     vprintf Solvable: "Determining ramification:\n";
     abc_below := t`SolvableDBABC;
     abc := s`SolvableDBABC;
-    s := SolvableRamification(s);
+    s := SolvableAssignRamification(s);
     ram0, ram1, ramoo := Explode(s`SolvableDBRamification);
     vprintf Solvable: "ABC before = %o.\n", abc_below;
     vprintf Solvable: "ramification = %o.\n", [ram0, ram1, ramoo];
     vprintf Solvable: "ABC after = %o.\n", abc;
-  // check if we need to extend base field using BelyiMap below
+  // assign residue fields
+    vprintf Solvable : "Assign residue fields to s...";
+    t0 := Cputime();
+    s := SolvableAssignResidueFields(s);
+    t1 := Cputime();
+    vprintf Solvable : "done. %o seconds.\n", t1-t0;
+  // check if base change is needed
     vprintf Solvable: "Checking if we need to extend base field:\n";
-    X_below := t`SolvableDBBelyiCurve;
-    phi_below := t`SolvableDBBelyiMap;
-    DivX_below := DivisorGroup(X_below);
-    // ram0
-    if ram0 then
-      D0 := Numerator(Divisor(phi_below));
-      _, F0 := SolvableCheckResidueFields(D0);
-      vprintf Solvable: "D0 divisor:\n";
-      supp0, mult0 := Support(D0);
-      vprintf Solvable: "%o\n%o\n", supp0, mult0;
-      vprintf Solvable: "D0 degree of residue fields: %o\n", Degree(F0);
-      vprintf Solvable: "#supp(D0) before base change = %o.\n", #Support(D0);
-    else
-      vprintf Solvable: "D0 nothing to do.\n";
-      D0 := DivX_below!0;
-      F0 := Rationals();
-    end if;
-    // ram1
-    if ram1 then
-      D1 := Numerator(Divisor(phi_below-1));
-      _, F1 := SolvableCheckResidueFields(D1);
-      vprintf Solvable: "D1 divisor:\n";
-      supp1, mult1 := Support(D1);
-      vprintf Solvable: "%o\n%o\n", supp1, mult1;
-      vprintf Solvable: "D1 degree of residue fields: %o\n", Degree(F1);
-      vprintf Solvable: "#supp(D1) before base change = %o.\n", #Support(D1);
-    else
-      vprintf Solvable: "D1 nothing to do.\n";
-      D1 := DivX_below!0;
-      F1 := Rationals();
-    end if;
-    // ramoo
-    if ramoo then
-      Doo := Denominator(Divisor(phi_below));
-      _, Foo := SolvableCheckResidueFields(Doo);
-      vprintf Solvable: "Doo divisor:\n";
-      suppoo, multoo := Support(Doo);
-      vprintf Solvable: "%o\n%o\n", suppoo, multoo;
-      vprintf Solvable: "Doo degree of residue fields: %o\n", Degree(Foo);
-      vprintf Solvable: "#supp(Doo) before base change = %o.\n", #Support(Doo);
-    else
-      vprintf Solvable: "Doo nothing to do.\n";
-      Doo := DivX_below!0;
-      Foo := Rationals();
-    end if;
-    vprintf Solvable: "ResidueFields:\n";
-    vprintf Solvable: "F0 = %o\n", F0;
-    vprintf Solvable: "F1 = %o\n", F1;
-    vprintf Solvable: "Foo = %o\n", Foo;
-  // make divisor D (first try manual entry divisor if available)
+
     // make ramification divisor before BaseChange
       vprintf Solvable: "Try to find Ramification Divisor Before BaseChange:\n";
       time_start := Cputime();
