@@ -35,7 +35,9 @@ declare attributes SolvableDBObject:
   // graph attributes
   SolvableDBPathToPP1,
   SolvableDBParents,
-  SolvableDBChildren;
+  SolvableDBChildren,
+  // temporary attributes (not saved to database)
+  SolvableDBRamification; // [ram0, ram1, ramoo]
 
 intrinsic Print(s::SolvableDBObject)
   {Print SolvableDBObject}

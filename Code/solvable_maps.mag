@@ -22,6 +22,8 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
   end if;
 end intrinsic;
 
+// TODO local sanity check
+
 intrinsic SolvableIsUnramified(s::SolvableDBObject) -> BoolElt, MonStgElt
   {checks if s is unramified over any of its children and returns a bool and the child.}
   // fixed error when reading in PP1 if s has degree 2
@@ -193,401 +195,6 @@ intrinsic SolvableRamificationToDivisor(ram::SeqEnum[BoolElt], Ds::List) -> DivC
   end if;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false, child_index := 1, manual_divisor := 0, compute_primary_decomposition := false, primary_index := 0) -> SolvableDBObject
-  {computes BelyiMap for s and returns s. Optional to input a divisor for RiemannRoch. Optional to compute primary decomposition (instead of saturation) and the index to choose which Ps to take in the primary decomposition.}
-  // if s is unramified then stop and return s
-    isunram, unramchild := SolvableIsUnramified(s);
-    if isunram then
-      vprintf Solvable: "%o is unramified over %o\n", s`SolvableDBName, unramchild;
-      return s;
-    end if;
-  // assertions about child of s
-    vprintf Solvable: "So you want to compute a SolvableBelyiMap? Checking basic assertions.\n";
-    time_start := Cputime();
-    assert assigned s`SolvableDBChildren;
-    // assert #s`SolvableDBChildren ge 1;
-    assert #s`SolvableDBChildren eq 1;
-    assert child_index le #s`SolvableDBChildren;
-    t := SolvableDBAccessEntry(s`SolvableDBChildren[child_index] cat ".m");
-    if SolvableIsUnramified(t) then
-      vprintf Solvable: "%o is unramified child of %o\n", t`SolvableDBName, s`SolvableDBName;
-      return s;
-    end if;
-    assert SolvableMapSanityCheck(t);
-    time_end := Cputime();
-    vprintf Solvable: "Done. That took %o seconds.\n", time_end-time_start;
-  // [ram0, ram1, ramoo] a sequence of bools
-    vprintf Solvable: "Determining ramification:\n";
-    abc_below := t`SolvableDBABC;
-    abc := s`SolvableDBABC;
-    vprintf Solvable: "ABC before = %o.\n", abc_below;
-    // ramification above 0
-      if abc_below[1] eq abc[1] then
-        ram0 := false;
-      else
-        assert abc[1] eq 2*abc_below[1];
-        ram0 := true;
-      end if;
-    // ramification above 1
-      if abc_below[2] eq abc[2] then
-        ram1 := false;
-      else
-        assert abc[2] eq 2*abc_below[2];
-        ram1 := true;
-      end if;
-    // ramification above oo
-      if abc_below[3] eq abc[3] then
-        ramoo := false;
-      else
-        assert abc[3] eq 2*abc_below[3];
-        ramoo := true;
-      end if;
-    vprintf Solvable: "ramification = %o.\n", [ram0, ram1, ramoo];
-    vprintf Solvable: "ABC after = %o.\n", abc;
-  // check if we need to extend base field using BelyiMap below
-    vprintf Solvable: "Checking if we need to extend base field:\n";
-    X_below := t`SolvableDBBelyiCurve;
-    phi_below := t`SolvableDBBelyiMap;
-    DivX_below := DivisorGroup(X_below);
-    // ram0
-    if ram0 then
-      D0 := Numerator(Divisor(phi_below));
-      _, F0 := SolvableCheckResidueFields(D0);
-      vprintf Solvable: "D0 divisor:\n";
-      supp0, mult0 := Support(D0);
-      vprintf Solvable: "%o\n%o\n", supp0, mult0;
-      vprintf Solvable: "D0 degree of residue fields: %o\n", Degree(F0);
-      vprintf Solvable: "#supp(D0) before base change = %o.\n", #Support(D0);
-    else
-      vprintf Solvable: "D0 nothing to do.\n";
-      D0 := DivX_below!0;
-      F0 := Rationals();
-    end if;
-    // ram1
-    if ram1 then
-      D1 := Numerator(Divisor(phi_below-1));
-      _, F1 := SolvableCheckResidueFields(D1);
-      vprintf Solvable: "D1 divisor:\n";
-      supp1, mult1 := Support(D1);
-      vprintf Solvable: "%o\n%o\n", supp1, mult1;
-      vprintf Solvable: "D1 degree of residue fields: %o\n", Degree(F1);
-      vprintf Solvable: "#supp(D1) before base change = %o.\n", #Support(D1);
-    else
-      vprintf Solvable: "D1 nothing to do.\n";
-      D1 := DivX_below!0;
-      F1 := Rationals();
-    end if;
-    // ramoo
-    if ramoo then
-      Doo := Denominator(Divisor(phi_below));
-      _, Foo := SolvableCheckResidueFields(Doo);
-      vprintf Solvable: "Doo divisor:\n";
-      suppoo, multoo := Support(Doo);
-      vprintf Solvable: "%o\n%o\n", suppoo, multoo;
-      vprintf Solvable: "Doo degree of residue fields: %o\n", Degree(Foo);
-      vprintf Solvable: "#supp(Doo) before base change = %o.\n", #Support(Doo);
-    else
-      vprintf Solvable: "Doo nothing to do.\n";
-      Doo := DivX_below!0;
-      Foo := Rationals();
-    end if;
-    vprintf Solvable: "ResidueFields:\n";
-    vprintf Solvable: "F0 = %o\n", F0;
-    vprintf Solvable: "F1 = %o\n", F1;
-    vprintf Solvable: "Foo = %o\n", Foo;
-  // first try manual entry divisor if available
-    if not ISA(Type(manual_divisor), RngIntElt) then
-      /*
-        vprintf Solvable: "Using manual divisor first:\n";
-        D := manual_divisor;
-        // TODO assert parent is correct?
-        if Dimension(RiemannRochSpace(D)) eq 1 then
-          vprintf Solvable: "Manual divisor yields 1 dimensional Lspace!\n";
-        else
-          error "Manual divisor does not appear to work.\n";
-        end if;
-      */
-    else
-      // make ramification divisor before BaseChange
-        vprintf Solvable: "Try to find Ramification Divisor Before BaseChange:\n";
-        time_start := Cputime();
-        // worked_before_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-        Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-        if force_basechange then
-          worked_before_basechange := false;
-        else
-          worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
-        end if;
-        time_end := Cputime();
-      // update t with base change if necessary
-      // NOTE this does not update t in the database, just to be used for s later
-        if worked_before_basechange then
-          vprintf Solvable: "OK found Ramification Divisor! That took %o seconds.\n", time_end-time_start;
-          vprintf Solvable: "No need to BaseChange.\n";
-        else
-          vprintf Solvable: "BaseChanging...\n";
-          vprintf Solvable: "Updating curve base field:\n";
-          F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
-          vprintf Solvable: "Degree of current base field = %o\n", Degree(F);
-          newF := Compositum(F, F0);
-          vprintf Solvable: "Degree with F0 = %o.\n", Degree(newF);
-          newF := Compositum(newF, F1);
-          vprintf Solvable: "Degree with F1 = %o.\n", Degree(newF);
-          newF := Compositum(newF, Foo);
-          vprintf Solvable: "Degree with Foo = %o.\n", Degree(newF);
-          t := SolvableBaseChange(t, newF);
-          vprintf Solvable: "OK done. Here is the new field:\n%o\n", newF;
-          assert t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList] eq newF;
-          vprintf Solvable: "Now updating divisors D0, D1, Doo.\n";
-          // update D0, D1, Doo after base change
-          X_below := t`SolvableDBBelyiCurve;
-          phi_below := t`SolvableDBBelyiMap;
-          DivX_below := DivisorGroup(X_below);
-          if ram0 then
-            D0 := Numerator(Divisor(phi_below));
-            vprintf Solvable: "#supp(D0) after base change = %o.\n", #Support(D0);
-          else
-            D0 := DivX_below!0;
-          end if;
-          if ram1 then
-            D1 := Numerator(Divisor(phi_below-1));
-            vprintf Solvable: "#supp(D1) after base change = %o.\n", #Support(D1);
-          else
-            D1 := DivX_below!0;
-          end if;
-          if ramoo then
-            Doo := Denominator(Divisor(phi_below));
-            vprintf Solvable: "#supp(Doo) after base change = %o.\n", #Support(Doo);
-          else
-            Doo := DivX_below!0;
-          end if;
-          // make ramification divisor after BaseChange
-          vprintf Solvable: "Finding Ramification Divisor After BaseChange:\n";
-          time_start := Cputime();
-          // worked_after_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-          Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-          worked_after_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
-          time_end := Cputime();
-          if worked_after_basechange then
-            vprintf Solvable: "OK done! That took %o seconds.\n", time_end-time_start;
-          else
-            error "base change didn't help us find dimension 1 Lspace :(";
-          end if;
-        end if;
-    end if;
-  // RiemannRoch
-    vprintf Solvable: "Applying RiemannRoch to following divisor:\n";
-    supp, mult := Support(D);
-    vprintf Solvable: "%o\n%o\n", supp, mult;
-    LD, mpLDtoKX := RiemannRochSpace(D);
-    assert Dimension(LD) eq 1;
-    f := mpLDtoKX(LD.1);
-    denom := Denominator(f);
-    numer := Numerator(f);
-    AffAlg := Parent(numer);
-    assert Parent(denom) eq Parent(numer);
-    vprintf Solvable: "Parent(f) =\n%o\n", Parent(f);
-    vprintf Solvable: "f = \n%o\n", f;
-    vprintf Solvable: "Numerator(f) = %o.\n", numer;
-    vprintf Solvable: "Denominator(f) = %o.\n", denom;
-  // make the curve (brutal) using primary decomposition or (less brutal) use saturation
-    if compute_primary_decomposition then
-      vprintf Solvable: "Now constructing the curve and map.\n";
-      AffAlg := Parent(denom);
-      F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
-      // l := s`SolvableDBLevel; // not compatible with new model code
-      l := Dimension(Ambient(t`SolvableDBBelyiCurve));
-      // polynomial ring
-      PX_below := t`SolvableDBCurvePolynomialRingList[#t`SolvableDBCurvePolynomialRingList];
-      PX := eval Sprintf("PX<%o> := PolynomialRing(F, %o); return PX;", VarText("x", 0, l), l+1);
-      // map from poly ring downstairs to poly ring upstairs
-      mpPX_belowToPX := eval Sprintf("mpPX_belowToPX := hom< PX_below -> PX | %o >; return mpPX_belowToPX;", HomText("PX", 1, l));
-      // map from parent(f) to poly ring upstairs
-      mpAffAlgToPX := eval Sprintf("mpAffAlgToPX := hom< AffAlg -> PX | %o >; return mpAffAlgToPX;", HomText("PX", 1, l));
-      // ideal downstairs
-      I_below := Ideal(t`SolvableDBBelyiCurve);
-      assert IsPrime(I_below);
-      // I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
-      basis_below := Basis(I_below);
-      // map basis into poly ring upstairs
-      basis := [];
-      for j := 1 to #basis_below do
-        Append(~basis, mpPX_belowToPX(basis_below[j]));
-      end for;
-      // append new poly to basis coming
-      Append(~basis, mpAffAlgToPX(denom)*PX.(l+1)^2-mpAffAlgToPX(numer));
-      vprintf Solvable : "Polynomial ring upstairs:\n%o\n", PX;
-      vprintf Solvable : "Ideal generators upstairs:\n%o\n", basis;
-      vprintf Solvable : "extracted sqrt of:\n%o\n", f;
-      vprintf Solvable : "numerator: %o\n", Numerator(f);
-      vprintf Solvable : "denominator: %o\n", Denominator(f);
-      // ideal upstairs
-      vprintf Solvable: "Apply PrimaryDecomposition:\n";
-      I := ideal< PX | basis >;
-      vprintf Solvable: "Ideal to start with:\n%o\n", I;
-      Qs, Ps := PrimaryDecomposition(I);
-      vprintf Solvable: "#Ps = %o:\n", #Ps;
-      vprintf Solvable: "%o\n", Ps;
-      // which Ps do you want?
-      vprintf Solvable: "Checking for optional index.\n";
-      if primary_index ne 0 then
-        Ps_index := primary_index;
-      else
-        vprintf Solvable: "No optional index given. Choosing automagically.\n";
-        Ps_index := -1;
-        for i := 1 to #Ps do
-          // TODO get a better idea about the curve...
-          P := Ps[i];
-          if Dimension(P) eq 1 then
-            A := Spec(Parent(P.1));
-            C := Curve(A,P);
-            if Genus(C) eq s`SolvableDBGenus then
-              Ps_index := i;
-              break i;
-            end if;
-          end if;
-        end for;
-        if Ps_index lt 0 then
-          error "No Ps worked with ease.";
-        end if;
-      end if;
-      Ip := Ps[Ps_index];
-      vprintf Solvable: "We picked Ps[%o]:\n%o\n", Ps_index, Ps[Ps_index];
-      // curve upstairs
-      vprintf Solvable : "Making ambient...";
-      // AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
-      AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
-      vprintf Solvable : "done.\n";
-      vprintf Solvable : "Making curve...";
-      // X := eval Sprintf("X<%o> := Curve(AA, Ip); return X;", VarText("x", 0, l));
-      X := eval Sprintf("X<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return X;", VarText("x", 0, l));
-      vprintf Solvable : "done.\n";
-      vprintf Solvable : "Making function field...";
-      KX := eval Sprintf("KX<%o> := FunctionField(X); return KX;", VarText("x", 0, l));
-      phi := KX.1;
-      vprintf Solvable : "done.\n";
-    else
-      vprintf Solvable: "Now constructing the curve and map.\n";
-      AffAlg := Parent(denom);
-      F := t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList];
-      l := s`SolvableDBLevel;
-      // polynomial ring
-      PX_below := t`SolvableDBCurvePolynomialRingList[#t`SolvableDBCurvePolynomialRingList];
-      PX := eval Sprintf("PX<%o> := PolynomialRing(F, %o); return PX;", VarText("x", 0, l), l+1);
-      // map from poly ring downstairs to poly ring upstairs
-      mpPX_belowToPX := eval Sprintf("mpPX_belowToPX := hom< PX_below -> PX | %o >; return mpPX_belowToPX;", HomText("PX", 1, l));
-      // map from parent(f) to poly ring upstairs
-      mpAffAlgToPX := eval Sprintf("mpAffAlgToPX := hom< AffAlg -> PX | %o >; return mpAffAlgToPX;", HomText("PX", 1, l));
-      // ideal downstairs
-      I_below := Ideal(t`SolvableDBBelyiCurve);
-      assert IsPrime(I_below);
-      // I_below := t`SolvableDBCurveIdealList[#t`SolvableDBCurveIdealList];
-      basis_below := Basis(I_below);
-      // map basis into poly ring upstairs
-      basis := [];
-      for j := 1 to #basis_below do
-        Append(~basis, mpPX_belowToPX(basis_below[j]));
-      end for;
-      // append new poly to basis coming
-      Append(~basis, mpAffAlgToPX(denom)*PX.(l+1)^2-mpAffAlgToPX(numer));
-      vprintf Solvable : "Polynomial ring upstairs:\n%o\n", PX;
-      vprintf Solvable : "Ideal generators upstairs:\n%o\n", basis;
-      vprintf Solvable : "extracted sqrt of:\n%o\n", f;
-      vprintf Solvable : "numerator: %o\n", Numerator(f);
-      vprintf Solvable : "denominator: %o\n", Denominator(f);
-      // ideal upstairs
-      vprintf Solvable: "Apply Saturation:\n";
-      I := ideal< PX | basis >;
-      vprintf Solvable : "Ideal to start with:\n%o\n", I;
-      vprintf Solvable : "Saturating:\n";
-      a := Numerator(f);
-      b := Denominator(f);
-      a_poly := mpAffAlgToPX(a);
-      b_poly := mpAffAlgToPX(b);
-      vprintf Solvable : "numerator = %o\n", a;
-      vprintf Solvable : "num poly  = %o\n", a_poly;
-      vprintf Solvable : "denominator = %o\n", b;
-      vprintf Solvable : "denom poly  = %o\n", b_poly;
-      vprintf Solvable : "computing saturation at numerator...";
-      time S_num := Saturation(I, a_poly);
-      vprintf Solvable : "done.\n";
-      vprintf Solvable : "I : numerator =\n%o\n", S_num;
-      vprintf Solvable : "computing saturation at denominator...";
-      time S_den := Saturation(I, b_poly); // TODO don't do both of these...for testing
-      vprintf Solvable : "done.\n";
-      vprintf Solvable : "I : denominator =\n%o\n", S_den;
-      // FIXME
-      if IsPrime(S_num) then
-        Ip := S_num;
-      else
-        vprintf Solvable : "Saturation didn't work >_<...analyzing primary decomposition...\n";
-        QsI, PsI := PrimaryDecomposition(I);
-        vprintf Solvable : "#Ps of I = %o\n", #PsI;
-        Qs, Ps := PrimaryDecomposition(S_num);
-        for i := 1 to #Ps do
-          vprintf Solvable : "Ps[%o] (of %o) = \n%o\n", i, #Ps, Ps[i];
-        end for;
-        error "Saturation didn't work!";
-      end if;
-      // curve upstairs
-      vprintf Solvable : "Making ambient...";
-      AA := eval Sprintf("AA<%o> := AffineSpace(PX); return AA;", VarText("x", 0, l));
-      vprintf Solvable : "done.\n";
-      vprintf Solvable : "Making curve...";
-      // X := eval Sprintf("X<%o> := Curve(AA, Ip); return X;", VarText("x", 0, l));
-      X := eval Sprintf("X<%o> := Curve(AA, Ip : Reduced := true, Irreducible := true); return X;", VarText("x", 0, l));
-      vprintf Solvable : "done.\n";
-      vprintf Solvable : "Making function field...";
-      KX := eval Sprintf("KX<%o> := FunctionField(X); return KX;", VarText("x", 0, l));
-      phi := KX.1;
-      vprintf Solvable : "done.\n";
-    end if;
-  // assertions
-    vprintf Solvable : "Checking genus of curve...";
-    assert s`SolvableDBGenus eq Genus(X);
-    vprintf Solvable : "done.\n";
-  // assign information to s
-    s`SolvableDBCurveBaseFieldList := t`SolvableDBCurveBaseFieldList cat [* F *];
-    s`SolvableDBCurvePolynomialRingList := t`SolvableDBCurvePolynomialRingList cat [* PX *];
-    s`SolvableDBCurveAmbientList := t`SolvableDBCurveAmbientList cat [* AA *];
-    s`SolvableDBCurveIdealList := t`SolvableDBCurveIdealList cat [* I *];
-    s`SolvableDBCurveList := t`SolvableDBCurveList cat [* X *];
-    s`SolvableDBBelyiCurve := X;
-    s`SolvableDBBelyiMap := phi;
-    s`SolvableDBExtractNumerator := mpAffAlgToPX(numer);
-    s`SolvableDBExtractDenominator := mpAffAlgToPX(denom);
-  return s;
-end intrinsic;
-
-intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
-  {Multiple calls to SolvableBelyiMap (singular) and returns the errors.}
-  f := SolvableDBFilenames(d);
-  errors := [];
-  for i := 1 to #f do
-    s := SolvableDBAccessEntry(f[i]);
-    try
-      time_start := Cputime();
-      if (not SolvableIsUnramified(s)) and (not (assigned s`SolvableDBBelyiCurve)) then
-        assert not assigned s`SolvableDBBelyiMap;
-        s := SolvableBelyiMap(s);
-        vprintf Solvable : "%o sanity check...", s`SolvableDBName;
-        if SolvableMapSanityCheck(s) then
-          vprintf Solvable : "done.\n";
-          SolvableDBWriteObject(s);
-        end if;
-      end if;
-      time_end := Cputime();
-      vprintf Solvable : "%o time: %o\n", s`SolvableDBName, time_end-time_start;
-    catch e
-      print e;
-      Append(~errors, e);
-    end try;
-  end for;
-  return errors;
-end intrinsic;
-
-// 2018/01/11 extract root function updated
-// assign names here or somewhere else?
 intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
   {Given a curve Y, and f in KY the function field of Y, return a new curve X with function field KX where KX = KY(mthroot(f)).}
   // assertions
@@ -620,14 +227,44 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     return X;
 end intrinsic;
 
-// 2018/01/11 updated version of SolvableBelyiMap that makes better choices
-intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := false, manual_divisor := 0) -> SolvableDBObject
+intrinsic SolvableRamification(s::SolvableDBObject) -> SolvableDBObject
+  {assigns [ram0, ram1, ramoo] to s.}
+  t := Child(s);
+  abc_below := t`SolvableDBABC;
+  abc := s`SolvableDBABC;
+  // ramification above 0
+    if abc_below[1] eq abc[1] then
+      ram0 := false;
+    else
+      assert abc[1] eq 2*abc_below[1];
+      ram0 := true;
+    end if;
+  // ramification above 1
+    if abc_below[2] eq abc[2] then
+      ram1 := false;
+    else
+      assert abc[2] eq 2*abc_below[2];
+      ram1 := true;
+    end if;
+  // ramification above oo
+    if abc_below[3] eq abc[3] then
+      ramoo := false;
+    else
+      assert abc[3] eq 2*abc_below[3];
+      ramoo := true;
+    end if;
+  // assign to s and return s
+  s`SolvableDBRamification := [ram0, ram1, ramoo];
+  return s;
+end intrinsic;
+
+intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false) -> SolvableDBObject
   {}
   // if s is unramified then stop and return s
     isunram := not SolvableIsRamifiedAtEveryLevel(s);
     if isunram then
-      vprintf Solvable: "%o is unramified at some level.\n", s`SolvableDBName;
-      return s;
+      name := s`SolvableDBName;
+      error Sprintf("%o is unramified at some level, no method to compute unramified covers (currently).\n", name);
     end if;
   // assertions about child of s
     vprintf Solvable: "So you want to compute a SolvableBelyiMap? Checking basic assertions.\n";
@@ -640,28 +277,9 @@ intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := fa
     vprintf Solvable: "Determining ramification:\n";
     abc_below := t`SolvableDBABC;
     abc := s`SolvableDBABC;
+    s := SolvableRamification(s);
+    ram0, ram1, ramoo := Explode(s`SolvableDBRamification);
     vprintf Solvable: "ABC before = %o.\n", abc_below;
-    // ramification above 0
-      if abc_below[1] eq abc[1] then
-        ram0 := false;
-      else
-        assert abc[1] eq 2*abc_below[1];
-        ram0 := true;
-      end if;
-    // ramification above 1
-      if abc_below[2] eq abc[2] then
-        ram1 := false;
-      else
-        assert abc[2] eq 2*abc_below[2];
-        ram1 := true;
-      end if;
-    // ramification above oo
-      if abc_below[3] eq abc[3] then
-        ramoo := false;
-      else
-        assert abc[3] eq 2*abc_below[3];
-        ramoo := true;
-      end if;
     vprintf Solvable: "ramification = %o.\n", [ram0, ram1, ramoo];
     vprintf Solvable: "ABC after = %o.\n", abc;
   // check if we need to extend base field using BelyiMap below
@@ -716,85 +334,72 @@ intrinsic SolvableBelyiMapOptimized(s::SolvableDBObject : force_basechange := fa
     vprintf Solvable: "F1 = %o\n", F1;
     vprintf Solvable: "Foo = %o\n", Foo;
   // make divisor D (first try manual entry divisor if available)
-    if not ISA(Type(manual_divisor), RngIntElt) then
-      /*
-        vprintf Solvable: "Using manual divisor first:\n";
-        D := manual_divisor;
-        // TODO assert parent is correct?
-        if Dimension(RiemannRochSpace(D)) eq 1 then
-          vprintf Solvable: "Manual divisor yields 1 dimensional Lspace!\n";
+    // make ramification divisor before BaseChange
+      vprintf Solvable: "Try to find Ramification Divisor Before BaseChange:\n";
+      time_start := Cputime();
+      // worked_before_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+      Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+      if force_basechange then
+        worked_before_basechange := false;
+      else
+        worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
+      end if;
+      time_end := Cputime();
+    // update t with base change if necessary
+    // NOTE this does not update t in the database, just to be used for s later
+      if worked_before_basechange then
+        vprintf Solvable: "OK found Ramification Divisor! That took %o seconds.\n", time_end-time_start;
+        vprintf Solvable: "No need to BaseChange.\n";
+      else
+        vprintf Solvable: "BaseChanging...\n";
+        vprintf Solvable: "Updating curve base field:\n";
+        F := BaseField(t`SolvableDBBelyiCurve);
+        vprintf Solvable: "Degree of current base field = %o\n", Degree(F);
+        newF := Compositum(F, F0);
+        vprintf Solvable: "Degree with F0 = %o.\n", Degree(newF);
+        newF := Compositum(newF, F1);
+        vprintf Solvable: "Degree with F1 = %o.\n", Degree(newF);
+        newF := Compositum(newF, Foo);
+        vprintf Solvable: "Degree with Foo = %o.\n", Degree(newF);
+        t := SolvableBaseChange(t, newF);
+        vprintf Solvable: "OK done. Here is the new field:\n%o\n", newF;
+        assert t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList] eq newF;
+        vprintf Solvable: "Now updating divisors D0, D1, Doo.\n";
+        // update D0, D1, Doo after base change
+        X_below := t`SolvableDBBelyiCurve;
+        phi_below := t`SolvableDBBelyiMap;
+        DivX_below := DivisorGroup(X_below);
+        if ram0 then
+          D0 := Numerator(Divisor(phi_below));
+          vprintf Solvable: "#supp(D0) after base change = %o.\n", #Support(D0);
         else
-          error "Manual divisor does not appear to work.\n";
+          D0 := DivX_below!0;
         end if;
-      */
-    else
-      // make ramification divisor before BaseChange
-        vprintf Solvable: "Try to find Ramification Divisor Before BaseChange:\n";
+        if ram1 then
+          D1 := Numerator(Divisor(phi_below-1));
+          vprintf Solvable: "#supp(D1) after base change = %o.\n", #Support(D1);
+        else
+          D1 := DivX_below!0;
+        end if;
+        if ramoo then
+          Doo := Denominator(Divisor(phi_below));
+          vprintf Solvable: "#supp(Doo) after base change = %o.\n", #Support(Doo);
+        else
+          Doo := DivX_below!0;
+        end if;
+        // make ramification divisor after BaseChange
+        vprintf Solvable: "Finding Ramification Divisor After BaseChange:\n";
         time_start := Cputime();
-        // worked_before_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+        // worked_after_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
         Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-        if force_basechange then
-          worked_before_basechange := false;
-        else
-          worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
-        end if;
+        worked_after_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
         time_end := Cputime();
-      // update t with base change if necessary
-      // NOTE this does not update t in the database, just to be used for s later
-        if worked_before_basechange then
-          vprintf Solvable: "OK found Ramification Divisor! That took %o seconds.\n", time_end-time_start;
-          vprintf Solvable: "No need to BaseChange.\n";
+        if worked_after_basechange then
+          vprintf Solvable: "OK done! That took %o seconds.\n", time_end-time_start;
         else
-          vprintf Solvable: "BaseChanging...\n";
-          vprintf Solvable: "Updating curve base field:\n";
-          F := BaseField(t`SolvableDBBelyiCurve);
-          vprintf Solvable: "Degree of current base field = %o\n", Degree(F);
-          newF := Compositum(F, F0);
-          vprintf Solvable: "Degree with F0 = %o.\n", Degree(newF);
-          newF := Compositum(newF, F1);
-          vprintf Solvable: "Degree with F1 = %o.\n", Degree(newF);
-          newF := Compositum(newF, Foo);
-          vprintf Solvable: "Degree with Foo = %o.\n", Degree(newF);
-          t := SolvableBaseChange(t, newF);
-          vprintf Solvable: "OK done. Here is the new field:\n%o\n", newF;
-          assert t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList] eq newF;
-          vprintf Solvable: "Now updating divisors D0, D1, Doo.\n";
-          // update D0, D1, Doo after base change
-          X_below := t`SolvableDBBelyiCurve;
-          phi_below := t`SolvableDBBelyiMap;
-          DivX_below := DivisorGroup(X_below);
-          if ram0 then
-            D0 := Numerator(Divisor(phi_below));
-            vprintf Solvable: "#supp(D0) after base change = %o.\n", #Support(D0);
-          else
-            D0 := DivX_below!0;
-          end if;
-          if ram1 then
-            D1 := Numerator(Divisor(phi_below-1));
-            vprintf Solvable: "#supp(D1) after base change = %o.\n", #Support(D1);
-          else
-            D1 := DivX_below!0;
-          end if;
-          if ramoo then
-            Doo := Denominator(Divisor(phi_below));
-            vprintf Solvable: "#supp(Doo) after base change = %o.\n", #Support(Doo);
-          else
-            Doo := DivX_below!0;
-          end if;
-          // make ramification divisor after BaseChange
-          vprintf Solvable: "Finding Ramification Divisor After BaseChange:\n";
-          time_start := Cputime();
-          // worked_after_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-          Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-          worked_after_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
-          time_end := Cputime();
-          if worked_after_basechange then
-            vprintf Solvable: "OK done! That took %o seconds.\n", time_end-time_start;
-          else
-            error "base change didn't help us find dimension 1 Lspace :(";
-          end if;
+          error "base change didn't help us find dimension 1 Lspace :(";
         end if;
-    end if;
+      end if;
   // RiemannRoch
     vprintf Solvable: "Applying RiemannRoch to following divisor:\n";
     supp, mult := Support(D);
