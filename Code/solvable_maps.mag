@@ -258,7 +258,7 @@ intrinsic SolvableAssignRamification(s::SolvableDBObject) -> SolvableDBObject
   return s;
 end intrinsic;
 
-intrinsic SolvableAssignResidueFields(s::SolvableDBObject) -> SolvableDBObject
+intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDBObject) -> SolvableDBObject
   {assigns F0, F1, Foo to s.}
   assert assigned s`SolvableDBRamification;
   t := Child(s);
@@ -316,6 +316,9 @@ intrinsic SolvableAssignResidueFields(s::SolvableDBObject) -> SolvableDBObject
     s`SolvableDBResidueField0 := F0;
     s`SolvableDBResidueField1 := F1;
     s`SolvableDBResidueFieldoo := Foo;
+    s`SolvableDBDivisor0 := D0;
+    s`SolvableDBDivisor1 := D1;
+    s`SolvableDBDivisoroo := Doo;
     return s;
 end intrinsic;
 
@@ -343,10 +346,16 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject : force_basechange := false) -> S
     vprintf Solvable: "ABC before = %o.\n", abc_below;
     vprintf Solvable: "ramification = %o.\n", [ram0, ram1, ramoo];
     vprintf Solvable: "ABC after = %o.\n", abc;
-  // assign residue fields
+  // assign residue fields F0, F1, Foo, and divisors D0, D1, Doo
     vprintf Solvable : "Assign residue fields to s...";
     t0 := Cputime();
-    s := SolvableAssignResidueFields(s);
+    s := SolvableAssignResidueFieldsAndDivisors(s);
+    F0 := s`SolvableDBResidueField0;
+    F1 := s`SolvableDBResidueField1;
+    Foo := s`SolvableDBResidueFieldoo;
+    D0 := s`SolvableDBDivisor0;
+    D1 := s`SolvableDBDivisor1;
+    Doo := s`SolvableDBDivisoroo;
     t1 := Cputime();
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
   // check if base change is needed

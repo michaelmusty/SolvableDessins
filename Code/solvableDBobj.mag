@@ -40,6 +40,9 @@ declare attributes SolvableDBObject:
   SolvableDBResidueField0,
   SolvableDBResidueField1,
   SolvableDBResidueFieldoo,
+  SolvableDBDivisor0,
+  SolvableDBDivisor1,
+  SolvableDBDivisoroo,
   SolvableDBRamification; // [ram0, ram1, ramoo]
 
 intrinsic Print(s::SolvableDBObject)
