@@ -80,7 +80,7 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   X := s`SolvableDBBelyiCurve;
   X := BaseChange(X, K);
   vars := VarSeq("x", 1, Rank(Generic(Ideal(X))));
-  AssigneNames(~X, vars);
+  AssignNames(~X, vars);
   s`SolvableDBBelyiCurve := X;
   // map
   map := s`SolvableDBBelyiMap;
