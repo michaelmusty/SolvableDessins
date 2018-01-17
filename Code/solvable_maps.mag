@@ -74,7 +74,6 @@ intrinsic SolvableIsRamifiedAtEveryLevel(s::SolvableDBObject) -> BoolElt
   end if;
 end intrinsic;
 
-// TODO
 intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   {Extend base field of object to K.}
   // curve
@@ -393,7 +392,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     vprintf Solvable: "ramification = %o.\n", [ram0, ram1, ramoo];
     vprintf Solvable: "ABC after = %o.\n", abc;
   // assign residue fields F0, F1, Foo, and divisors D0, D1, Doo
-    vprintf Solvable : "Assign residue fields to s...";
+    vprintf Solvable : "Assign residue fields and divisors to s...";
     t0 := Cputime();
     s := SolvableAssignResidueFieldsAndDivisors(s);
     F0 := s`SolvableDBResidueField0;
@@ -405,6 +404,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     t1 := Cputime();
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
   // check if base change is needed
+    // try initial divisor before base change
       vprintf Solvable: "Try to find dimension one L-spaces before base change:\n";
       Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]); // divisor without basechange
       vprintf Solvable : "Initial ramification divisor computed. Do we need to base change?\n";
@@ -434,7 +434,6 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
         vprintf Solvable: "Degree with Foo = %o.\n", Degree(newF);
         t := SolvableBaseChange(t, newF); // TODO update this function
         vprintf Solvable: "OK done. Here is the new field:\n%o\n", newF;
-        // assert t`SolvableDBCurveBaseFieldList[#t`SolvableDBCurveBaseFieldList] eq newF;
         vprintf Solvable: "Now updating divisors D0, D1, Doo.\n";
         // update D0, D1, Doo after base change
         X_below := t`SolvableDBBelyiCurve;
