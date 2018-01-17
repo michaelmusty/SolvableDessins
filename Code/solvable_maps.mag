@@ -104,6 +104,7 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   else
     error "we should not be working in a high dimensional ambient space!";
   end if;
+  phi := eval Sprintf("phi := KX!(%o); return phi;", map);
   s`SolvableDBBelyiMap := phi;
   // sanity and return
   assert SolvableMapSanityCheck(s);
