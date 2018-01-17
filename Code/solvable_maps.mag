@@ -459,6 +459,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   // RiemannRoch
     D := all_dim_one[1]; // TODO could try all of these...
     X_below := t`SolvableDBBelyiCurve;
+    phi_below := t`SolvableDBBelyiMap;
     vprintf Solvable: "Applying RiemannRoch to following divisor:\n";
     supp, mult := Support(D);
     vprintf Solvable: "%o\n%o\n", supp, mult;
@@ -480,7 +481,15 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
     vprintf Solvable : "Making new Belyi map...";
     KX := FunctionField(X);
-    phi := KX.1; // TODO this is now wrong
+    // making the new Belyi map requires a bit more care now that we are changing models
+    rk_below := Rank(Generic(Ideal(X_below)));
+    rk_above := Rank(Generic(Ideal(X)));
+    assert rk_above eq rk_below+1;
+    // projection map X -> X_below: [x1,x2,x3]->[x1,x2]
+    map_text := VarText("X.", 1, rk_below);
+    mp := eval Sprintf("mp := map< X->X_below | [%o] >; return mp;", map_text);
+    // pullback phi_below under this map
+    phi := Pullback(mp, phi_below);
     vprintf Solvable : "done.\n";
   // assertions
     vprintf Solvable : "Checking genus of curve...";
