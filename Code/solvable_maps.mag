@@ -303,10 +303,10 @@ intrinsic SolvableAssignRamification(s::SolvableDBObject) -> SolvableDBObject
   return s;
 end intrinsic;
 
-intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDBObject) -> SolvableDBObject
+intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDBObject, t::SolvableDBObject) -> SolvableDBObject
   {assigns F0, F1, Foo to s.}
   assert assigned s`SolvableDBRamification;
-  t := Child(s);
+  assert t`SolvableDBName eq Child(s)`SolvableDBName;
   ram0, ram1, ramoo := Explode(s`SolvableDBRamification);
   X_below := t`SolvableDBBelyiCurve;
   phi_below := t`SolvableDBBelyiMap;
@@ -394,7 +394,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   // assign residue fields F0, F1, Foo, and divisors D0, D1, Doo
     vprintf Solvable : "Assign residue fields and divisors to s...";
     t0 := Cputime();
-    s := SolvableAssignResidueFieldsAndDivisors(s);
+    s := SolvableAssignResidueFieldsAndDivisors(s, t);
     F0 := s`SolvableDBResidueField0;
     F1 := s`SolvableDBResidueField1;
     Foo := s`SolvableDBResidueFieldoo;
@@ -403,74 +403,62 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     Doo := s`SolvableDBDivisoroo;
     t1 := Cputime();
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
-  // check if base change is needed
-    // try initial divisor before base change
+  // find dimension one Lspaces
+    // try before base change
       vprintf Solvable: "Try to find dimension one L-spaces before base change:\n";
       Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]); // divisor without basechange
-      vprintf Solvable : "Initial ramification divisor computed. Do we need to base change?\n";
-      vprintf Solvable : "First try initial ramification divisor.\n";
+      vprintf Solvable : "Initial ramification divisor computed.\n";
+      vprintf Solvable : "First try without base change.\n";
       vprintf Solvable : "#supp(Divisor) = %o\n", #Support(Dinitial);
       vprintf Solvable : "Trying all combinations...";
       t0 := Cputime();
-      // worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
-      worked_before_basechange, all_dim_one_before := SolvableDimensionOneLspacesUsingAllPoints(Dinitial);
-      s`SolvableDBDimensionOneLspacesBeforeBaseChange := all_dim_one_before;
+      worked_before_basechange, all_dim_one := SolvableDimensionOneLspacesUsingAllPoints(Dinitial);
+      s`SolvableDBDimensionOneLspacesBeforeBaseChange := all_dim_one;
       t1 := Cputime();
       vprintf Solvable : "done. %o seconds.\n", t1-t0;
-    // update t with base change if necessary
-    // NOTE this does not update t in the database, just to be used for s later
+    // base change if necessary
       if worked_before_basechange then
         vprintf Solvable: "No need to BaseChange.\n";
       else
-        vprintf Solvable: "Base changing...\n";
-        vprintf Solvable: "Updating curve base field:\n";
-        F := BaseField(t`SolvableDBBelyiCurve);
-        vprintf Solvable: "Degree of current base field = %o\n", Degree(F);
-        newF := Compositum(F, F0);
-        vprintf Solvable: "Degree with F0 = %o.\n", Degree(newF);
-        newF := Compositum(newF, F1);
-        vprintf Solvable: "Degree with F1 = %o.\n", Degree(newF);
-        newF := Compositum(newF, Foo);
-        vprintf Solvable: "Degree with Foo = %o.\n", Degree(newF);
-        t := SolvableBaseChange(t, newF); // TODO update this function
-        vprintf Solvable: "OK done. Here is the new field:\n%o\n", newF;
-        vprintf Solvable: "Now updating divisors D0, D1, Doo.\n";
+        // make composite of residue fields
+          vprintf Solvable: "Base changing...\n";
+          vprintf Solvable: "Updating curve base field:\n";
+          F := BaseField(t`SolvableDBBelyiCurve);
+          vprintf Solvable: "Degree of current base field = %o\n", Degree(F);
+          newF := Compositum(F, F0);
+          vprintf Solvable: "Degree with F0 = %o.\n", Degree(newF);
+          newF := Compositum(newF, F1);
+          vprintf Solvable: "Degree with F1 = %o.\n", Degree(newF);
+          newF := Compositum(newF, Foo);
+          vprintf Solvable: "Degree with Foo = %o.\n", Degree(newF);
+          t := SolvableBaseChange(t, newF);
+          vprintf Solvable: "OK done. Here is the new field:\n%o\n", newF;
+          vprintf Solvable: "Now updating divisors D0, D1, Doo.\n";
         // update D0, D1, Doo after base change
-        X_below := t`SolvableDBBelyiCurve;
-        phi_below := t`SolvableDBBelyiMap;
-        DivX_below := DivisorGroup(X_below);
-        if ram0 then
-          D0 := Numerator(Divisor(phi_below));
-          vprintf Solvable: "#supp(D0) after base change = %o.\n", #Support(D0);
-        else
-          D0 := DivX_below!0;
-        end if;
-        if ram1 then
-          D1 := Numerator(Divisor(phi_below-1));
-          vprintf Solvable: "#supp(D1) after base change = %o.\n", #Support(D1);
-        else
-          D1 := DivX_below!0;
-        end if;
-        if ramoo then
-          Doo := Denominator(Divisor(phi_below));
-          vprintf Solvable: "#supp(Doo) after base change = %o.\n", #Support(Doo);
-        else
-          Doo := DivX_below!0;
-        end if;
+          t0 := Cputime();
+          s := SolvableAssignResidueFieldsAndDivisors(s, t);
+          F0 := s`SolvableDBResidueField0;
+          F1 := s`SolvableDBResidueField1;
+          Foo := s`SolvableDBResidueFieldoo;
+          D0 := s`SolvableDBDivisor0;
+          D1 := s`SolvableDBDivisor1;
+          Doo := s`SolvableDBDivisoroo;
+          t1 := Cputime();
         // make ramification divisor after BaseChange
-        vprintf Solvable: "Finding Ramification Divisor After BaseChange:\n";
-        time_start := Cputime();
-        // worked_after_basechange, D := SolvableRamificationDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-        Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
-        worked_after_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
-        time_end := Cputime();
-        if worked_after_basechange then
-          vprintf Solvable: "OK done! That took %o seconds.\n", time_end-time_start;
-        else
-          error "base change didn't help us find dimension 1 Lspace :(";
-        end if;
+          vprintf Solvable: "Try to find dimension one L-spaces after base change:\n";
+          Dinitial := SolvableRamificationToDivisor([ram0, ram1, ramoo], [*D0, D1, Doo*]);
+          vprintf Solvable : "Initial divisor computed.\n";
+          vprintf Solvable : "#supp(Divisor) = %o\n", #Support(Dinitial);
+          vprintf Solvable : "Trying all combinations...";
+          t0 := Cputime();
+          worked_after_basechange, all_dim_one := SolvableDimensionOneLspacesUsingAllPoints(Dinitial);
+          s`SolvableDBDimensionOneLspacesAfterBaseChange := all_dim_one;
+          t1 := Cputime();
+          vprintf Solvable : "done. %o seconds.\n", t1-t0;
       end if;
   // RiemannRoch
+    D := all_dim_one[1]; // TODO could try all of these...
+    X_below := t`SolvableDBBelyiCurve;
     vprintf Solvable: "Applying RiemannRoch to following divisor:\n";
     supp, mult := Support(D);
     vprintf Solvable: "%o\n%o\n", supp, mult;
@@ -485,10 +473,9 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     vprintf Solvable: "Numerator(f) = %o.\n", numer;
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
-  // TODO have X_below and f in KX_below, extract root
     vprintf Solvable : "Extracting root to make new curve...";
     t0 := Cputime();
-    X := ExtractRoot(X_below, f, 2); // TODO make this function
+    X := ExtractRoot(X_below, f, 2);
     t1 := Cputime();
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
     vprintf Solvable : "Making new Belyi map...";
