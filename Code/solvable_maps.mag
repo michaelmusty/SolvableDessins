@@ -631,6 +631,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           C, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
           assert IsProjective(Ambient(C));
           assert Curve(C) eq C;
+          C := Curve(C);
           /*
           dim := Dimension(Ambient(C))+1; // projective
           Sctext := IsoText("Sc", 1, dim);
