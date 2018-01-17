@@ -645,7 +645,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           if not g eq KC.1 then
             vprintf Solvable : "  WARNING! new Belyi map is no longer KX.1\n";
           end if;
-          vprintf Solvable : "  Degree of new model = %o.\n", Degree(C);
+          Cproj := ProjectiveClosure(C);
+          vprintf Solvable : "  Degree of new model = %o.\n", Degree(Cproj);
+          // vprintf Solvable : "  Degree of new model = %o.\n", Degree(C);
         // bookkeeping and return
           // sanity checks
           assert Parent(g) eq FunctionField(C);
