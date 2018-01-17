@@ -461,6 +461,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     phi_below := t`SolvableDBBelyiMap;
     if IsProjective(X_below) then // X_below is hyperelliptic so choose a patch
       X_below := AffinePatch(X_below, 1);
+      assert IsAffine(X_below);
       KX_below := FunctionField(X_below);
       assert KX_below eq Parent(phi_below);
       num_vars := Rank(Generic(Ideal(X_below)));
@@ -489,6 +490,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
     vprintf Solvable : "Extracting root to make new curve...";
     t0 := Cputime();
+    assert IsAffine(X_below); // like huh?
     X := ExtractRoot(X_below, f, 2);
     t1 := Cputime();
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
