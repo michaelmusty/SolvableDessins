@@ -456,10 +456,23 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
       end if;
-  // RiemannRoch
-    D := all_dim_one[1]; // TODO could try all of these...
+  // setup curve downstairs
     X_below := t`SolvableDBBelyiCurve;
     phi_below := t`SolvableDBBelyiMap;
+    if IsProjective(X_below) then // X_below is hyperelliptic so choose a patch
+      X_below := AffinePatch(X_below, 1);
+      KX_below := FunctionField(X_below);
+      assert KX_below eq Parent(phi_below);
+      num_vars := Rank(Generic(Ideal(X_below)));
+      vars := VarSeq("x", 1, num_vars);
+      AssignNames(~X_below, vars);
+      AssignNames(~KX_below, vars);
+      phi_below := KX_below!phi_below; // not necessary
+    else
+      assert IsAffine(X_below);
+    end if;
+  // RiemannRoch
+    D := all_dim_one[1]; // TODO could try all of these...
     vprintf Solvable: "Applying RiemannRoch to following divisor:\n";
     supp, mult := Support(D);
     vprintf Solvable: "%o\n%o\n", supp, mult;
