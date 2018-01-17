@@ -74,6 +74,7 @@ intrinsic SolvableIsRamifiedAtEveryLevel(s::SolvableDBObject) -> BoolElt
   end if;
 end intrinsic;
 
+// TODO
 intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   {Extend base field of object to K.}
   // curve
@@ -86,7 +87,23 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   map := s`SolvableDBBelyiMap;
   KX := FunctionField(X);
   AssignNames(~KX, vars);
-  phi := KX!map;
+  // initialize variables to base change the map
+  num_vars := Rank(Generic(Ideal(X)));
+  if num_vars eq 2 then
+    x1 := KX.1;
+    x2 := KX.2;
+  elif num_vars eq 3 then
+    x1 := KX.1;
+    x2 := KX.2;
+    x3 := KX.3;
+  elif num_vars eq 4 then
+    x1 := KX.1;
+    x2 := KX.2;
+    x3 := KX.3;
+    x4 := KX.4;
+  else
+    error "we should not be working in a high dimensional ambient space!";
+  end if;
   s`SolvableDBBelyiMap := phi;
   // sanity and return
   assert SolvableMapSanityCheck(s);
