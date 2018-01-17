@@ -490,7 +490,6 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
     vprintf Solvable : "Extracting root to make new curve...";
     t0 := Cputime();
-    assert IsAffine(X_below); // like huh?
     X := ExtractRoot(X_below, f, 2);
     t1 := Cputime();
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
