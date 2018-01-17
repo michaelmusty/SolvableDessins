@@ -480,7 +480,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
     vprintf Solvable : "Making new Belyi map...";
     KX := FunctionField(X);
-    phi := KX.1;
+    phi := KX.1; // TODO this is now wrong
     vprintf Solvable : "done.\n";
   // assertions
     vprintf Solvable : "Checking genus of curve...";
