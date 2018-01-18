@@ -633,20 +633,21 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
       else // g > 1 and curve is not hyperelliptic
         // computing new model
           vprintf Solvable : "  Curve is not hyperelliptic.\n";
-          vprintf Solvable : "  Projecting to PP3...";
+          // TODO currently this timing block appears to take the most time
           t0 := Cputime();
-          C, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
-          assert IsProjective(Ambient(C));
-          assert Curve(C) eq C;
-          C := Curve(C);
-          /*
-          dim := Dimension(Ambient(C))+1; // projective
-          Sctext := IsoText("Sc", 1, dim);
-          Ctext := IsoText("C", 1, dim);
-          id := eval Sprintf("id := iso< Sc -> C | [%o], [%o] >; return id;", Sctext, Ctext);
-          */
-          fix := map< X_proj -> C | DefiningEquations(mp) >;
-          g := Pushforward(fix, f);
+          if Dimension(Ambient(ProjectiveClosure(X))) eq 3 then
+            printf "Curve is already in PP3...\n";
+            C := X;
+            g := f;
+          else
+            printf "Projecting to PP3...\n";
+            C, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
+            assert IsProjective(Ambient(C));
+            assert Curve(C) eq C;
+            C := Curve(C);
+            fix := map< X_proj -> C | DefiningEquations(mp) >;
+            g := Pushforward(fix, f);
+          end if;
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
           C := AffinePatch(C, 1); // TODO not pick blindly?
