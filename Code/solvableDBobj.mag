@@ -13,6 +13,8 @@ declare attributes SolvableDBObject:
   SolvableDBPointedPassportSize,
   SolvableDBLevel,
   SolvableDBBlocks, // TODO
+  SolvableDBBelyiMapTiming, // TODO
+  SolvableDBLowDegreeTiming, // TODO
   // permutation attributes
   SolvableDBGaloisOrbit,
   SolvableDBPassport,

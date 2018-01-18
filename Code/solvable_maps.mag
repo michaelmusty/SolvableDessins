@@ -367,6 +367,7 @@ intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDBObject, t::Solvabl
     return s;
 end intrinsic;
 
+// TODO assign timing to object
 intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   {}
   // if s is unramified then stop and return s
@@ -557,13 +558,14 @@ intrinsic IsoText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgE
   return var_text;
 end intrinsic;
 
-// update 2018
+// TODO assign timing to object
 intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
   {Naively try to reduce the degree of the BelyiCurve.}
   vprintf Solvable : "%o LowDegreeAttempt :\n", s`SolvableDBName;
   curve_assigned := assigned s`SolvableDBBelyiCurve;
   map_assigned := assigned s`SolvableDBBelyiMap;
   if curve_assigned and map_assigned then
+    timing_start := Cputime();
     // make before and after objects
       before := SolvableDBObjectInitialize();
       after := SolvableDBObjectInitialize();
@@ -612,6 +614,8 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           if Type(K) eq FldNum then
             K<nu> := BaseField(X);
           end if;
+          timing_end := Cputime();
+          after`SolvableDBLowDegreeTiming := timing_end-timing_start;
           after`SolvableDBBelyiCurve := X;
           after`SolvableDBBelyiMap := g; // not necessarily KX.1
         // bookkeeping and return
