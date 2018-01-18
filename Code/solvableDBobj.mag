@@ -124,9 +124,9 @@ intrinsic Print(s::SolvableDBObject)
     assert assigned s`SolvableDBLowDegreeTiming;
     assert assigned s`SolvableDBSanityCheckTiming;
     printf "Timing:\n";
-    printf "  BelyiMap       : %o seconds.\n", s`SolvableDBBelyiMapTiming;
-    printf "  LowDegreeModel : %o seconds.\n", s`SolvableDBLowDegreeTiming;
-    printf "  SanityCheck    : %o seconds.\n", s`SolvableDBSanityCheckTiming;
+    printf "BelyiMap       : %o seconds.\n", s`SolvableDBBelyiMapTiming;
+    printf "LowDegreeModel : %o seconds.\n", s`SolvableDBLowDegreeTiming;
+    printf "SanityCheck    : %o seconds.\n", s`SolvableDBSanityCheckTiming;
   end if;
 end intrinsic;
 
