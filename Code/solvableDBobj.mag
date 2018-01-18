@@ -15,6 +15,7 @@ declare attributes SolvableDBObject:
   SolvableDBBlocks, // TODO
   SolvableDBBelyiMapTiming, // TODO
   SolvableDBLowDegreeTiming, // TODO
+  SolvableDBSanityCheckTiming, // TODO
   // permutation attributes
   SolvableDBGaloisOrbit,
   SolvableDBPassport,

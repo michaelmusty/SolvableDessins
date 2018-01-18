@@ -234,6 +234,9 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
     Append(~easy_attrs, "SolvableDBPointedPassportSize");
     Append(~easy_attrs, "SolvableDBLevel");
     Append(~easy_attrs, "SolvableDBBlocks");
+    Append(~easy_attrs, "SolvableDBBelyiMapTiming");
+    Append(~easy_attrs, "SolvableDBLowDegreeTiming");
+    Append(~easy_attrs, "SolvableDBSanityCheckTiming");
     permutation_attrs := [];
     Append(~permutation_attrs, "SolvableDBGaloisOrbit");
     Append(~permutation_attrs, "SolvableDBPassport");

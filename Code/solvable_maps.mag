@@ -1,6 +1,7 @@
 intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
   {BelyiMapSanityCheck...solvableified.}
   if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
+    t_start := Cputime();
     pass := s`SolvableDBGaloisOrbit;
     curve := s`SolvableDBBelyiCurve;
     map := s`SolvableDBBelyiMap;
@@ -16,6 +17,8 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
       end if;
     end for;
     // if we make it out of the loop return true
+    t_end := Cputime();
+    s`SolvableDBSanityCheckTiming := t_end - t_start;
     return true;
   else
     return false;
@@ -105,8 +108,7 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   end if;
   phi := eval Sprintf("phi := KX!(%o); return phi;", map);
   s`SolvableDBBelyiMap := phi;
-  // sanity and return
-  assert SolvableMapSanityCheck(s);
+  // return
   return s;
 end intrinsic;
 
@@ -370,6 +372,8 @@ end intrinsic;
 // TODO assign timing to object
 intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   {}
+  // timing
+    t_start := Cputime();
   // if s is unramified then stop and return s
     isunram := not SolvableIsRamifiedAtEveryLevel(s);
     if isunram then
@@ -380,7 +384,6 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     vprintf Solvable: "So you want to compute a SolvableBelyiMap? Checking basic assertions.\n";
     time_start := Cputime();
     t := Child(s);
-    assert SolvableMapSanityCheck(t);
     time_end := Cputime();
     vprintf Solvable: "Done. That took %o seconds.\n", time_end-time_start;
   // [ram0, ram1, ramoo] a sequence of bools
@@ -513,9 +516,15 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   // assign information to s and return s
     s`SolvableDBBelyiCurve := X;
     s`SolvableDBBelyiMap := phi;
+  // timing
+    t_end := Cputime();
+    s`SolvableDBBelyiMapTiming := t_end - t_start;
+  // return
     return s;
 end intrinsic;
 
+/*
+// TODO update with low degree models
 intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
   {Multiple calls to SolvableBelyiMapOptimized (singular) and returns the errors.}
   f := SolvableDBFilenames(d);
@@ -542,6 +551,7 @@ intrinsic SolvableBelyiMaps(d::RngIntElt) -> Any
   end for;
   return errors;
 end intrinsic;
+*/
 
 intrinsic IsoText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgElt
   {returns text "var.lower, var.lower+1, ..., var.upper-1, var.upper".}
@@ -565,7 +575,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
   curve_assigned := assigned s`SolvableDBBelyiCurve;
   map_assigned := assigned s`SolvableDBBelyiMap;
   if curve_assigned and map_assigned then
-    timing_start := Cputime();
+    t_start := Cputime();
     // make before and after objects
       before := SolvableDBObjectInitialize();
       after := SolvableDBObjectInitialize();
@@ -618,15 +628,10 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           after`SolvableDBLowDegreeTiming := timing_end-timing_start;
           after`SolvableDBBelyiCurve := X;
           after`SolvableDBBelyiMap := g; // not necessarily KX.1
-        // bookkeeping and return
-          // sanity checks
-          vprintf Solvable : "  Sanity checking...";
-          t0 := Cputime();
-          assert SolvableMapSanityCheck(before);
-          assert SolvableMapSanityCheck(after);
-          t1 := Cputime();
-          vprintf Solvable : "done. %o seconds.\n", t1-t0;
-        return before, after;
+        // timing and return
+          t_end := Cputime();
+          after`SolvableDBLowDegreeTiming := t_end - t_start;
+          return before, after;
       else // g > 1 and curve is not hyperelliptic
         // computing new model
           vprintf Solvable : "  Curve is not hyperelliptic.\n";
@@ -668,14 +673,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           vprintf Solvable : "  Degree of new model = %o.\n", Degree(Cproj);
           // vprintf Solvable : "  Degree of new model = %o.\n", Degree(C);
         // bookkeeping and return
-          // sanity checks
           assert Parent(g) eq FunctionField(C);
-          vprintf Solvable : "  Sanity checking...";
-          t0 := Cputime();
-          assert SolvableMapSanityCheck(before);
-          assert SolvableMapSanityCheck(after);
-          t1 := Cputime();
-          vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          t_end := Cputime();
+          after`SolvableDBLowDegreeTiming := t_end - t_start;
           return before, after;
       end if;
   else
