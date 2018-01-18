@@ -13,9 +13,9 @@ declare attributes SolvableDBObject:
   SolvableDBPointedPassportSize,
   SolvableDBLevel,
   SolvableDBBlocks, // TODO
-  SolvableDBBelyiMapTiming, // TODO
-  SolvableDBLowDegreeTiming, // TODO
-  SolvableDBSanityCheckTiming, // TODO
+  SolvableDBBelyiMapTiming,
+  SolvableDBLowDegreeTiming,
+  SolvableDBSanityCheckTiming,
   // permutation attributes
   SolvableDBGaloisOrbit,
   SolvableDBPassport,
