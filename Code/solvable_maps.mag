@@ -636,11 +636,11 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           // TODO currently this timing block appears to take the most time
           t0 := Cputime();
           if Dimension(Ambient(X_proj)) eq 3 then
-            printf "Curve is already in PP3...\n";
+            printf "  Curve is already in PP3...";
             C := X_proj;
             g := f;
           else
-            printf "Projecting to PP3...\n";
+            printf "  Projecting to PP3...";
             C, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
             assert IsProjective(Ambient(C));
             assert Curve(C) eq C;
