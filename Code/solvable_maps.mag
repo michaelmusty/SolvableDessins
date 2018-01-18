@@ -624,8 +624,6 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           if Type(K) eq FldNum then
             K<nu> := BaseField(X);
           end if;
-          timing_end := Cputime();
-          after`SolvableDBLowDegreeTiming := timing_end-timing_start;
           after`SolvableDBBelyiCurve := X;
           after`SolvableDBBelyiMap := g; // not necessarily KX.1
         // timing and return
