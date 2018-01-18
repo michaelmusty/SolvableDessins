@@ -635,9 +635,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           vprintf Solvable : "  Curve is not hyperelliptic.\n";
           // TODO currently this timing block appears to take the most time
           t0 := Cputime();
-          if Dimension(Ambient(ProjectiveClosure(X))) eq 3 then
+          if Dimension(Ambient(X_proj)) eq 3 then
             printf "Curve is already in PP3...\n";
-            C := X;
+            C := X_proj;
             g := f;
           else
             printf "Projecting to PP3...\n";
