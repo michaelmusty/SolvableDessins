@@ -5,18 +5,21 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
     pass := s`SolvableDBGaloisOrbit;
     curve := s`SolvableDBBelyiCurve;
     map := s`SolvableDBBelyiMap;
+    test_cycle_structure := SolvableCycleStructure(pass[1]);
     for i := 1 to #pass do
-      if not BelyiMapSanityCheck(pass[i], curve, map : lax := lax) then
-        vprintf Solvable: "Solvable Sanity Failed:\n";
-        vprintf Solvable: "sigma = \n%o.\n", pass[i];
-        supp, mult := Support(Divisor(map));
-        vprintf Solvable: "supp(phi) = \n%o\n%o.\n", supp, mult;
-        supp1, mult1 := Support(Divisor(map-1));
-        vprintf Solvable: "supp(phi-1) = \n%o\n%o.\n", supp1, mult1;
-        return false;
-      end if;
+      assert SolvableCycleStructure(pass[i]) eq test_cycle_structure;
+      // something is terribly wrong if this fails!
     end for;
-    // if we make it out of the loop return true
+    if not BelyiMapSanityCheck(pass[1], curve, map : lax := lax) then
+      vprintf Solvable: "Solvable Sanity Failed:\n";
+      vprintf Solvable: "sigma = \n%o.\n", pass[1];
+      supp, mult := Support(Divisor(map));
+      vprintf Solvable: "supp(phi) = \n%o\n%o.\n", supp, mult;
+      supp1, mult1 := Support(Divisor(map-1));
+      vprintf Solvable: "supp(phi-1) = \n%o\n%o.\n", supp1, mult1;
+      return false;
+    end if;
+    // if we make it here then we passed!
     t_end := Cputime();
     s`SolvableDBSanityCheckTiming := t_end - t_start;
     return true;
@@ -25,7 +28,35 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
   end if;
 end intrinsic;
 
-// TODO local sanity check
+intrinsic SolvableLocalSanityCheck(s::SolvableDBObject) -> BoolElt
+  {SolvableMapSanityCheck...Localified.}
+  if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
+    t_start := Cputime();
+    pass := s`SolvableDBGaloisOrbit;
+    curve := s`SolvableDBBelyiCurve;
+    map := s`SolvableDBBelyiMap;
+    test_cycle_structure := SolvableCycleStructure(pass[1]);
+    for i := 1 to #pass do
+      assert SolvableCycleStructure(pass[i]) eq test_cycle_structure;
+      // something is terribly wrong if this fails!
+    end for;
+    if not BelyiMapSanityCheck(pass[1], curve, map : lax := lax) then
+      vprintf Solvable: "Solvable Sanity Failed:\n";
+      vprintf Solvable: "sigma = \n%o.\n", pass[1];
+      supp, mult := Support(Divisor(map));
+      vprintf Solvable: "supp(phi) = \n%o\n%o.\n", supp, mult;
+      supp1, mult1 := Support(Divisor(map-1));
+      vprintf Solvable: "supp(phi-1) = \n%o\n%o.\n", supp1, mult1;
+      return false;
+    end if;
+    // if we make it here then we passed!
+    t_end := Cputime();
+    s`SolvableDBSanityCheckTiming := t_end - t_start;
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
 
 intrinsic SolvableIsUnramified(s::SolvableDBObject) -> BoolElt, MonStgElt
   {checks if s is unramified over any of its children and returns a bool and the child.}
