@@ -43,11 +43,15 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
       end for;
     // reduce curve mod pp
       K := BaseField(curve);
-      ZK := Integers(K);
-      vprintf Solvable : "Factoring p = %o upstairs...", p;
-      pp := Factorization(p*ZK)[1][1];
-      vprintf Solvable : "done.\n";
-      vprintf Solvable : "Reducing curve mod pp..";
+      if Degree(K) eq 1 then
+        pp := p;
+      else
+        ZK := Integers(K);
+        vprintf Solvable : "Factoring p = %o upstairs...", p;
+        pp := Factorization(p*ZK)[1][1];
+        vprintf Solvable : "done.\n";
+        vprintf Solvable : "Reducing curve mod pp..";
+      end if;
       if IsProjective(curve) then
         X := Reduction(curve, pp);
       else
