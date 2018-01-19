@@ -142,6 +142,9 @@ intrinsic Print(s::SolvableDBObject)
   if assigned s`SolvableDBSanityCheckTiming then
     printf "SanityCheck    : %o seconds.\n", s`SolvableDBSanityCheckTiming;
   end if;
+  if assigned s`SolvableDBSanityCheckTiming then
+    printf "LocalSanity    : %o seconds.\n", s`SolvableDBLocalSanityCheckTiming;
+  end if;
 end intrinsic;
 
 intrinsic 'eq'(s::SolvableDBObject, t::SolvableDBObject) -> BoolElt
