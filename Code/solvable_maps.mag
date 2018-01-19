@@ -48,6 +48,13 @@ intrinsic SolvableReduceCurve(X::Crv, p::RngIntElt) -> Crv
   return Xp;
 end intrinsic;
 
+intrinsic SolvableFiniteField(pp::RngOrdIdl) -> FldFin
+  {Given a prime ideal, return the finite field iso to ZK/pp.}
+  ZK := Order(pp);
+  assert IsPrime(pp);
+  return FiniteField(Index(ZK, pp));
+end intrinsic;
+
 intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
   {SolvableMapSanityCheck...Localified...no lax!}
   if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
@@ -74,7 +81,12 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
         vprintf Solvable : "done.\n";
         vprintf Solvable : "Reducing curve mod pp..";
         if IsProjective(curve) then
-          X := Reduction(curve, pp);
+          if IsHyperelliptic(curve) then
+            FFq := SolvableFiniteField(pp); // TODO
+            X := ChangeRing(curve, FFq);
+          else
+            X := Reduction(curve, pp);
+          end if;
         else
           X := Reduction(ProjectiveClosure(curve), pp);
         end if;
