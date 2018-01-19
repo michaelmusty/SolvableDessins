@@ -82,7 +82,12 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   // curve
     X := s`SolvableDBBelyiCurve;
     X := BaseChange(X, K);
-    vars := VarSeq("x", 1, Rank(Generic(Ideal(X))));
+    rk := Rank(Generic(Ideal(X)));
+    if IsProjective(X) then // X is CrvHyp
+      vars := VarSeq("x", 1, rk-1);
+    else // X is not CrvHyp and is affine
+      vars := VarSeq("x", 1, rk);
+    end if;
     AssignNames(~X, vars);
     s`SolvableDBBelyiCurve := X;
   // map
@@ -90,7 +95,7 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
     KX := FunctionField(X);
     AssignNames(~KX, vars);
   // initialize variables to base change the map
-  num_vars := Rank(Generic(Ideal(X)));
+  num_vars := #vars;
   if num_vars eq 2 then
     x1 := KX.1;
     x2 := KX.2;
