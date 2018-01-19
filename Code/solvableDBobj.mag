@@ -112,7 +112,13 @@ intrinsic Print(s::SolvableDBObject)
     end if;
   end if;
   if assigned s`SolvableDBBelyiCurve and SolvableIsRamifiedAtEveryLevel(s) then
-    printf "BelyiCurve:\n";
+    printf "BelyiCurve: %o\n", s`SolvableDBName;
+    printf "LowGenusOrHyperelliptic? ";
+    if s`SolvableDBLowGenusOrHyperelliptic then
+      printf "true";
+    else
+      printf "false";
+    end if;
     printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
     printf "BaseField:\n";
     printf "%o\n", BaseField(s`SolvableDBBelyiCurve);
