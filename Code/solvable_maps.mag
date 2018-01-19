@@ -30,7 +30,7 @@ end intrinsic;
 
 intrinsic SolvableReduceCurve(X::Crv, p::RngIntElt) -> Crv
   {}
-  K eq BaseField(X);
+  K := BaseField(X);
   assert Degree(K) eq 1; // over number fields use built in Reduction(X, pp) function
   if IsAffine(X) then
     X := ProjectiveClosure(X);
