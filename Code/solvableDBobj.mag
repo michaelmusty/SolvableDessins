@@ -143,7 +143,7 @@ intrinsic Print(s::SolvableDBObject)
   if assigned s`SolvableDBSanityCheckTiming then
     printf "SanityCheck    : %o seconds.\n", s`SolvableDBSanityCheckTiming;
   end if;
-  if assigned s`SolvableDBSanityCheckTiming then
+  if assigned s`SolvableDBLocalSanityCheckTiming then
     printf "LocalSanity    : %o seconds.\n", s`SolvableDBLocalSanityCheckTiming;
     printf "p = %o\n", s`SolvableDBLocalSanityCheckPrime;
   end if;
