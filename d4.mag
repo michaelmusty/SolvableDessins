@@ -7,7 +7,7 @@ for i := 1 to #a do
   s := SolvableBelyiMap(s);
   before, after := SolvableLowDegreeModel(s);
   assert SolvableMapSanityCheck(after);
-  assert SolvableLocalSanityCheck(t, 101);
+  assert SolvableLocalSanityCheck(after, 101);
   SolvableDBWriteObject(after);
   filename := after`SolvableDBFilename;
   t := SolvableDBAccessEntry(filename);
