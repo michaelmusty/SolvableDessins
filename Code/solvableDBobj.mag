@@ -16,6 +16,7 @@ declare attributes SolvableDBObject:
   SolvableDBBelyiMapTiming,
   SolvableDBLowDegreeTiming,
   SolvableDBSanityCheckTiming,
+  SolvableDBLocalSanityCheckTiming,
   SolvableDBIsLowGenusOrHyperelliptic, // TODO
   // permutation attributes
   SolvableDBGaloisOrbit,

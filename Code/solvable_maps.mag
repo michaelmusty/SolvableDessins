@@ -28,30 +28,57 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
   end if;
 end intrinsic;
 
-intrinsic SolvableLocalSanityCheck(s::SolvableDBObject) -> BoolElt
+intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
   {SolvableMapSanityCheck...Localified...no lax!}
   if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
-    t_start := Cputime();
-    pass := s`SolvableDBGaloisOrbit;
-    curve := s`SolvableDBBelyiCurve;
-    map := s`SolvableDBBelyiMap;
-    test_cycle_structure := SolvableCycleStructure(pass[1]);
-    for i := 1 to #pass do
-      assert SolvableCycleStructure(pass[i]) eq test_cycle_structure;
-      // something is terribly wrong if this fails!
-    end for;
-    if not BelyiMapSanityCheck(pass[1], curve, map) then
-      vprintf Solvable: "Solvable Sanity Failed:\n";
-      vprintf Solvable: "sigma = \n%o.\n", pass[1];
-      supp, mult := Support(Divisor(map));
-      vprintf Solvable: "supp(phi) = \n%o\n%o.\n", supp, mult;
-      supp1, mult1 := Support(Divisor(map-1));
-      vprintf Solvable: "supp(phi-1) = \n%o\n%o.\n", supp1, mult1;
-      return false;
-    end if;
+    // setup
+      t_start := Cputime();
+      pass := s`SolvableDBGaloisOrbit;
+      curve := s`SolvableDBBelyiCurve;
+      map := s`SolvableDBBelyiMap;
+      test_cycle_structure := SolvableCycleStructure(pass[1]);
+      for i := 1 to #pass do
+        assert SolvableCycleStructure(pass[i]) eq test_cycle_structure;
+        // something is terribly wrong if this fails!
+      end for;
+    // reduce curve mod pp
+      K := BaseField(curve);
+      ZK := Integers(K);
+      vprintf Solvable : "Factoring p = %o upstairs...", p;
+      pp := Factorization(p*ZK)[1][1];
+      vprintf Solvable : "done.\n";
+      vprintf Solvable : "Reducing curve mod pp..";
+      if IsProjective(curve) then
+        X := Reduction(curve, pp);
+      else
+        X := Reduction(ProjectiveClosure(curve), pp);
+      end if;
+      C := Curve(X); // Sch -> Crv
+      vprintf Solvable : "done.\n";
+    // coerce map into function field of curve mod pp
+    num := Numerator(map);
+    den := Denominator(map);
+    Aff := Parent(num);
+    assert Aff eq Parent(den);
+    KC := FunctionField(C);
+    Affpp := Parent(Numerator(KC.1));
+    assert Rank(Aff) eq Rank(Affpp);
+    hompp := eval Sprintf("hompp := hom<Aff->Affpp|[%o]>; return hompp;", VarText("Affpp.", 1, Rank(Affpp)));
+    mapp := KC!(hompp(num))/KC!(hompp(den));
+    assert Parent(mapp) eq FunctionField(C);
+    // sanity check
+      if not BelyiMapSanityCheck(pass[1], C, mapp) then
+        vprintf Solvable: "Solvable Local Sanity Failed:\n";
+        vprintf Solvable: "sigma = \n%o.\n", pass[1];
+        supp, mult := Support(Divisor(mapp));
+        vprintf Solvable: "supp(phi) = \n%o\n%o.\n", supp, mult;
+        supp1, mult1 := Support(Divisor(mapp-1));
+        vprintf Solvable: "supp(phi-1) = \n%o\n%o.\n", supp1, mult1;
+        return false;
+      end if;
     // if we make it here then we passed!
     t_end := Cputime();
-    s`SolvableDBSanityCheckTiming := t_end - t_start;
+    s`SolvableDBLocalSanityCheckTiming := t_end - t_start;
     return true;
   else
     return false;
