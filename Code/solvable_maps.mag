@@ -132,7 +132,7 @@ intrinsic SolvableReduceCurve(X::Crv, f::FldFunFracSchElt, p::RngIntElt) -> Crv,
   pp := Factorization(p*ZK)[1][1];
   FFq, mpZKtoFFq := ResidueClassField(pp);
   I := Ideal(X);
-  Ipp := ChangeRing(I, FFq);
+  Ipp := Reduction(I, pp);
   PP := ProjectiveSpace(Generic(Ipp));
   Xpp := Curve(PP, Ipp);
   KXpp := FunctionField(Xpp);
