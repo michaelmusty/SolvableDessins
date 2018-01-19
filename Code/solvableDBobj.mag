@@ -17,6 +17,7 @@ declare attributes SolvableDBObject:
   SolvableDBLowDegreeTiming,
   SolvableDBSanityCheckTiming,
   SolvableDBLocalSanityCheckTiming,
+  SolvableDBLocalSanityCheckPrime,
   SolvableDBIsLowGenusOrHyperelliptic, // TODO
   // permutation attributes
   SolvableDBGaloisOrbit,
@@ -144,6 +145,7 @@ intrinsic Print(s::SolvableDBObject)
   end if;
   if assigned s`SolvableDBSanityCheckTiming then
     printf "LocalSanity    : %o seconds.\n", s`SolvableDBLocalSanityCheckTiming;
+    printf "p = %o\n", s`SolvableDBLocalSanityCheckPrime;
   end if;
 end intrinsic;
 

@@ -79,6 +79,7 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
     // if we make it here then we passed!
     t_end := Cputime();
     s`SolvableDBLocalSanityCheckTiming := t_end - t_start;
+    s`SolvableDBLocalSanityCheckPrime := p;
     return true;
   else
     return false;
