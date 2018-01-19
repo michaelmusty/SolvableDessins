@@ -11,6 +11,7 @@ for i := 1 to #a do
   filename := after`SolvableDBFilename;
   t := SolvableDBAccessEntry(filename);
   assert SolvableMapSanityCheck(t);
+  assert SolvableLocalSanityCheck(t, 9999991);
   assert assigned t`SolvableDBBelyiMapTiming;
   assert assigned t`SolvableDBLowDegreeTiming;
   assert assigned t`SolvableDBSanityCheckTiming;
