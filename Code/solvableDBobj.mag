@@ -16,6 +16,7 @@ declare attributes SolvableDBObject:
   SolvableDBBelyiMapTiming,
   SolvableDBLowDegreeTiming,
   SolvableDBSanityCheckTiming,
+  SolvableDBIsLowGenusOrHyperelliptic, // TODO
   // permutation attributes
   SolvableDBGaloisOrbit,
   SolvableDBPassport,
@@ -121,11 +122,13 @@ intrinsic Print(s::SolvableDBObject)
     end if;
   end if;
   if assigned s`SolvableDBBelyiMapTiming then
-    assert assigned s`SolvableDBLowDegreeTiming;
-    assert assigned s`SolvableDBSanityCheckTiming;
     printf "Timing:\n";
     printf "BelyiMap       : %o seconds.\n", s`SolvableDBBelyiMapTiming;
+  end if;
+  if assigned s`SolvableDBLowDegreeTiming then
     printf "LowDegreeModel : %o seconds.\n", s`SolvableDBLowDegreeTiming;
+  end if;
+  if assigned s`SolvableDBSanityCheckTiming then
     printf "SanityCheck    : %o seconds.\n", s`SolvableDBSanityCheckTiming;
   end if;
 end intrinsic;

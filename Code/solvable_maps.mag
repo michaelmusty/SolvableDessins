@@ -80,15 +80,15 @@ end intrinsic;
 intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
   {Extend base field of object to K.}
   // curve
-  X := s`SolvableDBBelyiCurve;
-  X := BaseChange(X, K);
-  vars := VarSeq("x", 1, Rank(Generic(Ideal(X))));
-  AssignNames(~X, vars);
-  s`SolvableDBBelyiCurve := X;
+    X := s`SolvableDBBelyiCurve;
+    X := BaseChange(X, K);
+    vars := VarSeq("x", 1, Rank(Generic(Ideal(X))));
+    AssignNames(~X, vars);
+    s`SolvableDBBelyiCurve := X;
   // map
-  map := s`SolvableDBBelyiMap;
-  KX := FunctionField(X);
-  AssignNames(~KX, vars);
+    map := s`SolvableDBBelyiMap;
+    KX := FunctionField(X);
+    AssignNames(~KX, vars);
   // initialize variables to base change the map
   num_vars := Rank(Generic(Ideal(X)));
   if num_vars eq 2 then
@@ -103,6 +103,12 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
     x2 := KX.2;
     x3 := KX.3;
     x4 := KX.4;
+  elif num_vars eq 5 then
+    x1 := KX.1;
+    x2 := KX.2;
+    x3 := KX.3;
+    x4 := KX.4;
+    x5 := KX.5;
   else
     error "we should not be working in a high dimensional ambient space!";
   end if;
@@ -369,7 +375,6 @@ intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDBObject, t::Solvabl
     return s;
 end intrinsic;
 
-// TODO assign timing to object
 intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   {}
   // timing
@@ -568,7 +573,6 @@ intrinsic IsoText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgE
   return var_text;
 end intrinsic;
 
-// TODO assign timing to object
 intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
   {Naively try to reduce the degree of the BelyiCurve.}
   vprintf Solvable : "%o LowDegreeAttempt :\n", s`SolvableDBName;
@@ -597,6 +601,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
       vprintf Solvable : "  Checking Canonical map...";
       t0 := Cputime();
       g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
+      s`SolvableDBIsLowGenusOrHyperelliptic := is_low_genus_or_hyp;
+      before`SolvableDBIsLowGenusOrHyperelliptic := is_low_genus_or_hyp;
+      after`SolvableDBIsLowGenusOrHyperelliptic := is_low_genus_or_hyp;
       t1 := Cputime();
       vprintf Solvable : "done. %o seconds.\n", t1-t0;
     // cases
