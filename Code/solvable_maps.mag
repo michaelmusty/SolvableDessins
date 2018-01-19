@@ -428,7 +428,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
       vprintf Solvable : "Trying all combinations...";
       t0 := Cputime();
       worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
-      s`SolvableDBeRamificationDivisorBeforeBaseChange := D;
+      s`SolvableDBRamificationDivisorBeforeBaseChange := D;
       t1 := Cputime();
       vprintf Solvable : "done. %o seconds.\n", t1-t0;
     // base change if necessary
