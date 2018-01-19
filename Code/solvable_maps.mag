@@ -108,7 +108,6 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
       hompp := eval Sprintf("hompp := hom<Aff->Affpp|[%o]>; return hompp;", VarText("Affpp.", 1, Rank(Affpp)));
       mapp := KC!(hompp(num))/KC!(hompp(den));
       assert Parent(mapp) eq FunctionField(C);
-      hompp(K.1);
     // sanity check
       if not BelyiMapSanityCheck(pass[1], C, mapp) then
         vprintf Solvable: "Solvable Local Sanity Failed:\n";
