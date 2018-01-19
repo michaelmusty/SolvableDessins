@@ -29,7 +29,7 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
 end intrinsic;
 
 intrinsic SolvableLocalSanityCheck(s::SolvableDBObject) -> BoolElt
-  {SolvableMapSanityCheck...Localified.}
+  {SolvableMapSanityCheck...Localified...no lax!}
   if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
     t_start := Cputime();
     pass := s`SolvableDBGaloisOrbit;
@@ -40,7 +40,7 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject) -> BoolElt
       assert SolvableCycleStructure(pass[i]) eq test_cycle_structure;
       // something is terribly wrong if this fails!
     end for;
-    if not BelyiMapSanityCheck(pass[1], curve, map : lax := lax) then
+    if not BelyiMapSanityCheck(pass[1], curve, map) then
       vprintf Solvable: "Solvable Sanity Failed:\n";
       vprintf Solvable: "sigma = \n%o.\n", pass[1];
       supp, mult := Support(Divisor(map));
