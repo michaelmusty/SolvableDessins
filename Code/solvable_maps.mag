@@ -96,7 +96,7 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
     end if;
     AssignNames(~KX, map_vars);
   // initialize variables to base change the map
-  num_vars := #vars;
+  num_vars := #map_vars;
   if num_vars eq 2 then
     x1 := KX.1;
     x2 := KX.2;
