@@ -28,6 +28,26 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
   end if;
 end intrinsic;
 
+intrinsic SolvableReduceCurve(X::Crv, p::RngIntElt) -> Crv
+  {}
+  K eq BaseField(X);
+  assert Degree(K) eq 1; // over number fields use built in Reduction(X, pp) function
+  if IsAffine(X) then
+    X := ProjectiveClosure(X);
+  end if;
+  equations := DefiningEquations(X);
+  PX := Parent(equations[1]);
+  rk := Rank(PX);
+  FFp := GF(p);
+  PXp := PolynomialRing(FFp, rk);
+  homp := eval Sprintf("homp := hom<PX->PXp|[%o]>; return homp;", VarText("PXp.", 1, rk));
+  equationsp := [homp(equations[i]) : i in [1..#equations]];
+  Ip := ideal<PXp|equationsp>;
+  PP := ProjectiveSpace(PXp);
+  Xp := Curve(PP, Ip);
+  return Xp;
+end intrinsic;
+
 intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
   {SolvableMapSanityCheck...Localified...no lax!}
   if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
@@ -44,32 +64,34 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
     // reduce curve mod pp
       K := BaseField(curve);
       if Degree(K) eq 1 then
-        pp := p;
-      else
+        vprintf Solvable : "Reducing curve mod p = %o...", p;
+        C := SolvableReduceCurve(curve, p);
+        vprintf Solvable : "done.\n";
+      else // built in reduction function only works over a number field
         ZK := Integers(K);
         vprintf Solvable : "Factoring p = %o upstairs...", p;
         pp := Factorization(p*ZK)[1][1];
         vprintf Solvable : "done.\n";
         vprintf Solvable : "Reducing curve mod pp..";
+        if IsProjective(curve) then
+          X := Reduction(curve, pp);
+        else
+          X := Reduction(ProjectiveClosure(curve), pp);
+        end if;
+        C := Curve(X); // Sch -> Crv
       end if;
-      if IsProjective(curve) then
-        X := Reduction(curve, pp);
-      else
-        X := Reduction(ProjectiveClosure(curve), pp);
-      end if;
-      C := Curve(X); // Sch -> Crv
       vprintf Solvable : "done.\n";
     // coerce map into function field of curve mod pp
-    num := Numerator(map);
-    den := Denominator(map);
-    Aff := Parent(num);
-    assert Aff eq Parent(den);
-    KC := FunctionField(C);
-    Affpp := Parent(Numerator(KC.1));
-    assert Rank(Aff) eq Rank(Affpp);
-    hompp := eval Sprintf("hompp := hom<Aff->Affpp|[%o]>; return hompp;", VarText("Affpp.", 1, Rank(Affpp)));
-    mapp := KC!(hompp(num))/KC!(hompp(den));
-    assert Parent(mapp) eq FunctionField(C);
+      num := Numerator(map);
+      den := Denominator(map);
+      Aff := Parent(num);
+      assert Aff eq Parent(den);
+      KC := FunctionField(C);
+      Affpp := Parent(Numerator(KC.1));
+      assert Rank(Aff) eq Rank(Affpp);
+      hompp := eval Sprintf("hompp := hom<Aff->Affpp|[%o]>; return hompp;", VarText("Affpp.", 1, Rank(Affpp)));
+      mapp := KC!(hompp(num))/KC!(hompp(den));
+      assert Parent(mapp) eq FunctionField(C);
     // sanity check
       if not BelyiMapSanityCheck(pass[1], C, mapp) then
         vprintf Solvable: "Solvable Local Sanity Failed:\n";
@@ -81,10 +103,10 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
         return false;
       end if;
     // if we make it here then we passed!
-    t_end := Cputime();
-    s`SolvableDBLocalSanityCheckTiming := t_end - t_start;
-    s`SolvableDBLocalSanityCheckPrime := p;
-    return true;
+      t_end := Cputime();
+      s`SolvableDBLocalSanityCheckTiming := t_end - t_start;
+      s`SolvableDBLocalSanityCheckPrime := p;
+      return true;
   else
     return false;
   end if;
