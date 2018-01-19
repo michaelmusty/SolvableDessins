@@ -427,8 +427,8 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
       vprintf Solvable : "#supp(Divisor) = %o\n", #Support(Dinitial);
       vprintf Solvable : "Trying all combinations...";
       t0 := Cputime();
-      worked_before_basechange, all_dim_one := SolvableDimensionOneLspacesUsingAllPoints(Dinitial);
-      s`SolvableDBDimensionOneLspacesBeforeBaseChange := all_dim_one;
+      worked_before_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
+      s`SolvableDBeRamificationDivisorBeforeBaseChange := D;
       t1 := Cputime();
       vprintf Solvable : "done. %o seconds.\n", t1-t0;
     // base change if necessary
@@ -466,10 +466,11 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
           vprintf Solvable : "#supp(Divisor) = %o\n", #Support(Dinitial);
           vprintf Solvable : "Trying all combinations...";
           t0 := Cputime();
-          worked_after_basechange, all_dim_one := SolvableDimensionOneLspacesUsingAllPoints(Dinitial);
-          s`SolvableDBDimensionOneLspacesAfterBaseChange := all_dim_one;
+          worked_after_basechange, D := SolvableRamificationDivisorUsingAllPoints(Dinitial);
+          s`SolvableDBRamificationDivisorAfterBaseChange := D;
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
+          assert worked_after_basechange;
       end if;
   // setup curve downstairs
     X_below := t`SolvableDBBelyiCurve;
@@ -488,7 +489,6 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
       assert IsAffine(X_below);
     end if;
   // RiemannRoch
-    D := all_dim_one[1]; // TODO could try all of these...
     vprintf Solvable: "Applying RiemannRoch to following divisor:\n";
     supp, mult := Support(D);
     vprintf Solvable: "%o\n%o\n", supp, mult;
