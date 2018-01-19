@@ -115,12 +115,12 @@ intrinsic Print(s::SolvableDBObject)
     printf "BelyiCurve %o: ", s`SolvableDBName;
     if s`SolvableDBIsLowGenusOrHyperelliptic then
       if s`SolvableDBGenus in [0,1] then
-        printf "Low genus";
+        printf "Low genus\n";
       else
-        printf "Hyperelliptic";
+        printf "Hyperelliptic\n";
       end if;
     else
-      printf "Nonhyperelliptic";
+      printf "Nonhyperelliptic\n";
     end if;
     printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
     printf "BaseField:\n";
