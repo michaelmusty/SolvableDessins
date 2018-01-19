@@ -72,7 +72,11 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
       K := BaseField(curve);
       if Degree(K) eq 1 then
         vprintf Solvable : "Reducing curve mod p = %o...", p;
-        C := SolvableReduceCurve(curve, p);
+        if IsHyperelliptic(curve) then
+          C := ChangeRing(curve, FiniteField(p));
+        else
+          C := SolvableReduceCurve(curve, p);
+        end if;
         vprintf Solvable : "done.\n";
       else // built in reduction function only works over a number field
         ZK := Integers(K);
