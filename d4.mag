@@ -8,6 +8,8 @@ for i := 1 to #a do
   before, after := SolvableLowDegreeModel(s);
   assert SolvableMapSanityCheck(after);
   assert SolvableLocalSanityCheck(after, 101);
+  assert assigned after`SolvableDBLocalSanityCheckTiming;
+  assert assigned after`SolvableDBLocalSanityCheckPrime;
   SolvableDBWriteObject(after);
   filename := after`SolvableDBFilename;
   t := SolvableDBAccessEntry(filename);
