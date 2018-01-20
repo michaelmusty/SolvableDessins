@@ -28,6 +28,43 @@ intrinsic SolvableMapSanityCheck(s::SolvableDBObject : lax := false) -> BoolElt
   end if;
 end intrinsic;
 
+intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
+  {SolvableMapSanityCheck...Localified...no lax!}
+  if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
+    // setup
+      t_start := Cputime();
+      pass := s`SolvableDBGaloisOrbit;
+      curve := s`SolvableDBBelyiCurve;
+      map := s`SolvableDBBelyiMap;
+      test_cycle_structure := SolvableCycleStructure(pass[1]);
+      for i := 1 to #pass do
+        assert SolvableCycleStructure(pass[i]) eq test_cycle_structure;
+        // something is terribly wrong if this fails!
+      end for;
+    // reduce curve and Belyi map mod pp
+      vprintf Solvable : "Reducing mod p = %o...", p;
+      C, mapp := SolvableReduceCurve(curve, map, p);
+      vprintf Solvable : "done.\n";
+    // sanity check
+      if not BelyiMapSanityCheck(pass[1], C, mapp) then
+        vprintf Solvable: "Solvable Local Sanity Failed:\n";
+        vprintf Solvable: "sigma = \n%o.\n", pass[1];
+        supp, mult := Support(Divisor(mapp));
+        vprintf Solvable: "supp(phi) = \n%o\n%o.\n", supp, mult;
+        supp1, mult1 := Support(Divisor(mapp-1));
+        vprintf Solvable: "supp(phi-1) = \n%o\n%o.\n", supp1, mult1;
+        return false;
+      end if;
+    // if we make it here then we passed!
+      t_end := Cputime();
+      s`SolvableDBLocalSanityCheckTiming := t_end - t_start;
+      s`SolvableDBLocalSanityCheckPrime := p;
+      return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
 /*
 intrinsic SolvableReduceCurve(X::Crv, p::RngIntElt) -> Crv
   {}
@@ -122,6 +159,7 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
 end intrinsic;
 */
 
+// TODO test for affine curve, projective curve, CrvHyp, CrvEll, CrvCon
 intrinsic SolvableReduceCurve(X::Crv, f::FldFunFracSchElt, p::RngIntElt) -> Crv, FldFunFracSchElt
   {Reduce X and f in QQ(X) mod p and return X mod p, f mod p.}
   K := BaseField(X);
