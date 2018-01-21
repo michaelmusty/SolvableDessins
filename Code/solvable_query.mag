@@ -38,7 +38,7 @@ intrinsic DegreeGenusIsLowGenusOrHyp(d::RngIntElt, g::RngIntElt, is_low_genus_or
     vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
     s := SolvableDBAccessEntry(f[i]);
     if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
-      s_bool := s`SolvableDBIsLowGenusOrHyperelliptic
+      s_bool := s`SolvableDBIsLowGenusOrHyperelliptic;
       s_g := s`SolvableDBGenus;
       if s_g eq g and s_bool eq is_low_genus_or_hyp then
         Append(~l, s);
