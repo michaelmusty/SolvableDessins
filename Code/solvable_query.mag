@@ -30,6 +30,23 @@ intrinsic SolvableSanityCheck(s::SolvableDBObject) -> BoolElt
 end intrinsic;
 */
 
+intrinsic DegreeGenusIsRamified(d::RngIntElt, g::RngIntElt, is_ramified::BoolElt) -> SeqEnum[SolvableDBObject]
+  {SeqEnum of SolvableDBObjects with given inputs.}
+  f := SolvableDBFilenames(d);
+  l := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
+    s_g := s`SolvableDBGenus;
+    s_isram := s`SolvableDBIsRamifiedAtEveryLevel;
+    if s_g eq g and s_isram eq is_ramified then
+      Append(~l, s);
+    end if;
+    vprintf Solvable : "done.\n";
+  end for;
+  return l;
+end intrinsic;
+
 intrinsic DegreeGenusIsLowGenusOrHyp(d::RngIntElt, g::RngIntElt, is_low_genus_or_hyp::BoolElt) -> SeqEnum[SolvableDBObject]
   {SeqEnum of SolvableDBObjects with given inputs.}
   f := SolvableDBFilenames(d);
