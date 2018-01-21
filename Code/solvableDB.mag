@@ -240,6 +240,7 @@ intrinsic SolvableDBWriteObjectText(s::SolvableDBObject) -> MonStgElt
     Append(~easy_attrs, "SolvableDBLocalSanityCheckTiming");
     Append(~easy_attrs, "SolvableDBLocalSanityCheckPrime");
     Append(~easy_attrs, "SolvableDBIsLowGenusOrHyperelliptic");
+    Append(~easy_attrs, "SolvableDBIsRamifiedAtEveryLevel");
     permutation_attrs := [];
     Append(~permutation_attrs, "SolvableDBGaloisOrbit");
     Append(~permutation_attrs, "SolvableDBPassport");

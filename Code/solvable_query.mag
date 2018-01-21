@@ -1,7 +1,7 @@
 // user defined verbose flags for vprintf
   declare verbose Solvable, 2;
   declare verbose SolvableTime, 1;
-
+/*
 intrinsic SolvableSanityCheck(s::SolvableDBObject) -> BoolElt
   {given a database object s, perform a detailed sanity check.}
   sanity := true;
@@ -27,4 +27,38 @@ intrinsic SolvableSanityCheck(s::SolvableDBObject) -> BoolElt
     end for;
   end if;
   return sanity;
+end intrinsic;
+*/
+
+intrinsic DegreeGenusIsLowGenusOrHyp(d::RngIntElt, g::RngIntElt, is_low_genus_or_hyp::BoolElt) -> SeqEnum[SolvableDBObject]
+  {SeqEnum of SolvableDBObjects with given inputs.}
+  f := SolvableDBFilenames(d);
+  l := [];
+  for i := 1 to #f do
+    if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
+      s_bool := s`SolvableDBIsLowGenusOrHyperelliptic
+      s := SolvableDBAccessEntry(f[i]);
+      s_g := s`SolvableDBGenus;
+      if s_g eq g and s_bool eq is_low_genus_or_hyp then
+        Append(~l, s);
+      end if;
+    end if;
+  end for;
+  return l;
+end intrinsic;
+
+intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> SeqEnum[SolvableDBObject]
+  {SeqEnum of SolvableDBObjects with given inputs.}
+  f := SolvableDBFilenames(d);
+  l := [];
+  for i := 1 to #f do
+    vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
+    s := SolvableDBAccessEntry(f[i]);
+    s_g := s`SolvableDBGenus;
+    if s_g eq g then
+      Append(~l, s);
+    end if;
+    end if;
+  end for;
+  return l;
 end intrinsic;
