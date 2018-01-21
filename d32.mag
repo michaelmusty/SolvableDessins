@@ -6,6 +6,7 @@ for i := 1 to #a do
   s := a[i];
   s := SolvableBelyiMap(s);
   before, after := SolvableLowDegreeModel(s);
+  printf "\nSanity checking...\n";
   assert SolvableMapSanityCheck(after);
   assert SolvableLocalSanityCheck(after, 101);
   assert assigned after`SolvableDBLocalSanityCheckTiming;
@@ -13,6 +14,7 @@ for i := 1 to #a do
   SolvableDBWriteObject(after);
   filename := after`SolvableDBFilename;
   t := SolvableDBAccessEntry(filename);
+  printf "\nSanity checking again...\n";
   assert SolvableMapSanityCheck(t);
   assert SolvableLocalSanityCheck(t, 101);
   assert assigned t`SolvableDBBelyiMapTiming;
@@ -23,6 +25,7 @@ for i := 1 to #b do
   s := b[i];
   s := SolvableBelyiMap(s);
   before, after := SolvableLowDegreeModel(s);
+  printf "\nSanity checking...\n";
   assert SolvableMapSanityCheck(after);
   assert SolvableLocalSanityCheck(after, 101);
   assert assigned after`SolvableDBLocalSanityCheckTiming;
@@ -30,6 +33,7 @@ for i := 1 to #b do
   SolvableDBWriteObject(after);
   filename := after`SolvableDBFilename;
   t := SolvableDBAccessEntry(filename);
+  printf "\nSanity checking again...\n";
   assert SolvableMapSanityCheck(t);
   assert SolvableLocalSanityCheck(t, 101);
   assert assigned t`SolvableDBBelyiMapTiming;
