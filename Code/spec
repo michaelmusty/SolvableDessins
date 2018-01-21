@@ -8,4 +8,5 @@
   solvable_graph.mag
   solvableDBobj.mag
   solvable_maps.mag
+  solvable_query.mag
 }
