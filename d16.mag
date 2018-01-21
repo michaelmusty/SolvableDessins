@@ -1,0 +1,21 @@
+load "doob.mag";
+
+a,b,c := SolvableDBStatus(16);
+
+for i := 1 to #a do
+  s := a[i];
+  s := SolvableBelyiMap(s);
+  before, after := SolvableLowDegreeModel(s);
+  assert SolvableMapSanityCheck(after);
+  assert SolvableLocalSanityCheck(after, 101);
+  assert assigned after`SolvableDBLocalSanityCheckTiming;
+  assert assigned after`SolvableDBLocalSanityCheckPrime;
+  SolvableDBWriteObject(after);
+  filename := after`SolvableDBFilename;
+  t := SolvableDBAccessEntry(filename);
+  assert SolvableMapSanityCheck(t);
+  assert SolvableLocalSanityCheck(t, 101);
+  assert assigned t`SolvableDBBelyiMapTiming;
+  assert assigned t`SolvableDBLowDegreeTiming;
+  assert assigned t`SolvableDBSanityCheckTiming;
+end for;
