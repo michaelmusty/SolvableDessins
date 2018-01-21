@@ -380,8 +380,8 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     new_equation := denom*PX.Rank(PX)^2-numer;
     Append(~basis, new_equation);
     IX := ideal< PX | basis >;
-    // S := Saturation(IX, numer); // saturate at numerator
-    S := Saturation(IX, denom); // saturate at numerator
+    S := Saturation(IX, numer); // saturate at numerator
+    // S := Saturation(IX, denom); // saturate at numerator
     assert IsPrime(S); // otherwise saturation didn't work
   // new ambient
     AAX := AffineSpace(PX);
