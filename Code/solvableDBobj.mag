@@ -19,7 +19,7 @@ declare attributes SolvableDBObject:
   SolvableDBLocalSanityCheckTiming,
   SolvableDBLocalSanityCheckPrime,
   SolvableDBIsLowGenusOrHyperelliptic, // TODO
-  SolvableIsRamifiedAtEveryLevel,
+  SolvableDBIsRamifiedAtEveryLevel,
   // permutation attributes
   SolvableDBGaloisOrbit,
   SolvableDBPassport,
