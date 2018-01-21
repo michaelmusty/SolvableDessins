@@ -2,8 +2,22 @@ load "doob.mag";
 
 a,b,c := SolvableDBStatus(32);
 
+// bad
+bad := [];
+Append(~bad, "32S9-8,4,2-g3-path11");
+Append(~bad, "32S10-4,4,8-g7-path8");
+
+// make list b without bad
+bb := [];
 for i := 1 to #b do
-  s := b[i];
+  if b[i]`SolvableDBName not in bad then
+    Append(~bb, b[i]);
+  end if;
+end for;
+
+// main
+for i := 1 to #bb do
+  s := bb[i];
   s := SolvableBelyiMap(s);
   before, after := SolvableLowDegreeModel(s);
   printf "\nLocal sanity checking %o:\n", s`SolvableDBName;
