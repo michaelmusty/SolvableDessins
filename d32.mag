@@ -26,6 +26,6 @@ for i := 1 to #b do
   assert assigned t`SolvableDBBelyiMapTiming;
   assert assigned t`SolvableDBLowDegreeTiming;
   // assert assigned t`SolvableDBSanityCheckTiming;
-  assert assigned t`SolvableDBLocalSanityCheckTiming,
-  assert assigned t`SolvableDBLocalSanityCheckPrime,
+  assert assigned t`SolvableDBLocalSanityCheckTiming;
+  assert assigned t`SolvableDBLocalSanityCheckPrime;
 end for;
