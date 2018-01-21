@@ -10,7 +10,7 @@ Append(~bad, "32S10-4,4,8-g7-path8");
 // make list b without bad
 bb := [];
 for i := 1 to #b do
-  if b[i]`SolvableDBName not in bad then
+  if not (b[i]`SolvableDBName in bad) then
     Append(~bb, b[i]);
   end if;
 end for;
