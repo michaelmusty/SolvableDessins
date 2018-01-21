@@ -59,7 +59,6 @@ intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> SeqEnum[SolvableDBObject]
     if s_g eq g then
       Append(~l, s);
     end if;
-    end if;
   end for;
   return l;
 end intrinsic;
