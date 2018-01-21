@@ -509,7 +509,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     vprintf Solvable: "ramification = %o.\n", [ram0, ram1, ramoo];
     vprintf Solvable: "ABC after = %o.\n", abc;
   // assign residue fields F0, F1, Foo, and divisors D0, D1, Doo
-    vprintf Solvable : "Assign residue fields and divisors to s...";
+    vprintf Solvable : "Assign residue fields and divisors to s...\n";
     t0 := Cputime();
     s := SolvableAssignResidueFieldsAndDivisors(s, t);
     F0 := s`SolvableDBResidueField0;
