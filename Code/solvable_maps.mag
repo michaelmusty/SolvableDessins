@@ -41,6 +41,7 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
         assert SolvableCycleStructure(pass[i]) eq test_cycle_structure;
         // something is terribly wrong if this fails!
       end for;
+      vprintf Solvable : "Local sanity check setup done.\n";
     // reduce curve and Belyi map mod pp
       vprintf Solvable : "Reducing mod p = %o...", p;
       C, mapp := SolvableReduceCurve(curve, map, p);

@@ -2,13 +2,12 @@ load "doob.mag";
 
 a,b,c := SolvableDBStatus(32);
 
-for i := 1 to #a do
-  s := a[i];
+for i := 1 to #b do
+  s := b[i];
   s := SolvableBelyiMap(s);
   before, after := SolvableLowDegreeModel(s);
-  printf "\nSanity checking...\n";
+  printf "\nLocal sanity checking %o:\n", s`SolvableDBName;
   t0 := Cputime();
-  // assert SolvableMapSanityCheck(after);
   assert SolvableLocalSanityCheck(after, 101);
   t1 := Cputime();
   printf "done. %o seconds.\n", t1-t0;
@@ -18,6 +17,7 @@ for i := 1 to #a do
   filename := after`SolvableDBFilename;
   t := SolvableDBAccessEntry(filename);
   printf "\nSanity checking again...\n";
+  printf "\nLocal sanity checking %o again:\n", s`SolvableDBName;
   t0 := Cputime();
   // assert SolvableMapSanityCheck(t);
   assert SolvableLocalSanityCheck(t, 101);
