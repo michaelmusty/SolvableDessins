@@ -117,14 +117,18 @@ intrinsic Print(s::SolvableDBObject)
   if assigned s`SolvableDBBelyiCurve and SolvableIsRamifiedAtEveryLevel(s) then
     printf "BelyiCurve:\n";
     printf "%o: ", s`SolvableDBName;
-    if s`SolvableDBIsLowGenusOrHyperelliptic then
-      if s`SolvableDBGenus in [0,1] then
-        printf "Low genus\n";
+    if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
+      if s`SolvableDBIsLowGenusOrHyperelliptic then
+        if s`SolvableDBGenus in [0,1] then
+          printf "Low genus\n";
+        else
+          printf "Hyperelliptic\n";
+        end if;
       else
-        printf "Hyperelliptic\n";
+        printf "Nonhyperelliptic\n";
       end if;
     else
-      printf "Nonhyperelliptic\n";
+      printf "Low degree model not computed!\n";
     end if;
     printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
     printf "BaseField:\n";
