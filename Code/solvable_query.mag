@@ -44,6 +44,7 @@ intrinsic DegreeGenusIsLowGenusOrHyp(d::RngIntElt, g::RngIntElt, is_low_genus_or
         Append(~l, s);
       end if;
     end if;
+    vprintf Solvable : "done.\n";
   end for;
   return l;
 end intrinsic;
@@ -59,6 +60,7 @@ intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> SeqEnum[SolvableDBObject]
     if s_g eq g then
       Append(~l, s);
     end if;
+    vprintf Solvable : "done.\n";
   end for;
   return l;
 end intrinsic;
