@@ -53,8 +53,8 @@ intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> SeqEnum[SolvableDBObject]
   f := SolvableDBFilenames(d);
   l := [];
   for i := 1 to #f do
-    vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
     s := SolvableDBAccessEntry(f[i]);
+    vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
     s_g := s`SolvableDBGenus;
     if s_g eq g then
       Append(~l, s);
