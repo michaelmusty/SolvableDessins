@@ -151,8 +151,8 @@ end intrinsic;
 intrinsic SolvableIsRamifiedAtEveryLevel(s::SolvableDBObject) -> BoolElt
   {true if s is ramified (at at least one point) at every intermediate level.}
   if s`SolvableDBDegree eq 2 then
-    return true;
     s`SolvableDBIsRamifiedAtEveryLevel := true;
+    return true;
   else
     path := s`SolvableDBPathToPP1; // PP1, degree 2, degree 4, etc
     path_filenames := [];
@@ -170,11 +170,11 @@ intrinsic SolvableIsRamifiedAtEveryLevel(s::SolvableDBObject) -> BoolElt
       end if;
     end for;
     if unramified_bool then
-      return false;
       s`SolvableDBIsRamifiedAtEveryLevel := false;
+      return false;
     else
-      return true;
       s`SolvableDBIsRamifiedAtEveryLevel := true;
+      return true;
     end if;
   end if;
 end intrinsic;
