@@ -164,7 +164,7 @@ intrinsic SolvablePolynomialReduction(poly::RngMPolElt, mp::Map, P::RngMPol) -> 
   assert Codomain(mp) eq BaseRing(P);
   rank := Rank(P);
   assert rank eq Rank(Parent(poly));
-  h := Sprintf("h := hom<Parent(poly)->P|[%o]>; return h;", VarText("P.", 1, rank));
+  h := eval Sprintf("h := hom<Parent(poly)->P|[%o]>; return h;", VarText("P.", 1, rank));
   coeffs, mons := CoefficientsAndMonomials(poly);
   poly_pp := P!0;
   for i := 1 to #coeffs do
