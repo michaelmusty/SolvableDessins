@@ -65,100 +65,6 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
   end if;
 end intrinsic;
 
-/*
-intrinsic SolvableReduceCurve(X::Crv, p::RngIntElt) -> Crv
-  {}
-  K := BaseField(X);
-  assert Degree(K) eq 1; // over number fields use built in Reduction(X, pp) function
-  if IsAffine(X) then
-    X := ProjectiveClosure(X);
-  end if;
-  equations := DefiningEquations(X);
-  PX := Parent(equations[1]);
-  rk := Rank(PX);
-  FFp := GF(p);
-  PXp := PolynomialRing(FFp, rk);
-  homp := eval Sprintf("homp := hom<PX->PXp|[%o]>; return homp;", VarText("PXp.", 1, rk));
-  equationsp := [homp(equations[i]) : i in [1..#equations]];
-  Ip := ideal<PXp|equationsp>;
-  PP := ProjectiveSpace(PXp);
-  Xp := Curve(PP, Ip);
-  return Xp;
-end intrinsic;
-intrinsic SolvableLocalSanityCheck(s::SolvableDBObject, p::RngIntElt) -> BoolElt
-  {SolvableMapSanityCheck...Localified...no lax!}
-  if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then
-    // setup
-      t_start := Cputime();
-      pass := s`SolvableDBGaloisOrbit;
-      curve := s`SolvableDBBelyiCurve;
-      map := s`SolvableDBBelyiMap;
-      test_cycle_structure := SolvableCycleStructure(pass[1]);
-      for i := 1 to #pass do
-        assert SolvableCycleStructure(pass[i]) eq test_cycle_structure;
-        // something is terribly wrong if this fails!
-      end for;
-    // reduce curve mod pp
-      K := BaseField(curve);
-      if Degree(K) eq 1 then
-        vprintf Solvable : "Reducing curve mod p = %o...", p;
-        if IsHyperelliptic(curve) then
-          C := ChangeRing(curve, FiniteField(p));
-        else
-          C := SolvableReduceCurve(curve, p);
-        end if;
-        vprintf Solvable : "done.\n";
-      else // built in reduction function only works over a number field
-        ZK := Integers(K);
-        vprintf Solvable : "Factoring p = %o upstairs...", p;
-        pp := Factorization(p*ZK)[1][1];
-        vprintf Solvable : "done.\n";
-        vprintf Solvable : "Reducing curve mod pp..";
-        if IsProjective(curve) then
-          if IsHyperelliptic(curve) then
-            FFq := SolvableFiniteField(pp); // TODO
-            X := ChangeRing(curve, FFq);
-          else
-            X := Reduction(curve, pp);
-          end if;
-        else
-          X := Reduction(ProjectiveClosure(curve), pp);
-        end if;
-        C := Curve(X); // Sch -> Crv
-      end if;
-      vprintf Solvable : "done.\n";
-    // coerce map into function field of curve mod pp
-      num := Numerator(map);
-      den := Denominator(map);
-      Aff := Parent(num);
-      assert Aff eq Parent(den);
-      KC := FunctionField(C);
-      Affpp := Parent(Numerator(KC.1));
-      assert Rank(Aff) eq Rank(Affpp);
-      hompp := eval Sprintf("hompp := hom<Aff->Affpp|[%o]>; return hompp;", VarText("Affpp.", 1, Rank(Affpp)));
-      mapp := KC!(hompp(num))/KC!(hompp(den));
-      assert Parent(mapp) eq FunctionField(C);
-    // sanity check
-      if not BelyiMapSanityCheck(pass[1], C, mapp) then
-        vprintf Solvable: "Solvable Local Sanity Failed:\n";
-        vprintf Solvable: "sigma = \n%o.\n", pass[1];
-        supp, mult := Support(Divisor(mapp));
-        vprintf Solvable: "supp(phi) = \n%o\n%o.\n", supp, mult;
-        supp1, mult1 := Support(Divisor(mapp-1));
-        vprintf Solvable: "supp(phi-1) = \n%o\n%o.\n", supp1, mult1;
-        return false;
-      end if;
-    // if we make it here then we passed!
-      t_end := Cputime();
-      s`SolvableDBLocalSanityCheckTiming := t_end - t_start;
-      s`SolvableDBLocalSanityCheckPrime := p;
-      return true;
-  else
-    return false;
-  end if;
-end intrinsic;
-*/
-
 intrinsic SolvablePolynomialReduction(poly::RngMPolElt, mp::Map, P::RngMPol) -> RngMPolElt
   {Given a poly and a mp on coefficients, return poly with new coeffs.}
   assert Codomain(mp) eq BaseRing(P);
@@ -173,7 +79,6 @@ intrinsic SolvablePolynomialReduction(poly::RngMPolElt, mp::Map, P::RngMPol) -> 
   return poly_pp;
 end intrinsic;
 
-// TODO test for affine curve, projective curve, CrvHyp, CrvEll, CrvCon
 intrinsic SolvableReduceCurve(X::Crv, f::FldFunFracSchElt, p::RngIntElt) -> Crv, FldFunFracSchElt
   {Reduce X and f in QQ(X) mod p and return X mod p, f mod p.}
   // setup
