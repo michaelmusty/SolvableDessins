@@ -19,13 +19,11 @@ for i := 1 to #b do
   printf "\nSanity checking again...\n";
   printf "\nLocal sanity checking %o again:\n", s`SolvableDBName;
   t0 := Cputime();
-  // assert SolvableMapSanityCheck(t);
   assert SolvableLocalSanityCheck(t, 101);
   t1 := Cputime();
   printf "done. %o seconds.\n", t1-t0;
   assert assigned t`SolvableDBBelyiMapTiming;
   assert assigned t`SolvableDBLowDegreeTiming;
-  // assert assigned t`SolvableDBSanityCheckTiming;
   assert assigned t`SolvableDBLocalSanityCheckTiming;
   assert assigned t`SolvableDBLocalSanityCheckPrime;
 end for;
