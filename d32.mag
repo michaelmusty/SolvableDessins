@@ -17,6 +17,7 @@ for i := 1 to #b do
   end if;
 end for;
 
+/*
 // main
 for i := 1 to #bb do
   s := bb[i];
@@ -43,3 +44,4 @@ for i := 1 to #bb do
   assert assigned t`SolvableDBLocalSanityCheckTiming;
   assert assigned t`SolvableDBLocalSanityCheckPrime;
 end for;
+*/

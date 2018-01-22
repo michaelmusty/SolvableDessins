@@ -25,4 +25,5 @@ Front Matter
 MAIN
 */
 
+SetColumns(0);
 SetVerbose("Solvable", 1);
