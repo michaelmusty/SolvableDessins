@@ -76,12 +76,10 @@ intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> Any
     vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
     s_g := s`SolvableDBGenus;
     if s_g eq g then
-      if s`SolvableDBIsRamifiedAtEveryLevel then
+      if SolvableIsRamifiedAtEveryLevel(s) then
         Append(~ram, s);
-      elif not s`SolvableDBIsRamifiedAtEveryLevel then
-        Append(~unram, s);
       else
-        error "ramification boolean is not assigned!";
+        Append(~unram, s);
       end if;
     end if;
     vprintf Solvable : "done.\n";
