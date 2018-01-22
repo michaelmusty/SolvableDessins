@@ -66,16 +66,23 @@ intrinsic DegreeGenusIsLowGenusOrHyp(d::RngIntElt, g::RngIntElt, is_low_genus_or
   return l;
 end intrinsic;
 
-intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> SeqEnum[SolvableDBObject]
-  {SeqEnum of SolvableDBObjects with given inputs.}
+intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> Any
+  {ram, unram sequences of SolvableDBObjects with given degree and genus.}
   f := SolvableDBFilenames(d);
-  l := [];
+  ram := [];
+  unram := [];
   for i := 1 to #f do
     s := SolvableDBAccessEntry(f[i]);
     vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
     s_g := s`SolvableDBGenus;
     if s_g eq g then
-      Append(~l, s);
+      if s`SolvableDBIsRamifiedAtEveryLevel then
+        Append(~ram, s);
+      elif not s`SolvableDBIsRamifiedAtEveryLevel then
+        Append(~unram, s);
+      else
+        error "ramification boolean is not assigned!";
+      end if;
     end if;
     vprintf Solvable : "done.\n";
   end for;

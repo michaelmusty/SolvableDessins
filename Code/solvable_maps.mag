@@ -218,6 +218,40 @@ intrinsic SolvableBaseChange(s::SolvableDBObject, K::FldNum) -> SolvableDBObject
     x3 := KX.3;
     x4 := KX.4;
     x5 := KX.5;
+  elif num_vars eq 6 then
+    x1 := KX.1;
+    x2 := KX.2;
+    x3 := KX.3;
+    x4 := KX.4;
+    x5 := KX.5;
+    x6 := KX.6;
+  elif num_vars eq 7 then
+    x1 := KX.1;
+    x2 := KX.2;
+    x3 := KX.3;
+    x4 := KX.4;
+    x5 := KX.5;
+    x6 := KX.6;
+    x7 := KX.7;
+  elif num_vars eq 8 then
+    x1 := KX.1;
+    x2 := KX.2;
+    x3 := KX.3;
+    x4 := KX.4;
+    x5 := KX.5;
+    x6 := KX.6;
+    x7 := KX.7;
+    x8 := KX.8;
+  elif num_vars eq 9 then
+    x1 := KX.1;
+    x2 := KX.2;
+    x3 := KX.3;
+    x4 := KX.4;
+    x5 := KX.5;
+    x6 := KX.6;
+    x7 := KX.7;
+    x8 := KX.8;
+    x9 := KX.9;
   else
     error "we should not be working in a high dimensional ambient space!";
   end if;

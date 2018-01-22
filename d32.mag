@@ -1,21 +1,6 @@
 load "doob.mag";
 
-a,b,c := SolvableDBStatus(32);
 
-// bad
-bad := [];
-Append(~bad, "32S9-8,4,2-g3-path11"); // changing to hyp model, pushforward takes forever
-Append(~bad, "32S10-4,4,8-g7-path8"); // nonhyp, projecting takes forever
-Append(~bad, "32S10-4,8,4-g7-path10"); // nonhyp, projecting takes forever
-Append(~bad, "32S10-4,8,4-g7-path24"); // wrong Genus!
-
-// make list b without bad
-bb := [];
-for i := 1 to #b do
-  if not (b[i]`SolvableDBName in bad) then
-    Append(~bb, b[i]);
-  end if;
-end for;
 
 /*
 // main
