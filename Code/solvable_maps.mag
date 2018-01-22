@@ -723,6 +723,7 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
         assert is_low_genus_or_hyp;
         // computing hyperelliptic model
           vprintf Solvable : "  Curve is hyperelliptic.\n";
+          vprintf Solvable : "  Computing hyperelliptic model...";
           t0 := Cputime();
           hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
           t1 := Cputime();
