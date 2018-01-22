@@ -735,7 +735,9 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
           vprintf Solvable : "  Degree of new Belyi curve = %o.\n", Degree(hyp_H);
         // make new Belyi map, curve, and base field, assign to after object
+          vprintf Solvable : "  Pushing forward Belyi map under iso...";
           g := Pushforward(hyp_mp, f);
+          vprintf Solvable : "done.\n";
           X<x1, x2, x3> := hyp_H;
           KX<x1, x2> := FunctionField(X);
           assert KX eq Parent(g);
