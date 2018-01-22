@@ -728,11 +728,6 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
-          vprintf Solvable : "  asserting IsGeometricallyHyperelliptic...";
-          t0 := Cputime();
-          geom_bool, geom_H, geom_mp := IsGeometricallyHyperelliptic(X);
-          t1 := Cputime();
-          vprintf Solvable : "done. %o seconds.\n", t1-t0;
           vprintf Solvable : "  Degree of new Belyi curve = %o.\n", Degree(hyp_H);
         // make new Belyi map, curve, and base field, assign to after object
           vprintf Solvable : "  Pushing forward Belyi map under iso...";
