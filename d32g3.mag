@@ -2,7 +2,7 @@ load "doob.mag";
 
 ram, unram := DegreeGenus(32, 3);
 
-for i := 8 to #ram do
+for i := 9 to #ram do
   s := ram[i];
   s := SolvableBelyiMap(s);
   before, after := SolvableLowDegreeModel(s);
