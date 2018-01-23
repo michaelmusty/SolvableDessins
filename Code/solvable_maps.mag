@@ -785,9 +785,10 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
           vprintf Solvable : "  Curve is not hyperelliptic.\n";
           // TODO currently this timing block appears to take the most time
           t0 := Cputime();
-          if Dimension(Ambient(X_proj)) eq 2 then
+          if Dimension(Ambient(X_proj)) le 4 then
+          // if Dimension(Ambient(X_proj)) eq 2 then
           // if Dimension(Ambient(X_proj)) eq 3 then
-            printf "  Curve is already in PP3...";
+            printf "  Curve already lives in PP4 or smaller...";
             C := X_proj;
             g := f;
           else
