@@ -1,6 +1,6 @@
 load "doob.mag";
 
-ram, unram := DegreeGenus(32, 1);
+ram, unram := DegreeGenus(32, 4);
 
 for i := 1 to #ram do
   s := ram[i];
