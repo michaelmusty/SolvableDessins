@@ -393,6 +393,7 @@ end intrinsic;
 
 intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt, genus::RngIntElt) -> Crv
   {Given a curve Y, and f in KY the function field of Y, return a new curve X with function field KX where KX = KY(mthroot(f)).}
+  printf "ASDF\n";
   // assertions
     assert IsAffine(Y);
     KY := FunctionField(Y);
