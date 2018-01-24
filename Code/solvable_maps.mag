@@ -395,7 +395,7 @@ intrinsic SolvableMeasure(s::SolvableDBObject) -> RngIntElt
   {asserts curve is assigned and returns an integer measuring the "solvable complexity" of the curve.}
   assert assigned s`SolvableDBBelyiCurve;
   assert assigned s`SolvableDBBelyiMap;
-  X := s`SolvableDBBelyiMap;
+  X := s`SolvableDBBelyiCurve;
   equations := DefiningEquations(X);
   height_sum := 0;
   if BaseField(X) eq Rationals() then
