@@ -414,9 +414,9 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     new_equation := denom*PX.Rank(PX)^2-numer;
     Append(~basis, new_equation);
     IX := ideal< PX | basis >;
-    // Snum := Saturation(IX, numer); // saturate at numerator
+    // S:= Saturation(IX, numer); // saturate at numerator
     // vprintf Solvable : "numerator...\n";
-    Sden := Saturation(IX, denom); // saturate at numerator
+    S:= Saturation(IX, denom); // saturate at numerator
     vprintf Solvable : "denominator...\n";
     assert IsPrime(S);
   // new ambient
