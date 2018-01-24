@@ -391,6 +391,32 @@ intrinsic SolvableRamificationToDivisor(ram::SeqEnum[BoolElt], Ds::List) -> DivC
   end if;
 end intrinsic;
 
+intrinsic SolvableMeasure(s::SolvableDBObject) -> RngIntElt
+  {asserts curve is assigned and returns an integer measuring the "solvable complexity" of the curve.}
+  assert assigned s`SolvableDBBelyiCurve;
+  assert assigned s`SolvableDBBelyiMap;
+  X := s`SolvableDBBelyiMap;
+  equations := DefiningEquations(X);
+  height_sum := 0;
+  if BaseField(X) eq Rationals() then
+    for i := 1 to #equations do
+      coeffs := Coefficients(equations[i]);
+      for j := 1 to #coeffs do
+        height_sum +:= Height(coeffs[j]);
+      end for;
+    end for;
+  else
+    assert Type(BaseField(X)) eq FldNum;
+    for i := 1 to #equations do
+      coeffs := Coefficients(equations[i]);
+      for j := 1 to #coeffs do
+        height_sum +:= CoefficientHeight(coeffs[j]);
+      end for;
+    end for;
+  end if;
+  return height_sum;
+end intrinsic;
+
 intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
   {Given a curve Y, and f in KY the function field of Y, return a new curve X with function field KX where KX = KY(mthroot(f)).}
   // assertions
