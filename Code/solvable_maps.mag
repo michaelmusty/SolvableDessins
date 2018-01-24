@@ -393,7 +393,6 @@ end intrinsic;
 
 intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt, genus::RngIntElt) -> Crv
   {Given a curve Y, and f in KY the function field of Y, return a new curve X with function field KX where KX = KY(mthroot(f)).}
-  printf "ASDFASDFASDFASDF";
   // assertions
     assert IsAffine(Y);
     KY := FunctionField(Y);
@@ -417,21 +416,23 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt, genus::RngIntEl
     IX := ideal< PX | basis >;
     Sden := Saturation(IX, denom); // saturate at denominator
     vprintf Solvable : "denominator...";
-    if Genus(Sden) eq genus then
-      assert IsPrime(Sden);
-      S := Sden;
+    assert IsPrime(Sden);
+    AAX := AffineSpace(PX);
+    X := Curve(AAX, Sden);
+    if Genus(X) eq genus then
+      vprintf Solvable : "\n";
+      return X;
     else
       Snum := Saturation(IX, numer); // saturate at numerator
       vprintf Solvable : "numerator...";
       assert IsPrime(Snum);
-      S := Snum;
+      AAX := AffineSpace(PX);
+      X := Curve(AAX, Snum);
+      assert Genus(X) eq genus;
+      vprintf Solvable : "\n";
+      return X;
     end if;
-    vprintf Solvable : "\n";
-  // new ambient
-    AAX := AffineSpace(PX);
   // make curve
-    X := Curve(AAX, S);
-    return X;
 end intrinsic;
 
 intrinsic SolvableAssignRamification(s::SolvableDBObject) -> SolvableDBObject
