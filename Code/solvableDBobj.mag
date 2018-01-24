@@ -152,6 +152,9 @@ intrinsic Print(s::SolvableDBObject)
     printf "LocalSanity    : %o seconds.\n", s`SolvableDBLocalSanityCheckTiming;
     printf "p = %o\n", s`SolvableDBLocalSanityCheckPrime;
   end if;
+  if assigned s`SolvableDBBelyiCurve then
+    printf "Measurement of Curve = %o\n", SolvableMeasure(s);
+  end if;
 end intrinsic;
 
 intrinsic 'eq'(s::SolvableDBObject, t::SolvableDBObject) -> BoolElt
