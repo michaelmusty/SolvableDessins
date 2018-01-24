@@ -391,9 +391,8 @@ intrinsic SolvableRamificationToDivisor(ram::SeqEnum[BoolElt], Ds::List) -> DivC
   end if;
 end intrinsic;
 
-intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt, genus::RngIntElt) -> Crv
+intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
   {Given a curve Y, and f in KY the function field of Y, return a new curve X with function field KX where KX = KY(mthroot(f)).}
-  printf "ASDF\n";
   // assertions
     assert IsAffine(Y);
     KY := FunctionField(Y);
@@ -415,25 +414,16 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt, genus::RngIntEl
     new_equation := denom*PX.Rank(PX)^2-numer;
     Append(~basis, new_equation);
     IX := ideal< PX | basis >;
-    Sden := Saturation(IX, denom); // saturate at denominator
-    vprintf Solvable : "denominator...";
-    assert IsPrime(Sden);
+    // Snum := Saturation(IX, numer); // saturate at numerator
+    // vprintf Solvable : "numerator...\n";
+    Sden := Saturation(IX, denom); // saturate at numerator
+    vprintf Solvable : "denominator...\n";
+    assert IsPrime(S);
+  // new ambient
     AAX := AffineSpace(PX);
-    X := Curve(AAX, Sden);
-    if Genus(X) eq genus then
-      vprintf Solvable : "\n";
-      return X;
-    else
-      Snum := Saturation(IX, numer); // saturate at numerator
-      vprintf Solvable : "numerator...";
-      assert IsPrime(Snum);
-      AAX := AffineSpace(PX);
-      X := Curve(AAX, Snum);
-      assert Genus(X) eq genus;
-      vprintf Solvable : "\n";
-      return X;
-    end if;
   // make curve
+    X := Curve(AAX, S);
+    return X;
 end intrinsic;
 
 intrinsic SolvableAssignRamification(s::SolvableDBObject) -> SolvableDBObject
@@ -655,7 +645,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
     vprintf Solvable : "Extracting root to make new curve...";
     t0 := Cputime();
-    X := ExtractRoot(X_below, f, 2, s`SolvableDBGenus);
+    X := ExtractRoot(X_below, f, 2);
     t1 := Cputime();
     vprintf Solvable : "done. %o seconds.\n", t1-t0;
     vprintf Solvable : "Making new Belyi map...";
