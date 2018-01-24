@@ -153,7 +153,8 @@ intrinsic Print(s::SolvableDBObject)
     printf "p = %o\n", s`SolvableDBLocalSanityCheckPrime;
   end if;
   if assigned s`SolvableDBBelyiCurve then
-    printf "Measurement of Curve = %o\n", SolvableMeasure(s);
+    printf "Naive Measure of Curve:\n";
+    printf "%o\n", SolvableMeasure(s);
   end if;
 end intrinsic;
 
