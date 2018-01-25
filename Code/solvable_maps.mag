@@ -925,23 +925,14 @@ intrinsic SolvableProjectToPP3(s::SolvableDBObject) -> Any
       else // g > 1 and curve is not hyperelliptic
         // computing new model
           vprintf Solvable : "  Curve is not hyperelliptic.\n";
-          // TODO currently this timing block appears to take the most time
           t0 := Cputime();
-          if Dimension(Ambient(X_proj)) le 4 then
-          // if Dimension(Ambient(X_proj)) eq 2 then
-          // if Dimension(Ambient(X_proj)) eq 3 then
-            printf "  Curve already lives in PP4 or smaller...";
-            C := X_proj;
-            g := f;
-          else
-            printf "  Projecting to PP3...";
-            C, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
-            assert IsProjective(Ambient(C));
-            assert Curve(C) eq C;
-            C := Curve(C);
-            fix := map< X_proj -> C | DefiningEquations(mp) >;
-            g := Pushforward(fix, f);
-          end if;
+          printf "  Projecting to PP3...";
+          C, mp := EmbedPlaneCurveInP3(X); // the scheme is the codomain of mp
+          assert IsProjective(Ambient(C));
+          assert Curve(C) eq C;
+          C := Curve(C);
+          fix := map< X_proj -> C | DefiningEquations(mp) >;
+          g := Pushforward(fix, f);
           t1 := Cputime();
           vprintf Solvable : "done. %o seconds.\n", t1-t0;
           C := AffinePatch(C, 1); // TODO not pick blindly?
@@ -986,7 +977,7 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
   // cases to disregard
   if g in [0,1] then
     vprintf Solvable : "  Genus 0 or 1. Do nothing.\n";
-    return false, s;
+    return false;
   end if;
   if assigned s`SolvableDBIsLowGenusOrHyperelliptic and s`SolvableDBIsLowGenusOrHyperelliptic then
     vprintf Solvable : "  Already hyperelliptic. Do nothing.\n";
@@ -1046,7 +1037,7 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
       return true, after;
     else
       vprintf Solvable : "  Curve is not hyperelliptic. Do nothing.\n";
-      return false, s;
+      return false;
     end if;
   else
     vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
