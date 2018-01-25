@@ -745,6 +745,31 @@ intrinsic IsoText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgE
   return var_text;
 end intrinsic;
 
+intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
+  {Compute solvable Belyi map m times, return the one with smallest SolvableMeasure.}
+  // make after object
+  after := SolvableDBObjectInitialize();
+  attrs := GetAttributes(Type(s));
+  for attr in attrs do
+    if assigned s``attr then
+      after``attr := s``attr;
+    end if;
+  end for;
+  after := SolvableBelyiMap(s);
+  after_measure := SolvableMeasure(after);
+  // m iterations
+  for i := 1 to m do
+    // make test object
+    test := SolvableBelyiMap(s);
+    test_measure := SolvableMeasure(test);
+    // compare with after object
+    if test_measure lt after_measure then
+      after := test;
+    end if;
+  end for;
+  return after;
+end intrinsic;
+
 intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
   {Naively try to reduce the degree of the BelyiCurve.}
   vprintf Solvable : "%o LowDegreeAttempt :\n", s`SolvableDBName;
