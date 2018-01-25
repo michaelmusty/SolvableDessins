@@ -929,7 +929,7 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> BoolEt, SolvableDBObje
       // timing and return
       return true, after;
     else
-      return false;
+      return false, s;
     end if;
   else
     vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
