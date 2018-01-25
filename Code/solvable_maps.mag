@@ -755,7 +755,7 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
       after``attr := s``attr;
     end if;
   end for;
-  after := SolvableBelyiMap(s);
+  after := SolvableBelyiMap(after);
   after_measure := SolvableMeasure(after);
   // m iterations
   measure_list := [after_measure];
