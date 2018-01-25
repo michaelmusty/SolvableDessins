@@ -766,7 +766,14 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
     Append(~measure_list, test_measure);
     // compare with after object
     if test_measure lt after_measure then
-      after := test;
+      // update after object
+      after := SolvableDBObjectInitialize();
+      attrs := GetAttributes(Type(test));
+      for attr in attrs do
+        if assigned test``attr then
+          after``attr := test``attr;
+        end if;
+      end for;
     end if;
   end for;
   vprintf Solvable : "Computed %o SolvableBelyiMaps for %o.\n", m, s`SolvableDBName;
