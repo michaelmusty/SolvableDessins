@@ -929,6 +929,7 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> BoolEt, SolvableDBObje
       // timing and return
       return true, after;
     else
+      vprintf Solvable : "  Curve is not hyperelliptic. Do nothing.\n";
       return false, s;
     end if;
   else
