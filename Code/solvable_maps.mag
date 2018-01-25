@@ -746,7 +746,7 @@ intrinsic IsoText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgE
 end intrinsic;
 
 intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
-  {Compute solvable Belyi map m times, return the one with smallest SolvableMeasure.}
+  {Compute solvable Belyi map m times, return the one with smallest SolvableMeasure. Careful with reassigning objects...}
   // make after object
   after := SolvableDBObjectInitialize();
   attrs := GetAttributes(Type(s));
