@@ -860,3 +860,79 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
     return s;
   end if;
 end intrinsic;
+
+intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> BoolEt, SolvableDBObject
+  {Determine if Belyi curve has a hyperelliptic model and if so, returns updated object.}
+  vprintf Solvable : "%o IsHyperelliptic?\n", s`SolvableDBName;
+  curve_assigned := assigned s`SolvableDBBelyiCurve;
+  map_assigned := assigned s`SolvableDBBelyiMap;
+  g := s`SolvableDBGenus;
+  // cases to disregard
+  if g in [0,1] then
+    vprintf Solvable : "  Genus 0 or 1. Do nothing.\n";
+    return false, s;
+  end if;
+  if assigned s`SolvableDBIsLowGenusOrHyperelliptic and s`SolvableDBIsLowGenusOrHyperelliptic then
+    vprintf Solvable : "  Already hyperelliptic. Do nothing.\n";
+    return true, s;
+  end if;
+  if curve_assigned and map_assigned then
+    // make before and after objects
+    before := SolvableDBObjectInitialize();
+    after := SolvableDBObjectInitialize();
+    attrs := GetAttributes(Type(s));
+    for attr in attrs do
+      if assigned s``attr then
+        before``attr := s``attr;
+        after``attr := s``attr;
+      end if;
+    end for;
+    // setup for various cases
+    vprintf Solvable : "  Belyi curve and map assigned.\n";
+    X := before`SolvableDBBelyiCurve;
+    assert IsAffine(X);
+    X_proj := ProjectiveClosure(X);
+    f := before`SolvableDBBelyiMap;
+    degree_start := Degree(X_proj);
+    vprintf Solvable : "  Degree of Belyi curve = %o.\n", degree_start;
+    vprintf Solvable : "  Checking Canonical map...";
+    t0 := Cputime();
+    g, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(X); // better to take projective closure?
+    s`SolvableDBIsLowGenusOrHyperelliptic := is_low_genus_or_hyp;
+    before`SolvableDBIsLowGenusOrHyperelliptic := is_low_genus_or_hyp;
+    after`SolvableDBIsLowGenusOrHyperelliptic := is_low_genus_or_hyp;
+    t1 := Cputime();
+    vprintf Solvable : "done. %o seconds.\n", t1-t0;
+    // cases
+    if is_low_genus_or_hyp then
+      // computing hyperelliptic model
+      vprintf Solvable : "  Curve is hyperelliptic.\n";
+      vprintf Solvable : "  Computing hyperelliptic model...";
+      t0 := Cputime();
+      hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(X);
+      t1 := Cputime();
+      vprintf Solvable : "done. %o seconds.\n", t1-t0;
+      vprintf Solvable : "  Degree of new Belyi curve = %o.\n", Degree(hyp_H);
+      // make new Belyi map, curve, and base field, assign to after object
+      vprintf Solvable : "  Pushing forward Belyi map under iso...";
+      g := Pushforward(hyp_mp, f);
+      vprintf Solvable : "done.\n";
+      X<x1, x2, x3> := hyp_H;
+      KX<x1, x2> := FunctionField(X);
+      assert KX eq Parent(g);
+      K := BaseField(X);
+      if Type(K) eq FldNum then
+        K<nu> := BaseField(X);
+      end if;
+      after`SolvableDBBelyiCurve := X;
+      after`SolvableDBBelyiMap := g; // not necessarily KX.1
+      // timing and return
+      return true, after;
+    else
+      return false;
+    end if;
+  else
+    vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
+    return false, s;
+  end if;
+end intrinsic;
