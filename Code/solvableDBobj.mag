@@ -91,21 +91,6 @@ intrinsic Print(s::SolvableDBObject)
   end if;
   if assigned s`SolvableDBBelyiCurve then
     printf "BelyiMap computed :)\n";
-    /*
-    // TODO sanity check takes forever!
-    sane := true;
-    pass := s`SolvableDBGaloisOrbit;
-    curve := s`SolvableDBBelyiCurve;
-    map := s`SolvableDBBelyiMap;
-    if not BelyiMapSanityCheck(pass[1], curve, map) then
-      sane := false;
-    end if;
-    if sane then
-      printf "BelyiMap passed sanity :)\n";
-    else
-      printf "BelyiMap failed sanity :(\n";
-    end if;
-    */
   else
     unram := not SolvableIsRamifiedAtEveryLevel(s);
     if unram then
