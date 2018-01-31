@@ -1104,3 +1104,20 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
     return false, s;
   end if;
 end intrinsic;
+
+intrinsic SolvableWrapper(d::RngIntElt) -> MonStgElt
+  {for internal use only}
+  assert d in [4,8,16,32]; // where all maps are already computed
+  a,b,c := SolvableDBStatus(d);
+  for i := 1 to #a do
+    s := SolvableBelyiMapLowMeasure(a[i], 100); // TODO change this for whatever d
+    assert SolvableMeasure(s) lt 50;
+    SolvableMapSanityCheck(s);
+    SolvableLocalSanityCheck(s,101);
+    SolvableDBWriteObject(s);
+    filename := s`SolvableDBFilename;
+    t := SolvableDBAccessEntry(filename);
+    assert SolvableMapSanityCheck(t);
+  end for;
+  return Sprintf("Solvable wrapper completed for degree %o\n", d);
+end intrinsic;
