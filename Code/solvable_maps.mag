@@ -830,6 +830,7 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
   vprintf Solvable : "List of measures:\n";
   vprintf Solvable : "%o\n", measure_list;
   vprintf Solvable : "Minimum = %o\n", Min(measure_list);
+  assert SolvableMeasure(current) eq Min(measure_list);
   return current;
 end intrinsic;
 
