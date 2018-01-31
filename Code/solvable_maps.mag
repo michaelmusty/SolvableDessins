@@ -1122,7 +1122,7 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
     SolvableDBWriteObject(s);
     filename := s`SolvableDBFilename;
     t := SolvableDBAccessEntry(filename);
-    assert SolvableMapSanityCheck(t);
+    assert SolvableLocalSanityCheck(t, 101);
   end for;
   return Sprintf("Solvable wrapper completed for degree %o\n", d);
 end intrinsic;
