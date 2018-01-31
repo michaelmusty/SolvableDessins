@@ -813,6 +813,7 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
     test_measure := SolvableMeasure(test);
     Append(~measure_list, test_measure);
     printf "  measure list = %o\n", measure_list;
+    printf "  Min measure list = %o\n", Min(measure_list);
     // compare with current object
     printf "  test measure = %o\n", test_measure;
     if test_measure lt Min(measure_list) then
