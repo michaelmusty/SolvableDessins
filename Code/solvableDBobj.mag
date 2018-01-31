@@ -143,6 +143,17 @@ intrinsic Print(s::SolvableDBObject)
   end if;
 end intrinsic;
 
+intrinsic SolvableCopy(s::SolvableDBObject) -> SolvableDBObject
+  {new instance of SolvableDBObject.}
+  after := SolvableDBObjectInitialize();
+  for attr in GetAttributes(Type(s)) do
+    if assigned s``attr then
+      after``attr := s``attr;
+    end if;
+  end for;
+  return after;
+end intrinsic;
+
 intrinsic 'eq'(s::SolvableDBObject, t::SolvableDBObject) -> BoolElt
   {Return whether s is equal to t.}
   isSame := true;
