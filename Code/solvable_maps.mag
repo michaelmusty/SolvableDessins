@@ -1113,7 +1113,6 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   a,b,c := SolvableDBStatus(d);
   for i := 1 to #a do
     s := SolvableBelyiMapLowMeasure(a[i], n); // TODO change this for whatever d
-    assert SolvableMeasure(s) lt 100;
     is_hyp, hyp := SolvableIsHyperelliptic(s);
     if is_hyp then
       s := hyp;
