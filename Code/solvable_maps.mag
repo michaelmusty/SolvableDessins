@@ -806,24 +806,16 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
   // m iterations
   measure_list := [current_measure];
   for i := 1 to m do
-    printf "i=%o:\n", i;
     // make test object
     test := SolvableCopy(s);
     test := SolvableBelyiMap(test);
     test_measure := SolvableMeasure(test);
     Append(~measure_list, test_measure);
-    printf "  measure list = %o\n", measure_list;
-    printf "  Min measure list = %o\n", Min(measure_list);
     // compare with current object
     current_measure := SolvableMeasure(current);
-    printf "  test measure = %o\n", test_measure;
-    printf "  current measure = %o\n", current_measure;
     if test_measure lt current_measure then
-      printf "  Update = YES\n";
       // update current object
       current := SolvableCopy(test);
-    else
-      printf "  Update = NO\n";
     end if;
   end for;
   vprintf Solvable : "Computed %o SolvableBelyiMaps for %o.\n", m, s`SolvableDBName;
