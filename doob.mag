@@ -3,7 +3,11 @@ Front Matter
 */
   // sarunas install
   a,b,c := GetVersion();
-  assert [a,b,c] eq [2,21,12];
+  if [a,b,c] eq [2,21,12] then
+    printf "using magma-s\n";
+  else
+    printf "using magma version %o,%o,%o\n", a,b,c;
+  end if;
   // assumes current directory = repo directory
   dir := GetCurrentDirectory();
   parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
