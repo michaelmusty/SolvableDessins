@@ -800,15 +800,9 @@ end intrinsic;
 intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
   {Compute solvable Belyi map m times, return the one with smallest SolvableMeasure. Careful with reassigning objects...}
   // make after object
-  after := SolvableDBObjectInitialize();
-  attrs := GetAttributes(Type(s));
-  for attr in attrs do
-    if assigned s``attr then
-      after``attr := s``attr;
-    end if;
-  end for;
-  after := SolvableBelyiMap(after);
-  after_measure := SolvableMeasure(after);
+    after := SolvableCopy(s);
+    after := SolvableBelyiMap(after);
+    after_measure := SolvableMeasure(after);
   // m iterations
   measure_list := [after_measure];
   for i := 1 to m do
@@ -843,15 +837,8 @@ intrinsic SolvableLowDegreeModel(s::SolvableDBObject) -> Any
   if curve_assigned and map_assigned then
     t_start := Cputime();
     // make before and after objects
-      before := SolvableDBObjectInitialize();
-      after := SolvableDBObjectInitialize();
-      attrs := GetAttributes(Type(s));
-      for attr in attrs do
-        if assigned s``attr then
-          before``attr := s``attr;
-          after``attr := s``attr;
-        end if;
-      end for;
+      before := SolvableCopy(s);
+      after := SolvableCopy(s);
     // setup for various cases
       vprintf Solvable : "  Belyi curve and map assigned.\n";
       X := before`SolvableDBBelyiCurve;
@@ -959,15 +946,8 @@ intrinsic SolvableProjectToPP3(s::SolvableDBObject) -> Any
   if curve_assigned and map_assigned then
     t_start := Cputime();
     // make before and after objects
-      before := SolvableDBObjectInitialize();
-      after := SolvableDBObjectInitialize();
-      attrs := GetAttributes(Type(s));
-      for attr in attrs do
-        if assigned s``attr then
-          before``attr := s``attr;
-          after``attr := s``attr;
-        end if;
-      end for;
+      before := SolvableCopy(s);
+      after := SolvableCopy(s);
     // setup for various cases
       vprintf Solvable : "  Belyi curve and map assigned.\n";
       X := before`SolvableDBBelyiCurve;
@@ -1075,15 +1055,8 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
   end if;
   if curve_assigned and map_assigned then
     // make before and after objects
-    before := SolvableDBObjectInitialize();
-    after := SolvableDBObjectInitialize();
-    attrs := GetAttributes(Type(s));
-    for attr in attrs do
-      if assigned s``attr then
-        before``attr := s``attr;
-        after``attr := s``attr;
-      end if;
-    end for;
+    before := SolvableCopy(s);
+    after := SolvableCopy(s);
     // setup for various cases
     vprintf Solvable : "  Belyi curve and map assigned.\n";
     X := before`SolvableDBBelyiCurve;
