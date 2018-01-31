@@ -1111,7 +1111,7 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   {for internal use only}
   assert d eq 16;
   a,b,c := SolvableDBStatus(d);
-  for i := 66 to #a do
+  for i := 100 to #a do
     s := SolvableBelyiMapLowMeasure(a[i], n); // TODO change this for whatever d
     if s`SolvableDBGenus in [0,1] then // low genus
       before, after := SolvableProjectToPP3(s);
