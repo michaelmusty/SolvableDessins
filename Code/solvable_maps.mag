@@ -815,10 +815,10 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
     printf "  measure list = %o\n", measure_list;
     printf "  Min measure list = %o\n", Min(measure_list);
     // compare with current object
+    current_measure := SolvableMeasure(current);
     printf "  test measure = %o\n", test_measure;
-    printf "  %o\n", test_measure lt Min(measure_list);
-    printf "  %o, %o\n", Type(test_measure), Type(Min(measure_list));
-    if test_measure lt Min(measure_list) then
+    printf "  current measure = %o\n", current_measure;
+    if test_measure lt current_measure then
       printf "  Update = YES\n";
       // update current object
       current := SolvableCopy(test);
