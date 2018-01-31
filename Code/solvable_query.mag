@@ -86,3 +86,14 @@ intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> Any
   end for;
   return ram, unram;
 end intrinsic;
+
+intrinsic MeasureBound(l::SeqEnum[SolvableDBObject], b::RngIntElt) -> SeqEnum
+  {given a SeqEnum of solvableDBobjs, measure them and return a SeqEnum of objs above bound.}
+  bad := [];
+  for i := 1 to #l do
+    if SolvableMeasure(l[i]) ge b then
+      Append(~bad, l[i]);
+    end if;
+  end for;
+  return bad;
+end intrinsic;
