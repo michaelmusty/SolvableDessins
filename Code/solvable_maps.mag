@@ -1046,10 +1046,12 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
     vprintf Solvable : "  Genus 0 or 1. Do nothing.\n";
     return false, s;
   end if;
+  /*
   if assigned s`SolvableDBIsLowGenusOrHyperelliptic and s`SolvableDBIsLowGenusOrHyperelliptic then
     vprintf Solvable : "  Already hyperelliptic. Do nothing.\n";
     return true, s;
   end if;
+  */
   if curve_assigned and map_assigned then
     // make before and after objects
     before := SolvableCopy(s);
