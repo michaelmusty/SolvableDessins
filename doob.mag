@@ -23,7 +23,7 @@ Front Matter
   examples := repo cat "/Examples/";
   // spec files
   AttachSpec(code cat "spec");
-  AttachSpec("~/belyi/Code/spec");
+  // AttachSpec("~/belyi/Code/spec");
 
 /*
 MAIN
