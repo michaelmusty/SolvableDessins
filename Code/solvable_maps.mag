@@ -1044,7 +1044,7 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
   // cases to disregard
   if g in [0,1] then
     vprintf Solvable : "  Genus 0 or 1. Do nothing.\n";
-    return false;
+    return false, s;
   end if;
   if assigned s`SolvableDBIsLowGenusOrHyperelliptic and s`SolvableDBIsLowGenusOrHyperelliptic then
     vprintf Solvable : "  Already hyperelliptic. Do nothing.\n";
@@ -1097,7 +1097,7 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
       return true, after;
     else
       vprintf Solvable : "  Curve is not hyperelliptic. Do nothing.\n";
-      return false;
+      return false, s;
     end if;
   else
     vprintf Solvable : "Belyi map (or curve) is not assigned.\n";
