@@ -69,6 +69,12 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
       str_new *:= "x_";
     elif str[i] eq "y" then
       str_new *:= "y_";
+    elif str[i] eq "^" then
+      j := i+1;
+      while (j lt #str) and (str[j] ne "*") and (str[j] ne " ") do
+        str_new *:= str[j];
+        j +:= 1;
+      end while;
     elif str[i] eq "n" then
       assert str[i+1] eq "u";
       str_new *:= "\\n";
