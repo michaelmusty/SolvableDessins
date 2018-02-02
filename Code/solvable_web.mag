@@ -55,7 +55,7 @@ intrinsic SolvableWebLists(d::RngIntElt) -> Any
   vprintf Solvable : "# names = %o\n", #f;
   for i := 1 to #f do
     vprintf Solvable : "i = %o of %o\n", i, #f;
-    Append(~l, SolvableNameToList(str));
+    Append(~l, SolvableNameToList(f[i]));
   end for;
   return l;
 end intrinsic;
