@@ -14,12 +14,10 @@ intrinsic SolvableWebName(s::SolvableDBObject) -> MonStgElt
     g, d := TransitiveGroupIdentification(G);
     name := Sprintf("%oT%o-%o,%o,%o", d, g, a, b, c);
   end if;
-  /*
   c0 := #CycleDecomposition(sigma[1]);
   c1 := #CycleDecomposition(sigma[2]);
   coo := #CycleDecomposition(sigma[3]);
   genus := (d+2-c0-c1-coo)/2;
   name *:= Sprintf("-g%o", genus);
-  */
   return name;
 end intrinsic;
