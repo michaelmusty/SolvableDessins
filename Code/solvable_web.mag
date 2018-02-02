@@ -74,7 +74,9 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
       str_new *:= str[i];
       j := i+1;
       while (j lt #str) and (str[j] ne "*") and (str[j] ne " ") do
-        str_new *:= str[j];
+        if str[j] ne "*" then
+          str_new *:= str[j];
+        end if;
         j +:= 1;
       end while;
       str_new *:= str[j];
