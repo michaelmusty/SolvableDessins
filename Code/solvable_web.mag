@@ -60,6 +60,7 @@ intrinsic SolvableWebLists(d::RngIntElt) -> Any
   return l;
 end intrinsic;
 
+// TODO ^
 intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
   {}
   str_new := "";
