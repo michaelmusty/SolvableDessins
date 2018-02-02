@@ -60,9 +60,9 @@ intrinsic SolvableWebLists(d::RngIntElt) -> Any
   return l;
 end intrinsic;
 
-intrinsic SolvableEquationToMathJax(str::MonStgElt) -> MonStgElt
+intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
   {}
-  str_new := "\\(";
+  str_new := "";
   for i := 1 to #str do
     if str[i] eq "x" then
       str_new *:= "x_";
@@ -79,7 +79,6 @@ intrinsic SolvableEquationToMathJax(str::MonStgElt) -> MonStgElt
       str_new *:= str[i];
     end if;
   end for;
-  str_new *:= "\\)";
   return str_new;
 end intrinsic;
 
@@ -94,6 +93,12 @@ end intrinsic;
 
 intrinsic SolvableMapText(s::SolvableDBObject) -> MonStgElt
   {}
+  map := s`SolvableDBBelyiMap;
+  num := Numerator(map);
+  den := Denominator(map);
+  num_text := SolvableEquationParse(num);
+  den_text := SolvableEquationParse(den);
+  return Sprintf("\\((%o)/(%o)\\)", num_text, den_text);
 end intrinsic;
 
 intrinsic SolvableMathJax(s::SolvableDBObject) -> MonStgElt, MonStgElt
