@@ -97,13 +97,16 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
   return str_new;
 end intrinsic;
 
-intrinsic SolvableHyperellipticCurveText(s::SolvableDBObject) -> MonStgElt
+intrinsic SolvableCurveText(s::SolvableDBObject) -> SeqEnum[MonStgElt]
   {}
-  // just make sure names are correct to pass to SolvableCurveText
-end intrinsic;
-
-intrinsic SolvableCurveText(s::SolvableDBObject) -> MonStgElt
-  {}
+  equations := DefiningEquations(s`SolvableDBBelyiCurve);
+  equations_str := [];
+  for eqn in equations do
+    eqn_str := SolvableEquationParse(Sprintf("%o", eqn));
+    eqn_str := Sprintf("\\(%o\\)", eqn_str);
+    Append(~equations_str, eqn_str);
+  end for;
+  return equations_str;
 end intrinsic;
 
 intrinsic SolvableMapText(s::SolvableDBObject) -> MonStgElt, MonStgElt
