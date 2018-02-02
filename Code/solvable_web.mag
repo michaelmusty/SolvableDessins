@@ -96,8 +96,8 @@ intrinsic SolvableMapText(s::SolvableDBObject) -> MonStgElt
   map := s`SolvableDBBelyiMap;
   num := Numerator(map);
   den := Denominator(map);
-  num_text := SolvableEquationParse(num);
-  den_text := SolvableEquationParse(den);
+  num_text := SolvableEquationParse(Sprintf("%o", num));
+  den_text := SolvableEquationParse(Sprintf("%o", den));
   return Sprintf("\\((%o)/(%o)\\)", num_text, den_text);
 end intrinsic;
 
