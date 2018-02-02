@@ -73,6 +73,8 @@ intrinsic SolvableEquationToMathJax(str::MonStgElt) -> MonStgElt
       str_new *:= "\\n";
     elif str[i] eq "*" then
       str_new *:= "";
+    elif str[i] eq "u" then
+      str_new *:= "u ";
     else
       str_new *:= str[i];
     end if;
