@@ -127,11 +127,7 @@ intrinsic SolvableMathJax(s::SolvableDBObject) -> MonStgElt, MonStgElt
   map_text := "";
   assert assigned s`SolvableDBBelyiCurve;
   assert assigned s`SolvableDBBelyiMap;
-  if s`SolvableDBIsLowGenusOrHyperelliptic and s`SolvableDBGenus gt 1 then
-    curve_text := SolvableHyperellipticCurveText(s);
-  else
-    curve_text := SolvableCurveText(s);
-  end if;
-  map_text := SolvableMapText(s);
-  return curve_text, map_text;
+  curve_text := SolvableCurveText(s); // list
+  num_text, den_text := SolvableMapText(s);
+  return curve_text, num_text, den_text;
 end intrinsic;
