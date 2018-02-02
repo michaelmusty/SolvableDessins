@@ -64,7 +64,8 @@ end intrinsic;
 intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
   {}
   str_new := "";
-  for i := 1 to #str do
+  i := 1;
+  while i lt #str do
     if str[i] eq "x" then
       str_new *:= "x_";
     elif str[i] eq "y" then
@@ -75,6 +76,7 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
         str_new *:= str[j];
         j +:= 1;
       end while;
+      i := j+1;
     elif str[i] eq "n" then
       assert str[i+1] eq "u";
       str_new *:= "\\n";
@@ -85,7 +87,8 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
     else
       str_new *:= str[i];
     end if;
-  end for;
+    i +:= 1;
+  end while;
   return str_new;
 end intrinsic;
 
