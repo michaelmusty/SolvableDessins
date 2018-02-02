@@ -79,7 +79,9 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
         end if;
         j +:= 1;
       end while;
-      str_new *:= str[j];
+      if str[j] ne "*" then
+        str_new *:= str[j];
+      end if;
       i := j;
     elif str[i] eq "n" then
       assert str[i+1] eq "u";
