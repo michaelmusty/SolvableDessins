@@ -47,3 +47,15 @@ intrinsic SolvableNameToList(str::MonStgElt) -> SeqEnum
   end for;
   return l;
 end intrinsic;
+
+intrinsic SolvableWebLists(d::RngIntElt) -> Any
+  {}
+  f := SolvableWebFilenames(d);
+  l := [];
+  vprintf Solvable : "# names = %o\n", #f;
+  for i := 1 to #f do
+    vprintf Solvable : "i = %o of %o\n", i, #f;
+    Append(~l, SolvableNameToList(str));
+  end for;
+  return l;
+end intrinsic;
