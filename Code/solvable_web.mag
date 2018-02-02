@@ -59,3 +59,50 @@ intrinsic SolvableWebLists(d::RngIntElt) -> Any
   end for;
   return l;
 end intrinsic;
+
+intrinsic SolvableEquationToMathJax(str::MonStgElt) -> MonStgElt
+  {}
+  str_new := "\\(";
+  for i := 1 to #str do
+    if str[i] eq "x" then
+      str_new *:= "x_";
+    elif str[i] eq "y" then
+      str_new *:= "y_";
+    elif str[i] eq "n" then
+      assert str[i+1] eq "u";
+      str_new *:= "\\n";
+    else
+      str_new *:= str[i];
+    end if;
+  end for;
+  str_new *:= "\\)";
+  return str_new;
+end intrinsic;
+
+intrinsic SolvableHyperellipticCurveText(s::SolvableDBObject) -> MonStgElt
+  {}
+  // just make sure names are correct to pass to SolvableCurveText
+end intrinsic;
+
+intrinsic SolvableCurveText(s::SolvableDBObject) -> MonStgElt
+  {}
+end intrinsic;
+
+intrinsic SolvableMapText(s::SolvableDBObject) -> MonStgElt
+  {}
+end intrinsic;
+
+intrinsic SolvableMathJax(s::SolvableDBObject) -> MonStgElt, MonStgElt
+  {}
+  curve_text := "";
+  map_text := "";
+  assert assigned s`SolvableDBBelyiCurve;
+  assert assigned s`SolvableDBBelyiMap;
+  if s`SolvableDBIsLowGenusOrHyperelliptic and s`SolvableDBGenus gt 1 then
+    curve_text := SolvableHyperellipticCurveText(s);
+  else
+    curve_text := SolvableCurveText(s);
+  end if;
+  map_text := SolvableMapText(s);
+  return curve_text, map_text;
+end intrinsic;
