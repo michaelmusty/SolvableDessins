@@ -32,3 +32,18 @@ intrinsic SolvableWebFilenames(d::RngIntElt) -> Any
   end for;
   return SetToSequence(SequenceToSet(f_web));
 end intrinsic;
+
+intrinsic SolvableNameToList(str::MonStgElt) -> SeqEnum
+  {given a name from SolvableWebFilenames, return a SeqEnum of SolvableDBObjects that match that name after disregarding paths.}
+  s := SolvableDBAccessEntry(str cat "-path1.m");
+  d := s`SolvableDBDegree;
+  f := SolvableDBFilenames(d);
+  l := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    if str eq SolvableWebName(s) then
+      Append(~l, s);
+    end if;
+  end for;
+  return l;
+end intrinsic;
