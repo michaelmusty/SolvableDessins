@@ -131,3 +131,26 @@ intrinsic SolvableMathJax(s::SolvableDBObject) -> MonStgElt, MonStgElt
   num_text, den_text := SolvableMapText(s);
   return curve_text, num_text, den_text;
 end intrinsic;
+
+intrinsic SolvableWebGraphTextSetup(l::SeqEnum[SolvableDBObject]) -> MonStgElt
+  {given a list of SolvableDBObjects (all with the same webname), produce html text for name-graph.html file}
+  // name
+  // children
+  // parents
+end intrinsic;
+
+intrinsic SolvableWebDataTextSetup(l::SeqEnum[SolvableDBObject]) -> MonStgElt
+  {given a list of SolvableDBObjects (all with the same webname), produce html text for name-data.html file}
+  // name
+  // type
+  // degree
+  // genus
+  // galois orbit size
+  // passport size
+  // pointed size
+  // belyi curve
+  // belyi map numerator
+  // belyi map denominator
+  // belyi curve degree
+  // belyi curve measure
+end intrinsic;
