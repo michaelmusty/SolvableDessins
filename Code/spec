@@ -9,4 +9,5 @@
   solvableDBobj.mag
   solvable_maps.mag
   solvable_query.mag
+  solvable_web.mag
 }

@@ -1,0 +1,25 @@
+intrinsic SolvableWebName(s::SolvableDBObject) -> MonStgElt
+  {no path or genus}
+  sigma := s`SolvableDBGaloisOrbit[1];
+  assert #sigma eq 3;
+  H := Parent(sigma[1]);
+  d := Degree(H);
+  G := sub<Sym(d)|sigma>;
+  assert IsTransitive(G);
+  a,b,c := Explode([Order(sigma[1]), Order(sigma[2]), Order(sigma[3])]);
+  if d gt 16 then
+    d, g := Explode(IdentifyGroup(G)); // small group identification
+    name := Sprintf("%oS%o-%o,%o,%o", d, g, a, b, c);
+  else
+    g, d := TransitiveGroupIdentification(G);
+    name := Sprintf("%oT%o-%o,%o,%o", d, g, a, b, c);
+  end if;
+  /*
+  c0 := #CycleDecomposition(sigma[1]);
+  c1 := #CycleDecomposition(sigma[2]);
+  coo := #CycleDecomposition(sigma[3]);
+  genus := (d+2-c0-c1-coo)/2;
+  name *:= Sprintf("-g%o", genus);
+  */
+  return name;
+end intrinsic;
