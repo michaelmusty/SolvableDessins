@@ -1,5 +1,5 @@
 intrinsic SolvableWebName(s::SolvableDBObject) -> MonStgElt
-  {no path or genus}
+  {no path}
   sigma := s`SolvableDBGaloisOrbit[1];
   assert #sigma eq 3;
   H := Parent(sigma[1]);
@@ -20,4 +20,15 @@ intrinsic SolvableWebName(s::SolvableDBObject) -> MonStgElt
   genus := (d+2-c0-c1-coo)/2;
   name *:= Sprintf("-g%o", genus);
   return name;
+end intrinsic;
+
+intrinsic SolvableWebFilenames(d::RngIntElt) -> Any
+  {for a degree d, sort names disregarding paths}
+  f := SolvableDBFilenames(d);
+  f_web := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    Append(~f_web, SolvableWebName(s));
+  end for;
+  return SetToSequence(SequenceToSet(f_web));
 end intrinsic;
