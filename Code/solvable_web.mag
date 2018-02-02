@@ -60,7 +60,6 @@ intrinsic SolvableWebLists(d::RngIntElt) -> Any
   return l;
 end intrinsic;
 
-// TODO ^
 intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
   {}
   str_new := "";
@@ -107,14 +106,16 @@ intrinsic SolvableCurveText(s::SolvableDBObject) -> MonStgElt
   {}
 end intrinsic;
 
-intrinsic SolvableMapText(s::SolvableDBObject) -> MonStgElt
+intrinsic SolvableMapText(s::SolvableDBObject) -> MonStgElt, MonStgElt
   {}
   map := s`SolvableDBBelyiMap;
   num := Numerator(map);
   den := Denominator(map);
   num_text := SolvableEquationParse(Sprintf("%o", num));
   den_text := SolvableEquationParse(Sprintf("%o", den));
-  return Sprintf("\\((%o)/(%o)\\)", num_text, den_text);
+  num_text := Sprintf("\\(%o\\)", num_text);
+  den_text := Sprintf("\\(%o\\)", den_text);
+  return num_text, den_text;
 end intrinsic;
 
 intrinsic SolvableMathJax(s::SolvableDBObject) -> MonStgElt, MonStgElt
