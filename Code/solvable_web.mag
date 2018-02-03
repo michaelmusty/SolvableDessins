@@ -278,6 +278,26 @@ intrinsic SolvableWebGraphTextSetup(l::SeqEnum[SolvableDBObject]) -> Any
   return name, children, parents;
 end intrinsic;
 
+intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> SeqEnum[MonStgElt]
+  {given degree and group number return a SeqEnum of pathless names with those parameters.}
+  f := SolvableDBFilenames(d);
+  names := [];
+  for i := 1 to #f do
+    vprintf Solvable : "i = %o out of %o\n", i, #f;
+    s := SolvableDBAccessEntry(f[i]);
+    G := s`SolvableDBMonodromyGroup;
+    if d gt 16 then
+      _, g_test := Explode(IdentifyGroup(G));
+    else
+      g_test := TransitiveGroupIdentification(G);
+    end if;
+    if g_test eq g then
+      Append(~names, SolvableWebName(s));
+    end if;
+  end for;
+  return names;
+end intrinsic;
+
 intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
   {given a list of SolvableDBObjects (all with the same webname), produce html text for name-data.html file}
   // name, children, parents
@@ -326,4 +346,9 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
   // belyi map denominator
   // belyi curve degree
   // belyi curve measure
+end intrinsic;
+
+// TODO
+intrinsic SolvableWebDataFiles(d::RngIntElt) -> MonStgElt
+  {}
 end intrinsic;
