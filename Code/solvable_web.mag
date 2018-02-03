@@ -184,12 +184,12 @@ intrinsic SolvableWebGraphText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
     // children nodes
     for i := 1 to #children do
       child := children[i];
-      str *:= Sprintf("        {id: 'b%o', label: '%o', group: 'simple', url:'%o-graph.html'},\n", child, child, child);
+      str *:= Sprintf("        {id: 'b%o', label: '%o', group: 'simple', url:'%o-graph.html'},\n", i, child, child);
     end for;
     // parents nodes
     for i := 1 to #parents do
       parent := parents[i];
-      str *:= Sprintf("        {id: 'a%o', label: '%o', group: 'simple', url:'%o-graph.html'},\n", parent, parent, parent);
+      str *:= Sprintf("        {id: 'a%o', label: '%o', group: 'simple', url:'%o-graph.html'},\n", i, parent, parent);
     end for;
     str *:= Sprintf("      ]);\n");
     str *:= Sprintf("      var edges = new vis.DataSet([\n");
