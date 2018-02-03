@@ -141,7 +141,7 @@ intrinsic SolvableWebGraphText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
     str *:= Sprintf("<!doctype html>\n");
     str *:= Sprintf("<html lang=\"en\">\n");
     str *:= Sprintf("  <head>\n");
-    str *:= Sprintf("    <title>PP1 | graph</title>\n");
+    str *:= Sprintf("    <title>%o | graph</title>\n", name);
     str *:= Sprintf("    <meta charset=\"UTF-8\">\n");
     str *:= Sprintf("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
     str *:= Sprintf("    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n");
