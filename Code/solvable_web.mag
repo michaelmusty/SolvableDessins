@@ -135,7 +135,9 @@ end intrinsic;
 intrinsic SolvableWebGraphFiles(d::RngIntElt) -> MonStgElt
   {generate all graph files for d equals 4 or larger.}
   lists := SolvableWebLists(d);
-  for l in lists do
+  for i := 1 to #lists do
+    vprintf Solvable : "i = %o out of %o\n", i, #lists;
+    l := lists[i];
     name := SolvableWebName(l[1]);
     filename := Sprintf("%o-graph.html", name);
     str := SolvableWebGraphText(l);
