@@ -139,7 +139,7 @@ intrinsic SolvableWebGraphFiles(d::RngIntElt) -> MonStgElt
     name := SolvableWebName(l[1]);
     filename := Sprintf("%o-graph.html", name);
     str := SolvableWebGraphText(l);
-    Write(Sprintf("web_files/%o", filename), str);
+    Write(Sprintf("web_files/%o", filename), str : Overwrite := true);
   end for;
   return_text := Sprintf("Successfully wrote %o web graph files for degree %o\n", #lists, d);
   return return_text;
