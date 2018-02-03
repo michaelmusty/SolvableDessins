@@ -295,7 +295,7 @@ intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> SeqEnum[MonStgElt]
       Append(~names, SolvableWebName(s));
     end if;
   end for;
-  return names;
+  return SetToSequence(SequenceToSet(names));
 end intrinsic;
 
 intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
