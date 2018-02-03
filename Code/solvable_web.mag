@@ -195,11 +195,11 @@ intrinsic SolvableWebGraphText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
     str *:= Sprintf("      var edges = new vis.DataSet([\n");
     // center -> children
     for i := 1 to #children do
-      str *:= Sprintf("        {from: 'c', to: 'b%o'},\n", i)
+      str *:= Sprintf("        {from: 'c', to: 'b%o'},\n", i);
     end for;
     // parents -> center
     for i := 1 to #parents do
-      str *:= Sprintf("        {from: 'a%o', to: 'c'},\n", i)
+      str *:= Sprintf("        {from: 'a%o', to: 'c'},\n", i);
     end for;
     str *:= Sprintf("      ]);\n");
     str *:= Sprintf("      var container = document.getElementById('mynetwork');\n");
