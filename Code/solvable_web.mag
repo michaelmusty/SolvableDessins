@@ -278,7 +278,7 @@ intrinsic SolvableWebGraphTextSetup(l::SeqEnum[SolvableDBObject]) -> Any
   return name, children, parents;
 end intrinsic;
 
-intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> SeqEnum[MonStgElt]
+intrinsic SolvableGroupHelper(d::RngIntElt, g::RngIntElt) -> SeqEnum[MonStgElt]
   {given degree and group number return a SeqEnum of pathless names with those parameters.}
   f := SolvableDBFilenames(d);
   names := [];
@@ -296,6 +296,22 @@ intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> SeqEnum[MonStgElt]
     end if;
   end for;
   return SetToSequence(SequenceToSet(names));
+end intrinsic;
+
+intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> MonStgElt
+  {return html text for buttons...}
+  names := SolvableGroupHelper(d, g);
+  str := "";
+  str *:= Sprintf("    <div class=\"container\">\n");
+  if d gt 16 then
+    str *:= Sprintf("      <h3>%oS%o</h3>\n", d, g);
+  else
+    str *:= Sprintf("      <h3>%oT%o</h3>\n", d, g);
+  end if;
+  for name in names do
+    str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-graph.html\">%o</a>\n", name, name);
+  end for;
+  return str;
 end intrinsic;
 
 intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
