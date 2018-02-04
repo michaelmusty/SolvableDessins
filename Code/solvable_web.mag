@@ -311,6 +311,7 @@ intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> MonStgElt
   for name in names do
     str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-graph.html\">%o</a>\n", name, name);
   end for;
+  str *:= Sprintf("    </div>\n");
   return str;
 end intrinsic;
 
