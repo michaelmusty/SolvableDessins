@@ -315,57 +315,113 @@ intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> MonStgElt
   return str;
 end intrinsic;
 
+// TODO
+/*
 intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
   {given a list of SolvableDBObjects (all with the same webname), produce html text for name-data.html file}
-  // name, children, parents
-    for s in l do
-      assert SolvableWebName(s) eq SolvableWebName(l[1]);
-    end for;
-    name, children, parents := SolvableWebGraphTextSetup(l);
-  // type
-    for s in l do
-      assert s`SolvableDBType eq l[1]`SolvableDBType;
-    end for;
-    type := l[1]`SolvableDBType;
-  // degree
-    for s in l do
-      assert s`SolvableDBDegree eq l[1]`SolvableDBDegree;
-    end for;
-    degree := l[1]`SolvableDBDegree;
-  // genus
-    for s in l do
-      assert s`SolvableDBGenus eq l[1]`SolvableDBGenus;
-    end for;
-    genus := l[1]`SolvableDBGenus;
-  // galois orbit size
-    for s in l do
-      assert #s`SolvableDBGaloisOrbit eq #l[1]`SolvableDBGaloisOrbit;
-    end for;
-    galois_orbit_size := #l[1]`SolvableDBGaloisOrbit;
-  // sigma0
-    sigma0 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][1]);
-  // sigma1
-    sigma1 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][2]);
-  // sigmaoo
-    sigmaoo := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][3]);
-  // passport size
-    for s in l do
-      assert #s`SolvableDBPassport eq #l[1]`SolvableDBPassport;
-    end for;
-    passport_size := #l[1]`SolvableDBPassport;
-  // pointed size
-    for s in l do
-      assert #s`SolvableDBPointedPassport eq #l[1]`SolvableDBPointedPassport;
-    end for;
-    pointed_size := #l[1]`SolvableDBPointedPassport;
-  // belyi curve
-  // belyi map numerator
-  // belyi map denominator
-  // belyi curve degree
-  // belyi curve measure
+  ////////// PRE //////////
+    // name, children, parents
+      for s in l do
+        assert SolvableWebName(s) eq SolvableWebName(l[1]);
+      end for;
+      name, children, parents := SolvableWebGraphTextSetup(l);
+    // type
+      for s in l do
+        assert s`SolvableDBType eq l[1]`SolvableDBType;
+      end for;
+      type := l[1]`SolvableDBType;
+    // degree
+      for s in l do
+        assert s`SolvableDBDegree eq l[1]`SolvableDBDegree;
+      end for;
+      degree := l[1]`SolvableDBDegree;
+    // genus
+      for s in l do
+        assert s`SolvableDBGenus eq l[1]`SolvableDBGenus;
+      end for;
+      genus := l[1]`SolvableDBGenus;
+    // galois orbit size
+      for s in l do
+        assert #s`SolvableDBGaloisOrbit eq #l[1]`SolvableDBGaloisOrbit;
+      end for;
+      galois_orbit_size := #l[1]`SolvableDBGaloisOrbit;
+    // sigma0
+      sigma0 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][1]);
+    // sigma1
+      sigma1 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][2]);
+    // sigmaoo
+      sigmaoo := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][3]);
+    // passport size
+      for s in l do
+        assert #s`SolvableDBPassport eq #l[1]`SolvableDBPassport;
+      end for;
+      passport_size := #l[1]`SolvableDBPassport;
+    // pointed size
+      for s in l do
+        assert #s`SolvableDBPointedPassport eq #l[1]`SolvableDBPointedPassport;
+      end for;
+      pointed_size := #l[1]`SolvableDBPointedPassport;
+    // belyi curves
+      belyi_curves := [* *];
+      for s in l do
+        if assigned s`SolvableDBBelyiCurve then
+          Append(~belyi_curves, s`SolvableDBBelyiCurve);
+        end if;
+      end for;
+    // base fields
+      base_fields := [* *];
+      for s in l do
+        if assigned s`SolvableDBBelyiCurve then
+          Append(~base_fields, BaseField(s`SolvableDBBelyiCurve));
+        end if;
+      end for;
+    // belyi curve degrees
+      belyi_curve_degrees := [];
+      for s in l do
+        if assigned s`SolvableDBBelyiCurve then
+          if IsProjective(s`SolvableDBBelyiCurve) then
+            Append(~belyi_curve_degrees, Degree(s`SolvableDBBelyiCurve));
+          else
+            Append(~belyi_curve_degrees, Degree(ProjectiveClosure(s`SolvableDBBelyiCurve)));
+          end if;
+        end if;
+      end for;
+    // belyi curve measures
+      belyi_curve_measures := [];
+      for s in l do
+        if assigned s`SolvableDBBelyiCurve then
+          Append(~belyi_curve_measures, SolvableMeasure(s`SolvableDBBelyiCurve));
+        end if;
+      end for;
+    // belyi maps
+      belyi_maps := [* *];
+      for s in l do
+        if assigned s`SolvableDBBelyiMaps then
+          Append(~belyi_maps, s`SolvableDBBelyiMaps);
+        end if;
+      end for;
+  ///////// POST //////////
+    str := "";
+    // head
+      str *:= Sprintf("<!doctype html>\n");
+      str *:= Sprintf("<html lang=\"en\">\n");
+      str *:= Sprintf("  <head>\n");
+      str *:= Sprintf("    <title>%o | data</title>\n", name);
+      str *:= Sprintf("    <meta charset=\"UTF-8\">\n");
+      str *:= Sprintf("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
+      str *:= Sprintf("    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n");
+      str *:= Sprintf("    <link href=\"entireframework.min.css\" rel=\"stylesheet\" type=\"text/css\">\n");
+      str *:= Sprintf("    <link rel=\"shortcut icon\" href=\"favicon.png\" type=\"image/x-icon\">\n");
+      str *:= Sprintf("    <script type=\"text/javascript\"\n");
+      str *:= Sprintf("      src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\">\n");
+      str *:= Sprintf("    </script>\n");
+      str *:= Sprintf("    <style type=\"text/css\">\n");
+      str *:= Sprintf("      html, body { padding: 0; margin: 0; width: 100%%; height: 100%%; }\n");
+      str *:= Sprintf("    </style>\n");
+      str *:= Sprintf("  </head>\n");
+    // body
 end intrinsic;
-
-// TODO
 intrinsic SolvableWebDataFiles(d::RngIntElt) -> MonStgElt
   {}
 end intrinsic;
+*/
