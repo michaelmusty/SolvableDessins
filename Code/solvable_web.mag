@@ -416,7 +416,7 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
       belyi_curve_measures := [];
       for s in l do
         if assigned s`SolvableDBBelyiCurve then
-          Append(~belyi_curve_measures, SolvableMeasure(s`SolvableDBBelyiCurve));
+          Append(~belyi_curve_measures, SolvableMeasure(s));
         end if;
       end for;
     // assertions
