@@ -121,17 +121,6 @@ intrinsic SolvableMapText(s::SolvableDBObject) -> MonStgElt, MonStgElt
   return num_text, den_text;
 end intrinsic;
 
-intrinsic SolvableMathJax(s::SolvableDBObject) -> MonStgElt, MonStgElt
-  {}
-  curve_text := "";
-  map_text := "";
-  assert assigned s`SolvableDBBelyiCurve;
-  assert assigned s`SolvableDBBelyiMap;
-  curve_text := SolvableCurveText(s); // list
-  num_text, den_text := SolvableMapText(s);
-  return curve_text, num_text, den_text;
-end intrinsic;
-
 intrinsic SolvableWebGraphFiles(d::RngIntElt) -> MonStgElt
   {generate all graph files for d equals 4 or larger.}
   lists := SolvableWebLists(d);
@@ -315,8 +304,42 @@ intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> MonStgElt
   return str;
 end intrinsic;
 
-// TODO
-/*
+intrinsic SolvableMathJaxFieldText(K::FldNum) -> Any
+  {}
+  if Degree(K) eq 1 then
+    return "Rationals";
+  else
+    f := MinimalPolynomial(K.1);
+    nu_text := "";
+    f_coeffs := Eltseq(f);
+    for i := #f_coeffs to 2 by -1 do
+      nu_text *:= Sprintf("%o\\nu^%o", f_coeffs[i], i-1);
+    end for;
+    nu_text *:= Sprintf("%o", f_coeffs[1]);
+    return Sprintf("Number field: \\(%o\\)", nu_text);
+  end if;
+end intrinsic;
+
+intrinsic SolvableMathJaxFieldText(K::FldRat) -> Any
+  {}
+  return "Rationals";
+end intrinsic;
+
+intrinsic SolvableMathJax(s::SolvableDBObject) -> Any
+  {}
+  assert assigned s`SolvableDBBelyiCurve;
+  assert assigned s`SolvableDBBelyiMap;
+  X := s`SolvableDBBelyiCurve;
+  K := BaseField(X);
+  // curve
+  curve_text := SolvableCurveText(s); // list
+  // field
+  field_text := SolvableMathJaxFieldText(K);
+  // belyi map
+  num_text, den_text := SolvableMapText(s);
+  return curve_text, field_text, num_text, den_text;
+end intrinsic;
+
 intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
   {given a list of SolvableDBObjects (all with the same webname), produce html text for name-data.html file}
   ////////// PRE //////////
@@ -362,17 +385,20 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
       end for;
       pointed_size := #l[1]`SolvableDBPointedPassport;
     // belyi curves
-      belyi_curves := [* *];
-      for s in l do
-        if assigned s`SolvableDBBelyiCurve then
-          Append(~belyi_curves, s`SolvableDBBelyiCurve);
-        end if;
-      end for;
     // base fields
-      base_fields := [* *];
+    // belyi map numerators,denominators
+      belyi_curves := [];
+      base_fields := [];
+      belyi_map_numerators := [];
+      belyi_map_denominators := [];
       for s in l do
         if assigned s`SolvableDBBelyiCurve then
-          Append(~base_fields, BaseField(s`SolvableDBBelyiCurve));
+          assert assigned s`SolvableDBBelyiMap;
+          curve_text, field_text, num_text, den_text := SolvableMathJax(s);
+          Append(~belyi_curves, curve_text);
+          Append(~belyi_fields, field_text);
+          Append(~belyi_map_numerators, num_text);
+          Append(~belyi_map_denominators, den_text);
         end if;
       end for;
     // belyi curve degrees
@@ -393,13 +419,12 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
           Append(~belyi_curve_measures, SolvableMeasure(s`SolvableDBBelyiCurve));
         end if;
       end for;
-    // belyi maps
-      belyi_maps := [* *];
-      for s in l do
-        if assigned s`SolvableDBBelyiMaps then
-          Append(~belyi_maps, s`SolvableDBBelyiMaps);
-        end if;
-      end for;
+    // assertions
+      assert #belyi_curves eq #belyi_curve_measures;
+      assert #belyi_curves eq #belyi_curve_degrees;
+      assert #belyi_curves eq #belyi_map_denominators;
+      assert #belyi_curves eq #belyi_map_numerators;
+      assert #belyi_curves eq #belyi_fields;
   ///////// POST //////////
     str := "";
     // head
@@ -420,7 +445,140 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
       str *:= Sprintf("    </style>\n");
       str *:= Sprintf("  </head>\n");
     // body
+      // setup
+        str *:= Sprintf("  <body>\n");
+        str *:= Sprintf("    <nav class=\"nav\" onclick=\"this.focus()\">\n");
+        str *:= Sprintf("      <div class=\"container\">\n");
+        str *:= Sprintf("        <a class=\"pagename current\" href=\"index.html\">dessin explorer</a>\n");
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("    </nav>\n");
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <h2>%o</h2>\n", name);
+        str *:= Sprintf("    </div>\n");
+      // graph and data links
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <a class=\"btn btn-a smooth\" href=\"%o-graph.html\">graph</a>\n", name);
+        str *:= Sprintf("        <a class=\"btn btn-b smooth\" href=\"%o-data.html\">data</a>\n", name);
+        str *:= Sprintf("      </div>\n");
+      // Table: name, type, degree, genus, galois orbit size, sigma0, sigma1, sigmaoo, passport size, pointed size
+        str *:= Sprintf("      <table class=\"table\">\n");
+        str *:= Sprintf("        <tbody>\n");
+        // name
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Name</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", name);
+        str *:= Sprintf("          </tr>\n");
+        // type
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Type</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", type);
+        str *:= Sprintf("          </tr>\n");
+        // degree
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Degree</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", degree);
+        str *:= Sprintf("          </tr>\n");
+        // genus
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Genus</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", genus);
+        str *:= Sprintf("          </tr>\n");
+        // galois orbit size
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Galois orbit size</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", galois_orbit_size);
+        str *:= Sprintf("          </tr>\n");
+        // sigma0
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>\(\sigma_0\)</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", sigma0);
+        str *:= Sprintf("          </tr>\n");
+        // sigma1
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>\(\sigma_1\)</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", sigma1);
+        str *:= Sprintf("          </tr>\n");
+        // sigmaoo
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>\(\sigma_oo\)</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", sigmaoo);
+        str *:= Sprintf("          </tr>\n");
+        // passport size
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Passport size</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", passport_size);
+        str *:= Sprintf("          </tr>\n");
+        // pointed size
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Pointed size</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", pointed_size);
+        str *:= Sprintf("          </tr>\n");
+        // end table
+        str *:= Sprintf("        </tbody>\n");
+        str *:= Sprintf("      </table>\n");
+        str *:= Sprintf("    </div>\n");
+      // parents
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <h3>Above</h3>\n");
+        for i := 1 to #parents do
+          str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-data.html\">%o</a>\n", parents[i], parents[i]);
+        end for;
+        str *:= Sprintf("    </div>\n");
+      // children
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <h3>Below</h3>\n");
+        for i := 1 to #children do
+          str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-data.html\">%o</a>\n", children[i], children[i]);
+        end for;
+        str *:= Sprintf("    </div>\n");
+      // belyi curves
+      // base fields
+      // belyi curve degrees
+      // belyi curve measures
+      // belyi map numerators
+      // belyi map denominators
+      for i := 1 to #belyi_curves do
+        // curve
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <h3>Belyi Curve %o</h3>\n", i);
+        for j := 1 to #belyi_curves[i]-1 do
+          str *:= Sprintf("        %o\n", belyi_curves[i][j]);
+          str *:= Sprintf("        <br>\n");
+        end for;
+        str *:= Sprintf("        %o\n", belyi_curves[i][#belyi_curves[i]]);
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("    </div>\n");
+        // field, degree, measure
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <h3>Belyi Curve %o Base Field: %o</h3>\n", i, belyi_field[i]);
+        str *:= Sprintf("      <h3>Belyi Curve %o Degree: %o</h3>\n", i, belyi_curve_degrees[i]);
+        str *:= Sprintf("      <h3>Belyi Curve %o Naive Measure: %o</h3>\n", i, belyi_curve_measures[i]);
+        str *:= Sprintf("    </div>\n");
+        // numerators
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <h3>Belyi Map %o Numerator</h3>\n", i);
+        str *:= Sprintf("        %o\n", belyi_map_numerators[i]);
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("    </div>\n");
+        // denominators
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <h3>Belyi Map %o Denominator</h3>\n", i);
+        str *:= Sprintf("        %o\n", belyi_map_denominators[i]);
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("    </div>\n");
+      end for;
+    // end and return
+      str *:= Sprintf("    <br>\n");
+      str *:= Sprintf("  </body>\n");
+      str *:= Sprintf("</html>\n");
+      return str;
 end intrinsic;
+
+/*
 intrinsic SolvableWebDataFiles(d::RngIntElt) -> MonStgElt
   {}
 end intrinsic;
