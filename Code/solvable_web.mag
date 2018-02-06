@@ -552,7 +552,7 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         str *:= Sprintf("    </div>\n");
         // field, degree, measure
         str *:= Sprintf("    <div class=\"container\">\n");
-        str *:= Sprintf("      <h3>Belyi Curve %o Base Field: %o</h3>\n", i, belyi_field[i]);
+        str *:= Sprintf("      <h3>Belyi Curve %o Base Field: %o</h3>\n", i, belyi_fields[i]);
         str *:= Sprintf("      <h3>Belyi Curve %o Degree: %o</h3>\n", i, belyi_curve_degrees[i]);
         str *:= Sprintf("      <h3>Belyi Curve %o Naive Measure: %o</h3>\n", i, belyi_curve_measures[i]);
         str *:= Sprintf("    </div>\n");
