@@ -315,9 +315,9 @@ intrinsic SolvableMathJaxFieldText(K::FldNum) -> Any
     for i := #f_coeffs to 2 by -1 do
       if f_coeffs[i] ne Parent(f_coeffs[i])!0 then
         if f_coeffs[i] eq Parent(f_coeffs[i])!1 then
-          nu_text *:= Sprintf("\\nu^{%o}+", f_coeffs[i], i-1);
+          nu_text *:= Sprintf("\\nu^{%o}+", f_coeffs[i], i);
         else
-          nu_text *:= Sprintf("%o\\nu^{%o}+", f_coeffs[i], i-1);
+          nu_text *:= Sprintf("%o\\nu^{%o}+", f_coeffs[i], i);
         end if;
       end if;
     end for;
