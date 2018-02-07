@@ -330,6 +330,7 @@ intrinsic ExtensionToPassports(extension::List, below::SeqEnum[GrpPermElt]) -> S
         end if;
       end for;
       // return
+      cover := EliminateRedundancies(cover);
       return [cover];
     else // 2 unique cycle structures
       cover1 := [];
