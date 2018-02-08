@@ -88,7 +88,7 @@ Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T4-2,2,4-g0-path2", "16T10-4,2,4-g1-path7" ];
-s`SolvableDBParents := [ Strings() | "32S9-8,2,4-g3-path9", "32S6-4,4,4-g5-path20", "32S11-8,4,4-g7-path9", "32S9-4,2,8-g3-path9", "32S7-8,2,8-g5-path9" ];
+s`SolvableDBParents := [ Strings() | "32S9-8,2,4-g3-path9", "32S6-4,4,4-g5-path20", "32S11-8,4,4-g7-path9", "32S9-4,2,8-g3-path9", "32S7-8,2,8-g5-path9", "32S11-4,4,8-g7-path20", "32S5-8,4,8-g9-path9", "32S11-8,2,4-g3-path9" ];
 s`SolvableDBChildren := [ Strings() | "8T4-2,2,4-g0-path2" ];
 
 /*
