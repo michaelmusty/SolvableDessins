@@ -1,0 +1,97 @@
+s := SolvableDBObjectInitialize();
+
+/*
+Basic Information about the Passport
+*/
+
+s`SolvableDBName := "16T10-4,2,4-g1-path9";
+s`SolvableDBFilename := "16T10-4,2,4-g1-path9.m";
+s`SolvableDBPathNumber := 9;
+s`SolvableDBDegree := 16;
+s`SolvableDBABC := \[ 4, 2, 4 ];
+s`SolvableDBType := "Euclidean";
+s`SolvableDBGenus := 1;
+s`SolvableDBGaloisOrbitSize := 1;
+s`SolvableDBPassportSize := 1;
+s`SolvableDBPointedPassportSize := 1;
+s`SolvableDBLevel := 4;
+s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
+{ IntegerRing() | 1, 5 },
+{ IntegerRing() | 2, 11 },
+{ IntegerRing() | 3, 10 },
+{ IntegerRing() | 4, 7 },
+{ IntegerRing() | 6, 14 },
+{ IntegerRing() | 8, 16 },
+{ IntegerRing() | 9, 12 },
+{ IntegerRing() | 13, 15 }
+@};
+
+/*
+Permutations and Passports
+*/
+
+s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  
+\[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],
+\[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]:
+ Order := 20922789888000 >) |
+[ PermutationGroup<16 |  
+\[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],
+\[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]:
+ Order := 20922789888000 > |
+[ 11, 16, 7, 15, 2, 5, 13, 14, 3, 4, 8, 10, 9, 1, 12, 6 ],
+[ 3, 9, 1, 14, 10, 7, 6, 13, 2, 5, 12, 11, 8, 4, 16, 15 ],
+[ 4, 10, 2, 5, 7, 15, 1, 12, 8, 11, 3, 16, 6, 13, 14, 9 ]
+]
+];
+s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |  
+\[ 11, 16, 7, 15, 2, 5, 13, 14, 3, 4, 8, 10, 9, 1, 12, 6 ],
+\[ 3, 9, 1, 14, 10, 7, 6, 13, 2, 5, 12, 11, 8, 4, 16, 15 ],
+\[ 4, 10, 2, 5, 7, 15, 1, 12, 8, 11, 3, 16, 6, 13, 14, 9 ]:
+ Order := 16 >) |
+[ PermutationGroup<16 |  
+\[ 11, 16, 7, 15, 2, 5, 13, 14, 3, 4, 8, 10, 9, 1, 12, 6 ],
+\[ 3, 9, 1, 14, 10, 7, 6, 13, 2, 5, 12, 11, 8, 4, 16, 15 ],
+\[ 4, 10, 2, 5, 7, 15, 1, 12, 8, 11, 3, 16, 6, 13, 14, 9 ]:
+ Order := 16 > |
+[ 14, 5, 9, 10, 6, 16, 3, 11, 13, 12, 1, 15, 7, 8, 4, 2 ],
+[ 3, 9, 1, 14, 10, 7, 6, 13, 2, 5, 12, 11, 8, 4, 16, 15 ],
+[ 12, 15, 6, 16, 9, 10, 8, 4, 1, 14, 13, 5, 2, 3, 11, 7 ]
+]
+];
+s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
+\[ 11, 16, 7, 15, 2, 5, 13, 14, 3, 4, 8, 10, 9, 1, 12, 6 ],
+\[ 3, 9, 1, 14, 10, 7, 6, 13, 2, 5, 12, 11, 8, 4, 16, 15 ],
+\[ 4, 10, 2, 5, 7, 15, 1, 12, 8, 11, 3, 16, 6, 13, 14, 9 ]:
+ Order := 16 >) |
+[ PermutationGroup<16 |  
+\[ 11, 16, 7, 15, 2, 5, 13, 14, 3, 4, 8, 10, 9, 1, 12, 6 ],
+\[ 3, 9, 1, 14, 10, 7, 6, 13, 2, 5, 12, 11, 8, 4, 16, 15 ],
+\[ 4, 10, 2, 5, 7, 15, 1, 12, 8, 11, 3, 16, 6, 13, 14, 9 ]:
+ Order := 16 > |
+[ 2, 8, 4, 13, 11, 1, 15, 6, 10, 7, 16, 3, 12, 5, 9, 14 ],
+[ 10, 12, 5, 6, 3, 4, 14, 15, 11, 1, 9, 2, 16, 7, 8, 13 ],
+[ 4, 10, 2, 5, 7, 15, 1, 12, 8, 11, 3, 16, 6, 13, 14, 9 ]
+]
+];
+s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
+\[ 11, 16, 7, 15, 2, 5, 13, 14, 3, 4, 8, 10, 9, 1, 12, 6 ],
+\[ 3, 9, 1, 14, 10, 7, 6, 13, 2, 5, 12, 11, 8, 4, 16, 15 ],
+\[ 4, 10, 2, 5, 7, 15, 1, 12, 8, 11, 3, 16, 6, 13, 14, 9 ] >;
+
+/*
+Top Level Belyi Curve/Map
+*/
+
+
+/*
+Graph Data
+*/
+
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T4-4,2,2-g0-path1", "16T10-4,2,4-g1-path9" ];
+s`SolvableDBChildren := [ Strings() | "8T4-4,2,2-g0-path1" ];
+
+/*
+Return for eval
+*/
+
+return s;
