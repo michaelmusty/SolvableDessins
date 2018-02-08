@@ -424,8 +424,13 @@ intrinsic SolvableAbove(s::SolvableDBObject) -> Any, Any
   new_covers := [];
   for i := 1 to #gal_orbit do
     below := gal_orbit[i];
+    t0 := Cputime();
     covers, unram := Coverings(below);
+    t1 := Cputime();
+    vprintf Solvable : "%o Galois orbit element %o out of %o:\n", s`SolvableDBName, i, #gal_orbit;
+    vprintf Solvable : "Covers computed in %o seconds.\n", t1-t0;
     sorted_covers := covers cat unram;
+    t0 := Cputime();
     if #sorted_covers eq 0 then // if there are no covers
       s`SolvableDBParents := [ "None" ]; // record that we checked for parents
     else
@@ -450,6 +455,9 @@ intrinsic SolvableAbove(s::SolvableDBObject) -> Any, Any
         end if;
       end for;
     end if;
+    t1 := Cputime();
+    vprintf Solvable : "%o Galois orbit element %o out of %o:\n", s`SolvableDBName, i, #gal_orbit;
+    vprintf Solvable : "Covers merged in %o seconds.\n", t1-t0;
   end for;
   return new_covers;
 end intrinsic;
@@ -465,7 +473,7 @@ intrinsic SolvableLevel(l::RngIntElt) -> Any
       // make a bunch of files at level l by calling SolvableAbove a level below
       for name in filenames_below do
         vprintf Solvable : "%o: ", name;
-        vprintf Solvable : "%o/%o\n\n", Index(filenames_below, name), #filenames_below;
+        vprintf Solvable : "%o out of %o\n\n", Index(filenames_below, name), #filenames_below;
         s := SolvableDBAccessEntry(name);
         SolvableAbove(s);
       end for;
