@@ -25,9 +25,9 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 16 },
 { IntegerRing() | 13, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.060p15;
-s`SolvableDBSanityCheckTiming := 0.010p15;
-s`SolvableDBLocalSanityCheckTiming := 0.040p15;
+s`SolvableDBBelyiMapTiming := 0.0600000000000000p15;
+s`SolvableDBSanityCheckTiming := 0.0100000000000000p15;
+s`SolvableDBLocalSanityCheckTiming := 0.0400000000000000p15;
 s`SolvableDBLocalSanityCheckPrime := 101;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
@@ -146,6 +146,7 @@ Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T2-2,2,2-g0-path3", "8T2-2,4,4-g1-path5", "16T8-4,4,4-g3-path5" ];
+s`SolvableDBParents := [ Strings() | "32S14-8,4,4-g7-path17", "32S12-4,8,8-g9-path45", "32S15-8,8,8-g11-path56", "32S13-8,4,4-g7-path17", "32S12-4,8,8-g9-path46", "32S15-8,8,8-g11-path57", "32S2-4,4,4-g5-path77" ];
 s`SolvableDBChildren := [ Strings() | "8T2-2,4,4-g1-path5" ];
 
 /*

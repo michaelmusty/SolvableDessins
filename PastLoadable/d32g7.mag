@@ -1,0 +1,30 @@
+load "doob.mag";
+
+ram, unram := DegreeGenus(32, 7);
+
+for i := 98 to #ram do
+  s := ram[i];
+  s := SolvableBelyiMap(s);
+  before, after := SolvableLowDegreeModel(s);
+  printf "\nLocal sanity checking %o:\n", s`SolvableDBName;
+  t0 := Cputime();
+  assert SolvableLocalSanityCheck(after, 101);
+  assert SolvableMapSanityCheck(after);
+  t1 := Cputime();
+  printf "done. %o seconds.\n", t1-t0;
+  assert assigned after`SolvableDBLocalSanityCheckTiming;
+  assert assigned after`SolvableDBLocalSanityCheckPrime;
+  SolvableDBWriteObject(after);
+  filename := after`SolvableDBFilename;
+  t := SolvableDBAccessEntry(filename);
+  printf "\nSanity checking again...\n";
+  t0 := Cputime();
+  assert SolvableLocalSanityCheck(t, 101);
+  assert SolvableMapSanityCheck(after);
+  t1 := Cputime();
+  printf "done. %o seconds.\n", t1-t0;
+  assert assigned t`SolvableDBBelyiMapTiming;
+  assert assigned t`SolvableDBLowDegreeTiming;
+  assert assigned t`SolvableDBLocalSanityCheckTiming;
+  assert assigned t`SolvableDBLocalSanityCheckPrime;
+end for;
