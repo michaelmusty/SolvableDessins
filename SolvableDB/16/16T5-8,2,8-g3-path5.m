@@ -25,6 +25,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 8, 12 },
 { IntegerRing() | 10, 14 }
 @};
+s`SolvableDBBelyiMapTiming := 0.230000000000000p15;
+s`SolvableDBSanityCheckTiming := 0.0600000000000000p15;
+s`SolvableDBLocalSanityCheckTiming := 0.0400000000000000p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -89,12 +95,22 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
+f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 1])> where K is RationalField()) |
+[[ RationalField() | 16777216/4294836225, 0 ], [ RationalField() | 0, 33554432/4294836225 ], [ RationalField() | -29360128/4294836225, 0 ], [ RationalField() | 0, -14680064/4294836225 ], [ RationalField() | 917504/858967245, 0 ], [ RationalField() | 0, 917504/4294836225 ], [ RationalField() | -114688/4294836225, 0 ], [ RationalField() | 0, -8192/4294836225 ], [ RationalField() | -256/65535, 0 ]],
+[]
+]);
+X<x1,x2,x3> := HyperellipticCurve([f, g]);
+K<nu> := BaseField(X);
+s`SolvableDBBelyiCurve := X;
+KX<x1, x2> := FunctionField(X);
+s`SolvableDBBelyiMap := KX!((1/65536*x1^8 - 1/2048*nu*x1^7 - 7/1024*x1^6 + 7/128*nu*x1^5 + 35/128*x1^4 - 7/8*nu*x1^3 - 7/4*x1^2 + 2*nu*x1 + 1)/x1^8);
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T2-4,2,4-g1-path3", "16T5-8,2,8-g3-path5" ];
+s`SolvableDBParents := [ Strings() | "32S3-8,4,8-g9-path20", "32S12-8,4,8-g9-path5", "32S16-16,2,16-g7-path7", "32S16-16,4,16-g11-path6", "32S17-16,2,16-g7-path5", "32S17-16,4,16-g11-path5", "32S5-8,2,8-g5-path16" ];
 s`SolvableDBChildren := [ Strings() | "8T2-4,2,4-g1-path3" ];
 
 /*

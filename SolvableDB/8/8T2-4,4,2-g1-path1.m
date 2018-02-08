@@ -21,6 +21,13 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 3, 7 },
 { IntegerRing() | 5, 8 }
 @};
+s`SolvableDBBelyiMapTiming := 0.060p15;
+s`SolvableDBLowDegreeTiming := 0.050p15;
+s`SolvableDBSanityCheckTiming := 0.000p15;
+s`SolvableDBLocalSanityCheckTiming := 0.040p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -78,6 +85,16 @@ s`SolvableDBMonodromyGroup := PermutationGroup<8 |
 Top Level Belyi Curve/Map
 */
 
+K := Rationals();
+PX<x1, x2> := PolynomialRing(K, 2);
+AA<x1, x2> := AffineSpace(PX);
+I<x1, x2> := ideal< PX | [
+x1^2 - 1/2*x2^3 - 1/2*x2
+] >;
+X<x1, x2> := Curve(AA, I);
+KX<x1, x2> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!(-4*x2^2/(x2^4 - 2*x2^2 + 1));
 
 /*
 Graph Data

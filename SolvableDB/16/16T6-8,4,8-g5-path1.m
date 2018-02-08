@@ -25,6 +25,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 15 },
 { IntegerRing() | 12, 16 }
 @};
+s`SolvableDBBelyiMapTiming := 0.140000000000000p15;
+s`SolvableDBSanityCheckTiming := 0.100000000000000p15;
+s`SolvableDBLocalSanityCheckTiming := 0.120000000000000p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -91,12 +97,26 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
+K := Rationals();
+PX<x1, x2, x3> := PolynomialRing(K, 3);
+AA<x1, x2, x3> := AffineSpace(PX);
+I<x1, x2, x3> := ideal< PX | [
+x1^2 - 1/2*x2^3 - 1/2*x2,
+x1*x2^2 - x1 - x2^3*x3^2 - x2*x3^2,
+x1*x3^2 - 1/2*x2^2 + 1/2,
+x2^4 - 2*x2^3*x3^4 - 2*x2^2 - 2*x2*x3^4 + 1
+] >;
+X<x1, x2, x3> := Curve(AA, I);
+KX<x1, x2, x3> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!(-x3^4/2*x2^3 + x3^8*x2^2 + 3*x3^4/2*x2 + x3^8 + 1);
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T1-4,1,4-g0-path1", "8T2-4,2,4-g1-path1", "16T6-8,4,8-g5-path1" ];
+s`SolvableDBParents := [ Strings() | "32S5-8,4,8-g9-path19", "32S12-8,4,8-g9-path20", "32S4-8,4,8-g9-path21" ];
 s`SolvableDBChildren := [ Strings() | "8T2-4,2,4-g1-path1" ];
 
 /*
