@@ -102,8 +102,9 @@ Top Level Belyi Curve/Map
 Graph Data
 */
 
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T2-2,4,4-g1-path4", "16T5-4,8,8-g5-path5", "32S5-4,8,8-g9-path17" ];
-s`SolvableDBChildren := [ Strings() | "16T5-4,8,8-g5-path5" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T2-2,4,4-g1-path4", "16T5-4,8,8-g5-path6", "32S5-4,8,8-g9-path17" ];
+s`SolvableDBParents := [ Strings() | "64S29-8,16,16-g25-path49", "64S31-8,16,16-g25-path33", "64S31-8,16,16-g25-path34", "64S30-8,16,16-g25-path17", "64S31-8,16,16-g25-path35", "64S29-8,16,16-g25-path50", "64S30-8,16,16-g25-path18", "64S31-8,16,16-g25-path36", "64S7-4,8,8-g17-path175", "64S6-4,8,8-g17-path39", "64S5-4,8,8-g17-path32", "64S6-4,8,8-g17-path40", "64S17-4,8,8-g17-path213", "64S4-4,8,8-g17-path9", "64S7-4,8,8-g17-path176" ];
+s`SolvableDBChildren := [ Strings() | "16T5-4,8,8-g5-path6" ];
 
 /*
 Return for eval

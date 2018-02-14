@@ -41,14 +41,6 @@ s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |
 [ 8, 14, 13, 2, 4, 15, 12, 7, 16, 6, 10, 1, 9, 5, 11, 3 ],
 [ 3, 6, 5, 10, 11, 1, 9, 13, 2, 12, 7, 16, 4, 15, 8, 14 ],
 [ 10, 13, 12, 3, 16, 4, 15, 6, 8, 5, 14, 11, 1, 9, 2, 7 ]
-],
-[ PermutationGroup<16 |  
-\[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],
-\[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]:
- Order := 20922789888000 > |
-[ 10, 16, 15, 14, 2, 5, 11, 12, 13, 9, 8, 7, 1, 3, 4, 6 ],
-[ 3, 8, 2, 6, 11, 7, 1, 9, 4, 15, 10, 13, 14, 5, 16, 12 ],
-[ 12, 14, 13, 10, 4, 15, 16, 5, 11, 7, 6, 2, 8, 9, 1, 3 ]
 ]
 ];
 s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -103,7 +95,7 @@ Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T1-2,4,4-g1-path1", "8T1-4,8,8-g3-path1", "16T5-4,8,8-g5-path1" ];
-s`SolvableDBParents := [ Strings() | "32S16-8,16,16-g13-path2", "32S17-8,16,16-g13-path1", "32S16-8,16,16-g13-path3", "32S12-4,8,8-g9-path8", "32S3-4,8,8-g9-path23", "32S5-4,8,8-g9-path12", "32S16-8,16,16-g13-path4", "32S16-8,16,16-g13-path5", "32S12-4,8,8-g9-path9", "32S3-4,8,8-g9-path24", "32S5-4,8,8-g9-path13" ];
+s`SolvableDBParents := [ Strings() | "32S16-8,16,16-g13-path5", "32S17-8,16,16-g13-path1", "32S16-8,16,16-g13-path6", "32S17-8,16,16-g13-path2", "32S12-4,8,8-g9-path8", "32S3-4,8,8-g9-path23", "32S5-4,8,8-g9-path12" ];
 s`SolvableDBChildren := [ Strings() | "8T1-4,8,8-g3-path1" ];
 
 /*

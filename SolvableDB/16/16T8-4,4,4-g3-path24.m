@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 10, 12 },
 { IntegerRing() | 13, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.110000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.0200000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.0400000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -111,8 +105,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 7, 2, 5, 8, 13, 11, 1, 12, 9, 3, 16, 14, 15, 6, 10 ]:
  Order := 16 > |
 [ 15, 8, 16, 2, 13, 10, 9, 11, 3, 14, 4, 6, 1, 12, 5, 7 ],
-[ 10, 15, 14, 9, 12, 3, 6, 16, 8, 5, 13, 1, 2, 7, 11, 4 ],
-[ 11, 16, 4, 15, 2, 5, 8, 13, 14, 7, 9, 3, 10, 1, 12, 6 ]
+[ 8, 3, 11, 1, 4, 15, 2, 5, 10, 16, 7, 9, 6, 13, 14, 12 ],
+[ 14, 5, 12, 3, 6, 16, 10, 7, 11, 13, 1, 15, 8, 9, 4, 2 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
@@ -134,21 +128,13 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-f, g := Explode([ PolynomialRing(RationalField()) |
-[0, -2, 0, -14, 0, -14, 0, -2],
-[]
-]);
-X<x1,x2,x3> := HyperellipticCurve([f, g]);
-s`SolvableDBBelyiCurve := X;
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiMap := KX!((-x1^8 + 4*x1^6 - 6*x1^4 + 4*x1^2 - 1)/(16*x1^6 + 32*x1^4 + 16*x1^2));
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T2-2,2,2-g0-path3", "8T4-4,2,2-g0-path3", "16T8-4,4,4-g3-path24" ];
-s`SolvableDBParents := [ Strings() | "32S14-8,4,4-g7-path11", "32S12-4,8,8-g9-path33", "32S15-8,8,8-g11-path32", "32S13-8,4,4-g7-path11", "32S12-4,8,8-g9-path34", "32S15-8,8,8-g11-path33", "32S2-4,4,4-g5-path65" ];
+s`SolvableDBParents := [ Strings() | "32S14-8,4,4-g7-path11", "32S12-4,8,8-g9-path33", "32S15-8,8,8-g11-path33", "32S13-8,4,4-g7-path11", "32S12-4,8,8-g9-path34", "32S15-8,8,8-g11-path34", "32S2-4,4,4-g5-path65" ];
 s`SolvableDBChildren := [ Strings() | "8T4-4,2,2-g0-path3" ];
 
 /*

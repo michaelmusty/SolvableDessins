@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 15 },
 { IntegerRing() | 13, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.260000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.240000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.120000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := false;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -59,9 +53,9 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 3, 9, 11, 6, 12, 8, 1, 16, 13, 2, 14, 15, 4, 5, 7, 10 ],
 \[ 4, 7, 2, 15, 10, 14, 16, 1, 5, 11, 8, 6, 3, 13, 9, 12 ]:
  Order := 16 > |
-[ 6, 1, 9, 7, 2, 5, 10, 3, 12, 14, 16, 8, 11, 4, 13, 15 ],
+[ 2, 5, 8, 14, 6, 1, 4, 12, 3, 7, 13, 9, 15, 10, 16, 11 ],
 [ 3, 9, 11, 6, 12, 8, 1, 16, 13, 2, 14, 15, 4, 5, 7, 10 ],
-[ 10, 14, 6, 11, 4, 7, 13, 5, 1, 15, 9, 2, 12, 16, 8, 3 ]
+[ 4, 7, 2, 15, 10, 14, 16, 1, 5, 11, 8, 6, 3, 13, 9, 12 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -75,8 +69,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 7, 2, 15, 10, 14, 16, 1, 5, 11, 8, 6, 3, 13, 9, 12 ]:
  Order := 16 > |
 [ 12, 8, 15, 2, 3, 9, 5, 13, 16, 6, 7, 11, 10, 1, 14, 4 ],
-[ 4, 7, 2, 15, 10, 14, 16, 1, 5, 11, 8, 6, 3, 13, 9, 12 ],
-[ 6, 1, 9, 7, 2, 5, 10, 3, 12, 14, 16, 8, 11, 4, 13, 15 ]
+[ 10, 14, 6, 11, 4, 7, 13, 5, 1, 15, 9, 2, 12, 16, 8, 3 ],
+[ 2, 5, 8, 14, 6, 1, 4, 12, 3, 7, 13, 9, 15, 10, 16, 11 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
@@ -97,19 +91,6 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
-PX<x1, x2, x3> := PolynomialRing(K, 3);
-AA<x1, x2, x3> := AffineSpace(PX);
-I<x1, x2, x3> := ideal< PX | [
-x1^2 - 1/2*x2^3 + 1/2*x2,
-x1*x2 - nu^2*x1 - x2^3*x3^2 - nu^2*x2^2*x3^2 + x2*x3^2 + nu^2*x3^2,
-x1*x3^2 - 1/2*nu^2*x2^3*x3^4 + 1/2*x2^2*x3^4 + 1/4*nu^2*x2^2 + 1/2*nu^2*x2*x3^4 + 1/4*x2 - 1/2*x3^4,
-x2^4*x3^4 + 2*nu^2*x2^3*x3^4 - 1/2*x2^3 - 2*x2^2*x3^4 + nu^2*x2^2 - 2*nu^2*x2*x3^4 + 1/2*x2 + x3^4
-] >;
-X<x1, x2, x3> := Curve(AA, I);
-KX<x1, x2, x3> := FunctionField(X);
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!((1/4*x2^4 + 1/2*x2^2 + 1/4)/x2^2);
 
 /*
 Graph Data

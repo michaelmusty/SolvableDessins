@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 15 },
 { IntegerRing() | 13, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.280000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.0800000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.100000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := false;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -59,9 +53,9 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 3, 9, 11, 6, 12, 8, 1, 16, 13, 2, 14, 15, 4, 5, 7, 10 ],
 \[ 4, 7, 2, 15, 10, 14, 16, 1, 5, 11, 8, 6, 3, 13, 9, 12 ]:
  Order := 16 > |
-[ 2, 5, 8, 14, 6, 1, 4, 12, 3, 7, 13, 9, 15, 10, 16, 11 ],
+[ 6, 1, 9, 7, 2, 5, 10, 3, 12, 14, 16, 8, 11, 4, 13, 15 ],
 [ 3, 9, 11, 6, 12, 8, 1, 16, 13, 2, 14, 15, 4, 5, 7, 10 ],
-[ 4, 7, 2, 15, 10, 14, 16, 1, 5, 11, 8, 6, 3, 13, 9, 12 ]
+[ 10, 14, 6, 11, 4, 7, 13, 5, 1, 15, 9, 2, 12, 16, 8, 3 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -97,18 +91,6 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-K := Rationals();
-PX<x1, x2, x3, x4> := PolynomialRing(K, 4);
-AA<x1, x2, x3, x4> := AffineSpace(PX);
-I<x1, x2, x3, x4> := ideal< PX | [
-x1 - x3^2,
-x2 - x3*x4^2,
-x3^4 - x3^2*x4^4 + 1
-] >;
-X<x1, x2, x3, x4> := Curve(AA, I);
-KX<x1, x2, x3, x4> := FunctionField(X);
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!(x3^4 + 1);
 
 /*
 Graph Data

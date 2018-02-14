@@ -69,8 +69,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 10, 2, 11, 14, 7, 13, 1, 5, 16, 9, 6, 3, 15, 8, 12 ]:
  Order := 16 > |
 [ 3, 9, 11, 2, 12, 8, 1, 13, 16, 5, 10, 15, 4, 6, 7, 14 ],
-[ 14, 7, 6, 15, 4, 10, 16, 5, 1, 13, 8, 2, 12, 11, 9, 3 ],
-[ 2, 5, 9, 10, 6, 1, 4, 3, 12, 14, 16, 8, 11, 7, 13, 15 ]
+[ 4, 10, 2, 11, 14, 7, 13, 1, 5, 16, 9, 6, 3, 15, 8, 12 ],
+[ 6, 1, 8, 7, 2, 5, 14, 12, 3, 4, 13, 9, 15, 10, 16, 11 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
@@ -96,9 +96,9 @@ Top Level Belyi Curve/Map
 Graph Data
 */
 
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T1-2,4,4-g1-path1", "8T2-2,4,4-g1-path2", "16T5-4,8,8-g5-path3" ];
-s`SolvableDBParents := [ Strings() | "32S16-8,16,16-g13-path8", "32S17-8,16,16-g13-path4", "32S16-8,16,16-g13-path9", "32S17-8,16,16-g13-path5", "32S12-4,8,8-g9-path11", "32S3-4,8,8-g9-path26", "32S5-4,8,8-g9-path15" ];
-s`SolvableDBChildren := [ Strings() | "8T2-2,4,4-g1-path2" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T1-1,4,4-g0-path1", "8T2-2,4,4-g1-path1", "16T5-4,8,8-g5-path3" ];
+s`SolvableDBParents := [ Strings() | "32S16-8,16,16-g13-path9", "32S17-8,16,16-g13-path5", "32S16-8,16,16-g13-path10", "32S17-8,16,16-g13-path6", "32S12-4,8,8-g9-path10", "32S3-4,8,8-g9-path25", "32S5-4,8,8-g9-path14" ];
+s`SolvableDBChildren := [ Strings() | "8T2-2,4,4-g1-path1" ];
 
 /*
 Return for eval

@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 16 },
 { IntegerRing() | 12, 14 }
 @};
-s`SolvableDBBelyiMapTiming := 0.110000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.0400000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.0100000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -131,22 +125,13 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 1])> where K is RationalField()) |
-[[ RationalField() | -1, 0 ], [ RationalField() | 0, 0 ], [ RationalField() | 0, 0 ], [ RationalField() | 0, 0 ], [ RationalField() | 0, 0 ], [ RationalField() | 0, 0 ], [ RationalField() | 0, 0 ], [ RationalField() | 0, 0 ], [ RationalField() | 1, 0 ]],
-[]
-]);
-X<x1,x2,x3> := HyperellipticCurve([f, g]);
-K<nu> := BaseField(X);
-s`SolvableDBBelyiCurve := X;
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiMap := KX!((-1/4*x1^8 + 1/2*x1^4 - 1/4)/x1^4);
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T2-4,4,2-g1-path3", "16T8-4,4,4-g3-path13" ];
-s`SolvableDBParents := [ Strings() | "32S12-8,8,4-g9-path29", "32S14-4,4,8-g7-path9", "32S15-8,8,8-g11-path8", "32S12-8,8,4-g9-path30", "32S13-4,4,8-g7-path9", "32S15-8,8,8-g11-path9", "32S2-4,4,4-g5-path53" ];
+s`SolvableDBParents := [ Strings() | "32S12-8,8,4-g9-path29", "32S14-4,4,8-g7-path9", "32S15-8,8,8-g11-path9", "32S12-8,8,4-g9-path30", "32S13-4,4,8-g7-path9", "32S15-8,8,8-g11-path10", "32S2-4,4,4-g5-path53" ];
 s`SolvableDBChildren := [ Strings() | "8T2-4,4,2-g1-path3" ];
 
 /*

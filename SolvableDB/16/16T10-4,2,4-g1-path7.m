@@ -25,13 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 15 },
 { IntegerRing() | 13, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.110p15;
-s`SolvableDBLowDegreeTiming := 0.120p15;
-s`SolvableDBSanityCheckTiming := 0.040p15;
-s`SolvableDBLocalSanityCheckTiming := 0.020p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -61,8 +54,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 8, 11, 13, 14, 3, 1, 15, 2, 5, 12, 6, 7, 16, 9, 10 ]:
  Order := 16 > |
 [ 2, 5, 10, 12, 6, 1, 3, 7, 4, 8, 13, 14, 15, 9, 16, 11 ],
-[ 12, 7, 13, 15, 9, 10, 2, 16, 5, 6, 14, 1, 3, 11, 4, 8 ],
-[ 10, 12, 2, 5, 7, 9, 16, 6, 11, 13, 8, 15, 14, 1, 3, 4 ]
+[ 3, 4, 1, 2, 8, 14, 15, 5, 16, 11, 10, 13, 12, 6, 7, 9 ],
+[ 14, 3, 15, 16, 4, 8, 5, 11, 6, 1, 9, 2, 10, 13, 12, 7 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -76,8 +69,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 8, 11, 13, 14, 3, 1, 15, 2, 5, 12, 6, 7, 16, 9, 10 ]:
  Order := 16 > |
 [ 11, 13, 4, 8, 15, 16, 9, 14, 10, 12, 5, 7, 6, 3, 1, 2 ],
-[ 9, 10, 16, 11, 12, 7, 6, 13, 1, 2, 4, 5, 8, 15, 14, 3 ],
-[ 14, 3, 15, 16, 4, 8, 5, 11, 6, 1, 9, 2, 10, 13, 12, 7 ]
+[ 8, 14, 5, 6, 3, 4, 11, 1, 13, 15, 7, 16, 9, 2, 10, 12 ],
+[ 10, 12, 2, 5, 7, 9, 16, 6, 11, 13, 8, 15, 14, 1, 3, 4 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
@@ -89,16 +82,6 @@ s`SolvableDBMonodromyGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
-PX<x1, x2> := PolynomialRing(K, 2);
-AA<x1, x2> := AffineSpace(PX);
-I<x1, x2> := ideal< PX | [
-x1^2 - 1/2*x2^3 + 1/2*x2
-] >;
-X<x1, x2> := Curve(AA, I);
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!((1/16*x2^8 + 1/4*x2^6 + 3/8*x2^4 + 1/4*x2^2 + 1/16)/(x2^6 - 2*x2^4 + x2^2));
 
 /*
 Graph Data

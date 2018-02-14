@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 15 },
 { IntegerRing() | 13, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.110000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.0500000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.0400000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -131,22 +125,13 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 1])> where K is RationalField()) |
-[[ RationalField() | 16777216/4294836225, 0 ], [ RationalField() | 0, 33554432/4294836225 ], [ RationalField() | -29360128/4294836225, 0 ], [ RationalField() | 0, -14680064/4294836225 ], [ RationalField() | 917504/858967245, 0 ], [ RationalField() | 0, 917504/4294836225 ], [ RationalField() | -114688/4294836225, 0 ], [ RationalField() | 0, -8192/4294836225 ], [ RationalField() | -256/65535, 0 ]],
-[]
-]);
-X<x1,x2,x3> := HyperellipticCurve([f, g]);
-K<nu> := BaseField(X);
-s`SolvableDBBelyiCurve := X;
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiMap := KX!((66049/1024*x1^8 - 257/32*nu*x1^7 - 775/16*x1^6 + 263/2*nu*x1^5 + 291/2*x1^4 - 56*nu*x1^3 - 112*x1^2 + 128*nu*x1 + 64)/(x1^8 - 16*nu*x1^7 - 96*x1^6 + 256*nu*x1^5 + 256*x1^4));
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T4-2,2,4-g0-path1", "16T8-4,4,4-g3-path16" ];
-s`SolvableDBParents := [ Strings() | "32S12-8,8,4-g9-path35", "32S14-4,4,8-g7-path12", "32S15-8,8,8-g11-path14", "32S12-8,8,4-g9-path36", "32S13-4,4,8-g7-path12", "32S15-8,8,8-g11-path15", "32S2-4,4,4-g5-path56" ];
+s`SolvableDBParents := [ Strings() | "32S12-8,8,4-g9-path35", "32S14-4,4,8-g7-path12", "32S15-8,8,8-g11-path15", "32S12-8,8,4-g9-path36", "32S13-4,4,8-g7-path12", "32S15-8,8,8-g11-path16", "32S2-4,4,4-g5-path56" ];
 s`SolvableDBChildren := [ Strings() | "8T4-2,2,4-g0-path1" ];
 
 /*

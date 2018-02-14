@@ -106,6 +106,7 @@ Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T1-4,4,2-g1-path1", "8T2-4,4,2-g1-path2", "16T10-4,4,2-g1-path2", "32S5-8,8,2-g5-path4" ];
+s`SolvableDBParents := [ Strings() | "64S17-8,8,4-g17-path199", "64S7-8,8,4-g17-path147", "64S7-8,8,4-g17-path148", "64S5-8,8,4-g17-path18", "64S29-16,16,2-g13-path34", "64S29-16,16,4-g21-path34", "64S31-16,16,2-g13-path35", "64S31-16,16,4-g21-path35", "64S31-16,16,2-g13-path36", "64S31-16,16,4-g21-path36", "64S30-16,16,2-g13-path18", "64S30-16,16,4-g21-path18", "64S6-8,8,2-g9-path57", "64S6-8,8,2-g9-path58", "64S4-8,8,2-g9-path18" ];
 s`SolvableDBChildren := [ Strings() | "16T10-4,4,2-g1-path2" ];
 
 /*

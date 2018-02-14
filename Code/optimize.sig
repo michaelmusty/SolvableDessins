@@ -10,5 +10,6 @@ S,EliminateRedundancies,eliminate simultaneuous conjugation,1,0,1,82,1,82,0,222,
 S,ExtensionToPassports,,1,1,1,82,0,222,2,0,0,0,0,0,0,0,82,,0,0,168,,-1,-38,-38,-38,-38,-38
 S,RamificationType,"returns a string ""unramified"", ""ramified"", or ""impossible"" according to the orders",2,0,1,82,0,222,1,1,82,0,222,2,0,0,0,0,0,0,0,82,,0,0,82,,298,-38,-38,-38,-38,-38
 S,Coverings,,1,0,1,82,0,222,1,0,0,0,0,0,0,0,82,,-1,-38,-38,-38,-38,-38
-S,SolvableAbove,"Given a solvableDBobj, find all Galois permutation triples ""above"" all permutation triples in the Galois orbit corresponding to s. Update the SolvableParents of s and return a SeqEnum of SolvableDBObjects covering s with their SolvableChildren updated accordingly",0,1,0,0,0,0,0,0,0,SolvableDBObject,,-1,-1,-38,-38,-38,-38
-S,SolvableLevel,multiple calls to SolvableAbove so that we can update parents and children accordingly,0,1,0,0,0,0,0,0,0,148,,-1,-38,-38,-38,-38,-38
+S,SolvableLevel,"All at once to save on database merging. returns lists below,above that then need to be written",0,1,0,0,0,0,0,0,0,148,,-1,-38,-38,-38,-38,-38
+S,SolvableLevelWrite,"given lists of db objs from SolvableLevel, write db objs to file",0,2,0,0,0,0,0,0,0,82,,0,0,82,,-1,-38,-38,-38,-38,-38
+S,SolvableLevelWrapper,SolvableLevel and SolvableLevelWrite in one step,0,1,0,0,0,0,0,0,0,148,,-1,-38,-38,-38,-38,-38

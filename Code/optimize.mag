@@ -389,7 +389,7 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
     t0 := Cputime();
     extensions := Extensions(below);
     t1 := Cputime();
-    vprintf Solvable : "done: %o seconds.\n\n", t1-t0;
+    vprintf Solvable : "done: %o seconds.\n", t1-t0;
   // initial lists for return
     ramified := [* *];
     unramified := [* *];
@@ -424,6 +424,130 @@ intrinsic Coverings(below::SeqEnum[GrpPermElt]) -> Any
     return ramified, unramified, impossible;
 end intrinsic;
 
+intrinsic SolvableLevel(d::RngIntElt) -> Any
+  {All at once to save on database merging. returns lists below,above that then need to be written.}
+  if IsEven(d) and #Factorization(d) eq 1 then
+    d_below := d div 2;
+    filenames_below := SolvableDBFilenames(d_below);
+    if #filenames_below eq 0 then
+      error "we have not computed far enough to compute to this degree yet!";
+    else
+      need_to_write_below := [];
+      need_to_write_above := [];
+      for i := 1 to #filenames_below do // i loops over SolvableDBObjects below
+        t0_i := Cputime();
+        name := filenames_below[i];
+        vprintf Solvable : "Starting...\n";
+        vprintf Solvable : "Degree %o above %o: ", d, name;
+        vprintf Solvable : "%o out of %o\n\n", i, #filenames_below;
+        s_below := SolvableDBAccessEntry(name);
+        assert not assigned s_below`SolvableDBParents;
+        s_below`SolvableDBParents := [];
+        orbit_below := s_below`SolvableDBGaloisOrbit;
+        vprintf Solvable : "Galois orbit size = %o\n", #orbit_below;
+        t0 := Cputime();
+        all_ramified := [* *];
+        all_unramified := [* *];
+        all_impossible := [* *];
+        for j := 1 to #orbit_below do
+          ramified, unramified, impossible := Coverings(orbit_below[j]);
+          all_ramified cat:= ramified;
+          all_unramified cat:= unramified;
+          all_impossible cat:= impossible;
+        end for;
+        t1 := Cputime();
+        vprintf Solvable : "Coverings of %o:", s_below`SolvableDBName;
+        vprintf Solvable : " %o seconds\n", t1-t0;
+        vprintf Solvable : "#ramified = %o\n", #ramified;
+        vprintf Solvable : "#unramified = %o\n", #unramified;
+        all := all_ramified cat all_unramified;
+        vprintf Solvable : "#total = %o\n", #all;
+        aboves := [];
+        for j := 1 to #all do
+          t0 := Cputime();
+          pass := all[j][1];
+          blocks := all[j][2];
+          // determine path number
+          new_name := SolvableDBGenerateName(pass[1]);
+          existing_path_numbers := [];
+          for k := 1 to #need_to_write_above do
+            test := need_to_write_above[k];
+            test_name := SolvableDBUnsolvableName(test);
+            if test_name eq new_name then
+              Append(~existing_path_numbers, test`SolvableDBPathNumber);
+            end if;
+          end for;
+          for a in aboves do
+            a_name := SolvableDBUnsolvableName(a);
+            if a_name eq new_name then
+              Append(~existing_path_numbers, a`SolvableDBPathNumber);
+            end if;
+          end for;
+          assert (#existing_path_numbers eq 0) or (Max(existing_path_numbers) eq #existing_path_numbers);
+          path_number := #existing_path_numbers+1;
+          // make new db object
+          above := SolvableDBExample(pass, blocks, path_number);
+          // update above`SolvableDBChildren
+          above`SolvableDBChildren := [s_below`SolvableDBName];
+          // update above`SolvableDBPathToPP1
+          above`SolvableDBPathToPP1 := s_below`SolvableDBPathToPP1 cat [above`SolvableDBName];
+          // update s_below`SolvableDBParents
+          Append(~s_below`SolvableDBParents, above`SolvableDBName);
+          // append to aboves
+          Append(~aboves, above);
+          t1 := Cputime();
+          vprintf Solvable : "j = %o out of %o:\n", j, #all;
+          vprintf Solvable : "  #checks for path number = %o\n", #need_to_write_above;
+          vprintf Solvable : "  that took %o seconds\n", t1-t0;
+        end for;
+        // update need_to_write_above
+        need_to_write_above cat:= aboves;
+        // update need_to_write_below
+        Append(~need_to_write_below, s_below);
+        t1_i := Cputime();
+        vprintf Solvable : "\n";
+        vprintf Solvable : "Degree %o above %o done: ", d, name;
+        vprintf Solvable : "%o out of %o\n", i, #filenames_below;
+        vprintf Solvable : "That took %o seconds\n\n", t1_i-t0_i;
+      end for;
+      vprintf Solvable : "SolvableDB lists to be written returned\n";
+      return need_to_write_below, need_to_write_above;
+    end if;
+  else
+    error "degree is not valid";
+  end if;
+end intrinsic;
+
+intrinsic SolvableLevelWrite(belows::SeqEnum, aboves::SeqEnum) -> Any
+  {given lists of db objs from SolvableLevel, write db objs to file.}
+  d_below := belows[1]`SolvableDBDegree;
+  d_above := aboves[1]`SolvableDBDegree;
+  assert d_above eq 2*d_below;
+  for below in belows do
+    SolvableDBWriteObject(below);
+  end for;
+  for above in aboves do
+    SolvableDBWriteObject(above);
+  end for;
+  return Sprintf("SolvableDB degree %o over %o written to file.\n", d_above, d_below);
+end intrinsic;
+
+intrinsic SolvableLevelWrapper(d::RngIntElt) -> Any
+  {SolvableLevel and SolvableLevelWrite in one step.}
+  belows, aboves := SolvableLevel(d);
+  d_below := belows[1]`SolvableDBDegree;
+  d_above := aboves[1]`SolvableDBDegree;
+  assert d_above eq 2*d_below;
+  for below in belows do
+    SolvableDBWriteObject(below);
+  end for;
+  for above in aboves do
+    SolvableDBWriteObject(above);
+  end for;
+  return Sprintf("SolvableDB degree %o over %o written to file.\n", d_above, d_below);
+end intrinsic;
+
+/*
 intrinsic SolvableAbove(s::SolvableDBObject) -> Any, Any
   {Given a solvableDBobj, find all Galois permutation triples "above" all permutation triples in the Galois orbit corresponding to s. Update the SolvableParents of s and return a SeqEnum of SolvableDBObjects covering s with their SolvableChildren updated accordingly.}
   gal_orbit := s`SolvableDBGaloisOrbit;
@@ -471,7 +595,6 @@ intrinsic SolvableAbove(s::SolvableDBObject) -> Any, Any
   end for;
   return new_covers;
 end intrinsic;
-
 intrinsic SolvableLevel(l::RngIntElt) -> Any
   {multiple calls to SolvableAbove so that we can update parents and children accordingly.}
   if IsEven(l) and #Factorization(l) eq 1 then
@@ -493,3 +616,4 @@ intrinsic SolvableLevel(l::RngIntElt) -> Any
     error "level is not valid";
   end if;
 end intrinsic;
+*/

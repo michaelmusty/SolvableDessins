@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 16 },
 { IntegerRing() | 13, 14 }
 @};
-s`SolvableDBBelyiMapTiming := 0.370p15;
-s`SolvableDBSanityCheckTiming := 2.120p15;
-s`SolvableDBLocalSanityCheckTiming := 0.140p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := false;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -67,18 +61,18 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 12, 8, 16, 6, 3, 9, 5, 14, 13, 1, 15, 11, 10, 7, 2, 4 ],
 \[ 4, 10, 2, 14, 15, 7, 11, 1, 5, 16, 9, 6, 3, 12, 13, 8 ]:
  Order := 16 > |
-[ 2, 5, 9, 10, 6, 1, 4, 3, 12, 15, 14, 8, 11, 16, 7, 13 ],
+[ 6, 1, 8, 7, 2, 5, 15, 12, 3, 4, 13, 9, 16, 11, 10, 14 ],
 [ 12, 8, 16, 6, 3, 9, 5, 14, 13, 1, 15, 11, 10, 7, 2, 4 ],
-[ 4, 10, 2, 14, 15, 7, 11, 1, 5, 16, 9, 6, 3, 12, 13, 8 ]
+[ 15, 7, 6, 13, 4, 10, 16, 5, 1, 11, 8, 2, 12, 3, 14, 9 ]
 ],
 [ PermutationGroup<16 |  
 \[ 2, 5, 9, 10, 6, 1, 4, 3, 12, 15, 14, 8, 11, 16, 7, 13 ],
 \[ 12, 8, 16, 6, 3, 9, 5, 14, 13, 1, 15, 11, 10, 7, 2, 4 ],
 \[ 4, 10, 2, 14, 15, 7, 11, 1, 5, 16, 9, 6, 3, 12, 13, 8 ]:
  Order := 16 > |
-[ 6, 1, 8, 7, 2, 5, 15, 12, 3, 4, 13, 9, 16, 11, 10, 14 ],
+[ 2, 5, 9, 10, 6, 1, 4, 3, 12, 15, 14, 8, 11, 16, 7, 13 ],
 [ 12, 8, 16, 6, 3, 9, 5, 14, 13, 1, 15, 11, 10, 7, 2, 4 ],
-[ 15, 7, 6, 13, 4, 10, 16, 5, 1, 11, 8, 2, 12, 3, 14, 9 ]
+[ 4, 10, 2, 14, 15, 7, 11, 1, 5, 16, 9, 6, 3, 12, 13, 8 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -92,8 +86,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 10, 2, 14, 15, 7, 11, 1, 5, 16, 9, 6, 3, 12, 13, 8 ]:
  Order := 16 > |
 [ 12, 8, 16, 6, 3, 9, 5, 14, 13, 1, 15, 11, 10, 7, 2, 4 ],
-[ 15, 7, 6, 13, 4, 10, 16, 5, 1, 11, 8, 2, 12, 3, 14, 9 ],
-[ 6, 1, 8, 7, 2, 5, 15, 12, 3, 4, 13, 9, 16, 11, 10, 14 ]
+[ 4, 10, 2, 14, 15, 7, 11, 1, 5, 16, 9, 6, 3, 12, 13, 8 ],
+[ 2, 5, 9, 10, 6, 1, 4, 3, 12, 15, 14, 8, 11, 16, 7, 13 ]
 ],
 [ PermutationGroup<16 |  
 \[ 2, 5, 9, 10, 6, 1, 4, 3, 12, 15, 14, 8, 11, 16, 7, 13 ],
@@ -101,8 +95,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 10, 2, 14, 15, 7, 11, 1, 5, 16, 9, 6, 3, 12, 13, 8 ]:
  Order := 16 > |
 [ 12, 8, 16, 6, 3, 9, 5, 14, 13, 1, 15, 11, 10, 7, 2, 4 ],
-[ 4, 10, 2, 14, 15, 7, 11, 1, 5, 16, 9, 6, 3, 12, 13, 8 ],
-[ 2, 5, 9, 10, 6, 1, 4, 3, 12, 15, 14, 8, 11, 16, 7, 13 ]
+[ 15, 7, 6, 13, 4, 10, 16, 5, 1, 11, 8, 2, 12, 3, 14, 9 ],
+[ 6, 1, 8, 7, 2, 5, 15, 12, 3, 4, 13, 9, 16, 11, 10, 14 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
@@ -120,25 +114,13 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
-PX<x1, x2, x3> := PolynomialRing(K, 3);
-AA<x1, x2, x3> := AffineSpace(PX);
-I<x1, x2, x3> := ideal< PX | [
-x1^5 - x2^2 + x1,
-x1^3*x3^2 - nu^2*x1*x3^2 - x2,
-x2*x3^2 - x1^2 - nu^2
-] >;
-X<x1, x2, x3> := Curve(AA, I);
-KX<x1, x2, x3> := FunctionField(X);
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!(x3^4*x2^2 - 2*nu^2*x3^2*x2);
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T1-1,4,4-g0-path1", "8T1-2,8,8-g2-path1", "16T1-4,16,16-g6-path1" ];
-s`SolvableDBParents := [ Strings() | "32S1-8,32,32-g14-path1", "32S16-4,16,16-g11-path1" ];
+s`SolvableDBParents := [ Strings() | "32S1-8,32,32-g14-path1", "32S1-8,32,32-g14-path2", "32S16-4,16,16-g11-path1", "32S16-4,16,16-g11-path2" ];
 s`SolvableDBChildren := [ Strings() | "8T1-2,8,8-g2-path1" ];
 
 /*

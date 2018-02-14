@@ -21,13 +21,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 3, 7 },
 { IntegerRing() | 5, 8 }
 @};
-s`SolvableDBBelyiMapTiming := 0.120p15;
-s`SolvableDBLowDegreeTiming := 0.120p15;
-s`SolvableDBSanityCheckTiming := 0.020p15;
-s`SolvableDBLocalSanityCheckTiming := 0.020p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -72,8 +65,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<8 |
 \[ 7, 4, 8, 3, 6, 1, 5, 2 ]:
  Order := 8 > |
 [ 2, 5, 1, 6, 3, 8, 4, 7 ],
-[ 7, 4, 8, 3, 6, 1, 5, 2 ],
-[ 4, 6, 7, 1, 8, 2, 3, 5 ]
+[ 6, 8, 4, 2, 7, 5, 1, 3 ],
+[ 8, 7, 6, 5, 4, 3, 2, 1 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<8 |  
@@ -85,23 +78,13 @@ s`SolvableDBMonodromyGroup := PermutationGroup<8 |
 Top Level Belyi Curve/Map
 */
 
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
-PX<x1, x2> := PolynomialRing(K, 2);
-AA<x1, x2> := AffineSpace(PX);
-I<x1, x2> := ideal< PX | [
-x1^2 - 1/2*x2^3 + 1/2*x2
-] >;
-X<x1, x2> := Curve(AA, I);
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!((1/4*x2^4 + 1/2*x2^2 + 1/4)/x2^2);
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T1-1,4,4-g0-path1", "8T2-2,4,4-g1-path1" ];
-s`SolvableDBParents := [ Strings() | "16T4-4,4,4-g3-path1", "16T8-4,4,4-g3-path1", "16T5-2,8,8-g3-path3", "16T5-4,8,8-g5-path2", "16T6-2,8,8-g3-path1", "16T6-4,8,8-g5-path1", "16T10-2,4,4-g1-path1" ];
+s`SolvableDBParents := [ Strings() | "16T4-4,4,4-g3-path1", "16T8-4,4,4-g3-path1", "16T5-2,8,8-g3-path3", "16T5-4,8,8-g5-path3", "16T6-2,8,8-g3-path1", "16T6-4,8,8-g5-path1", "16T10-2,4,4-g1-path1" ];
 s`SolvableDBChildren := [ Strings() | "4T1-1,4,4-g0-path1" ];
 
 /*

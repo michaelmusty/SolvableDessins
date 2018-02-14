@@ -25,13 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 12 },
 { IntegerRing() | 13, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.090p15;
-s`SolvableDBLowDegreeTiming := 0.100p15;
-s`SolvableDBSanityCheckTiming := 0.030p15;
-s`SolvableDBLocalSanityCheckTiming := 0.050p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -61,8 +54,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 10, 2, 5, 7, 15, 1, 12, 8, 11, 3, 16, 6, 13, 14, 9 ]:
  Order := 16 > |
 [ 14, 5, 9, 10, 6, 16, 3, 11, 13, 12, 1, 15, 7, 8, 4, 2 ],
-[ 3, 9, 1, 14, 10, 7, 6, 13, 2, 5, 12, 11, 8, 4, 16, 15 ],
-[ 12, 15, 6, 16, 9, 10, 8, 4, 1, 14, 13, 5, 2, 3, 11, 7 ]
+[ 10, 12, 5, 6, 3, 4, 14, 15, 11, 1, 9, 2, 16, 7, 8, 13 ],
+[ 9, 13, 14, 8, 12, 3, 16, 7, 5, 6, 15, 1, 11, 10, 2, 4 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -89,16 +82,6 @@ s`SolvableDBMonodromyGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
-PX<x1, x2> := PolynomialRing(K, 2);
-AA<x1, x2> := AffineSpace(PX);
-I<x1, x2> := ideal< PX | [
-x1^2 - 1/2*x2^3 - 1/2*x2
-] >;
-X<x1, x2> := Curve(AA, I);
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!((-16*x2^6 - 32*x2^4 - 16*x2^2)/(x2^8 - 4*x2^6 + 6*x2^4 - 4*x2^2 + 1));
 
 /*
 Graph Data

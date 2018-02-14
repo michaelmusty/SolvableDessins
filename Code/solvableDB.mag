@@ -395,7 +395,97 @@ intrinsic SolvableDBWriteObject(s::SolvableDBObject) -> MonStgElt
     return returnText;
 end intrinsic;
 
-// intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> MonStgElt
+intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]], blocks::SetIndx, path_number::RngIntElt) -> SolvableDBObject
+  {Creates a SolvableDBObject corresponding to pass, blocks, and pathnumber. This assumes the current directory is SolvableDessins.}
+  // some sanity checks
+    for i in [1..#pass] do
+      sigma := pass[i];
+      assert #sigma eq 3;
+      assert Type(Parent(sigma[1])) eq GrpPerm;
+      d := Degree(Parent(sigma[1]));
+      G := sub< Sym(d) | sigma >;
+      assert IsTransitive(G);
+    end for;
+    check_pass := PassportRepresentatives(sigma);
+    check_pointed_pass := PassportRepresentatives(sigma : Pointed := true);
+  // stuff we need later
+    sigma := pass[1];
+    d := Degree(Parent(sigma[1]));
+    G := sub< Sym(d) | sigma >;
+  // directory stuff
+    dir := GetCurrentDirectory();
+    parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
+    if parentdir ne "SolvableDessins\n" then
+      error "make sure your working directory is /SolvableDessins";
+    end if;
+    db := dir cat "/SolvableDB";
+    directory := Sprintf("%o/%o/", db, d);
+  // create one SolvableDBObject per passport
+    s := SolvableDBObjectInitialize();
+  // generate name
+    newname := SolvableDBGenerateName(sigma);
+  // SolvableDBName
+    s`SolvableDBName := Sprintf("%o-path%o", newname, path_number); // path number is passed
+  // SolvableDBBlocks
+    s`SolvableDBBlocks := blocks; // blocks are passed
+  // SolvableDBFilename
+    s`SolvableDBFilename := s`SolvableDBName cat ".m";
+  // SolvableDBPathNumber
+    s`SolvableDBPathNumber := path_number;
+  // SolvableDBDegree
+    s`SolvableDBDegree := d;
+  // SolvableDBABC
+    s`SolvableDBABC := [Order(sigma[i]) : i in {1..3}];
+  // SolvableDBType
+    a,b,c := Explode(s`SolvableDBABC);
+    if 1/a+1/b+1/c gt 1 then
+      s`SolvableDBType := "Spherical";
+    elif 1/a+1/b+1/c eq 1 then
+      s`SolvableDBType := "Euclidean";
+    else
+      s`SolvableDBType := "Hyperbolic";
+    end if;
+  // SolvableDBGenus
+    c0 := #CycleDecomposition(sigma[1]);
+    c1 := #CycleDecomposition(sigma[2]);
+    coo := #CycleDecomposition(sigma[3]);
+    genus := (d+2-c0-c1-coo)/2;
+    s`SolvableDBGenus := genus;
+  // SolvableDBGaloisOrbitSize
+    s`SolvableDBGaloisOrbitSize := #pass;
+  // SolvableDBSize
+    s`SolvableDBPassportSize := #check_pass;
+  // SolvableDBPointedPassportSize
+    s`SolvableDBPointedPassportSize := #check_pointed_pass;
+  // SolvableDBLevel
+    floor := Floor(Log(d)/Log(2));
+    ceil := Ceiling(Log(d)/Log(2));
+    assert floor eq ceil;
+    s`SolvableDBLevel := floor;
+  // SolvableDBGaloisOrbit
+    s`SolvableDBGaloisOrbit := pass;
+  // SolvableDBPassport
+    s`SolvableDBPassport := check_pass;
+  // SolvableDBPointedPassport
+    s`SolvableDBPointedPassport := check_pointed_pass;
+  // SolvableDBMonodromyGroup
+    s`SolvableDBMonodromyGroup := G;
+  // SolvableDBAutomorphismGroup and SolvableDBDessinCode
+    if s`SolvableDBType eq "Hyperbolic" then
+      s`SolvableDBAutomorphismGroup := AutomorphismGroup(sigma);
+      s`SolvableDBPointedAutomorphismGroup := PointedAutomorphismGroup(sigma);
+    end if;
+  // (DO NOT) write the object to file
+  /*
+    ChangeDirectory(dbdirectory);
+    SolvableDBWriteObject(s);
+    returnText := Sprintf("SolvableDBObject file for %o written in directory %o\n", s`SolvableDBName, directory, d);
+    ChangeDirectory(dbdirectory);
+    return returnText;
+  */
+  return s;
+end intrinsic;
+
 intrinsic SolvableDBExample(pass::SeqEnum[SeqEnum[GrpPermElt]]) -> SolvableDBObject
   // {Creates a SolvableDBObject file corresponding to sigma in the directory SolvableDB/d where d is the degree of sigma. This assumes the current directory is SolvableDB.}
   {Creates a SolvableDBObject corresponding to pass. This assumes the current directory is SolvableDessins.}

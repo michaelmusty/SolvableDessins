@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 15 },
 { IntegerRing() | 12, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.160000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.130000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.140000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := false;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -75,8 +69,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 3, 13, 9, 14, 12, 6, 1, 10, 5, 7, 2, 16, 15, 8, 11 ]:
  Order := 16 > |
 [ 13, 5, 14, 16, 6, 9, 4, 3, 11, 7, 1, 10, 15, 12, 2, 8 ],
-[ 3, 10, 5, 13, 7, 4, 1, 2, 16, 11, 8, 9, 14, 6, 12, 15 ],
-[ 10, 16, 11, 5, 8, 3, 2, 9, 14, 15, 12, 13, 7, 1, 4, 6 ]
+[ 7, 8, 1, 6, 3, 14, 5, 11, 12, 2, 10, 15, 4, 13, 16, 9 ],
+[ 8, 12, 2, 1, 10, 7, 11, 15, 4, 9, 16, 6, 3, 5, 14, 13 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
@@ -97,28 +91,14 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-K := Rationals();
-PX<x1, x2, x3, x4> := PolynomialRing(K, 4);
-AA<x1, x2, x3, x4> := AffineSpace(PX);
-I<x1, x2, x3, x4> := ideal< PX | [
-x1^2 - x3^2*x4^4 - x3^2 - x4^4 + 1,
-x1*x3 - x3^2*x4^2 - x4^2,
-x1*x4^2 - x3^3 + x3,
-x2 - x3^2,
-x3^4 - x3^2*x4^4 - x3^2 - x4^4
-] >;
-X<x1, x2, x3, x4> := Curve(AA, I);
-KX<x1, x2, x3, x4> := FunctionField(X);
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!(x3^4);
 
 /*
 Graph Data
 */
 
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T2-4,2,4-g1-path4", "16T5-8,4,8-g5-path5" ];
-s`SolvableDBParents := [ Strings() | "32S16-16,8,16-g13-path12", "32S17-16,8,16-g13-path8", "32S16-16,8,16-g13-path13", "32S17-16,8,16-g13-path9", "32S12-8,4,8-g9-path13", "32S3-8,4,8-g9-path28", "32S5-8,4,8-g9-path17" ];
-s`SolvableDBChildren := [ Strings() | "8T2-4,2,4-g1-path4" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T2-4,2,4-g1-path3", "16T5-8,4,8-g5-path5" ];
+s`SolvableDBParents := [ Strings() | "32S16-16,8,16-g13-path13", "32S17-16,8,16-g13-path9", "32S16-16,8,16-g13-path14", "32S17-16,8,16-g13-path10", "32S12-8,4,8-g9-path12", "32S3-8,4,8-g9-path27", "32S5-8,4,8-g9-path16" ];
+s`SolvableDBChildren := [ Strings() | "8T2-4,2,4-g1-path3" ];
 
 /*
 Return for eval

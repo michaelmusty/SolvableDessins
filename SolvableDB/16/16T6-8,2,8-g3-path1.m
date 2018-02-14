@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 8, 16 },
 { IntegerRing() | 11, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.0900000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.0100000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.0400000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -60,8 +54,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 3, 12, 8, 14, 11, 1, 9, 5, 13, 2, 15, 6, 16, 10, 7 ]:
  Order := 16 > |
 [ 6, 1, 14, 15, 12, 16, 3, 2, 13, 5, 9, 8, 4, 11, 7, 10 ],
-[ 13, 7, 5, 12, 3, 14, 2, 11, 10, 9, 8, 4, 1, 6, 16, 15 ],
-[ 7, 11, 2, 1, 9, 13, 16, 4, 8, 15, 6, 3, 10, 5, 12, 14 ]
+[ 3, 9, 1, 6, 13, 4, 10, 15, 2, 7, 16, 14, 5, 12, 8, 11 ],
+[ 9, 15, 10, 5, 7, 3, 8, 14, 16, 11, 12, 13, 2, 1, 6, 4 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -97,14 +91,6 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-f, g := Explode([ PolynomialRing(RationalField()) |
-[1, 0, 0, 0, 0, 0, 0, 0, -1],
-[]
-]);
-X<x1,x2,x3> := HyperellipticCurve([f, g]);
-s`SolvableDBBelyiCurve := X;
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiMap := KX!(1/x1^8);
 
 /*
 Graph Data

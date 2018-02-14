@@ -88,7 +88,7 @@ Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1" ];
-s`SolvableDBParents := [ Strings() | "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path5", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1", "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1" ];
+s`SolvableDBParents := [ Strings() | "4T2-2,2,2-g0-path3", "4T1-4,4,1-g0-path1", "4T1-4,4,2-g1-path1" ];
 s`SolvableDBChildren := [ Strings() | "PP1" ];
 
 /*

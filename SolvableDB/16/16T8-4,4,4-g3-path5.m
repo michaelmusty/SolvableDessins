@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 16 },
 { IntegerRing() | 13, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.0600000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.0100000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.0400000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -132,21 +126,13 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-f, g := Explode([ PolynomialRing(RationalField()) |
-[0, 2, 0, 14, 0, 14, 0, 2],
-[]
-]);
-X<x1,x2,x3> := HyperellipticCurve([f, g]);
-s`SolvableDBBelyiCurve := X;
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiMap := KX!((-x1^8 + 4*x1^6 - 6*x1^4 + 4*x1^2 - 1)/(16*x1^6 + 32*x1^4 + 16*x1^2));
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T2-2,2,2-g0-path3", "8T2-2,4,4-g1-path5", "16T8-4,4,4-g3-path5" ];
-s`SolvableDBParents := [ Strings() | "32S14-8,4,4-g7-path17", "32S12-4,8,8-g9-path45", "32S15-8,8,8-g11-path56", "32S13-8,4,4-g7-path17", "32S12-4,8,8-g9-path46", "32S15-8,8,8-g11-path57", "32S2-4,4,4-g5-path77" ];
+s`SolvableDBParents := [ Strings() | "32S14-8,4,4-g7-path17", "32S12-4,8,8-g9-path45", "32S15-8,8,8-g11-path57", "32S13-8,4,4-g7-path17", "32S12-4,8,8-g9-path46", "32S15-8,8,8-g11-path58", "32S2-4,4,4-g5-path77" ];
 s`SolvableDBChildren := [ Strings() | "8T2-2,4,4-g1-path5" ];
 
 /*

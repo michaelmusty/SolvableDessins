@@ -25,12 +25,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 10, 12 },
 { IntegerRing() | 13, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.130000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.0400000000000000p15;
-s`SolvableDBLocalSanityCheckTiming := 0.0400000000000000p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
-s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -78,8 +72,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 4, 7, 2, 5, 8, 13, 11, 1, 12, 9, 3, 16, 14, 15, 6, 10 ]:
  Order := 16 > |
 [ 3, 10, 5, 6, 7, 8, 1, 14, 15, 11, 12, 2, 9, 4, 16, 13 ],
-[ 8, 3, 11, 1, 4, 15, 2, 5, 10, 16, 7, 9, 6, 13, 14, 12 ],
-[ 11, 16, 4, 15, 2, 5, 8, 13, 14, 7, 9, 3, 10, 1, 12, 6 ]
+[ 10, 15, 14, 9, 12, 3, 6, 16, 8, 5, 13, 1, 2, 7, 11, 4 ],
+[ 14, 5, 12, 3, 6, 16, 10, 7, 11, 13, 1, 15, 8, 9, 4, 2 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -134,22 +128,13 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 Top Level Belyi Curve/Map
 */
 
-f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 1])> where K is RationalField()) |
-[[ RationalField() | 16777216/4294836225, 0 ], [ RationalField() | 0, 33554432/4294836225 ], [ RationalField() | -29360128/4294836225, 0 ], [ RationalField() | 0, -14680064/4294836225 ], [ RationalField() | 917504/858967245, 0 ], [ RationalField() | 0, 917504/4294836225 ], [ RationalField() | -114688/4294836225, 0 ], [ RationalField() | 0, -8192/4294836225 ], [ RationalField() | -256/65535, 0 ]],
-[]
-]);
-X<x1,x2,x3> := HyperellipticCurve([f, g]);
-K<nu> := BaseField(X);
-s`SolvableDBBelyiCurve := X;
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiMap := KX!((-1024/65025*x1^8 + 16384/65025*nu*x1^7 + 32768/21675*x1^6 - 262144/65025*nu*x1^5 - 262144/65025*x1^4)/(x1^8 + 32/255*nu*x1^7 + 48704/65025*x1^6 - 42496/21675*nu*x1^5 - 6656/3825*x1^4 - 57344/65025*nu*x1^3 - 114688/65025*x1^2 + 131072/65025*nu*x1 + 65536/65025));
 
 /*
 Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T4-4,2,2-g0-path2", "16T8-4,4,4-g3-path23" ];
-s`SolvableDBParents := [ Strings() | "32S14-8,4,4-g7-path10", "32S12-4,8,8-g9-path31", "32S15-8,8,8-g11-path30", "32S13-8,4,4-g7-path10", "32S12-4,8,8-g9-path32", "32S15-8,8,8-g11-path31", "32S2-4,4,4-g5-path64" ];
+s`SolvableDBParents := [ Strings() | "32S14-8,4,4-g7-path10", "32S12-4,8,8-g9-path31", "32S15-8,8,8-g11-path31", "32S13-8,4,4-g7-path10", "32S12-4,8,8-g9-path32", "32S15-8,8,8-g11-path32", "32S2-4,4,4-g5-path64" ];
 s`SolvableDBChildren := [ Strings() | "8T4-4,2,2-g0-path2" ];
 
 /*

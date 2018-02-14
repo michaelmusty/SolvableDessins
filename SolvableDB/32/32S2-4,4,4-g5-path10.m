@@ -104,6 +104,7 @@ Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T2-2,2,2-g0-path3", "8T4-2,2,4-g0-path3", "16T10-2,4,4-g1-path8", "32S2-4,4,4-g5-path10" ];
+s`SolvableDBParents := [ Strings() | "64S20-8,4,4-g13-path47", "64S21-4,8,4-g13-path70", "64S25-8,8,4-g17-path3", "64S21-4,4,8-g13-path70", "64S17-8,4,8-g17-path48", "64S24-4,8,8-g17-path2", "64S22-8,8,8-g21-path70", "64S21-8,4,4-g13-path70", "64S18-4,8,4-g13-path2", "64S24-8,8,4-g17-path2", "64S20-4,4,8-g13-path47", "64S24-8,4,8-g17-path2", "64S25-4,8,8-g17-path3", "64S19-8,8,8-g21-path2", "64S20-8,4,4-g13-path48", "64S20-4,8,4-g13-path47", "64S17-8,8,4-g17-path48", "64S20-4,4,8-g13-path48", "64S25-8,4,8-g17-path3", "64S17-4,8,8-g17-path48", "64S22-8,8,8-g21-path71", "64S18-8,4,4-g13-path2", "64S20-4,8,4-g13-path48", "64S25-8,8,4-g17-path4", "64S18-4,4,8-g13-path2", "64S25-8,4,8-g17-path4", "64S25-4,8,8-g17-path4", "64S22-8,8,8-g21-path72", "64S23-4,4,4-g9-path4", "64S23-4,4,4-g9-path5", "64S23-4,4,4-g9-path6" ];
 s`SolvableDBChildren := [ Strings() | "16T10-2,4,4-g1-path8" ];
 
 /*
