@@ -812,5 +812,7 @@ intrinsic SolvableDBStatus(d::RngIntElt) -> SeqEnum[SolvableDBObject], SeqEnum[S
   vprintf Solvable : "  %o/%o computed\n", #good, #f;
   vprintf Solvable : "  %o/%o not computed\n", #bad, #f;
   vprintf Solvable : "  %o/%o unramified\n", #unram, #f;
+  vprintf Solvable : "measures:\n";
+  vprintf Solvable : "%o\n", [SolvableMeasure(s) : s in good];
   return good, bad, unram;
 end intrinsic;
