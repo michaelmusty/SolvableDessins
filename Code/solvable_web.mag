@@ -298,11 +298,62 @@ intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> MonStgElt
     str *:= Sprintf("      <h3>%oT%o</h3>\n", d, g);
   end if;
   for name in names do
-    str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-graph.html\">%o</a>\n", name, name);
+    str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-data.html\">%o</a>\n", name, name);
   end for;
   str *:= Sprintf("    </div>\n");
   return str;
 end intrinsic;
+
+/*
+intrinsic SolvableMakeIndexFile(l::SeqEnum[RngIntElt]) -> MonStgElt
+  {}
+  assert l eq [2,4,8,16];
+  group_list_2 := [];
+  group_list_4 := [];
+  group_list_8 := [];
+  group_list_16 := [];
+  str := "";
+  // head
+    str *:= Sprintf("<!doctype html>\n");
+    str *:= Sprintf("<html lang=\"en\">\n");
+    str *:= Sprintf("  <head>\n");
+    str *:= Sprintf("    <title>dessin-explorer</title>\n");
+    str *:= Sprintf("    <meta charset=\"UTF-8\">\n");
+    str *:= Sprintf("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
+    str *:= Sprintf("    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n");
+    str *:= Sprintf("    <link href=\"entireframework.min.css\" rel=\"stylesheet\" type=\"text/css\">\n");
+    str *:= Sprintf("    <link rel=\"shortcut icon\" href=\"favicon.png\" type=\"image/x-icon\">\n");
+    str *:= Sprintf("    <script type=\"text/javascript\"\n");
+    str *:= Sprintf("      src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\">\n");
+    str *:= Sprintf("    </script>\n");
+    str *:= Sprintf("    <style type=\"text/css\">\n");
+    str *:= Sprintf("      html, body { padding: 0; margin: 0; width: 100%%; height: 100%%; }\n");
+    str *:= Sprintf("    </style>\n");
+    str *:= Sprintf("  </head>\n");
+  // body
+    // setup
+      str *:= Sprintf("  <body>\n");
+      str *:= Sprintf("    <nav class=\"nav\" onclick=\"this.focus()\">\n");
+      str *:= Sprintf("      <div class=\"container\">\n");
+      str *:= Sprintf("        <a class=\"pagename current\" href=\"index.html\">dessin explorer</a>\n");
+      str *:= Sprintf("      </div>\n");
+      str *:= Sprintf("    </nav>\n");
+    // PP1
+      str *:= Sprintf("    <div class=\"container\">\n");
+      str *:= Sprintf("      <div class=\"row\">\n");
+      str *:= Sprintf("        <a class=\"btn btn-sm smooth\" href=\"PP1-data.html\">\\(\\mathbf{P}^1\\)</a>");
+      str *:= Sprintf("      </div>");
+      str *:= Sprintf("    </div>");
+    // loop over degree and groups
+    for d in l do
+    end for;
+  // end and return
+    str *:= Sprintf("    <br>\n");
+    str *:= Sprintf("  </body>\n");
+    str *:= Sprintf("</html>\n");
+    return str;
+end intrinsic;
+*/
 
 intrinsic SolvableMathJaxFieldText(K::FldNum) -> Any
   {}
@@ -408,6 +459,7 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
     // base fields
     // belyi map numerators,denominators
       belyi_curves := [];
+      belyi_curves_names := [];
       base_fields := [];
       belyi_map_numerators := [];
       belyi_map_denominators := [];
@@ -415,6 +467,7 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         if assigned s`SolvableDBBelyiCurve then
           assert assigned s`SolvableDBBelyiMap;
           curve_text, field_text, num_text, den_text := SolvableMathJax(s);
+          Append(~belyi_curves_names, s`SolvableDBName);
           Append(~belyi_curves, curve_text);
           Append(~base_fields, field_text);
           Append(~belyi_map_numerators, num_text);
@@ -440,7 +493,6 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         end if;
       end for;
     // assertions
-      assert #galois_orbits eq #belyi_curves;
       assert #belyi_curves eq #belyi_curve_measures;
       assert #belyi_curves eq #belyi_curve_degrees;
       assert #belyi_curves eq #belyi_map_denominators;
@@ -573,7 +625,7 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         str *:= Sprintf("    <div class=\"container\">\n");
         str *:= Sprintf("      <div class=\"row\">\n");
         // str *:= Sprintf("        <h3>Belyi Curve %o</h3>\n", i);
-        str *:= Sprintf("        <h3>Belyi Curve %o: %o</h3>\n", i, l[i]`SolvableDBName);
+        str *:= Sprintf("        <h3>Belyi Curve %o: %o</h3>\n", i, belyi_curves_names[i]);
         for j := 1 to #belyi_curves[i]-1 do
           str *:= Sprintf("        %o\n", belyi_curves[i][j]);
           str *:= Sprintf("        <br>\n");
