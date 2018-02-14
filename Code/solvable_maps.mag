@@ -1136,7 +1136,7 @@ end intrinsic;
 
 intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   {for internal use only}
-  assert d eq 16;
+  assert d eq 32;
   a,b,c := SolvableDBStatus(d);
   for i := 1 to #b do
     s := SolvableBelyiMapLowMeasure(b[i], n); // TODO change this for whatever d
