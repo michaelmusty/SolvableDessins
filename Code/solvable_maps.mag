@@ -1111,7 +1111,7 @@ end intrinsic;
 
 intrinsic SolvableWrapper(s::SolvableDBObject, n::RngIntElt) -> SolvableDBObject
   {for internal use only}
-  s := SolvableBelyiMapLowMeasure(b[i], n); // TODO change this for whatever d
+  s := SolvableBelyiMapLowMeasure(s, n); // TODO change this for whatever d
   if s`SolvableDBGenus in [0,1] then // low genus
     before, after := SolvableProjectToPP3(s);
     if SolvableMeasure(after) lt SolvableMeasure(before) then
