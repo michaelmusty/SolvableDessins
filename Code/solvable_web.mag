@@ -371,17 +371,19 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         assert s`SolvableDBGenus eq l[1]`SolvableDBGenus;
       end for;
       genus := l[1]`SolvableDBGenus;
-    // galois orbit size
-      for s in l do
-        assert #s`SolvableDBGaloisOrbit eq #l[1]`SolvableDBGaloisOrbit;
-      end for;
-      galois_orbit_size := #l[1]`SolvableDBGaloisOrbit;
-    // sigma0
-      sigma0 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][1]);
-    // sigma1
-      sigma1 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][2]);
-    // sigmaoo
-      sigmaoo := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][3]);
+    /* depends on path!
+      // galois orbit size
+        for s in l do
+          assert #s`SolvableDBGaloisOrbit eq #l[1]`SolvableDBGaloisOrbit;
+        end for;
+        galois_orbit_size := #l[1]`SolvableDBGaloisOrbit;
+      // sigma0
+        sigma0 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][1]);
+      // sigma1
+        sigma1 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][2]);
+      // sigmaoo
+        sigmaoo := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][3]);
+    */
     // passport size
       for s in l do
         assert #s`SolvableDBPassport eq #l[1]`SolvableDBPassport;
@@ -392,6 +394,16 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         assert #s`SolvableDBPointedPassport eq #l[1]`SolvableDBPointedPassport;
       end for;
       pointed_size := #l[1]`SolvableDBPointedPassport;
+    // list of path names
+      path_names := [];
+      for s in l do
+        Append(~path_names, s`SolvableDBName);
+      end for;
+    // list of Galois orbits
+      galois_orbits := [];
+      for s in l do
+        Append(~galois_orbits, s`SolvableDBGaloisOrbit);
+      end for;
     // belyi curves
     // base fields
     // belyi map numerators,denominators
@@ -428,6 +440,7 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         end if;
       end for;
     // assertions
+      assert #galois_orbits eq #belyi_curves;
       assert #belyi_curves eq #belyi_curve_measures;
       assert #belyi_curves eq #belyi_curve_degrees;
       assert #belyi_curves eq #belyi_map_denominators;
@@ -492,26 +505,35 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         str *:= Sprintf("            <td>Genus</td>\n");
         str *:= Sprintf("            <td>%o</td>\n", genus);
         str *:= Sprintf("          </tr>\n");
-        // galois orbit size
-        str *:= Sprintf("          <tr>\n");
-        str *:= Sprintf("            <td>Galois orbit size</td>\n");
-        str *:= Sprintf("            <td>%o</td>\n", galois_orbit_size);
-        str *:= Sprintf("          </tr>\n");
-        // sigma0
-        str *:= Sprintf("          <tr>\n");
-        str *:= Sprintf("            <td>\\(\\sigma_0\\)</td>\n");
-        str *:= Sprintf("            <td>%o</td>\n", sigma0);
-        str *:= Sprintf("          </tr>\n");
-        // sigma1
-        str *:= Sprintf("          <tr>\n");
-        str *:= Sprintf("            <td>\\(\\sigma_1\\)</td>\n");
-        str *:= Sprintf("            <td>%o</td>\n", sigma1);
-        str *:= Sprintf("          </tr>\n");
-        // sigmaoo
-        str *:= Sprintf("          <tr>\n");
-        str *:= Sprintf("            <td>\\(\\sigma_\\infty\\)</td>\n");
-        str *:= Sprintf("            <td>%o</td>\n", sigmaoo);
-        str *:= Sprintf("          </tr>\n");
+        /* these depend on path!
+          // galois orbit size
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>Galois orbit size</td>\n");
+          str *:= Sprintf("            <td>%o</td>\n", galois_orbit_size);
+          str *:= Sprintf("          </tr>\n");
+          // sigma0
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>\\(\\sigma_0\\)</td>\n");
+          str *:= Sprintf("            <td>%o</td>\n", sigma0);
+          str *:= Sprintf("          </tr>\n");
+          // sigma1
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>\\(\\sigma_1\\)</td>\n");
+          str *:= Sprintf("            <td>%o</td>\n", sigma1);
+          str *:= Sprintf("          </tr>\n");
+          // sigmaoo
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>\\(\\sigma_\\infty\\)</td>\n");
+          str *:= Sprintf("            <td>%o</td>\n", sigmaoo);
+          str *:= Sprintf("          </tr>\n");
+        */
+        // galois orbit for each path
+        for s in l do
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>Galois orbit size for %o</td>\n", s`SolvableDBName);
+          str *:= Sprintf("            <td>%o</td>\n", #s`SolvableDBGaloisOrbit);
+          str *:= Sprintf("          </tr>\n");
+        end for;
         // passport size
         str *:= Sprintf("          <tr>\n");
         str *:= Sprintf("            <td>Passport size</td>\n");
@@ -550,7 +572,8 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         // curve
         str *:= Sprintf("    <div class=\"container\">\n");
         str *:= Sprintf("      <div class=\"row\">\n");
-        str *:= Sprintf("        <h3>Belyi Curve %o</h3>\n", i);
+        // str *:= Sprintf("        <h3>Belyi Curve %o</h3>\n", i);
+        str *:= Sprintf("        <h3>Belyi Curve %o: %o</h3>\n", i, l[i]`SolvableDBName);
         for j := 1 to #belyi_curves[i]-1 do
           str *:= Sprintf("        %o\n", belyi_curves[i][j]);
           str *:= Sprintf("        <br>\n");
