@@ -812,14 +812,18 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
       test_measure := SolvableMeasure(test);
       Append(~measure_list, test_measure);
       // compare with current object
-      if assigned current`SolvableDBBelyiCurve then
-        current_measure := SolvableMeasure(current);
-        if test_measure lt current_measure then
-          // update current object
-          current := SolvableCopy(test);
-        end if;
+      if #measure_list eq 1 then
+        current := test;
+        assert SolvableMeasure(current) eq Min(measure_list);
       else
-        current := SolvableCopy(test);
+        if assigned current`BelyiDBBelyiCurve then
+          current_measure := SolvableMeasure(current);
+          if test_measure lt current_measure then
+            current := SolvableCopy(test);
+          end if;
+        else
+          error "LowMeasureError!";
+        end if;
       end if;
     catch e1
       Append(~errors, e1);
