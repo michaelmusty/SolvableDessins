@@ -322,6 +322,7 @@ intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> MonStgElt
   return str;
 end intrinsic;
 
+// TODO l64
 intrinsic SolvableMakeIndexFile(l::SeqEnum[RngIntElt]) -> MonStgElt
   {}
   assert l eq [2,4,8,16,32,64];
