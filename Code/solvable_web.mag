@@ -267,6 +267,24 @@ intrinsic SolvableWebGraphTextSetup(l::SeqEnum[SolvableDBObject]) -> Any
   return name, children, parents;
 end intrinsic;
 
+intrinsic SolvableMaxGroupID(d::RngIntElt) -> RngIntElt
+  {}
+  f := SolvableDBFilenames(d);
+  ids := [];
+  for i := 1 to #f do
+    vprintf Solvable : "i = %o out of %o\n", i, #f;
+    s := SolvableDBAccessEntry(f[i]);
+    G := s`SolvableDBMonodromyGroup;
+    if d gt 16 then
+      _, id := Explode(IdentifyGroup(G));
+    else
+      id := TransitiveGroupIdentification(G);
+    end if;
+    Append(~ids, id);
+  end for;
+  return Max(ids);
+end intrinsic;
+
 intrinsic SolvableGroupHelper(d::RngIntElt, g::RngIntElt) -> SeqEnum[MonStgElt]
   {given degree and group number return a SeqEnum of pathless names with those parameters.}
   f := SolvableDBFilenames(d);
