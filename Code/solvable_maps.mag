@@ -1155,7 +1155,7 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   {for internal use only}
   assert d eq 32;
   a,b,c := SolvableDBStatus(d);
-  for i := 2 to #b do // TODO start after "bad" ones
+  for i := 3 to #b do // TODO start after "bad" ones
     s := SolvableBelyiMapLowMeasure(b[i], n); // TODO change this for whatever d
     if Type(s) eq SeqEnum then
       error "SolvableBelyiMapLowMeasure failed";
