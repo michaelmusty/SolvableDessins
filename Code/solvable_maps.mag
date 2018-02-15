@@ -799,12 +799,10 @@ end intrinsic;
 
 intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
   {Compute solvable Belyi map m times, return the one with smallest SolvableMeasure. Careful with reassigning objects...}
-  // make current object
-    current := SolvableCopy(s);
-    current := SolvableBelyiMap(current);
-    current_measure := SolvableMeasure(current);
+  // make initial object
+  current := SolvableCopy(s);
   // m iterations
-  measure_list := [current_measure];
+  measure_list := [];
   errors := [];
   for i := 1 to m do
     try
@@ -814,9 +812,13 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
       test_measure := SolvableMeasure(test);
       Append(~measure_list, test_measure);
       // compare with current object
-      current_measure := SolvableMeasure(current);
-      if test_measure lt current_measure then
-        // update current object
+      if assigned current`SolvableDBBelyiCurve then
+        current_measure := SolvableMeasure(current);
+        if test_measure lt current_measure then
+          // update current object
+          current := SolvableCopy(test);
+        end if;
+      else
         current := SolvableCopy(test);
       end if;
     catch e1
