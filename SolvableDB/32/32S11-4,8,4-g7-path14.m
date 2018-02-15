@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 22, 23 },
 { IntegerRing() | 30, 31 }
 @};
+s`SolvableDBBelyiMapTiming := 2.540p15;
+s`SolvableDBSanityCheckTiming := 25.070p15;
+s`SolvableDBLocalSanityCheckTiming := 5.050p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -116,6 +122,19 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 6, 0, 1]));
+PX<x1, x2, x3, x4> := PolynomialRing(K, 4);
+AA<x1, x2, x3, x4> := AffineSpace(PX);
+I<x1, x2, x3, x4> := ideal< PX | [
+x3^2*x4^2 + 1/2*(nu^3 + 5*nu)*x3*x4^2 - x1*x3 - x2*x3 + 1/2*(nu^3 + 5*nu)*x1 + 1/2*(nu^3 + 5*nu)*x2,
+x2*x3^2 + 1/2*(nu^3 + 5*nu)*x3^2 - x2 + 1/2*(nu^3 + 5*nu),
+x2*x4^2 - x3*x4^2 + 1/2*(nu^3 + 5*nu)*x1*x2 + 1/2*(nu^3 + 5*nu)*x2^2 + 1/2*(-nu^3 - 5*nu)*x4^2,
+x1^2 - x2^2 + 1
+] >;
+X<x1, x2, x3, x4> := Curve(AA, I);
+KX<x1, x2, x3, x4> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!((1/32*(-nu^3 - 5*nu)*x4^4 + 1/16*(-nu^3 - 5*nu)*x4^2 + 1/32*(-nu^3 - 5*nu))*x3^5 + (1/8*x4^6 + 3/8*x4^4 + 7/16*x4^2 + 1/8)/x4^2*x3^4 + (1/32*(nu^3 + 5*nu)*x4^8 + 1/8*(nu^3 + 5*nu)*x4^6 + 1/8*(nu^3 + 5*nu)*x4^4 + 1/32*(-nu^3 - 5*nu))/x4^4*x3^3 + (-1/16*x4^8 + 1/8*x4^6 - 1/8*x4^2 - 1/16)/x4^4*x3^2 + (1/16*(-nu^3 - 5*nu)*x4^6 + 1/32*(-3*nu^3 - 15*nu)*x4^4 + 1/4*(nu^3 + 5*nu)*x4^2 + 1/32*(nu^3 + 5*nu))/x4^4*x3 + (15/16*x4^4 + 1/8)/x4^4);
 
 /*
 Graph Data

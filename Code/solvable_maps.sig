@@ -19,7 +19,7 @@ S,SolvableAssignResidueFieldsAndDivisors,"assigns F0, F1, Foo to s",0,2,0,0,0,0,
 S,SolvableBelyiMap,,0,1,0,0,0,0,0,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38
 S,IsoText,"returns text ""var.lower, var.lower+1, ..., var.upper-1, var.upper""",0,3,0,0,0,0,0,0,0,148,,0,0,148,,0,0,298,,298,-38,-38,-38,-38,-38
 S,SolvableBelyiMapLowMeasure,"Compute solvable Belyi map m times, return the one with smallest SolvableMeasure. Careful with reassigning objects..",0,2,0,0,0,0,0,0,0,148,,0,0,SolvableDBObject,,-1,-38,-38,-38,-38,-38
-S,SolvableLowDegreeModel,Naively try to reduce the degree of the BelyiCurve,0,1,0,0,0,0,0,0,0,SolvableDBObject,,-1,-38,-38,-38,-38,-38
 S,SolvableProjectToPP3,Try to embed Belyi curve in PP3 (or PP2) and update SolvableDBObject. Return before and after versions,0,1,0,0,0,0,0,0,0,SolvableDBObject,,-1,-38,-38,-38,-38,-38
 S,SolvableIsHyperelliptic,"Determine if Belyi curve has a hyperelliptic model and if so, returns updated object",0,1,0,0,0,0,0,0,0,SolvableDBObject,,-1,-38,-38,-38,-38,-38
+S,SolvableWrapper,for internal use only,0,2,0,0,0,0,0,0,0,148,,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38
 S,SolvableWrapper,for internal use only,0,2,0,0,0,0,0,0,0,148,,0,0,148,,298,-38,-38,-38,-38,-38

@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 22, 25 },
 { IntegerRing() | 27, 31 }
 @};
+s`SolvableDBBelyiMapTiming := 0.730p15;
+s`SolvableDBSanityCheckTiming := 0.630p15;
+s`SolvableDBLocalSanityCheckTiming := 0.100p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -99,6 +105,15 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 6, 0, 1])> where K is RationalField()) |
+[[ RationalField() | 0, -41943040/68718952449, 0, -8388608/68718952449 ], [ RationalField() | 33554432/68718952449, 0, 0, 0 ], [ RationalField() | 0, 10485760/9816993207, 0, 2097152/9816993207 ], [ RationalField() | -2097152/9816993207, 0, 0, 0 ], [ RationalField() | 0, -1638400/9816993207, 0, -327680/9816993207 ], [ RationalField() | 131072/9816993207, 0, 0, 0 ], [ RationalField() | 0, 40960/9816993207, 0, 8192/9816993207 ], [ RationalField() | -8192/68718952449, 0, 0, 0 ], [ RationalField() | 0, 640/262143, 0, 128/262143 ]],
+[]
+]);
+X<x1,x2,x3> := HyperellipticCurve([f, g]);
+K<nu> := BaseField(X);
+s`SolvableDBBelyiCurve := X;
+KX<x1, x2> := FunctionField(X);
+s`SolvableDBBelyiMap := KX!((1048576/68720001025*x1^16 + 1/68720001025*(-16777216*nu^3 - 83886080*nu)*x1^15 - 469762048/68720001025*x1^14 + 1/68720001025*(1879048192*nu^3 + 9395240960*nu)*x1^13 + 3758096384/13744000205*x1^12 + 1/68720001025*(-30064771072*nu^3 - 150323855360*nu)*x1^11 - 120259084288/68720001025*x1^10 + 1/68720001025*(68719476736*nu^3 + 343597383680*nu)*x1^9 + 68719476736/68720001025*x1^8)/(x1^16 + 1/262145*(-32*nu^3 - 160*nu)*x1^15 - 234882944/68720001025*x1^14 + 1/68720001025*(939542016*nu^3 + 4697710080*nu)*x1^13 + 1879141376/13744000205*x1^12 + 1/68720001025*(-15034621952*nu^3 - 75173109760*nu)*x1^11 - 60162342912/68720001025*x1^10 + 1/68720001025*(34453454848*nu^3 + 172267274240*nu)*x1^9 + 35203186688/68720001025*x1^8 + 1/1057230785*(-23068672*nu^3 - 115343360*nu)*x1^7 - 645922816/5286153925*x1^6 + 1/5286153925*(704643072*nu^3 + 3523215360*nu)*x1^5 + 469762048/1057230785*x1^4 + 1/13744000205*(-3758096384*nu^3 - 18790481920*nu)*x1^3 - 6442450944/13744000205*x1^2 + 1/68720001025*(8589934592*nu^3 + 42949672960*nu)*x1 + 4294967296/68720001025));
 
 /*
 Graph Data
