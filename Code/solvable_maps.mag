@@ -805,29 +805,31 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
   measure_list := [];
   errors := [];
   for i := 1 to m do
-    try
-      // make test object
-      test := SolvableCopy(s);
-      test := SolvableBelyiMap(test);
-      test_measure := SolvableMeasure(test);
-      Append(~measure_list, test_measure);
-      // compare with current object
-      if #measure_list eq 1 then
-        current := test;
-        assert SolvableMeasure(current) eq Min(measure_list);
-      else
-        if assigned current`BelyiDBBelyiCurve then
-          current_measure := SolvableMeasure(current);
-          if test_measure lt current_measure then
-            current := SolvableCopy(test);
-          end if;
-        else
-          error "LowMeasureError!";
+    if assigned current`SolvableDBBelyiCurve then
+      try
+        // make test object
+        test := SolvableCopy(s);
+        test := SolvableBelyiMap(test);
+        test_measure := SolvableMeasure(test);
+        Append(~measure_list, test_measure);
+        // compare with current object
+        current_measure := SolvableMeasure(current);
+        if test_measure lt current_measure then
+          current := SolvableCopy(test);
         end if;
-      end if;
-    catch e1
-      Append(~errors, e1);
-    end try;
+      catch e1
+        Append(~errors, e1);
+      end try;
+    else
+      assert #measure_list eq 0;
+      try
+        current := SolvableBelyiMap(current);
+        current_measure := SolvableMeasure(current);
+        Append(~measure_list, current_measure);
+      catch e2
+        Append(~errors, e2);
+      end try;
+    end if;
   end for;
   vprintf Solvable : "Computed %o SolvableBelyiMaps for %o.\n", m, s`SolvableDBName;
   vprintf Solvable : "List of measures:\n";
