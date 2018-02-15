@@ -1157,6 +1157,9 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   a,b,c := SolvableDBStatus(d);
   for i := 1 to #b do
     s := SolvableBelyiMapLowMeasure(b[i], n); // TODO change this for whatever d
+    if Type(s) eq SeqEnum then
+      error "SolvableBelyiMapLowMeasure failed";
+    end if;
     if s`SolvableDBGenus in [0,1] then // low genus
       before, after := SolvableProjectToPP3(s);
       if SolvableMeasure(after) lt SolvableMeasure(before) then
