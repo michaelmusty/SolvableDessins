@@ -1193,6 +1193,7 @@ intrinsic SolvableWrapperLowToHigh(d::RngIntElt, n::RngIntElt, low::RngIntElt, h
   assert d eq 32;
   a,b,c := SolvableDBStatus(d);
   for i := low to high do
+    vprintf Solvable : "b[%o]: %o\n", i, b[i]`SolvableDBName;
     s := SolvableWrapper(b[i], n); // does sanity check and local
     SolvableDBWriteObject(s);
     filename := s`SolvableDBFilename;
