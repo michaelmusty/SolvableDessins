@@ -1143,7 +1143,8 @@ intrinsic SolvableWrapper(s::SolvableDBObject, n::RngIntElt) -> SolvableDBObject
     end if;
   end if;
   SolvableMapSanityCheck(s);
-  SolvableLocalSanityCheck(s,101);
+  // SolvableLocalSanityCheck(s,101);
+  SolvableLocalSanityCheck(s,8736028057);
   /*
   SolvableDBWriteObject(s);
   filename := s`SolvableDBFilename;
