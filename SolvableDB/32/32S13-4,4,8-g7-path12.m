@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 27, 29 },
 { IntegerRing() | 31, 32 }
 @};
+s`SolvableDBBelyiMapTiming := 0.460p15;
+s`SolvableDBSanityCheckTiming := 1.080p15;
+s`SolvableDBLocalSanityCheckTiming := 0.080p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -99,6 +105,15 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 1])> where K is RationalField()) |
+[[ RationalField() | 65536/18447307036548005889, 0 ], [ RationalField() | 0, -262144/18447307036548005889 ], [ RationalField() | -163840/6149102345516001963, 0 ], [ RationalField() | 0, 81920/2635329576649715127 ], [ RationalField() | 5120/202717659742285779, 0 ], [ RationalField() | 0, -1024/67572553247428593 ], [ RationalField() | -1408/202717659742285779, 0 ], [ RationalField() | 0, 3520/1419023618196000453 ], [ RationalField() | 110/157669290910666717, 0 ], [ RationalField() | 0, -220/1419023618196000453 ], [ RationalField() | -11/405435319484571558, 0 ], [ RationalField() | 0, 1/270290212989714372 ], [ RationalField() | 5/12973930223506289856, 0 ], [ RationalField() | 0, -5/168661092905581768128 ], [ RationalField() | -5/3148340400904193005056, 0 ], [ RationalField() | 0, 1/18890042405425158030336 ], [ RationalField() | -21845/93826423914496, 0 ]],
+[]
+]);
+X<x1,x2,x3> := HyperellipticCurve([f, g]);
+K<nu> := BaseField(X);
+s`SolvableDBBelyiCurve := X;
+KX<x1, x2> := FunctionField(X);
+s`SolvableDBBelyiMap := KX!((281475010265089/67108864*x1^16 + 16777217/1048576*nu*x1^15 - 117440527/524288*x1^14 - 117440547/65536*nu*x1^13 + 587203015/65536*x1^12 + 117440785/4096*nu*x1^11 - 117441513/2048*x1^10 - 16777931/256*nu*x1^9 + 16783651/512*x1^8 + 715/16*nu*x1^7 - 1001/8*x1^6 - 273*nu*x1^5 + 455*x1^4 + 560*nu*x1^3 - 480*x1^2 - 256*nu*x1 + 64)/(x1^16 + 32*nu*x1^15 - 448*x1^14 - 3584*nu*x1^13 + 17920*x1^12 + 57344*nu*x1^11 - 114688*x1^10 - 131072*nu*x1^9 + 65536*x1^8));
 
 /*
 Graph Data

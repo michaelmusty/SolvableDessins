@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 19, 26 },
 { IntegerRing() | 20, 30 }
 @};
+s`SolvableDBBelyiMapTiming := 0.960p15;
+s`SolvableDBSanityCheckTiming := 5.230p15;
+s`SolvableDBLocalSanityCheckTiming := 0.760p15;
+s`SolvableDBLocalSanityCheckPrime := 8736028057;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -100,6 +106,19 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+PX<x1, x2, x3> := PolynomialRing(K, 3);
+AA<x1, x2, x3> := AffineSpace(PX);
+I<x1, x2, x3> := ideal< PX | [
+x2^2*x3^6 - 126583155195904/277098404709375*x2*x3^4 + 8589934592/281462092005375*nu*x1^3*x2 - 838417128229055758336/239885264685437119378125*x1^2*x3^2 - 1024/65535*x2^2*x3^2 + 3448016925097984/18445618199572250625*x1^2*x2 + 2881439070388662304768/239885264685437119378125*nu*x1*x3^2 - 2513255020116312064/4703632640890923909375*nu*x1*x2 + 579036811290279411712/44423197163969836921875*x3^2 + 30036579731302776832/4703632640890923909375*x2,
+x1*x2*x3^4 + 1546/255*nu*x2*x3^4 + 33554432/858967245*nu*x1^2*x3^2 + 134217728/858967245*x1*x3^2 - 1024/65535*x1*x2 - 268435456/1431612075*nu*x3^2 - 1562624/16842495*nu*x2,
+x1^3*x3^2 - 4294836225/8388608*nu*x2*x3^4 - 6*nu*x1^2*x3^2 - 16*x1*x3^2 + 16*nu*x3^2 + 65535/8192*nu*x2,
+x1^4 - 16/257*nu*x1^3 - 65535/1024*x2*x3^2 - 96/257*x1^2 + 256/257*nu*x1 + 256/257
+] >;
+X<x1, x2, x3> := Curve(AA, I);
+KX<x1, x2, x3> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!((66049/65025*x1^8 - 8224/65025*nu*x1^7 - 1984/2601*x1^6 + 134656/65025*nu*x1^5 + 49664/21675*x1^4 - 57344/65025*nu*x1^3 - 114688/65025*x1^2 + 131072/65025*nu*x1 + 65536/65025)/(x1^8 + 32/255*nu*x1^7 + 48704/65025*x1^6 - 42496/21675*nu*x1^5 - 6656/3825*x1^4 - 57344/65025*nu*x1^3 - 114688/65025*x1^2 + 131072/65025*nu*x1 + 65536/65025));
 
 /*
 Graph Data

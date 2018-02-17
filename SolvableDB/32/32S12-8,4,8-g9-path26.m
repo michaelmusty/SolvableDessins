@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 23, 26 },
 { IntegerRing() | 30, 32 }
 @};
+s`SolvableDBBelyiMapTiming := 0.140p15;
+s`SolvableDBSanityCheckTiming := 0.080p15;
+s`SolvableDBLocalSanityCheckTiming := 0.170p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -118,6 +124,17 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+K := Rationals();
+PX<x1, x2, x3> := PolynomialRing(K, 3);
+AA<x1, x2, x3> := AffineSpace(PX);
+I<x1, x2, x3> := ideal< PX | [
+x2*x3^4 + 8*x3^4 + 2*x2*x3^2 + 2*x2 - 16,
+x1^4 + x2*x3^2 + 8*x3^2 + x2 - 12
+] >;
+X<x1, x2, x3> := Curve(AA, I);
+KX<x1, x2, x3> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!((-32*x1^8 - 128*x1^4)/(x1^12 - 12*x1^8 + 48*x1^4 - 64)*x3^2 + (x1^16 - 48*x1^12 - 672*x1^8 - 768*x1^4 + 256)/(x1^16 - 16*x1^12 + 96*x1^8 - 256*x1^4 + 256));
 
 /*
 Graph Data

@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 21, 32 },
 { IntegerRing() | 25, 29 }
 @};
+s`SolvableDBBelyiMapTiming := 0.590p15;
+s`SolvableDBSanityCheckTiming := 0.570p15;
+s`SolvableDBLocalSanityCheckTiming := 0.100p15;
+s`SolvableDBLocalSanityCheckPrime := 8736028057;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -99,6 +105,15 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 6, 0, 1])> where K is RationalField()) |
+[[ RationalField() | -8388608/4295098369, 0, 0, 0 ], [ RationalField() | 0, -41943040/4295098369, 0, -8388608/4295098369 ], [ RationalField() | 14680064/4295098369, 0, 0, 0 ], [ RationalField() | 0, 18350080/4295098369, 0, 3670016/4295098369 ], [ RationalField() | -2293760/4295098369, 0, 0, 0 ], [ RationalField() | 0, -1146880/4295098369, 0, -229376/4295098369 ], [ RationalField() | 57344/4295098369, 0, 0, 0 ], [ RationalField() | 0, 10240/4295098369, 0, 2048/4295098369 ], [ RationalField() | -128/65537, 0, 0, 0 ]],
+[]
+]);
+X<x1,x2,x3> := HyperellipticCurve([f, g]);
+K<nu> := BaseField(X);
+s`SolvableDBBelyiCurve := X;
+KX<x1, x2> := FunctionField(X);
+s`SolvableDBBelyiMap := KX!((4295098369/4294836225*x1^16 + 1/4294836225*(-2097184*nu^3 - 10485920*nu)*x1^15 - 58722176/4294836225*x1^14 + 1/1431612075*(78299648*nu^3 + 391498240*nu)*x1^13 + 469855232/858967245*x1^12 + 1/171793449*(-150413312*nu^3 - 752066560*nu)*x1^11 - 5021728768/1431612075*x1^10 + 1/4294836225*(8683651072*nu^3 + 43418255360*nu)*x1^9 + 9433382912/4294836225*x1^8 + 1/858967245*(-299892736*nu^3 - 1499463680*nu)*x1^7 - 8396996608/4294836225*x1^6 + 1/1431612075*(3053453312*nu^3 + 15267266560*nu)*x1^5 + 6106906624/858967245*x1^4 + 1/858967245*(-3758096384*nu^3 - 18790481920*nu)*x1^3 - 2147483648/286322415*x1^2 + 1/4294836225*(8589934592*nu^3 + 42949672960*nu)*x1 + 4294967296/4294836225)/(x1^16 + 1/65535*(32*nu^3 + 160*nu)*x1^15 + 58718336/4294836225*x1^14 + 1/4294836225*(-234863104*nu^3 - 1174315520*nu)*x1^13 - 156556288/286322415*x1^12 + 1/4294836225*(3755859968*nu^3 + 18779299840*nu)*x1^11 + 14999584768/4294836225*x1^10 + 1/84212475*(-166592512*nu^3 - 832962560*nu)*x1^9 - 7746486272/4294836225*x1^8 + 1/858967245*(-299892736*nu^3 - 1499463680*nu)*x1^7 - 8396996608/4294836225*x1^6 + 1/1431612075*(3053453312*nu^3 + 15267266560*nu)*x1^5 + 6106906624/858967245*x1^4 + 1/858967245*(-3758096384*nu^3 - 18790481920*nu)*x1^3 - 2147483648/286322415*x1^2 + 1/4294836225*(8589934592*nu^3 + 42949672960*nu)*x1 + 4294967296/4294836225));
 
 /*
 Graph Data

@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 28, 31 },
 { IntegerRing() | 30, 32 }
 @};
+s`SolvableDBBelyiMapTiming := 0.640p15;
+s`SolvableDBSanityCheckTiming := 0.760p15;
+s`SolvableDBLocalSanityCheckTiming := 0.250p15;
+s`SolvableDBLocalSanityCheckPrime := 8736028057;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -97,6 +103,15 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 0, 0, 0, 0, 0, 0, 1])> where K is RationalField()) |
+[[ RationalField() | 16777216/4295098369, 0, 0, 0, 0, 0, 0, 0 ], [ RationalField() | 0, 0, 0, 0, 33554432/4295098369, 0, 0, 0 ], [ RationalField() | -29360128/4295098369, 0, 0, 0, 0, 0, 0, 0 ], [ RationalField() | 0, 0, 0, 0, -14680064/4295098369, 0, 0, 0 ], [ RationalField() | 4587520/4295098369, 0, 0, 0, 0, 0, 0, 0 ], [ RationalField() | 0, 0, 0, 0, 917504/4295098369, 0, 0, 0 ], [ RationalField() | -114688/4295098369, 0, 0, 0, 0, 0, 0, 0 ], [ RationalField() | 0, 0, 0, 0, -8192/4295098369, 0, 0, 0 ], [ RationalField() | 256/65537, 0, 0, 0, 0, 0, 0, 0 ]],
+[]
+]);
+X<x1,x2,x3> := HyperellipticCurve([f, g]);
+K<nu> := BaseField(X);
+s`SolvableDBBelyiCurve := X;
+KX<x1, x2> := FunctionField(X);
+s`SolvableDBBelyiMap := KX!((-4294836225/262144*x1^16 - 65535/4096*nu^4*x1^15 - 458737/2048*x1^14 + 458717/256*nu^4*x1^13 + 2293305/256*x1^12 - 458479/16*nu^4*x1^11 - 457751/8*x1^10 + 64821*nu^4*x1^9 + 59101/2*x1^8 + 11440*nu^4*x1^7 + 32032*x1^6 - 69888*nu^4*x1^5 - 116480*x1^4 + 143360*nu^4*x1^3 + 122880*x1^2 - 65536*nu^4*x1 - 16384)/(x1^16 - 32*nu^4*x1^15 - 448*x1^14 + 3584*nu^4*x1^13 + 17920*x1^12 - 57344*nu^4*x1^11 - 114688*x1^10 + 131072*nu^4*x1^9 + 65536*x1^8));
 
 /*
 Graph Data

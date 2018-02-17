@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 29, 32 },
 { IntegerRing() | 30, 31 }
 @};
+s`SolvableDBBelyiMapTiming := 1.060p15;
+s`SolvableDBSanityCheckTiming := 4.490p15;
+s`SolvableDBLocalSanityCheckTiming := 0.260p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -117,6 +123,19 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+PX<x1, x2, x3> := PolynomialRing(K, 3);
+AA<x1, x2, x3> := AffineSpace(PX);
+I<x1, x2, x3> := ideal< PX | [
+x2^2*x3^6 + 1/1209018056149790439571457*(132154493251801401262080*nu + 5754983331970573926400)*x2*x3^4 + 536870912/281487861809153*x1^3*x2 + 1/79235416345888816038194577409*(-377783554022048582860800*nu + 16922526508327728459022336)*x1^2*x3^2 - 256/65537*x2^2*x3^2 + 1/18447869999386460161*(-211109453758464*nu - 4398046511104)*x1^2*x2 + 1/79235416345888816038194577409*(-58018699478645680252125184*nu - 1435575199440775401177088)*x1*x3^2 + 1/1209018056149790439571457*(3458746921634496512*nu - 36876599657406398464)*x1*x2 + 1/79235416345888816038194577409*(1662243026010995337199616*nu - 62852484301350030691794944)*x3^2 + 1/1209018056149790439571457*(-479650248684711444480*nu - 2882488479470583808)*x2,
+x1*x2*x3^4 + 1/65537*(393206*nu + 4096)*x2*x3^4 + 41943040/4295098369*x1^2*x3^2 - 167772160/4295098369*nu*x1*x3^2 - 256/65537*x1*x2 - 201326592/4295098369*x3^2 + 1/4295098369*(-100660736*nu + 1048576)*x2,
+x1^3*x3^2 + 4295098369/2097152*x2*x3^4 - 6*nu*x1^2*x3^2 - 16*x1*x3^2 + 16*nu*x3^2 - 65537/8192*x2,
+x1^4 + 1/65537*(-16*nu - 4096)*x1^3 - 65537/256*x2*x3^2 + 1/65537*(24576*nu - 96)*x1^2 + 1/65537*(256*nu + 65536)*x1 + 1/65537*(-65536*nu + 256)
+] >;
+X<x1, x2, x3> := Curve(AA, I);
+KX<x1, x2, x3> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!((65537/65536*x1^8 - 1/2048*nu*x1^7 - 7/1024*x1^6 + 7/128*nu*x1^5 + 35/128*x1^4 - 7/8*nu*x1^3 - 7/4*x1^2 + 2*nu*x1 + 1)/x1^8);
 
 /*
 Graph Data

@@ -23,3 +23,5 @@ S,SolvableProjectToPP3,Try to embed Belyi curve in PP3 (or PP2) and update Solva
 S,SolvableIsHyperelliptic,"Determine if Belyi curve has a hyperelliptic model and if so, returns updated object",0,1,0,0,0,0,0,0,0,SolvableDBObject,,-1,-38,-38,-38,-38,-38
 S,SolvableWrapper,for internal use only,0,2,0,0,0,0,0,0,0,148,,0,0,SolvableDBObject,,SolvableDBObject,-38,-38,-38,-38,-38
 S,SolvableWrapper,for internal use only,0,2,0,0,0,0,0,0,0,148,,0,0,148,,298,-38,-38,-38,-38,-38
+S,SolvableWrapperLowToHigh,for internal use only,0,4,0,0,0,0,0,0,0,148,,0,0,148,,0,0,148,,0,0,148,,298,-38,-38,-38,-38,-38
+S,SolvableWrapperReverse,for internal use only,0,2,0,0,0,0,0,0,0,148,,0,0,148,,298,-38,-38,-38,-38,-38
