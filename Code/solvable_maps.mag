@@ -740,8 +740,10 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     vprintf Solvable : "done.\n";
   // assertions
     vprintf Solvable : "Checking genus of curve...";
+    t0_genus := Cputime();
     assert s`SolvableDBGenus eq Genus(X);
-    vprintf Solvable : "done.\n";
+    t1_genus := Cputime();
+    vprintf Solvable : "done. %o seconds\n", t1_genus - t0_genus;
   // assign information to s and return s
     s`SolvableDBBelyiCurve := X;
     s`SolvableDBBelyiMap := phi;
