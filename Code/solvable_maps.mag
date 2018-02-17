@@ -1142,7 +1142,7 @@ intrinsic SolvableWrapper(s::SolvableDBObject, n::RngIntElt) -> SolvableDBObject
       s := hyp;
     end if;
   end if;
-  // SolvableMapSanityCheck(s);
+  SolvableMapSanityCheck(s);
   // SolvableLocalSanityCheck(s,101);
   SolvableLocalSanityCheck(s,8736028057);
   /*
