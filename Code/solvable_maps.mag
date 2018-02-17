@@ -1188,32 +1188,18 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   return Sprintf("Solvable wrapper completed for degree %o\n", d);
 end intrinsic;
 
-intrinsic SolvableWrapper100to200(d::RngIntElt, n::RngIntElt) -> MonStgElt
+intrinsic SolvableWrapperLowToHigh(d::RngIntElt, n::RngIntElt, low::RngIntElt, high::RngIntElt) -> MonStgElt
   {for internal use only}
   assert d eq 32;
   a,b,c := SolvableDBStatus(d);
-  for i := 100 to 200 do
-    s := SolvableWrapper(b[i], 50); // does sanity check and local
+  for i := low to high do
+    s := SolvableWrapper(b[i], n); // does sanity check and local
     SolvableDBWriteObject(s);
     filename := s`SolvableDBFilename;
     t := SolvableDBAccessEntry(filename);
     assert SolvableLocalSanityCheck(s,8736028057);
   end for;
-  return Sprintf("Solvable wrapper (reverse) completed for degree %o\n", d);
-end intrinsic;
-
-intrinsic SolvableWrapper200to300(d::RngIntElt, n::RngIntElt) -> MonStgElt
-  {for internal use only}
-  assert d eq 32;
-  a,b,c := SolvableDBStatus(d);
-  for i := 200 to 300 do
-    s := SolvableWrapper(b[i], 50); // does sanity check and local
-    SolvableDBWriteObject(s);
-    filename := s`SolvableDBFilename;
-    t := SolvableDBAccessEntry(filename);
-    assert SolvableLocalSanityCheck(s,8736028057);
-  end for;
-  return Sprintf("Solvable wrapper (reverse) completed for degree %o\n", d);
+  return Sprintf("Solvable wrapper completed b[%o] to b[%o]\n", low, high);
 end intrinsic;
 
 intrinsic SolvableWrapperReverse(d::RngIntElt, n::RngIntElt) -> MonStgElt
@@ -1221,7 +1207,7 @@ intrinsic SolvableWrapperReverse(d::RngIntElt, n::RngIntElt) -> MonStgElt
   assert d eq 32;
   a,b,c := SolvableDBStatus(d);
   for i := #b to 1 by -1 do
-    s := SolvableWrapper(b[i], 50); // does sanity check and local
+    s := SolvableWrapper(b[i], n); // does sanity check and local
     SolvableDBWriteObject(s);
     filename := s`SolvableDBFilename;
     t := SolvableDBAccessEntry(filename);
