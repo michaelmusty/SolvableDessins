@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 29, 31 },
 { IntegerRing() | 30, 32 }
 @};
+s`SolvableDBBelyiMapTiming := 1.760p15;
+s`SolvableDBSanityCheckTiming := 70.860p15;
+s`SolvableDBLocalSanityCheckTiming := 6.910p15;
+s`SolvableDBLocalSanityCheckPrime := 8736028057;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -99,6 +105,20 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+PX<x1, x2, x3> := PolynomialRing(K, 3);
+AA<x1, x2, x3> := AffineSpace(PX);
+I<x1, x2, x3> := ideal< PX | [
+x2^2*x3^6 - 86010544/385734155625*x1*x2*x3^4 + 1954662508/42648696916678125*x1^3*x3^2 - 249942682/1157202466875*x2*x3^4 + 80144/68669157375*x1^3*x2 + 2638954576/42648696916678125*x1^2*x3^2 + 4/4095*x2^2*x3^2 + 146027444/281200199450625*x1^2*x2 + 1247136664/42648696916678125*x1*x3^2 - 9033698/281200199450625*x1*x2 + 621524768/127946090750034375*x3^2,
+x1^2*x2*x3^4 + 14113/8190*x1*x2*x3^4 - 422113/2716582050*x1^3*x3^2 + 140519/147420*x2*x3^4 - 96956/452763675*x1^2*x3^2 + 4/4095*x1^2*x2 - 139417/1358291025*x1*x3^2 + 2/4095*x1*x2 - 32/1863225*x3^2,
+x1*x2^2*x3^4 + 8605321/9116380*x2^2*x3^4 + 557983/5333082300*x1^2*x2*x3^2 + 1472593/10666164600*x1*x2*x3^2 - 58783/6239706291000*x1^3 + 4/4095*x1*x2^2 + 27536819/447978913200*x2*x3^2 - 4491791/343963809291375*x1^2 - 50357/184606695*x2^2 - 77488871/12382697134489500*x1 - 3222848/3095674283622375,
+x1^3*x2*x3^2 - 16769025/20036*x2^2*x3^4 + 33423/20036*x1^2*x2*x3^2 + 41873/40072*x1*x2*x3^2 - 513/18232760*x1^3 + 23031/80144*x2*x3^2 - 89/2279095*x1^2 - 4095/5009*x2^2 - 1537/82047420*x1 - 64/20511855,
+x1^4 + 25/18*x1^3 + 4095/4*x2*x3^2 + 2/3*x1^2 + 1/9*x1
+] >;
+X<x1, x2, x3> := Curve(AA, I);
+KX<x1, x2, x3> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!(-1/4095*x1^8/(x1^8 + 16384/4095*x1^7 + 4096/585*x1^6 + 4096/585*x1^5 + 512/117*x1^4 + 1024/585*x1^3 + 256/585*x1^2 + 256/4095*x1 + 16/4095));
 
 /*
 Graph Data
