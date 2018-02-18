@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 19, 26 },
 { IntegerRing() | 20, 30 }
 @};
+s`SolvableDBBelyiMapTiming := 3.720p15;
+s`SolvableDBSanityCheckTiming := 27.100p15;
+s`SolvableDBLocalSanityCheckTiming := 5.220p15;
+s`SolvableDBLocalSanityCheckPrime := 8736028057;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -100,6 +106,20 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+K<nu> := NumberField(Polynomial([RationalField() | 4096, 0, 0, 0, 1]));
+PX<x1, x2, x3> := PolynomialRing(K, 3);
+AA<x1, x2, x3> := AffineSpace(PX);
+I<x1, x2, x3> := ideal< PX | [
+x1*x2*x3^4 - x2*x3^4 + 1/512*(K.1^3 - 64*K.1)*x1^4 - 10*x1^2*x3^2 + 1/128*(K.1^3 - 64*K.1)*x1*x2*x3^2 + 1/256*(K.1^3 - 64*K.1)*x1^3 - 2*x1^2*x2 + 8*x1*x3^2 + 1/1024*(7*K.1^3 - 448*K.1)*x2*x3^2 + 1/128*(-3*K.1^3 + 192*K.1)*x1^2 + 2*x1*x2 - 2*x3^2 + 1/256*(-5*K.1^3 + 320*K.1)*x1 + 4*x2 + 1/512*(3*K.1^3 - 192*K.1),
+x2^2*x3^4 - 26*x1^2*x2*x3^2 + 1/128*(K.1^3 - 64*K.1)*x2*x3^4 + 16*x1^4 + 1/32*(K.1^3 - 64*K.1)*x1^3*x2 + 1/64*(K.1^3 - 64*K.1)*x1^2*x3^2 - 44*x1*x2*x3^2 + 1/128*(K.1^3 - 64*K.1)*x2^2*x3^2 + 16*x1^3 + 1/128*(-K.1^3 + 64*K.1)*x1^2*x2 - 2*x1*x2^2 + 1/16*(-K.1^3 + 64*K.1)*x1*x3^2 - 30*x2*x3^2 + 144*x1^2 + 1/64*(-3*K.1^3 + 192*K.1)*x1*x2 + 1/64*(K.1^3 - 64*K.1)*x3^2 + 48*x1 + 1/128*(-K.1^3 + 64*K.1)*x2 - 32,
+x1^5 + x1^4 - 1/2*x1*x2*x3^2 + 6*x1^3 + 1/2*x2*x3^2 + 6*x1^2 + 1/512*(-K.1^3 + 64*K.1)*x1*x2 + x1 + 1/512*(-K.1^3 + 64*K.1)*x2 + 1,
+x1^4*x2 + 1/256*(-K.1^3 + 64*K.1)*x1^2*x2*x3^2 + 1/128*(-K.1^3 + 64*K.1)*x1^4 + 2*x1^3*x2 + 1/256*(K.1^3 - 64*K.1)*x1*x2*x3^2 - 1/2*x2^2*x3^2 + 1/256*(-K.1^3 + 64*K.1)*x2*x3^2 + 1/64*(-3*K.1^3 + 192*K.1)*x1^2 + 6*x1*x2 + 1/512*(-K.1^3 + 64*K.1)*x2^2 + 7*x2 + 1/128*(-K.1^3 + 64*K.1),
+x1^3*x3^2 + 1/1024*(-K.1^3 + 64*K.1)*x1^4 + 1/512*(K.1^3 - 64*K.1)*x1^3 + x1*x3^2 + 1/2048*(K.1^3 - 64*K.1)*x2*x3^2 + 1/512*(-K.1^3 + 64*K.1)*x1 + 1/1024*(K.1^3 - 64*K.1)
+] >;
+X<x1, x2, x3> := Curve(AA, I);
+KX<x1, x2, x3> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!((-1/16*x1^8 + 1/4*x1^6 - 3/8*x1^4 + 1/4*x1^2 - 1/16)/(x1^6 + 2*x1^4 + x1^2));
 
 /*
 Graph Data
