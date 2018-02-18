@@ -835,7 +835,7 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
     end if;
   end for;
   if #measure_list eq 0 then
-    return errors;
+    return _,errors;
   else
     vprintf Solvable : "Computed %o SolvableBelyiMaps for %o.\n", m, s`SolvableDBName;
     vprintf Solvable : "List of measures:\n";
