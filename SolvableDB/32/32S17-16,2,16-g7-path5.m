@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 29, 32 },
 { IntegerRing() | 30, 31 }
 @};
+s`SolvableDBBelyiMapTiming := 0.550p15;
+s`SolvableDBSanityCheckTiming := 2.160p15;
+s`SolvableDBLocalSanityCheckTiming := 0.050p15;
+s`SolvableDBLocalSanityCheckPrime := 8736028057;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -99,6 +105,15 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+f, g := Explode([ PolynomialRing(ext<K|Polynomial(K, [1, 0, 1])> where K is RationalField()) |
+[[ RationalField() | 65536/18447307036548005889, 0 ], [ RationalField() | 0, -262144/18447307036548005889 ], [ RationalField() | -163840/6149102345516001963, 0 ], [ RationalField() | 0, 81920/2635329576649715127 ], [ RationalField() | 5120/202717659742285779, 0 ], [ RationalField() | 0, -1024/67572553247428593 ], [ RationalField() | -1408/202717659742285779, 0 ], [ RationalField() | 0, 3520/1419023618196000453 ], [ RationalField() | 110/157669290910666717, 0 ], [ RationalField() | 0, -220/1419023618196000453 ], [ RationalField() | -11/405435319484571558, 0 ], [ RationalField() | 0, 1/270290212989714372 ], [ RationalField() | 5/12973930223506289856, 0 ], [ RationalField() | 0, -5/168661092905581768128 ], [ RationalField() | -5/3148340400904193005056, 0 ], [ RationalField() | 0, 1/18890042405425158030336 ], [ RationalField() | -21845/93826423914496, 0 ]],
+[]
+]);
+X<x1,x2,x3> := HyperellipticCurve([f, g]);
+K<nu> := BaseField(X);
+s`SolvableDBBelyiCurve := X;
+KX<x1, x2> := FunctionField(X);
+s`SolvableDBBelyiMap := KX!((1/281474976710656*x1^16 + 1/4398046511104*nu*x1^15 - 15/2199023255552*x1^14 - 35/274877906944*nu*x1^13 + 455/274877906944*x1^12 + 273/17179869184*nu*x1^11 - 1001/8589934592*x1^10 - 715/1073741824*nu*x1^9 + 6435/2147483648*x1^8 + 715/67108864*nu*x1^7 - 1001/33554432*x1^6 - 273/4194304*nu*x1^5 + 455/4194304*x1^4 + 35/262144*nu*x1^3 - 15/131072*x1^2 - 1/16384*nu*x1 + 1/65536)/x1^16);
 
 /*
 Graph Data

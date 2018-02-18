@@ -33,6 +33,12 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 22, 25 },
 { IntegerRing() | 23, 28 }
 @};
+s`SolvableDBBelyiMapTiming := 3.750p15;
+s`SolvableDBSanityCheckTiming := 80.450p15;
+s`SolvableDBLocalSanityCheckTiming := 5.980p15;
+s`SolvableDBLocalSanityCheckPrime := 8736028057;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 
 /*
 Permutations and Passports
@@ -100,6 +106,19 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+K<nu> := NumberField(Polynomial([RationalField() | 4096, 0, 0, 0, 1]));
+PX<x1, x2, x3> := PolynomialRing(K, 3);
+AA<x1, x2, x3> := AffineSpace(PX);
+I<x1, x2, x3> := ideal< PX | [
+x1^3*x2*x3^2 + x1^2*x2*x3^2 + 1/1024*(K.1^3 + 64*K.1)*x1^3*x2 + 7*x1*x2*x3^2 + 1/1024*(-K.1^3 - 64*K.1)*x2^2*x3^2 + 8*x1^3 + 1/1024*(-3*K.1^3 - 192*K.1)*x1^2*x2 + 3*x2*x3^2 + 1/1024*(-K.1^3 - 64*K.1)*x1*x2 - 1/2*x2^2 + 8*x1 + 1/1024*(3*K.1^3 + 192*K.1)*x2,
+x1*x2*x3^4 + 2*x1^3*x3^2 + x2*x3^4 + 10*x1^2*x3^2 + 1/512*(-K.1^3 - 64*K.1)*x1*x2*x3^2 + 1/512*(-3*K.1^3 - 192*K.1)*x1^3 + 2*x1*x3^2 + 1/256*(K.1^3 + 64*K.1)*x2*x3^2 + 1/512*(K.1^3 + 64*K.1)*x1^2 - 1/2*x1*x2 + 2*x3^2 + 1/512*(K.1^3 + 64*K.1)*x1 + 1/2*x2 + 1/512*(K.1^3 + 64*K.1),
+x2^2*x3^4 + 1/128*(K.1^3 + 64*K.1)*x1^3*x3^2 + 8*x1^2*x2*x3^2 + 1/128*(-K.1^3 - 64*K.1)*x2*x3^4 + 1/256*(K.1^3 + 64*K.1)*x1^3*x2 + 1/128*(-3*K.1^3 - 192*K.1)*x1^2*x3^2 + 8*x1*x2*x3^2 + 1/256*(-K.1^3 - 64*K.1)*x2^2*x3^2 + 20*x1^3 + 1/128*(-K.1^3 - 64*K.1)*x1^2*x2 + 1/128*(-K.1^3 - 64*K.1)*x1*x3^2 + 20*x2*x3^2 - 4*x1^2 + 1/256*(-K.1^3 - 64*K.1)*x1*x2 - 3/2*x2^2 + 1/128*(-K.1^3 - 64*K.1)*x3^2 + 28*x1 + 1/128*(K.1^3 + 64*K.1)*x2 + 4,
+x1^4 - 1/2*x1*x2*x3^2 - x1^3 - 1/2*x2*x3^2 + x1^2 + 1/2048*(K.1^3 + 64*K.1)*x1*x2 - x1 + 1/2048*(-K.1^3 - 64*K.1)*x2
+] >;
+X<x1, x2, x3> := Curve(AA, I);
+KX<x1, x2, x3> := FunctionField(X);
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := KX!((-1/16*x1^8 + 1/4*x1^6 - 3/8*x1^4 + 1/4*x1^2 - 1/16)/(x1^6 + 2*x1^4 + x1^2));
 
 /*
 Graph Data
