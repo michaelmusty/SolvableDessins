@@ -1160,7 +1160,7 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   {for internal use only}
   assert d eq 32;
   a,b,c := SolvableDBStatus(d);
-  for i := 6 to #b do // TODO start after "bad" ones
+  for i := 7 to #b do // TODO start after "bad" ones
     s := SolvableBelyiMapLowMeasure(b[i], n); // TODO change this for whatever d
     if Type(s) eq SeqEnum then
       error "SolvableBelyiMapLowMeasure failed";
@@ -1188,6 +1188,20 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   return Sprintf("Solvable wrapper completed for degree %o\n", d);
 end intrinsic;
 
+intrinsic SolvableWrapperReverse(d::RngIntElt, n::RngIntElt) -> MonStgElt
+  {for internal use only}
+  assert d eq 32;
+  a,b,c := SolvableDBStatus(d);
+  for i := #b-1 to 1 by -1 do // TODO start before "bad" ones
+    s := SolvableWrapper(b[i], n); // does sanity check and local
+    SolvableDBWriteObject(s);
+    filename := s`SolvableDBFilename;
+    t := SolvableDBAccessEntry(filename);
+    assert SolvableLocalSanityCheck(s,8736028057);
+  end for;
+  return Sprintf("Solvable wrapper (reverse) completed for degree %o\n", d);
+end intrinsic;
+
 intrinsic SolvableWrapperLowToHigh(d::RngIntElt, n::RngIntElt, low::RngIntElt, high::RngIntElt) -> MonStgElt
   {for internal use only}
   assert d eq 32;
@@ -1201,18 +1215,4 @@ intrinsic SolvableWrapperLowToHigh(d::RngIntElt, n::RngIntElt, low::RngIntElt, h
     assert SolvableLocalSanityCheck(s,8736028057);
   end for;
   return Sprintf("Solvable wrapper completed b[%o] to b[%o]\n", low, high);
-end intrinsic;
-
-intrinsic SolvableWrapperReverse(d::RngIntElt, n::RngIntElt) -> MonStgElt
-  {for internal use only}
-  assert d eq 32;
-  a,b,c := SolvableDBStatus(d);
-  for i := #b-1 to 1 by -1 do // TODO start before "bad" ones
-    s := SolvableWrapper(b[i], n); // does sanity check and local
-    SolvableDBWriteObject(s);
-    filename := s`SolvableDBFilename;
-    t := SolvableDBAccessEntry(filename);
-    assert SolvableLocalSanityCheck(s,8736028057);
-  end for;
-  return Sprintf("Solvable wrapper (reverse) completed for degree %o\n", d);
 end intrinsic;
