@@ -97,3 +97,40 @@ intrinsic MeasureBound(l::SeqEnum[SolvableDBObject], b::RngIntElt) -> SeqEnum
   end for;
   return bad;
 end intrinsic;
+
+// web lists -> query
+
+intrinsic SolvableFilenameWithoutPath(filename::MonStgElt) -> MonStgElt
+  {disregard path}
+  a,b,c := Regexp("(.*)-path", filename);
+  if a then
+    assert #c eq 1;
+    name := c[1];
+    assert #Split(name, "-") eq 3;
+    return name;
+  else
+    return filename;
+  end if;
+end intrinsic;
+
+intrinsic SolvableFilenamesWithoutPath(d::RngIntElt) -> Any
+  {for a degree d, sort names disregarding paths}
+  f := SolvableDBFilenames(d);
+  f_without_path := [ SolvableFilenameWithoutPath(name) : name in f ];
+  return SetToSequence(SequenceToSet(f_without_path));
+end intrinsic;
+
+intrinsic SolvableFilenameWithoutPathToList(str::MonStgElt) -> SeqEnum
+  {}
+  s := SolvableDBAccessEntry(str cat "-path1.m");
+  d := s`SolvableDBDegree;
+  f := SolvableDBFilenames(d);
+  name := SolvableFilenameWithoutPath(str);
+  l := [];
+  for i := 1 to #f do
+    if Regexp(name, f[i]) then
+      Append(~l, f[i]);
+    end if;
+  end for;
+  return l;
+end intrinsic;
