@@ -1129,7 +1129,7 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
   end if;
 end intrinsic;
 
-intrinsic SolvableWrapper(s::SolvableDBObject, n::RngIntElt) -> SolvableDBObject
+intrinsic SolvableWrapper(s::SolvableDBObject, n::RngIntElt : only_local := false) -> SolvableDBObject
   {for internal use only}
   s := SolvableBelyiMapLowMeasure(s, n); // TODO change this for whatever d
   assert Type(s) eq SolvableDBObject;
@@ -1144,9 +1144,14 @@ intrinsic SolvableWrapper(s::SolvableDBObject, n::RngIntElt) -> SolvableDBObject
       s := hyp;
     end if;
   end if;
-  SolvableMapSanityCheck(s);
-  // SolvableLocalSanityCheck(s,101);
-  SolvableLocalSanityCheck(s,8736028057);
+  if only_local then
+    // SolvableLocalSanityCheck(s,101);
+    SolvableLocalSanityCheck(s,8736028057);
+  else
+    // SolvableLocalSanityCheck(s,101);
+    SolvableLocalSanityCheck(s,8736028057);
+    SolvableMapSanityCheck(s);
+  end if;
   /*
   SolvableDBWriteObject(s);
   filename := s`SolvableDBFilename;

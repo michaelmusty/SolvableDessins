@@ -1,8 +1,8 @@
 // no maps computed along any path
 no_maps := [];
-Append(~no_maps, "32S4-4,8,8-g9"); // 8,4,8 : 8,8,4 computed
-Append(~no_maps, "32S16-8,16,16-g13"); // 16,8,16 : 16,16,8 computed
-Append(~no_maps, "32S17-4,16,16-g11"); // 16,4,16 : 16,16,4 computed
+// Append(~no_maps, "32S4-4,8,8-g9"); // 8,4,8 : 8,8,4 computed
+// Append(~no_maps, "32S16-8,16,16-g13"); // 16,8,16 : 16,16,8 computed
+Append(~no_maps, "32S17-4,16,16-g11"); // 16,4,16 : 16,16,4 computed, l[7] compositum error
 
 // descent needed
 descent := [];
