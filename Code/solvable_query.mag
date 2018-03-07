@@ -134,3 +134,16 @@ intrinsic SolvableFilenameWithoutPathToList(str::MonStgElt) -> SeqEnum
   end for;
   return l;
 end intrinsic;
+
+// user convenience
+
+intrinsic SolvablePassport(str::MonStgElt) -> Any
+  {}
+  l_str := SolvableFilenameWithoutPathToList(str);
+  l := [ SolvableDBAccessEntry(name) : name in l_str ];
+  return l, l_str;
+end intrinsic;
+
+intrinsic SolvableIsomorphismClasses(l::SeqEnum[SolvableDBObject]) -> Any
+  {}
+end intrinsic;

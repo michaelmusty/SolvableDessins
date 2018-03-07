@@ -8,3 +8,5 @@ S,MeasureBound,"given a SeqEnum of solvableDBobjs, measure them and return a Seq
 S,SolvableFilenameWithoutPath,disregard path,0,1,0,0,0,0,0,0,0,298,,298,-38,-38,-38,-38,-38
 S,SolvableFilenamesWithoutPath,"for a degree d, sort names disregarding paths",0,1,0,0,0,0,0,0,0,148,,-1,-38,-38,-38,-38,-38
 S,SolvableFilenameWithoutPathToList,,0,1,0,0,0,0,0,0,0,298,,82,-38,-38,-38,-38,-38
+S,SolvablePassport,,0,1,0,0,0,0,0,0,0,298,,-1,-38,-38,-38,-38,-38
+S,SolvableIsomorphismClasses,,1,0,1,82,0,SolvableDBObject,1,0,0,0,0,0,0,0,82,,-1,-38,-38,-38,-38,-38
