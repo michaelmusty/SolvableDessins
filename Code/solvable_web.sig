@@ -1,4 +1,5 @@
 174,0
+S,SolvableWebName,,0,1,0,0,0,0,0,0,0,298,,298,-38,-38,-38,-38,-38
 S,SolvableWebName,no path,0,1,0,0,0,0,0,0,0,SolvableDBObject,,298,-38,-38,-38,-38,-38
 S,SolvableWebFilenames,"for a degree d, sort names disregarding paths",0,1,0,0,0,0,0,0,0,148,,-1,-38,-38,-38,-38,-38
 S,SolvableNameToList,"given a name from SolvableWebFilenames, return a SeqEnum of SolvableDBObjects that match that name after disregarding paths",0,1,0,0,0,0,0,0,0,298,,82,-38,-38,-38,-38,-38

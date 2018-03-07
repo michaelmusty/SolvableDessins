@@ -105,6 +105,7 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 Top Level Belyi Curve/Map
 */
 
+/*
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
 PX<x1, x2, x3> := PolynomialRing(K, 3);
 AA<x1, x2, x3> := AffineSpace(PX);
@@ -120,6 +121,7 @@ X<x1, x2, x3> := Curve(AA, I);
 KX<x1, x2, x3> := FunctionField(X);
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := KX!((4097/4096*x1^8 + 4*nu^2*x1^7 - 7*x1^6 - 7*nu^2*x1^5 + 35/8*x1^4 + 7/4*nu^2*x1^3 - 7/16*x1^2 - 1/16*nu^2*x1 + 1/256)/(x1^8 + 4*nu^2*x1^7 - 7*x1^6 - 7*nu^2*x1^5 + 35/8*x1^4 + 7/4*nu^2*x1^3 - 7/16*x1^2 - 1/16*nu^2*x1 + 1/256));
+*/
 
 /*
 Graph Data

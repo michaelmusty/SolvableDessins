@@ -1,3 +1,8 @@
+intrinsic SolvableWebName(str::MonStgElt) -> MonStgElt
+  {}
+  return SolvableFilenameWithoutPath(str);
+end intrinsic;
+
 intrinsic SolvableWebName(s::SolvableDBObject) -> MonStgElt
   {no path}
   sigma := s`SolvableDBGaloisOrbit[1];
@@ -22,6 +27,7 @@ intrinsic SolvableWebName(s::SolvableDBObject) -> MonStgElt
   return name;
 end intrinsic;
 
+/*
 intrinsic SolvableWebFilenames(d::RngIntElt) -> Any
   {for a degree d, sort names disregarding paths}
   f := SolvableDBFilenames(d);
@@ -32,7 +38,14 @@ intrinsic SolvableWebFilenames(d::RngIntElt) -> Any
   end for;
   return SetToSequence(SequenceToSet(f_web));
 end intrinsic;
+*/
 
+intrinsic SolvableWebFilenames(d::RngIntElt) -> Any
+  {for a degree d, sort names disregarding paths}
+  return SolvableFilenamesWithoutPath(d);
+end intrinsic;
+
+/*
 intrinsic SolvableNameToList(str::MonStgElt) -> SeqEnum
   {given a name from SolvableWebFilenames, return a SeqEnum of SolvableDBObjects that match that name after disregarding paths.}
   s := SolvableDBAccessEntry(str cat "-path1.m");
@@ -46,6 +59,13 @@ intrinsic SolvableNameToList(str::MonStgElt) -> SeqEnum
     end if;
   end for;
   return l;
+end intrinsic;
+*/
+
+intrinsic SolvableNameToList(str::MonStgElt) -> SeqEnum
+  {given a name from SolvableWebFilenames, return a SeqEnum of SolvableDBObjects that match that name after disregarding paths.}
+  filenames := SolvableFilenameWithoutPathToList(str);
+  return [ SolvableDBAccessEntry(filename) : filename in filenames ];
 end intrinsic;
 
 intrinsic SolvableWebLists(d::RngIntElt) -> Any
@@ -67,19 +87,42 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
   while i le #str do
     if str[i] eq "x" then
       str_new *:= "x_";
+      str_new *:= "{";
+      j := i+1;
+      while (j le #str) and (str[j] ne "*") and (str[j] ne " ") and (str[j] ne "^") do
+        str_new *:= str[j];
+        j +:= 1;
+      end while;
+      str_new *:= "}";
+      if j le #str then
+        if str[j] eq "*" then
+          i := j;
+        elif str[j] eq "^" then
+          i := j-1;
+        elif str[j] eq " " then
+          i := j-1;
+        else
+          error "latex parse error";
+        end if;
+      end if;
     elif str[i] eq "y" then
-      str_new *:= "y_";
+      error "why are there ys?";
+      // str_new *:= "y_";
     elif str[i] eq "^" then
       str_new *:= str[i];
+      str_new *:= "{";
       j := i+1;
-      while (j lt #str) and (str[j] ne "*") and (str[j] ne " ") do
+      while (j le #str) and (str[j] ne "*") and (str[j] ne " ") do
         if str[j] ne "*" then
           str_new *:= str[j];
         end if;
         j +:= 1;
       end while;
-      if str[j] ne "*" then
-        str_new *:= str[j];
+      str_new *:= "}";
+      if j le #str then
+        if str[j] ne "*" then
+          str_new *:= str[j];
+        end if;
       end if;
       i := j;
     elif str[i] eq "n" then
@@ -88,7 +131,11 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
     elif str[i] eq "*" then
       str_new *:= "";
     elif str[i] eq "u" then
-      str_new *:= "u ";
+      if (i lt #str) and str[i+1] eq "^" then
+        str_new *:= "u";
+      else
+        str_new *:= "u ";
+      end if;
     else
       str_new *:= str[i];
     end if;
@@ -125,11 +172,14 @@ intrinsic SolvableWebGraphFiles(d::RngIntElt) -> MonStgElt
   {generate all graph files for d equals 2 or larger.}
   lists := SolvableWebLists(d);
   for i := 1 to #lists do
-    vprintf Solvable : "i = %o out of %o\n", i, #lists;
     l := lists[i];
     name := SolvableWebName(l[1]);
+    vprintf Solvable : "i = %o out of %o : %o : #paths = %o : ", i, #lists, name, #l;
     filename := Sprintf("%o-graph.html", name);
+    t0 := Cputime();
     str := SolvableWebGraphText(l);
+    t1 := Cputime();
+    vprintf Solvable : "%o s\n", t1-t0;
     Write(Sprintf("web_files/%o", filename), str : Overwrite := true);
   end for;
   return_text := Sprintf("Successfully wrote %o web graph files for degree %o\n", #lists, d);
@@ -260,9 +310,13 @@ intrinsic SolvableWebGraphTextSetup(l::SeqEnum[SolvableDBObject]) -> Any
   // parents
   parent_web_names := [];
   for i := 1 to #l do
-    parent_names := [SolvableWebName(Parents(l[i])[j]) : j in [1..#Parents(l[i])]];
+    t0 := Cputime(); // fixed timing no longer necessary
+    parent_names := [SolvableWebName(ParentsNames(l[i])[j]) : j in [1..#ParentsNames(l[i])]];
     parent_web_names cat:= parent_names;
+    t1 := Cputime();
+    // vprintf Solvable : "\n  computed (%o of %o) : #parents = %o : %o s", i, #l, #ParentsNames(l[i]), t1-t0;
   end for;
+  // vprintf Solvable : "\n";
   parents := SetToSequence(SequenceToSet(parent_web_names));
   return name, children, parents;
 end intrinsic;
@@ -285,6 +339,7 @@ intrinsic SolvableMaxGroupID(d::RngIntElt) -> RngIntElt
   return Max(ids);
 end intrinsic;
 
+// TODO don't access file directly
 intrinsic SolvableGroupHelper(d::RngIntElt, g::RngIntElt) -> SeqEnum[MonStgElt]
   {given degree and group number return a SeqEnum of pathless names with those parameters.}
   f := SolvableDBFilenames(d);
@@ -440,11 +495,12 @@ end intrinsic;
 intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
   {given a list of SolvableDBObjects (all with the same webname), produce html text for name-data.html file}
   ////////// PRE //////////
+  t0 := Cputime();
     // name, children, parents
       for s in l do
         assert SolvableWebName(s) eq SolvableWebName(l[1]);
       end for;
-      name, children, parents := SolvableWebGraphTextSetup(l);
+      name, children, parents := SolvableWebGraphTextSetup(l); // TODO time consuming
     // type
       for s in l do
         assert s`SolvableDBType eq l[1]`SolvableDBType;
@@ -493,6 +549,7 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
       for s in l do
         Append(~galois_orbits, s`SolvableDBGaloisOrbit);
       end for;
+    // TODO this takes the time in PRE
     // belyi curves
     // base fields
     // belyi map numerators,denominators
@@ -504,7 +561,7 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
       for s in l do
         if assigned s`SolvableDBBelyiCurve then
           assert assigned s`SolvableDBBelyiMap;
-          curve_text, field_text, num_text, den_text := SolvableMathJax(s);
+          curve_text, field_text, num_text, den_text := SolvableMathJax(s); // TODO time consuming!
           Append(~belyi_curves_names, s`SolvableDBName);
           Append(~belyi_curves, curve_text);
           Append(~base_fields, field_text);
@@ -536,7 +593,10 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
       assert #belyi_curves eq #belyi_map_denominators;
       assert #belyi_curves eq #belyi_map_numerators;
       assert #belyi_curves eq #base_fields;
+  t1 := Cputime();
+  printf "\nPRE : %o s\n", t1-t0;
   ///////// POST //////////
+  t0 := Cputime();
     str := "";
     // head
       str *:= Sprintf("<!doctype html>\n");
@@ -678,26 +738,37 @@ intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
         str *:= Sprintf("      <h4>Belyi Curve %o Base Field: %o</h4>\n", i, base_fields[i]);
         str *:= Sprintf("      <h4>Belyi Curve %o Degree: %o</h4>\n", i, belyi_curve_degrees[i]);
         str *:= Sprintf("      <h4>Belyi Curve %o Naive Measure: %o</h4>\n", i, belyi_curve_measures[i]);
-        str *:= Sprintf("      <h4>Belyi Map %o Numerator: %o</h4>\n", i, belyi_map_numerators[i]);
-        str *:= Sprintf("      <h4>Belyi Map %o Denominator: %o</h4>\n", i, belyi_map_denominators[i]);
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <h4>Belyi Map %o Numerator:</h4>\n", i);
+        str *:= Sprintf("        %o\n", belyi_map_numerators[i]);
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <h4>Belyi Map %o Denominator:</h4>\n", i);
+        str *:= Sprintf("        %o\n", belyi_map_denominators[i]);
+        str *:= Sprintf("      </div>\n");
         str *:= Sprintf("    </div>\n");
       end for;
     // end and return
       str *:= Sprintf("    <br>\n");
       str *:= Sprintf("  </body>\n");
       str *:= Sprintf("</html>\n");
-      return str;
+  t1 := Cputime();
+  printf "POST : %o s\n", t1-t0;
+  return str;
 end intrinsic;
 
 intrinsic SolvableWebDataFiles(d::RngIntElt) -> MonStgElt
   {generate all data files for d equals 2 or larger.}
   lists := SolvableWebLists(d);
   for i := 1 to #lists do
-    vprintf Solvable : "i = %o out of %o\n", i, #lists;
     l := lists[i];
     name := SolvableWebName(l[1]);
+    vprintf Solvable : "i = %o out of %o : %o : #paths = %o : ", i, #lists, name, #l;
     filename := Sprintf("%o-data.html", name);
+    t0 := Cputime();
     str := SolvableWebDataText(l);
+    t1 := Cputime();
+    vprintf Solvable : "%o s\n", t1-t0;
     Write(Sprintf("web_files/%o", filename), str : Overwrite := true);
   end for;
   return_text := Sprintf("Successfully wrote %o web data files for degree %o\n", #lists, d);
