@@ -104,6 +104,8 @@ intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
         else
           error "latex parse error";
         end if;
+      else
+        i := j;
       end if;
     elif str[i] eq "y" then
       error "why are there ys?";
