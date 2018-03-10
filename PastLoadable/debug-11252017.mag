@@ -1,9 +1,0 @@
-// load "catalog.mag";
-load "doob.mag";
-SetVerbose("Solvable", 1);
-f := SolvableDBFilenames(2);
-s := SolvableDBAccessEntry(f[1]);
-below := s`SolvableDBGaloisOrbit[1];
-ramified, unramified, impossible := Coverings(below);
-
-covers := PossibleGaloisCoveringPermutationTriples(below : brutal := true);

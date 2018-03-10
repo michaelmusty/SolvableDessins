@@ -1,6 +1,0 @@
-bad := [];
-// Compositum
-Append(~bad, SolvableDBAccessEntry("32S12-4,8,8-g9-path19.m"));
-Append(~bad, SolvableDBAccessEntry("32S12-4,8,8-g9-path7.m"));
-Append(~bad, SolvableDBAccessEntry("32S12-8,4,8-g9-path19.m"));
-Append(~bad, SolvableDBAccessEntry("32S12-8,4,8-g9-path7.m"));
