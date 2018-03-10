@@ -12,11 +12,9 @@ Front Matter
   // directories in SolvableDessins repo
   code := repo cat "/Code/";
   db := repo cat "/SolvableDB/";
-  profiler := repo cat "/Profiler/";
-  examples := repo cat "/Examples/";
   // spec files
   AttachSpec(code cat "spec");
-  AttachSpec("~/Dropbox/belyi/Code/spec");
+  // AttachSpec("~/Dropbox/belyi/Code/spec");
 
 /*
 MAIN
