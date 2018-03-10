@@ -1,13 +1,5 @@
 {
-  auts.mag
-  optimize.mag
-  passports.mag
-  solvable.mag
-  solvable_above.mag
-  solvableDB.mag
-  solvable_graph.mag
-  solvableDBobj.mag
-  solvable_maps.mag
-  solvable_query.mag
-  solvable_web.mag
+  auts.m
+  passports.m
+  solvableDBobj.m
 }
