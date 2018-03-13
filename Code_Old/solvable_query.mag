@@ -1,0 +1,149 @@
+// user defined verbose flags for vprintf
+  declare verbose Solvable, 2;
+  declare verbose SolvableTime, 1;
+/*
+intrinsic SolvableSanityCheck(s::SolvableDBObject) -> BoolElt
+  {given a database object s, perform a detailed sanity check.}
+  sanity := true;
+  // check unramified children of s have s as an unramified parent
+  // TODO
+  // check ramified children of s have s as a ramified parent
+  // TODO
+  // if parents of s are computed
+  // then check unramified parents of s have s as an unramified child
+  // TODO
+  // if parents of s are computed
+  // then check ramified parents of s have s as an ramified child
+  // TODO
+  if assigned s`SolvableDBParents then
+    parents := s`SolvableDBParents;
+    l := s`SolvableDBLevel;
+    l_above := Integers()!(l*2);
+    names_above := SolvableDBFilenames(l_above);
+    for parent in parents do
+      parent_name := parent cat ".m";
+      if parent_name in names_above then
+      end if;
+    end for;
+  end if;
+  return sanity;
+end intrinsic;
+*/
+
+intrinsic DegreeGenusIsRamified(d::RngIntElt, g::RngIntElt, is_ramified::BoolElt) -> SeqEnum[SolvableDBObject]
+  {SeqEnum of SolvableDBObjects with given inputs.}
+  f := SolvableDBFilenames(d);
+  l := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
+    s_g := s`SolvableDBGenus;
+    s_isram := s`SolvableDBIsRamifiedAtEveryLevel;
+    if s_g eq g and s_isram eq is_ramified then
+      Append(~l, s);
+    end if;
+    vprintf Solvable : "done.\n";
+  end for;
+  return l;
+end intrinsic;
+
+intrinsic DegreeGenusIsLowGenusOrHyp(d::RngIntElt, g::RngIntElt, is_low_genus_or_hyp::BoolElt) -> SeqEnum[SolvableDBObject]
+  {SeqEnum of SolvableDBObjects with given inputs.}
+  f := SolvableDBFilenames(d);
+  l := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
+    if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
+      s_bool := s`SolvableDBIsLowGenusOrHyperelliptic;
+      s_g := s`SolvableDBGenus;
+      if s_g eq g and s_bool eq is_low_genus_or_hyp then
+        Append(~l, s);
+      end if;
+    end if;
+    vprintf Solvable : "done.\n";
+  end for;
+  return l;
+end intrinsic;
+
+intrinsic DegreeGenus(d::RngIntElt, g::RngIntElt) -> Any
+  {ram, unram sequences of SolvableDBObjects with given degree and genus.}
+  f := SolvableDBFilenames(d);
+  ram := [];
+  unram := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    vprintf Solvable : "%o (example %o of %o): ", s`SolvableDBName, i, #f;
+    s_g := s`SolvableDBGenus;
+    if s_g eq g then
+      if SolvableIsRamifiedAtEveryLevel(s) then
+        Append(~ram, s);
+      else
+        Append(~unram, s);
+      end if;
+    end if;
+    vprintf Solvable : "done.\n";
+  end for;
+  return ram, unram;
+end intrinsic;
+
+intrinsic MeasureBound(l::SeqEnum[SolvableDBObject], b::RngIntElt) -> SeqEnum
+  {given a SeqEnum of solvableDBobjs, measure them and return a SeqEnum of objs above bound.}
+  bad := [];
+  for i := 1 to #l do
+    if SolvableMeasure(l[i]) ge b then
+      Append(~bad, l[i]);
+    end if;
+  end for;
+  return bad;
+end intrinsic;
+
+// web lists -> query
+
+intrinsic SolvableFilenameWithoutPath(filename::MonStgElt) -> MonStgElt
+  {disregard path}
+  a,b,c := Regexp("(.*)-path", filename);
+  if a then
+    assert #c eq 1;
+    name := c[1];
+    assert #Split(name, "-") eq 3;
+    return name;
+  else
+    return filename;
+  end if;
+end intrinsic;
+
+intrinsic SolvableFilenamesWithoutPath(d::RngIntElt) -> Any
+  {for a degree d, sort names disregarding paths}
+  f := SolvableDBFilenames(d);
+  f_without_path := [ SolvableFilenameWithoutPath(name) : name in f ];
+  return SetToSequence(SequenceToSet(f_without_path));
+end intrinsic;
+
+intrinsic SolvableFilenameWithoutPathToList(str::MonStgElt) -> SeqEnum
+  {}
+  s := SolvableDBAccessEntry(str cat "-path1.m");
+  d := s`SolvableDBDegree;
+  f := SolvableDBFilenames(d);
+  name := SolvableFilenameWithoutPath(str);
+  l := [];
+  for i := 1 to #f do
+    if Regexp(name, f[i]) then
+      Append(~l, f[i]);
+    end if;
+  end for;
+  return l;
+end intrinsic;
+
+// user convenience
+
+intrinsic SolvablePassport(str::MonStgElt) -> Any
+  {}
+  l_str := SolvableFilenameWithoutPathToList(str);
+  l := [ SolvableDBAccessEntry(name) : name in l_str ];
+  return l, l_str;
+end intrinsic;
+
+intrinsic SolvableIsomorphismClasses(l::SeqEnum[SolvableDBObject]) -> Any
+  {}
+end intrinsic;

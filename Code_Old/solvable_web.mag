@@ -1,0 +1,778 @@
+intrinsic SolvableWebName(str::MonStgElt) -> MonStgElt
+  {}
+  return SolvableFilenameWithoutPath(str);
+end intrinsic;
+
+intrinsic SolvableWebName(s::SolvableDBObject) -> MonStgElt
+  {no path}
+  sigma := s`SolvableDBGaloisOrbit[1];
+  assert #sigma eq 3;
+  H := Parent(sigma[1]);
+  d := Degree(H);
+  G := sub<Sym(d)|sigma>;
+  assert IsTransitive(G);
+  a,b,c := Explode([Order(sigma[1]), Order(sigma[2]), Order(sigma[3])]);
+  if d gt 16 then
+    d, g := Explode(IdentifyGroup(G)); // small group identification
+    name := Sprintf("%oS%o-%o,%o,%o", d, g, a, b, c);
+  else
+    g, d := TransitiveGroupIdentification(G);
+    name := Sprintf("%oT%o-%o,%o,%o", d, g, a, b, c);
+  end if;
+  c0 := #CycleDecomposition(sigma[1]);
+  c1 := #CycleDecomposition(sigma[2]);
+  coo := #CycleDecomposition(sigma[3]);
+  genus := (d+2-c0-c1-coo)/2;
+  name *:= Sprintf("-g%o", genus);
+  return name;
+end intrinsic;
+
+/*
+intrinsic SolvableWebFilenames(d::RngIntElt) -> Any
+  {for a degree d, sort names disregarding paths}
+  f := SolvableDBFilenames(d);
+  f_web := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    Append(~f_web, SolvableWebName(s));
+  end for;
+  return SetToSequence(SequenceToSet(f_web));
+end intrinsic;
+*/
+
+intrinsic SolvableWebFilenames(d::RngIntElt) -> Any
+  {for a degree d, sort names disregarding paths}
+  return SolvableFilenamesWithoutPath(d);
+end intrinsic;
+
+/*
+intrinsic SolvableNameToList(str::MonStgElt) -> SeqEnum
+  {given a name from SolvableWebFilenames, return a SeqEnum of SolvableDBObjects that match that name after disregarding paths.}
+  s := SolvableDBAccessEntry(str cat "-path1.m");
+  d := s`SolvableDBDegree;
+  f := SolvableDBFilenames(d);
+  l := [];
+  for i := 1 to #f do
+    s := SolvableDBAccessEntry(f[i]);
+    if str eq SolvableWebName(s) then
+      Append(~l, s);
+    end if;
+  end for;
+  return l;
+end intrinsic;
+*/
+
+intrinsic SolvableNameToList(str::MonStgElt) -> SeqEnum
+  {given a name from SolvableWebFilenames, return a SeqEnum of SolvableDBObjects that match that name after disregarding paths.}
+  filenames := SolvableFilenameWithoutPathToList(str);
+  return [ SolvableDBAccessEntry(filename) : filename in filenames ];
+end intrinsic;
+
+intrinsic SolvableWebLists(d::RngIntElt) -> Any
+  {}
+  f := SolvableWebFilenames(d);
+  l := [];
+  vprintf Solvable : "# names = %o\n", #f;
+  for i := 1 to #f do
+    vprintf Solvable : "i = %o of %o\n", i, #f;
+    Append(~l, SolvableNameToList(f[i]));
+  end for;
+  return l;
+end intrinsic;
+
+intrinsic SolvableEquationParse(str::MonStgElt) -> MonStgElt
+  {}
+  str_new := "";
+  i := 1;
+  while i le #str do
+    if str[i] eq "x" then
+      str_new *:= "x_";
+      str_new *:= "{";
+      j := i+1;
+      while (j le #str) and (str[j] ne "*") and (str[j] ne " ") and (str[j] ne "^") do
+        str_new *:= str[j];
+        j +:= 1;
+      end while;
+      str_new *:= "}";
+      if j le #str then
+        if str[j] eq "*" then
+          i := j;
+        elif str[j] eq "^" then
+          i := j-1;
+        elif str[j] eq " " then
+          i := j-1;
+        else
+          error "latex parse error";
+        end if;
+      else
+        i := j;
+      end if;
+    elif str[i] eq "y" then
+      error "why are there ys?";
+      // str_new *:= "y_";
+    elif str[i] eq "^" then
+      str_new *:= str[i];
+      str_new *:= "{";
+      j := i+1;
+      while (j le #str) and (str[j] ne "*") and (str[j] ne " ") do
+        if str[j] ne "*" then
+          str_new *:= str[j];
+        end if;
+        j +:= 1;
+      end while;
+      str_new *:= "}";
+      if j le #str then
+        if str[j] ne "*" then
+          str_new *:= str[j];
+        end if;
+      end if;
+      i := j;
+    elif str[i] eq "n" then
+      assert str[i+1] eq "u";
+      str_new *:= "\\n";
+    elif str[i] eq "*" then
+      str_new *:= "";
+    elif str[i] eq "u" then
+      if (i lt #str) and str[i+1] eq "^" then
+        str_new *:= "u";
+      else
+        str_new *:= "u ";
+      end if;
+    else
+      str_new *:= str[i];
+    end if;
+    i +:= 1;
+  end while;
+  return str_new;
+end intrinsic;
+
+intrinsic SolvableCurveText(s::SolvableDBObject) -> SeqEnum[MonStgElt]
+  {}
+  equations := DefiningEquations(s`SolvableDBBelyiCurve);
+  equations_str := [];
+  for eqn in equations do
+    eqn_str := SolvableEquationParse(Sprintf("%o", eqn));
+    eqn_str := Sprintf("\\(%o\\)", eqn_str);
+    Append(~equations_str, eqn_str);
+  end for;
+  return equations_str;
+end intrinsic;
+
+intrinsic SolvableMapText(s::SolvableDBObject) -> MonStgElt, MonStgElt
+  {}
+  map := s`SolvableDBBelyiMap;
+  num := Numerator(map);
+  den := Denominator(map);
+  num_text := SolvableEquationParse(Sprintf("%o", num));
+  den_text := SolvableEquationParse(Sprintf("%o", den));
+  num_text := Sprintf("\\(%o\\)", num_text);
+  den_text := Sprintf("\\(%o\\)", den_text);
+  return num_text, den_text;
+end intrinsic;
+
+intrinsic SolvableWebGraphFiles(d::RngIntElt) -> MonStgElt
+  {generate all graph files for d equals 2 or larger.}
+  lists := SolvableWebLists(d);
+  for i := 1 to #lists do
+    l := lists[i];
+    name := SolvableWebName(l[1]);
+    vprintf Solvable : "i = %o out of %o : %o : #paths = %o : ", i, #lists, name, #l;
+    filename := Sprintf("%o-graph.html", name);
+    t0 := Cputime();
+    str := SolvableWebGraphText(l);
+    t1 := Cputime();
+    vprintf Solvable : "%o s\n", t1-t0;
+    Write(Sprintf("web_files/%o", filename), str : Overwrite := true);
+  end for;
+  return_text := Sprintf("Successfully wrote %o web graph files for degree %o\n", #lists, d);
+  return return_text;
+end intrinsic;
+
+intrinsic SolvableWebGraphText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
+  {given a list of SolvableDBObjects (all with the same webname), produce html text for name-graph.html file}
+  // setup
+    name, children, parents := SolvableWebGraphTextSetup(l);
+    str := "";
+  // head
+    str *:= Sprintf("<!doctype html>\n");
+    str *:= Sprintf("<html lang=\"en\">\n");
+    str *:= Sprintf("  <head>\n");
+    str *:= Sprintf("    <title>%o | graph</title>\n", name);
+    str *:= Sprintf("    <meta charset=\"UTF-8\">\n");
+    str *:= Sprintf("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
+    str *:= Sprintf("    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n");
+    str *:= Sprintf("    <script type=\"text/javascript\" src=\"vis.min.js\"></script>\n");
+    str *:= Sprintf("    <link type=\"text/css\" href=\"vis-network.min.css\">\n");
+    str *:= Sprintf("    <link href=\"entireframework.min.css\" rel=\"stylesheet\" type=\"text/css\">\n");
+    str *:= Sprintf("    <link rel=\"shortcut icon\" href=\"favicon.png\" type=\"image/x-icon\">\n");
+    str *:= Sprintf("    <script type=\"text/javascript\"\n");
+    str *:= Sprintf("      src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\">\n");
+    str *:= Sprintf("    </script>\n");
+    str *:= Sprintf("    <style type=\"text/css\">\n");
+    str *:= Sprintf("      html, body { padding: 0; margin: 0; width: 100%%; height: 100%%; } #mynetwork { width: 100%%; height: 100%%; border: 1px solid #444444; background-color: white; }\n");
+    str *:= Sprintf("    </style>\n");
+    str *:= Sprintf("  </head>\n");
+  // body html
+    str *:= Sprintf("  <body>\n");
+    str *:= Sprintf("    <nav class=\"nav\" onclick=\"this.focus()\">\n");
+    str *:= Sprintf("      <div class=\"container\">\n");
+    str *:= Sprintf("        <a class=\"pagename current\" href=\"index.html\">dessin explorer</a>\n");
+    str *:= Sprintf("      </div>\n");
+    str *:= Sprintf("    </nav>\n");
+    str *:= Sprintf("    <div class=\"container\">\n");
+    str *:= Sprintf("      <h2>%o</h2>\n", name);
+    str *:= Sprintf("    </div>\n");
+    str *:= Sprintf("    <div class=\"container\">\n");
+    str *:= Sprintf("      <div class=\"row\">\n");
+    str *:= Sprintf("        <a class=\"btn btn-a smooth\" href=\"%o-graph.html\">graph</a>\n", name);
+    str *:= Sprintf("        <a class=\"btn btn-b smooth\" href=\"%o-data.html\">data</a>\n", name);
+    str *:= Sprintf("      </div>\n");
+    str *:= Sprintf("    </div>\n");
+    str *:= Sprintf("    <div class=\"container\">\n");
+    str *:= Sprintf("      <div id=\"mynetwork\"></div>\n");
+    str *:= Sprintf("    </div>\n");
+  // body script
+    str *:= Sprintf("    <script type=\"text/javascript\">\n");
+    str *:= Sprintf("      var layoutMethod = \"directed\";\n");
+    str *:= Sprintf("      var nodes = new vis.DataSet([\n");
+    // center node
+    str *:= Sprintf("        {id: 'c', label: '%o', group: 'simple', url: '%o-graph.html'},\n", name, name);
+    // children nodes
+    for i := 1 to #children do
+      child := children[i];
+      str *:= Sprintf("        {id: 'b%o', label: '%o', group: 'simple', url:'%o-graph.html'},\n", i, child, child);
+    end for;
+    // parents nodes
+    for i := 1 to #parents do
+      parent := parents[i];
+      str *:= Sprintf("        {id: 'a%o', label: '%o', group: 'simple', url:'%o-graph.html'},\n", i, parent, parent);
+    end for;
+    str *:= Sprintf("      ]);\n");
+    str *:= Sprintf("      var edges = new vis.DataSet([\n");
+    // center -> children
+    for i := 1 to #children do
+      str *:= Sprintf("        {from: 'c', to: 'b%o'},\n", i);
+    end for;
+    // parents -> center
+    for i := 1 to #parents do
+      str *:= Sprintf("        {from: 'a%o', to: 'c'},\n", i);
+    end for;
+    str *:= Sprintf("      ]);\n");
+    str *:= Sprintf("      var container = document.getElementById('mynetwork');\n");
+    str *:= Sprintf("      var data = {\n");
+    str *:= Sprintf("        nodes: nodes,\n");
+    str *:= Sprintf("        edges: edges\n");
+    str *:= Sprintf("      };\n");
+    str *:= Sprintf("      var options = { nodes: { shape: 'box', size: 15, font: { size: 15, }, borderWidth: 1, shadow: true }, edges: { width: 2, shadow: true, smooth: true, arrows: {to : true } }, groups: { simple: { color: {background: 'white', border: 'black'} }, sizeN: { color: {background: 'red', border: 'black'} } }, interaction: { hover: true, zoomView: false }, layout: { randomSeed: 2, hierarchical: { sortMethod: layoutMethod } }, };\n");
+    str *:= Sprintf("      var network = new vis.Network(container, data, options);\n");
+    str *:= Sprintf("      let yMin = Number.MAX_SAFE_INTEGER\n");
+    str *:= Sprintf("      let yMax = Number.MIN_SAFE_INTEGER\n");
+    str *:= Sprintf("      nodes.forEach(node => {\n");
+    str *:= Sprintf("        const boundingBox = network.getBoundingBox(node.id)\n");
+    str *:= Sprintf("        if(boundingBox.top < yMin)\n");
+    str *:= Sprintf("          yMin = boundingBox.top\n");
+    str *:= Sprintf("        if(boundingBox.bottom > yMax)\n");
+    str *:= Sprintf("          yMax = boundingBox.bottom\n");
+    str *:= Sprintf("      })\n");
+    str *:= Sprintf("      const heightOffset = 50\n");
+    str *:= Sprintf("      const naturalHeight = yMax - yMin + heightOffset\n");
+    str *:= Sprintf("      container.style.height = naturalHeight + 'px'\n");
+    str *:= Sprintf("      network.redraw()\n");
+    str *:= Sprintf("      network.fit()\n");
+    str *:= Sprintf("      container.style.height = network.getScale() * naturalHeight + 'px'\n");
+    str *:= Sprintf("      network.redraw()\n");
+    str *:= Sprintf("      network.fit()\n");
+    str *:= Sprintf("      network.on(\"click\", function(params) {\n");
+    str *:= Sprintf("        if (params.nodes.length === 1) {\n");
+    str *:= Sprintf("          var node = nodes.get(params.nodes[0]);\n");
+    str *:= Sprintf("          window.open(node.url, '_self');\n");
+    str *:= Sprintf("        }\n");
+    str *:= Sprintf("      });\n");
+    str *:= Sprintf("    </script>\n");
+    str *:= Sprintf("  </body>\n");
+  // end
+  str *:= Sprintf("</html>");
+  return str;
+end intrinsic;
+
+intrinsic SolvableWebGraphTextSetup(l::SeqEnum[SolvableDBObject]) -> Any
+  {given a list of SolvableDBObjects (all with the same webname), produce name, children, parents for input to SolvableWebGraphText.}
+  // name
+    for s in l do
+      assert SolvableWebName(s) eq SolvableWebName(l[1]);
+    end for;
+    name := SolvableWebName(l[1]);
+  // children
+  if l[1]`SolvableDBDegree eq 2 then
+    children := ["PP1"];
+  else
+    children_web_names := [SolvableWebName(Child(l[i])) : i in [1..#l]];
+    children := SetToSequence(SequenceToSet(children_web_names));
+  end if;
+  // parents
+  parent_web_names := [];
+  for i := 1 to #l do
+    t0 := Cputime(); // fixed timing no longer necessary
+    parent_names := [SolvableWebName(ParentsNames(l[i])[j]) : j in [1..#ParentsNames(l[i])]];
+    parent_web_names cat:= parent_names;
+    t1 := Cputime();
+    // vprintf Solvable : "\n  computed (%o of %o) : #parents = %o : %o s", i, #l, #ParentsNames(l[i]), t1-t0;
+  end for;
+  // vprintf Solvable : "\n";
+  parents := SetToSequence(SequenceToSet(parent_web_names));
+  return name, children, parents;
+end intrinsic;
+
+intrinsic SolvableMaxGroupID(d::RngIntElt) -> RngIntElt
+  {}
+  f := SolvableDBFilenames(d);
+  ids := [];
+  for i := 1 to #f do
+    vprintf Solvable : "i = %o out of %o\n", i, #f;
+    s := SolvableDBAccessEntry(f[i]);
+    G := s`SolvableDBMonodromyGroup;
+    if d gt 16 then
+      _, id := Explode(IdentifyGroup(G));
+    else
+      id := TransitiveGroupIdentification(G);
+    end if;
+    Append(~ids, id);
+  end for;
+  return Max(ids);
+end intrinsic;
+
+// TODO don't access file directly
+intrinsic SolvableGroupHelper(d::RngIntElt, g::RngIntElt) -> SeqEnum[MonStgElt]
+  {given degree and group number return a SeqEnum of pathless names with those parameters.}
+  f := SolvableDBFilenames(d);
+  names := [];
+  for i := 1 to #f do
+    vprintf Solvable : "i = %o out of %o\n", i, #f;
+    s := SolvableDBAccessEntry(f[i]);
+    G := s`SolvableDBMonodromyGroup;
+    if d gt 16 then
+      _, g_test := Explode(IdentifyGroup(G));
+    else
+      g_test := TransitiveGroupIdentification(G);
+    end if;
+    if g_test eq g then
+      Append(~names, SolvableWebName(s));
+    end if;
+  end for;
+  return SetToSequence(SequenceToSet(names));
+end intrinsic;
+
+intrinsic SolvableIndexHelper(d::RngIntElt, g::RngIntElt) -> MonStgElt
+  {return html text for buttons...}
+  names := SolvableGroupHelper(d, g);
+  str := "";
+  str *:= Sprintf("    <div class=\"container\">\n");
+  if d gt 16 then
+    str *:= Sprintf("      <h3>%oS%o</h3>\n", d, g);
+  else
+    str *:= Sprintf("      <h3>%oT%o</h3>\n", d, g);
+  end if;
+  for name in names do
+    str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-data.html\">%o</a>\n", name, name);
+  end for;
+  str *:= Sprintf("    </div>\n");
+  return str;
+end intrinsic;
+
+intrinsic SolvableMakeIndexFile(l::SeqEnum[RngIntElt]) -> MonStgElt
+  {}
+  assert l eq [2,4,8,16,32,64];
+  group_list_2 := [1]; // max 1
+  group_list_4 := [1,2]; // max 2
+  group_list_8 := [1,2,4,5]; // max 5
+  group_list_16 := [1, 4, 5, 6, 8, 10, 12, 13, 14]; // max 14
+  group_list_32 := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]; // max 20
+  group_list_64 := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54]; // max 54
+  str := "";
+  // head
+    str *:= Sprintf("<!doctype html>\n");
+    str *:= Sprintf("<html lang=\"en\">\n");
+    str *:= Sprintf("  <head>\n");
+    str *:= Sprintf("    <title>dessin-explorer</title>\n");
+    str *:= Sprintf("    <meta charset=\"UTF-8\">\n");
+    str *:= Sprintf("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
+    str *:= Sprintf("    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n");
+    str *:= Sprintf("    <link href=\"entireframework.min.css\" rel=\"stylesheet\" type=\"text/css\">\n");
+    str *:= Sprintf("    <link rel=\"shortcut icon\" href=\"favicon.png\" type=\"image/x-icon\">\n");
+    str *:= Sprintf("    <script type=\"text/javascript\"\n");
+    str *:= Sprintf("      src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\">\n");
+    str *:= Sprintf("    </script>\n");
+    str *:= Sprintf("    <style type=\"text/css\">\n");
+    str *:= Sprintf("      html, body { padding: 0; margin: 0; width: 100%%; height: 100%%; }\n");
+    str *:= Sprintf("    </style>\n");
+    str *:= Sprintf("  </head>\n");
+  // setup
+    str *:= Sprintf("  <body>\n");
+    str *:= Sprintf("    <nav class=\"nav\" onclick=\"this.focus()\">\n");
+    str *:= Sprintf("      <div class=\"container\">\n");
+    str *:= Sprintf("        <a class=\"pagename current\" href=\"index.html\">dessin explorer</a>\n");
+    str *:= Sprintf("      </div>\n");
+    str *:= Sprintf("    </nav>\n");
+  // PP1
+    str *:= Sprintf("    <div class=\"container\">\n");
+    str *:= Sprintf("      <div class=\"row\">\n");
+    str *:= Sprintf("        <a class=\"btn btn-sm smooth\" href=\"PP1-data.html\">\\(\\mathbf{P}^1\\)</a>");
+    str *:= Sprintf("      </div>");
+    str *:= Sprintf("    </div>");
+  // degree 2
+    for g in group_list_2 do
+      str *:= SolvableIndexHelper(2, g);
+    end for;
+  // degree 4
+    for g in group_list_4 do
+      str *:= SolvableIndexHelper(4, g);
+    end for;
+  // degree 8
+    for g in group_list_8 do
+      str *:= SolvableIndexHelper(8, g);
+    end for;
+  // degree 16
+    for g in group_list_16 do
+      str *:= SolvableIndexHelper(16, g);
+    end for;
+  // degree 32
+    for g in group_list_32 do
+      str *:= SolvableIndexHelper(32, g);
+    end for;
+  // degree 64
+    for g in group_list_64 do
+      str *:= SolvableIndexHelper(64, g);
+    end for;
+  // end and return
+    str *:= Sprintf("    <br>\n");
+    str *:= Sprintf("  </body>\n");
+    str *:= Sprintf("</html>\n");
+    return str;
+end intrinsic;
+
+intrinsic SolvableMathJaxFieldText(K::FldNum) -> Any
+  {}
+  if Degree(K) eq 1 then
+    return "Rationals";
+  else
+    f := MinimalPolynomial(K.1);
+    nu_text := "";
+    f_coeffs := Eltseq(f);
+    for i := #f_coeffs to 2 by -1 do
+      if f_coeffs[i] ne Parent(f_coeffs[i])!0 then
+        if f_coeffs[i] eq Parent(f_coeffs[i])!1 then
+          nu_text *:= Sprintf("\\nu^{%o}+", i-1);
+        else
+          nu_text *:= Sprintf("%o\\nu^{%o}+", f_coeffs[i], i-1);
+        end if;
+      end if;
+    end for;
+    if f_coeffs[1] ne Parent(f_coeffs[1])!0 then
+      nu_text *:= Sprintf("%o", f_coeffs[1]);
+    end if;
+    return Sprintf("\\(%o\\), discriminant %o", nu_text, Factorization(Discriminant(K)));
+  end if;
+end intrinsic;
+
+intrinsic SolvableMathJaxFieldText(K::FldRat) -> Any
+  {}
+  return "Rationals";
+end intrinsic;
+
+intrinsic SolvableMathJax(s::SolvableDBObject) -> Any
+  {}
+  assert assigned s`SolvableDBBelyiCurve;
+  assert assigned s`SolvableDBBelyiMap;
+  X := s`SolvableDBBelyiCurve;
+  K := BaseField(X);
+  // curve
+  curve_text := SolvableCurveText(s); // list
+  // field
+  field_text := SolvableMathJaxFieldText(K);
+  // belyi map
+  num_text, den_text := SolvableMapText(s);
+  return curve_text, field_text, num_text, den_text;
+end intrinsic;
+
+intrinsic SolvableWebDataText(l::SeqEnum[SolvableDBObject]) -> MonStgElt
+  {given a list of SolvableDBObjects (all with the same webname), produce html text for name-data.html file}
+  ////////// PRE //////////
+  t0 := Cputime();
+    // name, children, parents
+      for s in l do
+        assert SolvableWebName(s) eq SolvableWebName(l[1]);
+      end for;
+      name, children, parents := SolvableWebGraphTextSetup(l); // TODO time consuming
+    // type
+      for s in l do
+        assert s`SolvableDBType eq l[1]`SolvableDBType;
+      end for;
+      type := l[1]`SolvableDBType;
+    // degree
+      for s in l do
+        assert s`SolvableDBDegree eq l[1]`SolvableDBDegree;
+      end for;
+      degree := l[1]`SolvableDBDegree;
+    // genus
+      for s in l do
+        assert s`SolvableDBGenus eq l[1]`SolvableDBGenus;
+      end for;
+      genus := l[1]`SolvableDBGenus;
+    /* depends on path!
+      // galois orbit size
+        for s in l do
+          assert #s`SolvableDBGaloisOrbit eq #l[1]`SolvableDBGaloisOrbit;
+        end for;
+        galois_orbit_size := #l[1]`SolvableDBGaloisOrbit;
+      // sigma0
+        sigma0 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][1]);
+      // sigma1
+        sigma1 := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][2]);
+      // sigmaoo
+        sigmaoo := Sprintf("%o", l[1]`SolvableDBGaloisOrbit[1][3]);
+    */
+    // passport size
+      for s in l do
+        assert #s`SolvableDBPassport eq #l[1]`SolvableDBPassport;
+      end for;
+      passport_size := #l[1]`SolvableDBPassport;
+    // pointed size
+      for s in l do
+        assert #s`SolvableDBPointedPassport eq #l[1]`SolvableDBPointedPassport;
+      end for;
+      pointed_size := #l[1]`SolvableDBPointedPassport;
+    // list of path names
+      path_names := [];
+      for s in l do
+        Append(~path_names, s`SolvableDBName);
+      end for;
+    // list of Galois orbits
+      galois_orbits := [];
+      for s in l do
+        Append(~galois_orbits, s`SolvableDBGaloisOrbit);
+      end for;
+    // TODO this takes the time in PRE
+    // belyi curves
+    // base fields
+    // belyi map numerators,denominators
+      belyi_curves := [];
+      belyi_curves_names := [];
+      base_fields := [];
+      belyi_map_numerators := [];
+      belyi_map_denominators := [];
+      for s in l do
+        if assigned s`SolvableDBBelyiCurve then
+          assert assigned s`SolvableDBBelyiMap;
+          curve_text, field_text, num_text, den_text := SolvableMathJax(s); // TODO time consuming!
+          Append(~belyi_curves_names, s`SolvableDBName);
+          Append(~belyi_curves, curve_text);
+          Append(~base_fields, field_text);
+          Append(~belyi_map_numerators, num_text);
+          Append(~belyi_map_denominators, den_text);
+        end if;
+      end for;
+    // belyi curve degrees
+      belyi_curve_degrees := [];
+      for s in l do
+        if assigned s`SolvableDBBelyiCurve then
+          if IsProjective(s`SolvableDBBelyiCurve) then
+            Append(~belyi_curve_degrees, Degree(s`SolvableDBBelyiCurve));
+          else
+            Append(~belyi_curve_degrees, Degree(ProjectiveClosure(s`SolvableDBBelyiCurve)));
+          end if;
+        end if;
+      end for;
+    // belyi curve measures
+      belyi_curve_measures := [];
+      for s in l do
+        if assigned s`SolvableDBBelyiCurve then
+          Append(~belyi_curve_measures, SolvableMeasure(s));
+        end if;
+      end for;
+    // assertions
+      assert #belyi_curves eq #belyi_curve_measures;
+      assert #belyi_curves eq #belyi_curve_degrees;
+      assert #belyi_curves eq #belyi_map_denominators;
+      assert #belyi_curves eq #belyi_map_numerators;
+      assert #belyi_curves eq #base_fields;
+  t1 := Cputime();
+  printf "\nPRE : %o s\n", t1-t0;
+  ///////// POST //////////
+  t0 := Cputime();
+    str := "";
+    // head
+      str *:= Sprintf("<!doctype html>\n");
+      str *:= Sprintf("<html lang=\"en\">\n");
+      str *:= Sprintf("  <head>\n");
+      str *:= Sprintf("    <title>%o | data</title>\n", name);
+      str *:= Sprintf("    <meta charset=\"UTF-8\">\n");
+      str *:= Sprintf("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
+      str *:= Sprintf("    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n");
+      str *:= Sprintf("    <link href=\"entireframework.min.css\" rel=\"stylesheet\" type=\"text/css\">\n");
+      str *:= Sprintf("    <link rel=\"shortcut icon\" href=\"favicon.png\" type=\"image/x-icon\">\n");
+      str *:= Sprintf("    <script type=\"text/javascript\"\n");
+      str *:= Sprintf("      src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML\">\n");
+      str *:= Sprintf("    </script>\n");
+      str *:= Sprintf("    <style type=\"text/css\">\n");
+      str *:= Sprintf("      html, body { padding: 0; margin: 0; width: 100%%; height: 100%%; }\n");
+      str *:= Sprintf("    </style>\n");
+      str *:= Sprintf("  </head>\n");
+    // body
+      // setup
+        str *:= Sprintf("  <body>\n");
+        str *:= Sprintf("    <nav class=\"nav\" onclick=\"this.focus()\">\n");
+        str *:= Sprintf("      <div class=\"container\">\n");
+        str *:= Sprintf("        <a class=\"pagename current\" href=\"index.html\">dessin explorer</a>\n");
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("    </nav>\n");
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <h2>%o</h2>\n", name);
+        str *:= Sprintf("    </div>\n");
+      // graph and data links
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <a class=\"btn btn-a smooth\" href=\"%o-graph.html\">graph</a>\n", name);
+        str *:= Sprintf("        <a class=\"btn btn-b smooth\" href=\"%o-data.html\">data</a>\n", name);
+        str *:= Sprintf("      </div>\n");
+      // Table: name, type, degree, genus, galois orbit size, sigma0, sigma1, sigmaoo, passport size, pointed size
+        str *:= Sprintf("      <table class=\"table\">\n");
+        str *:= Sprintf("        <tbody>\n");
+        // name
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Name</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", name);
+        str *:= Sprintf("          </tr>\n");
+        // type
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Type</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", type);
+        str *:= Sprintf("          </tr>\n");
+        // degree
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Degree</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", degree);
+        str *:= Sprintf("          </tr>\n");
+        // genus
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Genus</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", genus);
+        str *:= Sprintf("          </tr>\n");
+        /* these depend on path!
+          // galois orbit size
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>Galois orbit size</td>\n");
+          str *:= Sprintf("            <td>%o</td>\n", galois_orbit_size);
+          str *:= Sprintf("          </tr>\n");
+          // sigma0
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>\\(\\sigma_0\\)</td>\n");
+          str *:= Sprintf("            <td>%o</td>\n", sigma0);
+          str *:= Sprintf("          </tr>\n");
+          // sigma1
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>\\(\\sigma_1\\)</td>\n");
+          str *:= Sprintf("            <td>%o</td>\n", sigma1);
+          str *:= Sprintf("          </tr>\n");
+          // sigmaoo
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>\\(\\sigma_\\infty\\)</td>\n");
+          str *:= Sprintf("            <td>%o</td>\n", sigmaoo);
+          str *:= Sprintf("          </tr>\n");
+        */
+        // galois orbit for each path
+        for s in l do
+          str *:= Sprintf("          <tr>\n");
+          str *:= Sprintf("            <td>Galois orbit size for %o</td>\n", s`SolvableDBName);
+          str *:= Sprintf("            <td>%o</td>\n", #s`SolvableDBGaloisOrbit);
+          str *:= Sprintf("          </tr>\n");
+        end for;
+        // passport size
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Passport size</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", passport_size);
+        str *:= Sprintf("          </tr>\n");
+        // pointed size
+        str *:= Sprintf("          <tr>\n");
+        str *:= Sprintf("            <td>Pointed size</td>\n");
+        str *:= Sprintf("            <td>%o</td>\n", pointed_size);
+        str *:= Sprintf("          </tr>\n");
+        // end table
+        str *:= Sprintf("        </tbody>\n");
+        str *:= Sprintf("      </table>\n");
+        str *:= Sprintf("    </div>\n");
+      // parents
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <h3>Above</h3>\n");
+        for i := 1 to #parents do
+          str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-data.html\">%o</a>\n", parents[i], parents[i]);
+        end for;
+        str *:= Sprintf("    </div>\n");
+      // children
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <h3>Below</h3>\n");
+        for i := 1 to #children do
+          str *:= Sprintf("      <a class=\"btn btn-sm smooth\" href=\"%o-data.html\">%o</a>\n", children[i], children[i]);
+        end for;
+        str *:= Sprintf("    </div>\n");
+      // belyi curves
+      // base fields
+      // belyi curve degrees
+      // belyi curve measures
+      // belyi map numerators
+      // belyi map denominators
+      for i := 1 to #belyi_curves do
+        // curve
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <div class=\"row\">\n");
+        // str *:= Sprintf("        <h3>Belyi Curve %o</h3>\n", i);
+        str *:= Sprintf("        <h3>Belyi Curve %o: %o</h3>\n", i, belyi_curves_names[i]);
+        for j := 1 to #belyi_curves[i]-1 do
+          str *:= Sprintf("        %o\n", belyi_curves[i][j]);
+          str *:= Sprintf("        <br>\n");
+        end for;
+        str *:= Sprintf("        %o\n", belyi_curves[i][#belyi_curves[i]]);
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("    </div>\n");
+        // field, degree, measure
+        // numerators
+        // denominators
+        str *:= Sprintf("    <div class=\"container\">\n");
+        str *:= Sprintf("      <h4>Belyi Curve %o Base Field: %o</h4>\n", i, base_fields[i]);
+        str *:= Sprintf("      <h4>Belyi Curve %o Degree: %o</h4>\n", i, belyi_curve_degrees[i]);
+        str *:= Sprintf("      <h4>Belyi Curve %o Naive Measure: %o</h4>\n", i, belyi_curve_measures[i]);
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <h4>Belyi Map %o Numerator:</h4>\n", i);
+        str *:= Sprintf("        %o\n", belyi_map_numerators[i]);
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("      <div class=\"row\">\n");
+        str *:= Sprintf("        <h4>Belyi Map %o Denominator:</h4>\n", i);
+        str *:= Sprintf("        %o\n", belyi_map_denominators[i]);
+        str *:= Sprintf("      </div>\n");
+        str *:= Sprintf("    </div>\n");
+      end for;
+    // end and return
+      str *:= Sprintf("    <br>\n");
+      str *:= Sprintf("  </body>\n");
+      str *:= Sprintf("</html>\n");
+  t1 := Cputime();
+  printf "POST : %o s\n", t1-t0;
+  return str;
+end intrinsic;
+
+intrinsic SolvableWebDataFiles(d::RngIntElt) -> MonStgElt
+  {generate all data files for d equals 2 or larger.}
+  lists := SolvableWebLists(d);
+  for i := 1 to #lists do
+    l := lists[i];
+    name := SolvableWebName(l[1]);
+    vprintf Solvable : "i = %o out of %o : %o : #paths = %o : ", i, #lists, name, #l;
+    filename := Sprintf("%o-data.html", name);
+    t0 := Cputime();
+    str := SolvableWebDataText(l);
+    t1 := Cputime();
+    vprintf Solvable : "%o s\n", t1-t0;
+    Write(Sprintf("web_files/%o", filename), str : Overwrite := true);
+  end for;
+  return_text := Sprintf("Successfully wrote %o web data files for degree %o\n", #lists, d);
+  return return_text;
+end intrinsic;

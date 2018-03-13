@@ -1,0 +1,174 @@
+declare type SolvableDBObject;
+declare attributes SolvableDBObject:
+  // easy attributes
+  SolvableDBName,
+  SolvableDBFilename,
+  SolvableDBPathNumber,
+  SolvableDBDegree,
+  SolvableDBABC,
+  SolvableDBType,
+  SolvableDBGenus,
+  SolvableDBGaloisOrbitSize,
+  SolvableDBPassportSize,
+  SolvableDBPointedPassportSize,
+  SolvableDBLevel,
+  SolvableDBBlocks, // TODO
+  SolvableDBBelyiMapTiming,
+  SolvableDBLowDegreeTiming,
+  SolvableDBSanityCheckTiming,
+  SolvableDBLocalSanityCheckTiming,
+  SolvableDBLocalSanityCheckPrime,
+  SolvableDBIsLowGenusOrHyperelliptic,
+  SolvableDBIsRamifiedAtEveryLevel,
+  // permutation attributes
+  SolvableDBGaloisOrbit,
+  SolvableDBPassport,
+  SolvableDBPointedPassport,
+  SolvableDBMonodromyGroup,
+  SolvableDBAutomorphismGroup, // TODO new
+  SolvableDBPointedAutomorphismGroup, // TODO new
+  // curve function fields
+  SolvableDBCurveBaseFieldList, // [F0, F1]
+  SolvableDBCurvePolynomialRingList, // [PX0, PX1]
+  SolvableDBCurveAmbientList, // [AA0, AA1]
+  SolvableDBCurveIdealList, // [I0, I1]
+  SolvableDBCurveList, // [X0, X1]
+  // extract attributes
+  SolvableDBExtractNumerator, // Numerator(f)
+  SolvableDBExtractDenominator, // Denominator(f)
+  // Belyi map attributes
+  SolvableDBBelyiCurve, // X
+  SolvableDBBelyiMap, // phi
+  // graph attributes
+  SolvableDBPathToPP1,
+  SolvableDBParents,
+  SolvableDBChildren,
+  // temporary attributes (not saved to database)
+  SolvableDBResidueField0,
+  SolvableDBResidueField1,
+  SolvableDBResidueFieldoo,
+  SolvableDBDivisor0,
+  SolvableDBDivisor1,
+  SolvableDBDivisoroo,
+  SolvableDBRamificationDivisorBeforeBaseChange,
+  SolvableDBRamificationDivisorAfterBaseChange,
+  SolvableDBRamification; // [ram0, ram1, ramoo]
+
+intrinsic Print(s::SolvableDBObject)
+  {Print SolvableDBObject}
+  printf "SolvableDBObject %o:\n", s`SolvableDBName;
+  printf "Degree %o\n", s`SolvableDBDegree;
+  printf "Genus %o\n", s`SolvableDBGenus;
+  printf "%o\n", s`SolvableDBType;
+  printf "Galois Orbit Size %o\n", s`SolvableDBGaloisOrbitSize;
+  printf "Passport Size %o\n", s`SolvableDBPassportSize;
+  printf "Pointed Passport Size %o\n", s`SolvableDBPointedPassportSize;
+  if assigned s`SolvableDBPathToPP1 then
+    printf "PathToPP1:\n";
+    for i := #s`SolvableDBPathToPP1 to 1 by -1 do
+      printf "  %o\n", s`SolvableDBPathToPP1[i];
+    end for;
+  end if;
+  printf "Children:\n";
+  if assigned s`SolvableDBChildren and #s`SolvableDBChildren gt 0 then
+    for i in [1..#s`SolvableDBChildren] do
+      printf "  %o\n", s`SolvableDBChildren[i];
+    end for;
+  else
+    printf "  Children not computed yet :(\n";
+  end if;
+  printf "Parents:\n";
+  if assigned s`SolvableDBParents then
+    if #s`SolvableDBParents gt 0 then
+      for i in [1..#s`SolvableDBParents] do
+        printf "  %o\n", s`SolvableDBParents[i];
+      end for;
+    else
+      printf "  None\n";
+    end if;
+  else
+    printf "  Parents not computed yet :(\n";
+  end if;
+  if assigned s`SolvableDBBelyiCurve then
+    printf "BelyiMap computed :)\n";
+  else
+    unram := not SolvableIsRamifiedAtEveryLevel(s);
+    if unram then
+      printf "Cover is unramified at some level.\n";
+    else
+      printf "BelyiMap not computed yet :(\n";
+    end if;
+  end if;
+  if assigned s`SolvableDBBelyiCurve and SolvableIsRamifiedAtEveryLevel(s) then
+    printf "BelyiCurve:\n";
+    printf "%o: ", s`SolvableDBName;
+    if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
+      if s`SolvableDBIsLowGenusOrHyperelliptic then
+        if s`SolvableDBGenus in [0,1] then
+          printf "Low genus\n";
+        else
+          printf "Hyperelliptic\n";
+        end if;
+      else
+        printf "Nonhyperelliptic\n";
+      end if;
+    else
+      printf "Low degree model not computed!\n";
+    end if;
+    printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
+    printf "BaseField:\n";
+    printf "%o\n", BaseField(s`SolvableDBBelyiCurve);
+    if ISA(Type(BaseField(s`SolvableDBBelyiCurve)), FldNum) then
+      printf "Generators:\n";
+      printf "%o\n", GeneratorsSequence(BaseField(s`SolvableDBBelyiCurve));
+    end if;
+  end if;
+  if assigned s`SolvableDBBelyiMapTiming then
+    printf "Timing:\n";
+    printf "BelyiMap       : %o seconds.\n", s`SolvableDBBelyiMapTiming;
+  end if;
+  if assigned s`SolvableDBLowDegreeTiming then
+    printf "LowDegreeModel : %o seconds.\n", s`SolvableDBLowDegreeTiming;
+  end if;
+  if assigned s`SolvableDBSanityCheckTiming then
+    printf "SanityCheck    : %o seconds.\n", s`SolvableDBSanityCheckTiming;
+  end if;
+  if assigned s`SolvableDBLocalSanityCheckTiming then
+    printf "LocalSanity    : %o seconds.\n", s`SolvableDBLocalSanityCheckTiming;
+    printf "p = %o\n", s`SolvableDBLocalSanityCheckPrime;
+  end if;
+  if assigned s`SolvableDBBelyiCurve then
+    printf "Naive Measure of Curve:\n";
+    printf "%o\n", SolvableMeasure(s);
+  end if;
+end intrinsic;
+
+intrinsic SolvableCopy(s::SolvableDBObject) -> SolvableDBObject
+  {new instance of SolvableDBObject.}
+  after := SolvableDBObjectInitialize();
+  for attr in GetAttributes(Type(s)) do
+    if assigned s``attr then
+      after``attr := s``attr;
+    end if;
+  end for;
+  return after;
+end intrinsic;
+
+intrinsic 'eq'(s::SolvableDBObject, t::SolvableDBObject) -> BoolElt
+  {Return whether s is equal to t.}
+  isSame := true;
+  for attr in GetAttributes(Type(s)) do
+    if Type(s``attr) ne Type(t``attr) then
+      isSame := false;
+    elif s``attr ne t``attr then
+      isSame := false;
+    end if;
+  end for;
+  return isSame;
+end intrinsic;
+
+intrinsic SolvableDBObjectInitialize() -> SolvableDBObject
+  {Create an empty SolvableDBObject.}
+  s := New(SolvableDBObject);
+  return s;
+end intrinsic;
