@@ -1,21 +1,21 @@
-s := SolvableDBObjectInitialize();
+s := SolvableDBInitialize();
 
 /*
 Basic Information about the Passport
 */
 
 s`SolvableDBName := "2T1-2,2,1-g0-path1";
-s`SolvableDBFilename := "2T1-2,2,1-g0-path1.m";
+s`SolvableDBFilename := "2T1-2,2,1-g0-path1-computed.m";
+s`SolvableDBPassportName := "2T1-2,2,1-g0";
 s`SolvableDBPathNumber := 1;
 s`SolvableDBDegree := 2;
-s`SolvableDBABC := \[ 2, 2, 1 ];
+s`SolvableDBOrders := \[ 2, 2, 1 ];
 s`SolvableDBType := "Spherical";
 s`SolvableDBGenus := 0;
 s`SolvableDBGaloisOrbitSize := 1;
 s`SolvableDBPassportSize := 1;
 s`SolvableDBPointedPassportSize := 1;
 s`SolvableDBLevel := 1;
-s`SolvableDBSanityCheckTiming := 0.0200000000000000p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 
@@ -88,7 +88,7 @@ Graph Data
 */
 
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1" ];
-s`SolvableDBChildren := [ Strings() | "PP1" ];
+s`SolvableDBChild := "PP1";
 
 /*
 Return for eval

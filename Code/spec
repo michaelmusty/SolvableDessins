@@ -2,4 +2,6 @@
   auts.m
   passports.m
   solvableDBobj.m
+  solvableDB.m
+  timing_and_measure.m
 }

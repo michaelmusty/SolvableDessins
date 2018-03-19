@@ -2,53 +2,51 @@ declare verbose Solvable, 2;
 declare type SolvableDB;
 declare attributes SolvableDB:
   // easy attributes
-  SolvableDBName,
-  SolvableDBFilename,
-  SolvableDBPassportName,
-  SolvableDBPathNumber,
-  SolvableDBDegree,
-  SolvableDBABC,
-  SolvableDBType,
-  SolvableDBGenus,
-  SolvableDBGaloisOrbitSize,
-  SolvableDBPassportSize,
-  SolvableDBPointedPassportSize,
-  SolvableDBLevel,
-  SolvableDBBlocks,
-  SolvableDBBelyiMapTiming,
-  SolvableDBLowDegreeTiming,
-  SolvableDBSanityCheckTiming,
-  SolvableDBLocalSanityCheckTiming,
-  SolvableDBLocalSanityCheckPrime,
-  SolvableDBIsLowGenusOrHyperelliptic,
-  SolvableDBIsRamifiedAtEveryLevel,
+    SolvableDBName,
+    SolvableDBFilename,
+    SolvableDBPassportName,
+    SolvableDBPathNumber,
+    SolvableDBDegree,
+    SolvableDBOrders,
+    SolvableDBType,
+    SolvableDBGenus,
+    SolvableDBGaloisOrbitSize,
+    SolvableDBPassportSize,
+    SolvableDBPointedPassportSize,
+    SolvableDBLevel,
+    SolvableDBBlocks,
+    SolvableDBBelyiMapTiming,
+    SolvableDBLowDegreeTiming,
+    SolvableDBSanityCheckTiming,
+    SolvableDBLocalSanityCheckTiming,
+    SolvableDBLocalSanityCheckPrime,
+    SolvableDBIsLowGenusOrHyperelliptic,
+    SolvableDBIsRamifiedAtEveryLevel,
+    SolvableDBMeasure,
   // permutation attributes
-  SolvableDBGaloisOrbit,
-  SolvableDBPassport,
-  SolvableDBPointedPassport,
-  SolvableDBMonodromyGroup,
-  SolvableDBAutomorphismGroup,
-  SolvableDBPointedAutomorphismGroup,
-  // extract attributes
-  SolvableDBExtractNumerator, // Numerator(f)
-  SolvableDBExtractDenominator, // Denominator(f)
-  // Belyi map attributes
-  SolvableDBBelyiCurve, // X
-  SolvableDBBelyiMap, // phi
+    SolvableDBGaloisOrbit,
+    SolvableDBPassport,
+    SolvableDBPointedPassport,
+    SolvableDBMonodromyGroup,
+    SolvableDBAutomorphismGroup,
+    SolvableDBPointedAutomorphismGroup,
   // graph attributes
-  SolvableDBPathToPP1,
-  SolvableDBParents,
-  SolvableDBChild,
+    SolvableDBPathToPP1,
+    SolvableDBParents,
+    SolvableDBChild,
+  // Belyi map attributes
+    SolvableDBBelyiCurve, // X
+    SolvableDBBelyiMap, // phi
   // temporary attributes (not saved to database)
-  SolvableDBResidueField0,
-  SolvableDBResidueField1,
-  SolvableDBResidueFieldoo,
-  SolvableDBDivisor0,
-  SolvableDBDivisor1,
-  SolvableDBDivisoroo,
-  SolvableDBRamificationDivisorBeforeBaseChange,
-  SolvableDBRamificationDivisorAfterBaseChange,
-  SolvableDBRamification; // [ram0, ram1, ramoo]
+    SolvableDBResidueField0,
+    SolvableDBResidueField1,
+    SolvableDBResidueFieldoo,
+    SolvableDBDivisor0,
+    SolvableDBDivisor1,
+    SolvableDBDivisoroo,
+    SolvableDBRamificationDivisorBeforeBaseChange,
+    SolvableDBRamificationDivisorAfterBaseChange,
+    SolvableDBRamification; // [ram0, ram1, ramoo]
 
 intrinsic Print(s::SolvableDB)
   {Print SolvableDB}
@@ -65,13 +63,11 @@ intrinsic Print(s::SolvableDB)
       printf "  %o\n", s`SolvableDBPathToPP1[i];
     end for;
   end if;
-  printf "Child:\n";
+  printf "Child: ";
   if assigned s`SolvableDBChild and #s`SolvableDBChild gt 0 then
-    for i in [1..#s`SolvableDBChild] do
-      printf "  %o\n", s`SolvableDBChild[i];
-    end for;
+    printf "%o\n", s`SolvableDBChild;
   else
-    printf "  Child not computed yet :(\n";
+    error "Child not computed yet :(\n";
   end if;
   printf "Parents:\n";
   if assigned s`SolvableDBParents then
@@ -88,14 +84,15 @@ intrinsic Print(s::SolvableDB)
   if assigned s`SolvableDBBelyiCurve then
     printf "BelyiMap computed :)\n";
   else
-    unram := not SolvableIsRamifiedAtEveryLevel(s);
+    // unram := not SolvableIsRamifiedAtEveryLevel(s);
+    unram := not s`SolvableDBIsRamifiedAtEveryLevel;
     if unram then
       printf "Cover is unramified at some level.\n";
     else
       printf "BelyiMap not computed yet :(\n";
     end if;
   end if;
-  if assigned s`SolvableDBBelyiCurve and SolvableIsRamifiedAtEveryLevel(s) then
+  if assigned s`SolvableDBBelyiCurve and s`SolvableDBIsRamifiedAtEveryLevel then
     printf "BelyiCurve:\n";
     printf "%o: ", s`SolvableDBName;
     if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
@@ -139,7 +136,7 @@ intrinsic Print(s::SolvableDB)
   end if;
 end intrinsic;
 
-intrinsic SolvableCopy(s::SolvableDB) -> SolvableDB
+intrinsic SolvableDBCopy(s::SolvableDB) -> SolvableDB
   {new instance of SolvableDB.}
   after := SolvableDBInitialize();
   for attr in GetAttributes(Type(s)) do
@@ -291,16 +288,6 @@ end intrinsic;
 intrinsic PointedAutomorphismGroup(s::SolvableDB) -> GrpPerm
   {}
   s`SolvableDBPointedAutomorphismGroup;
-end intrinsic;
-
-intrinsic ExtractNumerator(s::SolvableDB) -> FldFunFracSchElt
-  {Numerator(f) where the Belyi curve of s is obtained by extracting a sqrt of f.}
-  s`SolvableDBExtractNumerator;
-end intrinsic;
-
-intrinsic ExtractDenominator(s::SolvableDB) -> FldFunFracSchElt
-  {Denominator(f) where the Belyi curve of s is obtained by extracting a sqrt of f.}
-  s`SolvableDBExtractDenominator;
 end intrinsic;
 
 intrinsic BelyiCurve(s::SolvableDB) -> Crv

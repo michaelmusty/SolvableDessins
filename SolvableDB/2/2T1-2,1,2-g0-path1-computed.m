@@ -1,14 +1,15 @@
-s := SolvableDBObjectInitialize();
+s := SolvableDBInitialize();
 
 /*
 Basic Information about the Passport
 */
 
-s`SolvableDBName := "2T1-1,2,2-g0-path1";
-s`SolvableDBFilename := "2T1-1,2,2-g0-path1.m";
+s`SolvableDBName := "2T1-2,1,2-g0-path1";
+s`SolvableDBFilename := "2T1-2,1,2-g0-path1-computed.m";
+s`SolvableDBPassportName := "2T1-2,1,2-g0";
 s`SolvableDBPathNumber := 1;
 s`SolvableDBDegree := 2;
-s`SolvableDBABC := \[ 1, 2, 2 ];
+s`SolvableDBOrders := \[ 2, 1, 2 ];
 s`SolvableDBType := "Spherical";
 s`SolvableDBGenus := 0;
 s`SolvableDBGaloisOrbitSize := 1;
@@ -28,8 +29,8 @@ s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<2 |
 [ PermutationGroup<2 |  
 \[ 2, 1 ]:
  Order := 2 > |
-[ 1, 2 ],
 [ 2, 1 ],
+[ 1, 2 ],
 [ 2, 1 ]
 ]
 ];
@@ -39,8 +40,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<2 |
 [ PermutationGroup<2 |  
 \[ 2, 1 ]:
  Order := 2 > |
-[ 1, 2 ],
 [ 2, 1 ],
+[ 1, 2 ],
 [ 2, 1 ]
 ]
 ];
@@ -56,14 +57,16 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<2 |
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<2 |  
-\[ 1, 2 ],
 \[ 2, 1 ],
+\[ 1, 2 ],
 \[ 2, 1 ]:
  Order := 2 >;
 s`SolvableDBAutomorphismGroup := PermutationGroup<2 |  
 \[ 2, 1 ]:
  Order := 2 >;
-s`SolvableDBPointedAutomorphismGroup := PermutationGroup<2 |   >;
+s`SolvableDBPointedAutomorphismGroup := PermutationGroup<2 |  
+\[ 2, 1 ]:
+ Order := 2 >;
 
 /*
 Top Level Belyi Curve/Map
@@ -73,19 +76,19 @@ K := Rationals();
 PX<x1, x2> := PolynomialRing(K, 2);
 AA<x1, x2> := AffineSpace(PX);
 I<x1, x2> := ideal< PX | [
-x1 - x2^2 - 1
+x1 - x2^2
 ] >;
 X<x1, x2> := Curve(AA, I);
 KX<x1, x2> := FunctionField(X);
 s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!(x2^2 + 1);
+s`SolvableDBBelyiMap := KX!(x2^2);
 
 /*
 Graph Data
 */
 
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1" ];
-s`SolvableDBChildren := [ Strings() | "PP1" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1" ];
+s`SolvableDBChild := "PP1";
 
 /*
 Return for eval
