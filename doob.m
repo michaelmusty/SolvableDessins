@@ -1,7 +1,6 @@
 /*
 Front Matter
 */
-asdf
   // sarunas install
   a,b,c := GetVersion();
   if [a,b,c] eq [2,21,12] then
