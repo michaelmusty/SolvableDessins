@@ -167,6 +167,7 @@ intrinsic SolvableDBAttributesEasyAssigned(s::SolvableDB) -> SeqEnum[MonStgElt]
   for attr in easy do
     if assigned s``attr then
       Append(~ass, attr);
+      Append(~ass, attr);
     end if;
   end for;
   return ass;
@@ -216,7 +217,7 @@ intrinsic SolvableDBCurveWriter(X::Crv : field_name := "K", generator_name := "n
   assert IsAffine(X);
   str := "";
   str *:= SolvableDBFieldWriter(K : field_name := field_name, generator_name := generator_name);
-  P := 
+  P :=
 end intrinsic;
 
 // TODO
