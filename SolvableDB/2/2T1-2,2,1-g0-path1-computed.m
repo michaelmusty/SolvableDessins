@@ -1,7 +1,35 @@
 s := SolvableDBInitialize();
 
 /*
-Basic Information about the Passport
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K := Rationals();
+P<x1, x2> := PolynomialRing(K, 2);
+A<x1, x2> := AffineSpace(P);
+I<x1, x2> := ideal< P | [
+x1*x2^2 - x1 + 1
+] >;
+X<x1, x2> := Curve(A, I);
+
+/* Belyi map */
+K := Rationals();
+P<x1, x2> := PolynomialRing(K, 2);
+A<x1, x2> := AffineSpace(P);
+I<x1, x2> := ideal< P | [
+x1*x2^2 - x1 + 1
+] >;
+X<x1, x2> := Curve(A, I);
+KX<x1, x2> := FunctionField(X);
+phi := KX!(-1/(x2^2 - 1));
+
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
+Magma printing
 */
 
 s`SolvableDBName := "2T1-2,2,1-g0-path1";
@@ -18,11 +46,6 @@ s`SolvableDBPointedPassportSize := 1;
 s`SolvableDBLevel := 1;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
-
-/*
-Permutations and Passports
-*/
-
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<2 |  
 \[ 2, 1 ]:
  Order := 2 >) |
@@ -67,26 +90,6 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<2 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<2 |  
 \[ 2, 1 ]:
  Order := 2 >;
-
-/*
-Top Level Belyi Curve/Map
-*/
-
-K := Rationals();
-PX<x1, x2> := PolynomialRing(K, 2);
-AA<x1, x2> := AffineSpace(PX);
-I<x1, x2> := ideal< PX | [
-x1*x2^2 - x1 + 1
-] >;
-X<x1, x2> := Curve(AA, I);
-KX<x1, x2> := FunctionField(X);
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := KX!(-1/(x2^2 - 1));
-
-/*
-Graph Data
-*/
-
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1" ];
 s`SolvableDBChild := "PP1";
 

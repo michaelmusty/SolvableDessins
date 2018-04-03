@@ -1,5 +1,15 @@
 /* functions to help with printing */
 
+intrinsic SequenceToString(l::SeqEnum) -> MonStgElt
+  {[a,b,c] -> "a,b,c"}
+  str := "";
+  for i := 1 to #l-1 do
+    str *:= Sprintf("%o, ", l[i]);
+  end for;
+  str *:= Sprintf("%o", l[#l]);
+  return str;
+end intrinsic;
+
 intrinsic VarText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgElt
   {returns text "varlower, varlower+1, ..., varupper-1, varupper".}
   assert upper ge lower;
@@ -193,7 +203,7 @@ intrinsic SolvableDBWriteTest(s::SolvableDB) -> BoolElt
   return true;
 end intrinsic;
 
-intrinsic SolvableDBFieldWriter(K::FldRat : field_name := "K") -> MonStgElt
+intrinsic SolvableDBFieldWriter(K::FldRat : field_name := "K", generator_name := "nu") -> MonStgElt
   {text to load rational field with optional field_name.}
   return Sprintf("%o := Rationals();\n", field_name);
 end intrinsic;
@@ -214,34 +224,131 @@ end intrinsic;
 
 intrinsic SolvableDBCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
   {text to load X with optional name and variable names.}
-  assert IsAffine(X);
-  str := "";
-  str *:= SolvableDBFieldWriter(K : field_name := field_name, generator_name := generator_name);
-  P :=
+  if ISA(Type(X), CrvCon) then
+    return SolvableDBConicWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+  elif ISA(Type(X), CrvEll) then
+    return SolvableDBEllipticCurveWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+  elif ISA(Type(X), CrvHyp) then
+    return SolvableDBHyperellipticCurveWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+  else
+    return SolvableDBGenericCurveWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+  end if;
 end intrinsic;
 
 // TODO
+intrinsic SolvableDBConicWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load X in conic case.}
+  str := "";
+  return str;
+end intrinsic;
+
+// TODO
+intrinsic SolvableDBEllipticCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load X in elliptic curve case.}
+  str := "";
+  return str;
+end intrinsic;
+
+// TODO
+intrinsic SolvableDBHyperellipticCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load X in hyperelliptic curve case.}
+  str := "";
+  return str;
+end intrinsic;
+
+// TODO
+intrinsic SolvableDBGenericCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load X in generic case.}
+  assert IsAffine(X);
+  // base field
+    K := BaseField(X);
+    assert #Generators(K) eq 1;
+    AssignNames(~K, [generator_name]);
+    str := SolvableDBFieldWriter(K : field_name := field_name, generator_name := generator_name);
+    assert K.1 eq 1 or generator_name eq Sprintf("%o", K.1);
+  // setup
+    I := Ideal(X);
+    P := Generic(I);
+    num_vars := Rank(P);
+    if var_names eq [] then // default variable names
+      vars := VarSeq("x", 1, num_vars);
+      var_text := VarText("x", 1, num_vars);
+    else // user declared variable names
+      assert #var_names eq num_vars;
+      vars := var_names;
+      var_text := SequenceToString(vars);
+    end if;
+    AssignNames(~P, vars);
+    AssignNames(~I, vars);
+    AssignNames(~X, vars);
+    for i := 1 to num_vars do
+      assert vars[i] eq Sprintf("%o", P.i);
+      assert vars[i] eq Sprintf("%o", I.i);
+    end for;
+  // writing
+    str *:= Sprintf("P<%o> := PolynomialRing(%o, %o);\n", var_text, field_name, num_vars);
+    str *:= Sprintf("A<%o> := AffineSpace(P);\n", var_text);
+    str *:= Sprintf("I<%o> := ideal< P | %o >;\n", var_text, Basis(I));
+    str *:= Sprintf("%o<%o> := Curve(A, I);\n", curve_name, var_text);
+  // return
+    return str;
+end intrinsic;
+
+intrinsic SolvableDBMapWriter(X::Crv, phi::FldFunFracSchElt : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load phi.}
+  // setup
+    assert FunctionField(X) eq Parent(phi);
+    KX := Parent(phi);
+    I := Ideal(X);
+    P := Generic(I);
+    num_vars := Rank(P);
+    if var_names eq [] then // default variable names
+      vars := VarSeq("x", 1, num_vars);
+      var_text := VarText("x", 1, num_vars);
+    else // user declared variable names
+      assert #var_names eq num_vars;
+      vars := var_names;
+      var_text := SequenceToString(vars);
+    end if;
+    AssignNames(~KX, vars);
+  // writing
+    str := SolvableDBCurveWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+    str *:= Sprintf("KX<%o> := FunctionField(%o);\n", var_text, curve_name);
+    str *:= Sprintf("phi := KX!(%o);\n", phi);
+  // return
+    return str;
+end intrinsic;
+
 intrinsic SolvableDBWriteText(s::SolvableDB) -> MonStgElt
-  {}
+  {text to load s.}
   assert SolvableDBWriteTest(s);
   str := "";
   // always make an instance of the object
-  str *:= "s := SolvableDBObjectInitialize();\n";
+    str *:= "s := SolvableDBInitialize();\n";
   // curve and Belyi map using custom printing
-  str *:= "\n/*\nCustom printing for Belyi curve and map\n*/\n\n";
+    X := BelyiCurve(s);
+    phi := BelyiMap(s);
+    str *:= "\n/*\nCustom printing for Belyi curve and map\n*/\n\n";
+    str *:= Sprintf("/* Belyi curve */\n");
+    str *:= SolvableDBCurveWriter(X);
+    str *:= Sprintf("\n/* Belyi map */\n");
+    str *:= SolvableDBMapWriter(X, phi);
+    str *:= Sprintf("\n/* assign to object */\n");
+    str *:= Sprintf("s`SolvableDBBelyiCurve := X;\n");
+    str *:= Sprintf("s`SolvableDBBelyiMap := phi;\n");
   // easy (automatic) magma printing
-  easy := SolvableDBAttributesEasy(s);
-  str *:= "\n/*\nMagma printing\n*/\n\n";
-  for attr in easy do
-    if assigned s``attr then
-      str *:= Sprintf("s`%o := ", attr);
-      str *:= Sprintf("%m;\n", s``attr);
-    end if;
-  end for;
+    easy := SolvableDBAttributesEasy(s);
+    str *:= "\n/*\nMagma printing\n*/\n\n";
+    for attr in easy do
+      if assigned s``attr then
+        str *:= Sprintf("s`%o := ", attr);
+        str *:= Sprintf("%m;\n", s``attr);
+      end if;
+    end for;
   // return
-  str *:= "\n/*\nReturn for eval\n*/\n\n";
-  str *:= Sprintf("return s;");
-  return str;
+    str *:= "\n/*\nReturn for eval\n*/\n\n";
+    str *:= Sprintf("return s;");
+    return str;
 end intrinsic;
 
 intrinsic SolvableDBWrite(s::SolvableDB) -> MonStgElt
