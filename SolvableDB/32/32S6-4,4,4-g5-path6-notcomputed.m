@@ -59,8 +59,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<32 |
 \[ 4, 3, 15, 19, 20, 21, 23, 1, 10, 30, 7, 31, 2, 5, 13, 9, 18, 28, 8, 32, 25, 6, 29, 27, 22, 17, 12, 26, 11, 16, 24, 14 ]:
  Order := 32 > |
 [ 11, 27, 8, 22, 2, 5, 14, 28, 18, 13, 9, 29, 20, 21, 30, 7, 10, 1, 15, 17, 16, 12, 31, 3, 19, 32, 6, 24, 4, 25, 26, 23 ],
-[ 20, 7, 23, 32, 4, 28, 15, 5, 12, 31, 3, 30, 11, 1, 29, 27, 6, 21, 14, 19, 26, 18, 13, 9, 17, 22, 10, 25, 2, 24, 16, 8 ],
-[ 22, 8, 30, 15, 17, 16, 31, 11, 13, 25, 14, 26, 27, 2, 20, 18, 1, 24, 28, 23, 19, 5, 4, 6, 12, 10, 29, 32, 9, 7, 3, 21 ]
+[ 16, 22, 18, 27, 24, 13, 6, 31, 8, 5, 17, 1, 26, 30, 21, 32, 15, 29, 10, 9, 11, 23, 28, 19, 3, 7, 14, 2, 25, 4, 20, 12 ],
+[ 3, 10, 5, 18, 7, 4, 1, 25, 21, 11, 12, 2, 19, 26, 24, 15, 31, 20, 29, 6, 27, 30, 16, 23, 14, 8, 28, 9, 32, 17, 22, 13 ]
 ],
 [ PermutationGroup<32 |  
 \[ 11, 27, 8, 22, 2, 5, 14, 28, 18, 13, 9, 29, 20, 21, 30, 7, 10, 1, 15, 17, 16, 12, 31, 3, 19, 32, 6, 24, 4, 25, 26, 23 ],
@@ -122,7 +122,6 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 11, 27, 12, 7, 2, 5, 10, 29, 18, 28, 9, 21, 24, 13, 31, 17, 8, 1, 23, 3, 20, 14, 30, 22, 32, 19, 6, 4, 16, 26, 25, 15 ]:
  Order := 4 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1-computed", "4T2-2,2,2-g0-path1-notcomputed", "8T4-2,2,4-g0-path1-notcomputed", "16T10-4,2,4-g1-path4-notcomputed", "32S6-4,4,4-g5-path6-notcomputed" ];
-s`SolvableDBParents := [ Strings() | "64S8-8,4,4-g13-path3-notcomputed", "64S8-4,4,8-g13-path3-notcomputed", "64S4-8,4,8-g17-path4-notcomputed", "64S9-8,4,4-g13-path17-notcomputed", "64S9-4,4,8-g13-path17-notcomputed", "64S5-8,4,8-g17-path8-notcomputed", "64S32-8,4,4-g13-path1-notcomputed", "64S32-4,4,8-g13-path1-notcomputed", "64S36-8,4,8-g17-path1-notcomputed", "64S33-8,4,4-g13-path3-notcomputed", "64S33-4,4,8-g13-path3-notcomputed", "64S37-8,4,8-g17-path2-notcomputed", "64S23-4,4,4-g9-path19-notcomputed", "64S34-4,4,4-g9-path1-notcomputed", "64S35-4,4,4-g9-path4-notcomputed" ];
 s`SolvableDBChild := "16T10-4,2,4-g1-path4-notcomputed";
 
 /*

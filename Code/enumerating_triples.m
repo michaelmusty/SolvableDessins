@@ -546,12 +546,34 @@ intrinsic ChildObject(s::SolvableDB) -> SolvableDB
 end intrinsic;
 
 intrinsic IsRedundant(s::SolvableDB, t::SolvableDB) -> BoolElt
-  {true if PassportName(s) equals PassportName(t) AND PassportName(Child(s)) equals PassportName(Child(t)).}
-  if PassportName(s) eq PassportName(t) and PassportName(ChildObject(s)) eq PassportName(ChildObject(t)) then
+  {}
+  check1 := PassportName(s) eq PassportName(t);
+  check2 := PassportName(ChildObject(s)) eq PassportName(ChildObject(t));
+  check3 := #GaloisOrbit(s) eq #GaloisOrbit(t);
+  if check1 and check2 and check3 then
+    gal_s := GaloisOrbit(s);
+    gal_t := GaloisOrbit(t);
+    S := Generic(Parent(gal_s[1][1]));
+    there_is_an_element_in_gal_s_not_conjugate_to_any_element_of_gal_t := false;
+    for sigma in gal_s do
+      sigma_conj_to_element_in_gal_s := false;
+      for tau in gal_t do
+        if IsConjugate(S, sigma, tau) then
+          sigma_conj_to_element_in_gal_s := true;
+        end if;
+      end for;
+      if not sigma_conj_to_element_in_gal_s then
+        there_is_an_element_in_gal_s_not_conjugate_to_any_element_of_gal_t := true;
+      end if;
+    end for;
+    if not there_is_an_element_in_gal_s_not_conjugate_to_any_element_of_gal_t then
+      return true;
+    else
+      return false;
+    end if;
     return true;
-  else
-    return false;
   end if;
+  return false;
 end intrinsic;
 
 

@@ -51,8 +51,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 12, 14, 13, 11, 4, 16, 15, 5, 7, 9, 6, 3, 10, 8, 1, 2 ]:
  Order := 16 > |
 [ 6, 1, 2, 10, 13, 7, 4, 3, 5, 8, 9, 16, 14, 12, 11, 15 ],
-[ 11, 15, 16, 13, 3, 9, 5, 12, 8, 14, 10, 6, 2, 1, 4, 7 ],
-[ 13, 5, 9, 16, 6, 14, 12, 11, 1, 15, 2, 10, 7, 4, 3, 8 ]
+[ 14, 13, 5, 15, 7, 12, 16, 9, 6, 11, 1, 8, 4, 10, 2, 3 ],
+[ 15, 16, 12, 5, 8, 11, 9, 14, 10, 13, 4, 1, 3, 2, 7, 6 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  
@@ -64,8 +64,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]:
  Order := 20922789888000 > |
 [ 6, 1, 2, 10, 13, 7, 4, 3, 5, 8, 9, 16, 14, 12, 11, 15 ],
-[ 11, 15, 16, 13, 3, 9, 5, 12, 8, 14, 10, 6, 2, 1, 4, 7 ],
-[ 13, 5, 9, 16, 6, 14, 12, 11, 1, 15, 2, 10, 7, 4, 3, 8 ]
+[ 14, 13, 5, 15, 7, 12, 16, 9, 6, 11, 1, 8, 4, 10, 2, 3 ],
+[ 15, 16, 12, 5, 8, 11, 9, 14, 10, 13, 4, 1, 3, 2, 7, 6 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<16 |  
@@ -82,7 +82,7 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 \[ 6, 1, 2, 10, 13, 7, 4, 3, 5, 8, 9, 16, 14, 12, 11, 15 ]:
  Order := 8 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1-computed", "4T1-4,2,4-g1-path1-notcomputed", "8T1-8,4,8-g3-path1-notcomputed", "16T5-8,4,8-g5-path1-notcomputed" ];
-s`SolvableDBParents := [ Strings() | "32S16-16,8,16-g13-path5-notcomputed", "32S17-16,8,16-g13-path3-notcomputed", "32S16-16,8,16-g13-path6-notcomputed", "32S17-16,8,16-g13-path4-notcomputed", "32S12-8,4,8-g9-path5-notcomputed", "32S3-8,4,8-g9-path8-notcomputed", "32S5-8,4,8-g9-path5-notcomputed" ];
+s`SolvableDBParents := [ Strings() | "32S16-16,8,16-g13-path7-notcomputed", "32S17-16,8,16-g13-path3-notcomputed", "32S16-16,8,16-g13-path8-notcomputed", "32S17-16,8,16-g13-path4-notcomputed", "32S12-8,4,8-g9-path5-notcomputed", "32S3-8,4,8-g9-path8-notcomputed", "32S5-8,4,8-g9-path5-notcomputed" ];
 s`SolvableDBChild := "8T1-8,4,8-g3-path1-notcomputed";
 
 /*

@@ -72,8 +72,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<32 |
 \[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 ]:
  Order := 263130836933693530167218012160000000 > |
 [ 15, 31, 20, 29, 24, 19, 4, 17, 27, 7, 32, 3, 14, 23, 22, 30, 25, 28, 11, 21, 10, 26, 16, 9, 13, 5, 1, 2, 12, 8, 6, 18 ],
-[ 3, 10, 5, 18, 7, 4, 1, 26, 29, 11, 12, 2, 19, 27, 25, 15, 31, 20, 30, 6, 9, 21, 32, 16, 24, 14, 8, 13, 22, 28, 23, 17 ],
-[ 14, 30, 11, 5, 8, 17, 2, 19, 25, 22, 13, 9, 15, 28, 7, 31, 27, 23, 20, 1, 18, 16, 26, 3, 32, 29, 21, 4, 6, 24, 12, 10 ]
+[ 17, 14, 31, 15, 23, 16, 32, 2, 30, 27, 8, 26, 9, 11, 20, 18, 5, 25, 29, 24, 19, 13, 1, 4, 6, 10, 12, 21, 28, 22, 7, 3 ],
+[ 10, 29, 27, 31, 12, 3, 26, 9, 20, 28, 21, 19, 18, 22, 23, 5, 11, 7, 25, 32, 15, 4, 2, 17, 1, 30, 13, 16, 24, 6, 8, 14 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<32 |  
@@ -90,7 +90,6 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 6, 1, 4, 21, 18, 22, 20, 23, 2, 3, 5, 7, 8, 17, 19, 13, 16, 9, 26, 29, 12, 11, 25, 28, 30, 32, 31, 27, 10, 14, 15, 24 ]:
  Order := 8 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1-computed", "4T1-4,2,4-g1-path1-notcomputed", "8T2-4,2,4-g1-path2-notcomputed", "16T10-4,2,4-g1-path3-notcomputed", "32S5-8,4,8-g9-path1-notcomputed" ];
-s`SolvableDBParents := [ Strings() | "64S29-16,8,16-g25-path4-notcomputed", "64S31-16,8,16-g25-path1-notcomputed", "64S31-16,8,16-g25-path2-notcomputed", "64S29-16,8,16-g25-path5-notcomputed", "64S31-16,8,16-g25-path3-notcomputed", "64S30-16,8,16-g25-path1-notcomputed", "64S30-16,8,16-g25-path2-notcomputed", "64S31-16,8,16-g25-path4-notcomputed", "64S7-8,4,8-g17-path19-notcomputed", "64S6-8,4,8-g17-path3-notcomputed", "64S17-8,4,8-g17-path20-notcomputed", "64S6-8,4,8-g17-path4-notcomputed", "64S5-8,4,8-g17-path4-notcomputed", "64S4-8,4,8-g17-path1-notcomputed", "64S7-8,4,8-g17-path20-notcomputed" ];
 s`SolvableDBChild := "16T10-4,2,4-g1-path3-notcomputed";
 
 /*

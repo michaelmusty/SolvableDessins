@@ -106,7 +106,6 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 27, 32, 13, 16, 18, 15, 10, 7, 20, 29, 17, 25, 24, 11, 2, 28, 26, 31, 8, 21, 12, 3, 5, 14, 30, 22, 9, 19, 4, 1, 6, 23 ]:
  Order := 8 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1-computed", "4T2-2,2,2-g0-path1-notcomputed", "8T4-4,2,2-g0-path1-notcomputed", "16T14-8,4,4-g4-path1-notcomputed", "32S10-8,4,4-g7-path10-notcomputed" ];
-s`SolvableDBParents := [ Strings() | "64S13-8,8,4-g17-path3-notcomputed", "64S7-8,8,4-g17-path5-notcomputed", "64S14-8,8,4-g17-path3-notcomputed", "64S7-8,8,4-g17-path6-notcomputed", "64S9-8,4,4-g13-path1-notcomputed", "64S21-8,4,4-g13-path1-notcomputed", "64S9-8,4,4-g13-path2-notcomputed" ];
 s`SolvableDBChild := "16T14-8,4,4-g4-path1-notcomputed";
 
 /*

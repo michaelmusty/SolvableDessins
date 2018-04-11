@@ -71,8 +71,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<32 |
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],
 \[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 ]:
  Order := 263130836933693530167218012160000000 > |
-[ 12, 26, 8, 6, 30, 4, 10, 3, 32, 7, 24, 1, 27, 25, 21, 18, 19, 16, 17, 28, 15, 23, 22, 11, 14, 2, 13, 20, 31, 5, 29, 9 ],
-[ 10, 7, 25, 12, 28, 26, 14, 24, 20, 11, 19, 8, 23, 17, 1, 6, 30, 21, 32, 22, 2, 4, 15, 31, 29, 3, 18, 16, 5, 27, 9, 13 ],
+[ 2, 1, 7, 15, 9, 21, 3, 10, 5, 8, 14, 26, 20, 11, 4, 22, 29, 23, 31, 13, 6, 16, 18, 25, 24, 12, 28, 27, 17, 32, 19, 30 ],
+[ 3, 8, 11, 2, 13, 1, 24, 14, 27, 25, 29, 7, 16, 31, 26, 15, 9, 4, 5, 18, 12, 21, 6, 17, 19, 10, 22, 23, 32, 20, 30, 28 ],
 [ 4, 6, 12, 16, 17, 22, 1, 26, 19, 2, 8, 15, 30, 3, 18, 27, 11, 28, 14, 5, 23, 13, 20, 10, 7, 21, 32, 9, 24, 29, 25, 31 ]
 ]
 ];
@@ -89,7 +89,6 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 2, 1, 8, 6, 9, 4, 10, 3, 5, 7, 14, 26, 27, 11, 21, 22, 19, 23, 17, 28, 15, 16, 18, 25, 24, 12, 13, 20, 31, 32, 29, 30 ]:
  Order := 2 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1-computed", "4T2-2,2,2-g0-path2-notcomputed", "8T2-2,4,4-g1-path4-notcomputed", "16T6-2,8,8-g3-path1-notcomputed", "32S5-2,8,8-g5-path7-notcomputed" ];
-s`SolvableDBParents := [ Strings() | "64S17-4,8,8-g17-path17-notcomputed", "64S7-4,8,8-g17-path17-notcomputed", "64S7-4,8,8-g17-path18-notcomputed", "64S5-4,8,8-g17-path1-notcomputed", "64S29-2,16,16-g13-path5-notcomputed", "64S29-4,16,16-g21-path4-notcomputed", "64S31-2,16,16-g13-path1-notcomputed", "64S31-4,16,16-g21-path1-notcomputed", "64S31-2,16,16-g13-path2-notcomputed", "64S31-4,16,16-g21-path2-notcomputed", "64S30-2,16,16-g13-path1-notcomputed", "64S30-4,16,16-g21-path1-notcomputed", "64S6-2,8,8-g9-path3-notcomputed", "64S6-2,8,8-g9-path4-notcomputed", "64S4-2,8,8-g9-path1-notcomputed" ];
 s`SolvableDBChild := "16T6-2,8,8-g3-path1-notcomputed";
 
 /*

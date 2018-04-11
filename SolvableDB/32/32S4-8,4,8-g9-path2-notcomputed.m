@@ -72,8 +72,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<32 |
 \[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 ]:
  Order := 263130836933693530167218012160000000 > |
 [ 15, 5, 24, 25, 6, 9, 4, 16, 11, 3, 1, 7, 8, 28, 26, 17, 29, 32, 21, 30, 22, 12, 20, 13, 27, 2, 19, 31, 10, 14, 18, 23 ],
-[ 16, 8, 32, 15, 3, 17, 5, 18, 13, 30, 10, 11, 20, 19, 24, 14, 23, 27, 1, 25, 6, 26, 21, 28, 9, 29, 2, 4, 31, 12, 22, 7 ],
-[ 12, 22, 11, 32, 27, 7, 30, 9, 21, 26, 25, 31, 15, 10, 19, 2, 1, 29, 18, 17, 14, 23, 3, 5, 28, 4, 20, 16, 6, 13, 24, 8 ]
+[ 3, 10, 14, 6, 16, 24, 1, 30, 29, 18, 8, 2, 31, 7, 17, 32, 28, 12, 5, 22, 15, 9, 4, 23, 26, 13, 11, 21, 20, 27, 25, 19 ],
+[ 27, 25, 2, 14, 12, 19, 18, 26, 4, 9, 22, 20, 6, 8, 7, 11, 5, 13, 30, 24, 32, 28, 16, 1, 23, 21, 31, 3, 15, 29, 17, 10 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<32 |  
@@ -91,7 +91,6 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 6, 1, 24, 25, 15, 26, 4, 16, 2, 3, 5, 7, 8, 23, 9, 17, 29, 14, 21, 18, 22, 12, 31, 13, 27, 11, 19, 20, 10, 32, 30, 28 ]:
  Order := 8 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1-computed", "4T2-2,2,2-g0-path2-notcomputed", "8T2-4,4,2-g1-path4-notcomputed", "16T4-4,4,4-g3-path7-notcomputed", "32S4-8,4,8-g9-path2-notcomputed" ];
-s`SolvableDBParents := [ Strings() | "64S28-16,8,16-g25-path3-notcomputed", "64S28-16,4,16-g21-path3-notcomputed", "64S3-8,8,8-g21-path18-notcomputed", "64S28-16,8,16-g25-path4-notcomputed", "64S28-16,4,16-g21-path4-notcomputed", "64S3-8,8,8-g21-path19-notcomputed", "64S17-8,4,8-g17-path15-notcomputed" ];
 s`SolvableDBChild := "16T4-4,4,4-g3-path7-notcomputed";
 
 /*

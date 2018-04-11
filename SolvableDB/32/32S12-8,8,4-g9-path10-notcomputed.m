@@ -68,8 +68,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<32 |
 \[ 4, 7, 14, 17, 18, 3, 25, 1, 11, 21, 28, 2, 23, 19, 29, 13, 8, 32, 6, 15, 31, 5, 30, 9, 12, 10, 20, 24, 27, 16, 26, 22 ]:
  Order := 32 > |
 [ 2, 9, 8, 12, 10, 1, 24, 7, 20, 13, 27, 11, 6, 17, 22, 3, 25, 26, 4, 5, 16, 21, 19, 15, 28, 23, 18, 29, 32, 14, 30, 31 ],
-[ 7, 11, 1, 2, 21, 4, 9, 25, 15, 23, 20, 28, 3, 8, 5, 14, 12, 10, 17, 18, 13, 31, 6, 29, 24, 30, 32, 27, 22, 19, 16, 26 ],
-[ 23, 3, 31, 30, 11, 21, 14, 13, 4, 15, 17, 6, 18, 26, 25, 5, 16, 28, 10, 7, 29, 9, 32, 1, 19, 20, 2, 8, 12, 22, 27, 24 ]
+[ 21, 23, 5, 10, 7, 18, 13, 31, 3, 11, 6, 30, 15, 22, 1, 29, 26, 2, 32, 4, 9, 25, 20, 14, 16, 28, 17, 19, 8, 27, 24, 12 ],
+[ 11, 15, 25, 28, 23, 7, 29, 9, 18, 3, 32, 20, 4, 12, 31, 1, 24, 30, 2, 21, 14, 13, 17, 5, 27, 6, 10, 22, 26, 8, 19, 16 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<32 |  
@@ -104,9 +104,8 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<32 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |  
 \[ 10, 13, 18, 21, 2, 5, 23, 26, 6, 9, 3, 16, 20, 32, 4, 27, 31, 7, 22, 1, 11, 12, 15, 19, 30, 24, 8, 14, 17, 29, 28, 25 ]:
  Order := 8 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1-computed", "4T1-4,4,1-g0-path1-notcomputed", "8T2-4,4,2-g1-path1-notcomputed", "16T8-4,4,4-g3-path9-notcomputed", "32S12-8,8,4-g9-path10-notcomputed" ];
-s`SolvableDBParents := [ Strings() | "64S16-8,8,8-g21-path12-notcomputed", "64S15-8,8,8-g21-path12-notcomputed", "64S44-16,16,4-g21-path3-notcomputed", "64S45-16,16,8-g25-path3-notcomputed", "64S44-16,16,4-g21-path4-notcomputed", "64S45-16,16,8-g25-path4-notcomputed", "64S17-8,8,4-g17-path2-notcomputed" ];
-s`SolvableDBChild := "16T8-4,4,4-g3-path9-notcomputed";
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1-computed", "4T2-2,2,2-g0-path1-notcomputed", "8T4-2,2,4-g0-path1-notcomputed", "16T8-4,4,4-g3-path10-notcomputed", "32S12-8,8,4-g9-path10-notcomputed" ];
+s`SolvableDBChild := "16T8-4,4,4-g3-path10-notcomputed";
 
 /*
 Return for eval

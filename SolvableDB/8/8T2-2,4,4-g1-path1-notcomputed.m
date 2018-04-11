@@ -59,9 +59,9 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<8 |
 \[ 2, 3, 4, 5, 6, 7, 8, 1 ],
 \[ 2, 1, 3, 4, 5, 6, 7, 8 ]:
  Order := 40320 > |
-[ 4, 6, 7, 1, 8, 2, 3, 5 ],
+[ 8, 7, 6, 5, 4, 3, 2, 1 ],
 [ 2, 5, 1, 6, 3, 8, 4, 7 ],
-[ 7, 4, 8, 3, 6, 1, 5, 2 ]
+[ 6, 8, 4, 2, 7, 5, 1, 3 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<8 |  
