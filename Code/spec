@@ -1,7 +1,10 @@
 {
   auts.m
   passports.m
-  solvableDBobj.m
-  solvableDB.m
+  solvable_db_obj.m
+  solvable_db.m
+	solvable_passport_db_obj.m
+	solvable_passport_db.m
   timing_and_measure.m
+  enumerating_triples.m
 }

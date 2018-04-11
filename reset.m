@@ -20,6 +20,14 @@ Front Matter
 MAIN
 */
 
+f := SolvableDBFilenames(2);
+l := [SolvableDBRead(name) : name in f];
+for s in l do
+  delete s`SolvableDBParents;
+  SolvableDBWrite(s);
+end for;
+
+/*
 s2t1_1_a := SolvableDBAccessEntry("2T1-1,2,2-g0-path1.m");
 delete s2t1_1_a`SolvableDBParents;
 SolvableDBWriteObject(s2t1_1_a);
@@ -29,3 +37,4 @@ SolvableDBWriteObject(s2t1_1_b);
 s2t1_1_c := SolvableDBAccessEntry("2T1-2,2,1-g0-path1.m");
 delete s2t1_1_c`SolvableDBParents;
 SolvableDBWriteObject(s2t1_1_c);
+*/

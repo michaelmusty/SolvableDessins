@@ -32,7 +32,7 @@ s`SolvableDBBelyiMap := phi;
 Magma printing
 */
 
-s`SolvableDBName := "2T1-2,1,2-g0-path1";
+s`SolvableDBName := "2T1-2,1,2-g0-path1-computed";
 s`SolvableDBFilename := "2T1-2,1,2-g0-path1-computed.m";
 s`SolvableDBPassportName := "2T1-2,1,2-g0";
 s`SolvableDBPathNumber := 1;
@@ -90,7 +90,8 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<2 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<2 |  
 \[ 2, 1 ]:
  Order := 2 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1-computed" ];
+s`SolvableDBParents := [ Strings() | "4T2-2,2,2-g0-path2-notcomputed", "4T1-4,2,4-g1-path1-notcomputed", "4T1-4,1,4-g0-path1-notcomputed" ];
 s`SolvableDBChild := "PP1";
 
 /*
