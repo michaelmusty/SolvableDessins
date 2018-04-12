@@ -171,7 +171,7 @@ intrinsic PassportNamesBelow(spass::SolvablePassportDB) -> SeqEnum[MonStgElt]
   {}
   objs := PassportObjects(spass);
   children := [Child(s) : s in objs];
-  passport_names_below := [SolvableDBGetPassportNameFromFile(child) : child in children];
+  passport_names_below := [SolvableDBGetPassportNameFromFile(child cat ".m") : child in children];
   return passport_names_below;
 end intrinsic;
 
@@ -180,4 +180,13 @@ intrinsic PassportsBelow(spass::SolvablePassportDB) -> SeqEnum[SolvablePassportD
   passport_names_below := PassportNamesBelow(spass);
   passports_below := [SolvablePassportDBRead(name cat ".m") : name in passport_names_below];
   return passports_below;
+end intrinsic;
+
+intrinsic Passports(d::RngIntElt) -> SeqEnum[SolvablePassportDB]
+  {}
+  if IsEven(d) and #Factorization(d) eq 1 then
+    return [SolvablePassportDBRead(name) : name in SolvablePassportDBFilenames(d)];
+  else
+    error "degree is not valid";
+  end if;
 end intrinsic;

@@ -576,7 +576,6 @@ intrinsic IsRedundant(s::SolvableDB, t::SolvableDB) -> BoolElt
   return false;
 end intrinsic;
 
-
 intrinsic EliminateRedundancies(l::SeqEnum[SolvableDB]) -> SeqEnum[SolvableDB]
   {uses IsRedundant over a sequence of objects.}
   for i := #l to 1 by -1 do
