@@ -6,15 +6,15 @@ declare attributes SolvablePassportDB:
     Passport, // SeqEnum[SeqEnum[GrpPermElt]]
     GaloisOrbits; // SeqEnum[MonStgElt]
 
-intrinsic Print(s::SolvablePassportDB : verbose := false)
+intrinsic Print(s::SolvablePassportDB : verbose := 1)
   {Print SolvablePassportDB}
   printf "Passport %o : Size %o :\n", s`Name, #Passport(s);
-  if verbose eq false then // default
+  if verbose eq 0 then
     printf " Filenames:\n";
     for i := 1 to #GaloisOrbits(s) do
       printf "  %o\n", GaloisOrbits(s)[i];
     end for;
-  else
+  elif verbose eq 1 then // default
     printf " Filenames:\n";
     filenames := GaloisOrbits(s);
     children_filenames := [];
@@ -22,7 +22,27 @@ intrinsic Print(s::SolvablePassportDB : verbose := false)
       printf "  %o", filenames[i];
       s := SolvableDBRead(filenames[i]);
       Append(~children_filenames, Child(s) cat ".m");
-      printf " : orbit size %o\n", GaloisOrbitSize(s);
+      printf " : orbit size %o", GaloisOrbitSize(s);
+      if IsRamifiedAtEveryLevel(s) then
+        printf " : ramified\n";
+      else
+        printf " : unramified\n";
+      end if;
+    end for;
+  elif verbose eq 2 then
+    printf " Filenames:\n";
+    filenames := GaloisOrbits(s);
+    children_filenames := [];
+    for i := 1 to #filenames do
+      printf "  %o", filenames[i];
+      s := SolvableDBRead(filenames[i]);
+      Append(~children_filenames, Child(s) cat ".m");
+      printf " : orbit size %o", GaloisOrbitSize(s);
+      if IsRamifiedAtEveryLevel(s) then
+        printf " : ramified\n";
+      else
+        printf " : unramified\n";
+      end if;
     end for;
     printf " Below:\n";
     for i := 1 to #children_filenames do
