@@ -367,6 +367,7 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<64 |
 \[ 6, 1, 7, 15, 17, 16, 4, 3, 2, 5, 8, 18, 27, 29, 28, 13, 30, 14, 12, 9, 10, 11, 19, 20, 39, 41, 40, 25, 42, 26, 21, 22, 23, 24, 31, 32, 51, 53, 52, 37, 54, 38, 33, 34, 35, 36, 43, 44, 61, 63, 62, 49, 64, 50, 45, 46, 47, 48, 55, 56, 57, 59, 58, 60 ]:
  Order := 32 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1-computed", "4T1-2,4,4-g1-path1-notcomputed", "8T1-4,8,8-g3-path1-notcomputed", "16T1-8,16,16-g7-path2-notcomputed", "32S1-16,32,32-g15-path3-notcomputed", "64S1-32,64,64-g31-path7-notcomputed" ];
+s`SolvableDBParents := [ Strings() | "128S1-64,128,128-g63-path3-notcomputed", "128S1-64,128,128-g63-path4-notcomputed", "128S159-32,64,64-g61-path3-notcomputed", "128S159-32,64,64-g61-path4-notcomputed" ];
 s`SolvableDBChild := "32S1-16,32,32-g15-path3-notcomputed";
 
 /*
