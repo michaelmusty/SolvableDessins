@@ -3,8 +3,10 @@
   passports.m
   solvable_db_obj.m
   solvable_db.m
-	solvable_passport_db_obj.m
-	solvable_passport_db.m
+  solvable_passport_db_obj.m
+  solvable_passport_db.m
   timing_and_measure.m
   enumerating_triples.m
+  genus_zero_models.m
+  sanity_check.m
 }

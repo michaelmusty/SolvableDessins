@@ -238,8 +238,12 @@ end intrinsic;
 
 intrinsic SolvableDBCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
   {text to load X with optional name and variable names.}
-  if ISA(Type(X), CrvCon) then
-    return SolvableDBConicWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+  if Genus(X) eq 0 then
+    if ISA(Type(X), CrvCon) then
+      return SolvableDBConicWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+    else // PP1
+      return SolvableDBPP1Writer(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+    end if;
   elif ISA(Type(X), CrvEll) then
     return SolvableDBEllipticCurveWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
   elif ISA(Type(X), CrvHyp) then
@@ -249,31 +253,47 @@ intrinsic SolvableDBCurveWriter(X::Crv : field_name := "K", generator_name := "n
   end if;
 end intrinsic;
 
-// TODO
-intrinsic SolvableDBConicWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+intrinsic SolvableDBPP1Writer(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
   {text to load X in conic case.}
+  assert Genus(X) eq 0;
+  assert var_names eq [];
   str := "";
+  // base field
+    K := BaseField(X);
+    assert #Generators(K) eq 1;
+    AssignNames(~K, [generator_name]);
+    str := SolvableDBFieldWriter(K : field_name := field_name, generator_name := generator_name);
+    assert K.1 eq 1 or generator_name eq Sprintf("%o", K.1);
+  // setup for PP1
+    I := Ideal(X);
+    P := Generic(I);
+    assert #Basis(I) eq 0;
+    num_vars := Rank(P);
+    if var_names eq [] then // default variable names
+      vars := VarSeq("x", 1, num_vars);
+      var_text := VarText("x", 1, num_vars);
+    else // user declared variable names
+      assert #var_names eq num_vars;
+      vars := var_names;
+      var_text := SequenceToString(vars);
+    end if;
+    AssignNames(~P, vars);
+    AssignNames(~X, vars);
+    for i := 1 to num_vars do
+      assert vars[i] eq Sprintf("%o", P.i);
+    end for;
+  // writing
+    str *:= Sprintf("P<%o> := PolynomialRing(%o, %o);\n", var_text, field_name, num_vars);
+    str *:= Sprintf("PP<%o> := Curve(ProjectiveSpace(P));\n", var_text);
+    str *:= Sprintf("%o<%o> := PP;\n", curve_name, var_text);
   return str;
 end intrinsic;
 
-// TODO
-intrinsic SolvableDBEllipticCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
-  {text to load X in elliptic curve case.}
+intrinsic SolvableDBConicWriter(X::CrvCon : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load X = PP1.}
+  assert Genus(X) eq 0;
+  assert var_names eq [];
   str := "";
-  return str;
-end intrinsic;
-
-// TODO
-intrinsic SolvableDBHyperellipticCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
-  {text to load X in hyperelliptic curve case.}
-  str := "";
-  return str;
-end intrinsic;
-
-// TODO
-intrinsic SolvableDBGenericCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
-  {text to load X in generic case.}
-  assert IsAffine(X);
   // base field
     K := BaseField(X);
     assert #Generators(K) eq 1;
@@ -301,19 +321,92 @@ intrinsic SolvableDBGenericCurveWriter(X::Crv : field_name := "K", generator_nam
     end for;
   // writing
     str *:= Sprintf("P<%o> := PolynomialRing(%o, %o);\n", var_text, field_name, num_vars);
-    str *:= Sprintf("A<%o> := AffineSpace(P);\n", var_text);
+    str *:= Sprintf("PP<%o> := ProjectiveSpace(P);\n", var_text);
     str *:= Sprintf("I<%o> := ideal< P | %o >;\n", var_text, Basis(I));
-    str *:= Sprintf("%o<%o> := Curve(A, I);\n", curve_name, var_text);
-  // return
-    return str;
+    assert #Basis(I) eq 1;
+    str *:= Sprintf("%o<%o> := Conic(PP, %o);\n", curve_name, var_text, Basis(I)[1]);
+  return str;
 end intrinsic;
 
-intrinsic SolvableDBMapWriter(X::Crv, phi::FldFunFracSchElt : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
-  {text to load phi.}
+intrinsic SolvableDBEllipticCurveWriter(X::CrvEll : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load X in elliptic curve case.}
+  // base field
+    K := BaseField(X);
+    assert #Generators(K) eq 1;
+    AssignNames(~K, [generator_name]);
+    str := SolvableDBFieldWriter(K : field_name := field_name, generator_name := generator_name);
+    assert K.1 eq 1 or generator_name eq Sprintf("%o", K.1);
   // setup
-    assert FunctionField(X) eq Parent(phi);
-    KX := Parent(phi);
     I := Ideal(X);
+    P := Generic(I);
+    num_vars := Rank(P); // just need this P for number of vars
+    assert num_vars eq 3;
+    P := PolynomialRing(K);
+    if var_names eq [] then // default variable names
+      vars := VarSeq("x", 1, num_vars);
+      var_text := VarText("x", 1, num_vars);
+    else // user declared variable names
+      assert #var_names eq 3; // CrvElls live in PP2
+      assert #var_names eq num_vars;
+      vars := var_names;
+      var_text := SequenceToString(vars);
+    end if;
+    AssignNames(~X, vars);
+  // writing
+    f, h := HyperellipticPolynomials(X);
+    f_text := Sprintf("Polynomial(%o, %o)", field_name, Coefficients(f));
+    h_text := Sprintf("Polynomial(%o, %o)", field_name, Coefficients(h));
+    str *:= Sprintf("%o<%o> := EllipticCurve(%o, %o);\n", curve_name, var_text, f_text, h_text);
+  return str;
+end intrinsic;
+
+intrinsic SolvableDBHyperellipticCurveWriter(X::CrvHyp : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load X in hyperelliptic curve case.}
+  // base field
+    K := BaseField(X);
+    assert #Generators(K) eq 1;
+    AssignNames(~K, [generator_name]);
+    str := SolvableDBFieldWriter(K : field_name := field_name, generator_name := generator_name);
+    assert K.1 eq 1 or generator_name eq Sprintf("%o", K.1);
+  // setup
+    I := Ideal(X);
+    P := Generic(I);
+    num_vars := Rank(P); // just need this P for number of vars
+    assert num_vars eq 3;
+    P := PolynomialRing(K);
+    if var_names eq [] then // default variable names
+      vars := VarSeq("x", 1, num_vars);
+      var_text := VarText("x", 1, num_vars);
+    else // user declared variable names
+      assert #var_names eq 3; // CrvHyps live in PP2
+      assert #var_names eq num_vars;
+      vars := var_names;
+      var_text := SequenceToString(vars);
+    end if;
+    AssignNames(~X, vars);
+  // writing
+    f, h := HyperellipticPolynomials(X);
+    f_text := Sprintf("Polynomial(%o, %o)", field_name, Coefficients(f));
+    h_text := Sprintf("Polynomial(%o, %o)", field_name, Coefficients(h));
+    str *:= Sprintf("%o<%o> := HyperellipticCurve([%o, %o]);\n", curve_name, var_text, f_text, h_text);
+  return str;
+end intrinsic;
+
+intrinsic SolvableDBGenericCurveWriter(X::Crv : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load X in generic case.}
+  // base field
+    K := BaseField(X);
+    assert #Generators(K) eq 1;
+    AssignNames(~K, [generator_name]);
+    str := SolvableDBFieldWriter(K : field_name := field_name, generator_name := generator_name);
+    assert K.1 eq 1 or generator_name eq Sprintf("%o", K.1);
+  // setup
+    I := Ideal(X);
+    /*
+    if #Basis(I) ne 0 then // for PP1
+      assert IsAffine(X);
+    end if;
+    */
     P := Generic(I);
     num_vars := Rank(P);
     if var_names eq [] then // default variable names
@@ -324,10 +417,99 @@ intrinsic SolvableDBMapWriter(X::Crv, phi::FldFunFracSchElt : field_name := "K",
       vars := var_names;
       var_text := SequenceToString(vars);
     end if;
-    AssignNames(~KX, vars);
+    AssignNames(~P, vars);
+    AssignNames(~I, vars);
+    AssignNames(~X, vars);
+    for i := 1 to num_vars do
+      assert vars[i] eq Sprintf("%o", P.i);
+      assert vars[i] eq Sprintf("%o", I.i);
+    end for;
+  // writing
+    str *:= Sprintf("P<%o> := PolynomialRing(%o, %o);\n", var_text, field_name, num_vars);
+    str *:= Sprintf("A<%o> := AffineSpace(P);\n", var_text);
+    str *:= Sprintf("I<%o> := ideal< P | %o >;\n", var_text, Basis(I));
+    str *:= Sprintf("%o<%o> := Curve(A, I);\n", curve_name, var_text);
+  // return
+    return str;
+end intrinsic;
+
+intrinsic SolvableDBGenusZeroMapWriter(X::Crv, phi::FldFunFracSchElt : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load Genus zero phi.}
+  assert var_names eq []; // var_names not implemented here
+  assert Genus(X) eq 0;
+  // setup
+  assert FunctionField(X) eq Parent(phi);
+  KX := Parent(phi);
+  I := Ideal(X);
+  P := Generic(I);
+  num_vars := Rank(P);
+  vars := VarSeq("x", 1, num_vars);
+  var_text := VarText("x", 1, num_vars);
+  AssignNames(~X, vars);
+  // writing
+  if ISA(Type(X), CrvCon) then
+    str := SolvableDBCurveWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+    KX<[x]> := Parent(phi);
+    str *:= Sprintf("KX<[x]> := FunctionField(%o);\n", curve_name);
+    str *:= Sprintf("phi := KX!(%o);\n", phi);
+  else // PP1
+    assert #Basis(I) eq 0;
+    str := SolvableDBCurveWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
+    KX<[x]> := Parent(phi);
+    str *:= Sprintf("KX<[x]> := FunctionField(%o);\n", curve_name);
+    str *:= Sprintf("phi := KX!(%o);\n", phi);
+  end if;
+  return str;
+end intrinsic;
+
+intrinsic SolvableDBMapWriter(X::Crv, phi::FldFunFracSchElt : field_name := "K", generator_name := "nu", curve_name := "X", var_names := []) -> MonStgElt
+  {text to load phi.}
+  if Genus(X) eq 0 then
+    return SolvableDBGenusZeroMapWriter(X, phi : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := []);
+  end if;
+  // setup
+    assert FunctionField(X) eq Parent(phi);
+    KX := Parent(phi);
+    I := Ideal(X);
+    P := Generic(I);
+    num_vars := Rank(P);
+    print num_vars;
+    if var_names eq [] then // default variable names
+      vars := VarSeq("x", 1, num_vars);
+      var_text := VarText("x", 1, num_vars);
+    else // user declared variable names
+      assert #var_names eq num_vars;
+      vars := var_names;
+      var_text := SequenceToString(vars);
+    end if;
+    // AssignNames(~KX, vars);
+    AssignNames(~X, vars);
+  // hacky assertions that the names are not completely messed up
+    two_char_test := Names(KX)[Rank(KX)][1..2];
+    does_it_appear := false;
+    coeffs, mons := CoefficientsAndMonomials(Numerator(phi));
+    for mon in mons do
+      mon_str := Sprintf("%o", mon);
+      if #mon_str gt 1 then
+        if mon_str[1..2] eq two_char_test then
+          does_it_appear := true;
+        end if;
+      end if;
+    end for;
+    coeffs, mons := CoefficientsAndMonomials(Denominator(phi));
+    for mon in mons do
+      mon_str := Sprintf("%o", mon);
+      if #mon_str gt 1 then
+        if mon_str[1..2] eq two_char_test then
+          does_it_appear := true;
+        end if;
+      end if;
+    end for;
+    assert does_it_appear;
   // writing
     str := SolvableDBCurveWriter(X : field_name := field_name, generator_name := generator_name, curve_name := curve_name, var_names := var_names);
     str *:= Sprintf("KX<%o> := FunctionField(%o);\n", var_text, curve_name);
+    // str *:= Sprintf("KX := FunctionField(%o);\n", curve_name);
     str *:= Sprintf("phi := KX!(%o);\n", phi);
   // return
     return str;

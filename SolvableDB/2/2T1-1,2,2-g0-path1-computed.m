@@ -7,22 +7,16 @@ Custom printing for Belyi curve and map
 /* Belyi curve */
 K := Rationals();
 P<x1, x2> := PolynomialRing(K, 2);
-A<x1, x2> := AffineSpace(P);
-I<x1, x2> := ideal< P | [
-x1 - x2^2 - 1
-] >;
-X<x1, x2> := Curve(A, I);
+PP<x1, x2> := Curve(ProjectiveSpace(P));
+X<x1, x2> := PP;
 
 /* Belyi map */
 K := Rationals();
 P<x1, x2> := PolynomialRing(K, 2);
-A<x1, x2> := AffineSpace(P);
-I<x1, x2> := ideal< P | [
-x1 - x2^2 - 1
-] >;
-X<x1, x2> := Curve(A, I);
-KX<x1, x2> := FunctionField(X);
-phi := KX!(x2^2 + 1);
+PP<x1, x2> := Curve(ProjectiveSpace(P));
+X<x1, x2> := PP;
+KX<[x]> := FunctionField(X);
+phi := KX!((x[1]^2 + 1)/x[1]^2);
 
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
@@ -44,6 +38,7 @@ s`SolvableDBGaloisOrbitSize := 1;
 s`SolvableDBPassportSize := 1;
 s`SolvableDBPointedPassportSize := 1;
 s`SolvableDBLevel := 1;
+s`SolvableDBSanityCheckTiming := 0.0300000000000000p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<2 |  
