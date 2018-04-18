@@ -499,6 +499,12 @@ end intrinsic;
 
 intrinsic SolvableDBUpdate(s::SolvableDB) -> MonStgElt
   {s is newly "computed" but database files have "notcomputed" in the name...so we remedy this situation.}
+  d := Degree(s);
+  dir := GetCurrentDirectory();
+  parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
+  if parentdir ne "SolvableDessins\n" then
+    error "make sure your working directory is the SolvableDessins repository.";
+  end if;
   assert BelyiMapIsComputed(s);
   if DatabaseBoolMatchesLocalBool(s) then
     // computed locally but already computed in database
