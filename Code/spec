@@ -9,4 +9,5 @@
   enumerating_triples.m
   genus_zero_models.m
   sanity_check.m
+  solvable_maps.m
 }

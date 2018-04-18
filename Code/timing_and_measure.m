@@ -2,7 +2,7 @@ intrinsic SolvableMeasure(s::SolvableDB) -> RngIntElt
   {asserts curve is assigned and returns an integer giving some naive measure of the complexity of the curve.}
   assert assigned s`SolvableDBBelyiCurve;
   assert assigned s`SolvableDBBelyiMap;
-  X := s`SolvableDBBelyiCurve;
+  X := BelyiCurve(s);
   equations := DefiningEquations(X);
   height_sum := 0;
   if BaseField(X) eq Rationals() then
@@ -13,7 +13,7 @@ intrinsic SolvableMeasure(s::SolvableDB) -> RngIntElt
       end for;
     end for;
   else
-    assert Type(BaseField(X)) eq FldNum;
+    assert ISA(Type(BaseField(X)), FldNum);
     for i := 1 to #equations do
       coeffs := Coefficients(equations[i]);
       for j := 1 to #coeffs do

@@ -1,81 +1,29 @@
+intrinsic IsoText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgElt
+  {returns text "var.lower, var.lower+1, ..., var.upper-1, var.upper".}
+  assert upper ge lower;
+  var_text := "";
+  if upper eq lower then
+    var_text *:= Sprintf("%o.%o", var, lower);
+  else
+    for i := lower to upper-1 by 1 do
+      var_text *:= Sprintf("%o.%o, ", var, i);
+    end for;
+    var_text *:= Sprintf("%o.%o", var, upper);
+  end if;
+  return var_text;
+end intrinsic;
+
 intrinsic SolvableBaseChange(s::SolvableDB, K::FldNum) -> SolvableDB
   {Extend base field of object to K.}
-  // curve
-    X := s`SolvableDBBelyiCurve;
-    X := BaseChange(X, K);
-    rk := Rank(Generic(Ideal(X)));
-    curve_vars := VarSeq("x", 1, rk);
-    AssignNames(~X, curve_vars);
-    s`SolvableDBBelyiCurve := X;
-  // map
-    map := s`SolvableDBBelyiMap;
-    KX := FunctionField(X);
-    if IsProjective(X) then // X is CrvHyp
-      map_vars := VarSeq("x", 1, rk-1);
-    else // X is not CrvHyp and is affine
-      map_vars := VarSeq("x", 1, rk);
-    end if;
-    AssignNames(~KX, map_vars);
-  // initialize variables to base change the map
-  num_vars := #map_vars;
-  if num_vars eq 2 then
-    x1 := KX.1;
-    x2 := KX.2;
-  elif num_vars eq 3 then
-    x1 := KX.1;
-    x2 := KX.2;
-    x3 := KX.3;
-  elif num_vars eq 4 then
-    x1 := KX.1;
-    x2 := KX.2;
-    x3 := KX.3;
-    x4 := KX.4;
-  elif num_vars eq 5 then
-    x1 := KX.1;
-    x2 := KX.2;
-    x3 := KX.3;
-    x4 := KX.4;
-    x5 := KX.5;
-  elif num_vars eq 6 then
-    x1 := KX.1;
-    x2 := KX.2;
-    x3 := KX.3;
-    x4 := KX.4;
-    x5 := KX.5;
-    x6 := KX.6;
-  elif num_vars eq 7 then
-    x1 := KX.1;
-    x2 := KX.2;
-    x3 := KX.3;
-    x4 := KX.4;
-    x5 := KX.5;
-    x6 := KX.6;
-    x7 := KX.7;
-  elif num_vars eq 8 then
-    x1 := KX.1;
-    x2 := KX.2;
-    x3 := KX.3;
-    x4 := KX.4;
-    x5 := KX.5;
-    x6 := KX.6;
-    x7 := KX.7;
-    x8 := KX.8;
-  elif num_vars eq 9 then
-    x1 := KX.1;
-    x2 := KX.2;
-    x3 := KX.3;
-    x4 := KX.4;
-    x5 := KX.5;
-    x6 := KX.6;
-    x7 := KX.7;
-    x8 := KX.8;
-    x9 := KX.9;
-  else
-    error "we should not be working in a high dimensional ambient space!";
-  end if;
-  phi := eval Sprintf("phi := KX!(%o); return phi;", map);
+  assert assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap;
+  X<[x]> := BaseChange(BelyiCurve(s), K);
+  rk := Rank(Generic(Ideal(X)));
+  phi := BelyiMap(s);
+  KX<[x]> := Parent(phi); // before base change (to rename variables)
+  KX<[x]> := FunctionField(X); // after base change
+  phi := eval Sprintf("return KX!(%o);", phi);
+  s`SolvableDBBelyiCurve := X;
   s`SolvableDBBelyiMap := phi;
-  // return
   return s;
 end intrinsic;
 
@@ -247,11 +195,11 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     return X;
 end intrinsic;
 
-intrinsic SolvableAssignRamification(s::SolvableDBObject) -> SolvableDBObject
+intrinsic SolvableAssignRamification(s::SolvableDB) -> SolvableDB
   {assigns [ram0, ram1, ramoo] to s.}
-  t := Child(s);
-  abc_below := t`SolvableDBABC;
-  abc := s`SolvableDBABC;
+  t := SolvableDBRead(Child(s) cat ".m");
+  abc_below := Orders(t);
+  abc := Orders(s);
   // ramification above 0
     if abc_below[1] eq abc[1] then
       ram0 := false;
@@ -278,13 +226,14 @@ intrinsic SolvableAssignRamification(s::SolvableDBObject) -> SolvableDBObject
   return s;
 end intrinsic;
 
-intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDBObject, t::SolvableDBObject) -> SolvableDBObject
+intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDB, t::SolvableDB) -> SolvableDB
   {assigns F0, F1, Foo to s.}
+  child_s := SolvableDBRead(Child(s) cat ".m");
   assert assigned s`SolvableDBRamification;
-  assert t`SolvableDBName eq Child(s)`SolvableDBName;
-  ram0, ram1, ramoo := Explode(s`SolvableDBRamification);
-  X_below := t`SolvableDBBelyiCurve;
-  phi_below := t`SolvableDBBelyiMap;
+  assert Name(t) eq Name(child_s);
+  ram0, ram1, ramoo := Explode(Ramification(s));
+  X_below := BelyiCurve(t);
+  phi_below := BelyiMap(t);
   DivX_below := DivisorGroup(X_below);
   // ram0
     if ram0 then
@@ -342,31 +291,51 @@ intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDBObject, t::Solvabl
     return s;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
+intrinsic PullbackBelyiMap(X_below::Crv, f::FldFunFracSchElt, phi_below::FldFunFracSchElt) -> Any
   {}
-  // timing
-    t_start := Cputime();
-  // if s is unramified then stop and return s
-    isunram := not SolvableIsRamifiedAtEveryLevel(s);
-    if isunram then
-      name := s`SolvableDBName;
-      error Sprintf("%o is unramified at some level, no method to compute unramified covers (currently).\n", name);
-    end if;
-  // assertions about child of s
-    vprintf Solvable: "So you want to compute a SolvableBelyiMap? Checking basic assertions.\n";
-    time_start := Cputime();
-    t := Child(s);
-    time_end := Cputime();
-    vprintf Solvable: "Done. That took %o seconds.\n", time_end-time_start;
+  vprintf Solvable : "Extracting root to make new curve...";
+  t0 := Cputime();
+  X<[x]> := ExtractRoot(X_below, f, 2);
+  t1 := Cputime();
+  vprintf Solvable : "done. %o seconds.\n", t1-t0;
+  vprintf Solvable : "Making new Belyi map...";
+  assert IsAffine(X);
+  KX<[x]> := FunctionField(X);
+  if IsAffine(X_below) then
+    X_below<[x]> := X_below;
+  else
+    assert IsProjective(X_below);
+    X_below<[x]> := AffinePatch(X_below, 1);
+  end if;
+  rk_below := Rank(Generic(Ideal(X_below)));
+  rk_above := Rank(Generic(Ideal(X)));
+  assert rk_above eq rk_below+1;
+  // projection map X -> X_below: [x1,x2,x3]->[x1,x2]
+  map_text := VarText("X.", 1, rk_below);
+  mp := eval Sprintf("return map< X->X_below | [%o] >;", map_text);
+  // pullback phi_below under this map
+  phi := Pullback(mp, phi_below);
+  assert phi_below in FunctionField(X_below);
+  assert phi in FunctionField(X);
+  vprintf Solvable : "done.\n";
+  return X, phi;
+end intrinsic;
+
+intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB) -> SolvableDB
+  {}
+  t_start := Cputime();
+  if not IsRamifiedAtEveryLevel(s) then
+    error Sprintf("%o is unramified at some level, no method to compute unramified covers (currently).\n", Name(s));
+  end if;
   // [ram0, ram1, ramoo] a sequence of bools
     vprintf Solvable: "Determining ramification:\n";
-    abc_below := t`SolvableDBABC;
-    abc := s`SolvableDBABC;
+    abc_below := Orders(t);
+    abc := Orders(s);
     s := SolvableAssignRamification(s);
-    ram0, ram1, ramoo := Explode(s`SolvableDBRamification);
-    vprintf Solvable: "ABC before = %o.\n", abc_below;
+    ram0, ram1, ramoo := Explode(Ramification(s));
+    vprintf Solvable: "Orders below = %o.\n", abc_below;
     vprintf Solvable: "ramification = %o.\n", [ram0, ram1, ramoo];
-    vprintf Solvable: "ABC after = %o.\n", abc;
+    vprintf Solvable: "Orders above = %o.\n", abc;
   // assign residue fields F0, F1, Foo, and divisors D0, D1, Doo
     vprintf Solvable : "Assign residue fields and divisors to s...\n";
     t0 := Cputime();
@@ -399,7 +368,7 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
         // make composite of residue fields
           vprintf Solvable: "Base changing...\n";
           vprintf Solvable: "Updating curve base field:\n";
-          F := BaseField(t`SolvableDBBelyiCurve);
+          F := BaseField(BelyiCurve(t));
           vprintf Solvable: "Degree of current base field = %o\n", Degree(F);
           newF := Compositum(F, F0);
           vprintf Solvable: "Degree with F0 = %o.\n", Degree(newF);
@@ -434,21 +403,8 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
           assert worked_after_basechange;
       end if;
   // setup curve downstairs
-    X_below := t`SolvableDBBelyiCurve;
-    phi_below := t`SolvableDBBelyiMap;
-    if IsProjective(X_below) then // X_below is hyperelliptic so choose a patch
-      X_below := AffinePatch(X_below, 1);
-      assert IsAffine(X_below);
-      KX_below := FunctionField(X_below);
-      assert KX_below eq Parent(phi_below);
-      num_vars := Rank(Generic(Ideal(X_below)));
-      vars := VarSeq("x", 1, num_vars);
-      AssignNames(~X_below, vars);
-      AssignNames(~KX_below, vars);
-      phi_below := KX_below!phi_below; // not necessary
-    else
-      assert IsAffine(X_below);
-    end if;
+    X_below := BelyiCurve(t);
+    phi_below := BelyiMap(t);
   // RiemannRoch
     vprintf Solvable: "Applying RiemannRoch to following divisor:\n";
     supp, mult := Support(D);
@@ -464,32 +420,17 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     vprintf Solvable: "Numerator(f) = %o.\n", numer;
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
-    vprintf Solvable : "Extracting root to make new curve...";
-    t0 := Cputime();
-    X := ExtractRoot(X_below, f, 2);
-    t1 := Cputime();
-    vprintf Solvable : "done. %o seconds.\n", t1-t0;
-    vprintf Solvable : "Making new Belyi map...";
-    KX := FunctionField(X);
-    // making the new Belyi map requires a bit more care now that we are changing models
-    rk_below := Rank(Generic(Ideal(X_below)));
-    rk_above := Rank(Generic(Ideal(X)));
-    assert rk_above eq rk_below+1;
-    // projection map X -> X_below: [x1,x2,x3]->[x1,x2]
-    map_text := VarText("X.", 1, rk_below);
-    mp := eval Sprintf("mp := map< X->X_below | [%o] >; return mp;", map_text);
-    // pullback phi_below under this map
-    phi := Pullback(mp, phi_below);
-    vprintf Solvable : "done.\n";
+    X, phi := PullbackBelyiMap(X_below, f, phi_below);
   // assertions
     vprintf Solvable : "Checking genus of curve...";
     t0_genus := Cputime();
-    assert s`SolvableDBGenus eq Genus(X);
+    assert Genus(s) eq Genus(X);
     t1_genus := Cputime();
     vprintf Solvable : "done. %o seconds\n", t1_genus - t0_genus;
   // assign information to s and return s
     s`SolvableDBBelyiCurve := X;
     s`SolvableDBBelyiMap := phi;
+    s := ToggleNotComputedToComputed(s); // put "computed" in the filename
   // timing
     t_end := Cputime();
     s`SolvableDBBelyiMapTiming := t_end - t_start;
@@ -497,21 +438,13 @@ intrinsic SolvableBelyiMap(s::SolvableDBObject) -> SolvableDBObject
     return s;
 end intrinsic;
 
-intrinsic IsoText(var::MonStgElt, lower::RngIntElt, upper::RngIntElt) -> MonStgElt
-  {returns text "var.lower, var.lower+1, ..., var.upper-1, var.upper".}
-  assert upper ge lower;
-  var_text := "";
-  if upper eq lower then
-    var_text *:= Sprintf("%o.%o", var, lower);
-  else
-    for i := lower to upper-1 by 1 do
-      var_text *:= Sprintf("%o.%o, ", var, i);
-    end for;
-    var_text *:= Sprintf("%o.%o", var, upper);
-  end if;
-  return var_text;
+intrinsic SolvableBelyiMap(s::SolvableDB) -> SolvableDB
+  {overloaded using child of s.}
+  t := SolvableDBRead(Child(s) cat ".m");
+  return SolvableBelyiMap(s, t);
 end intrinsic;
 
+/*
 intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
   {Compute solvable Belyi map m times, return the one with smallest SolvableMeasure. Careful with reassigning objects...}
   // make initial object
@@ -558,7 +491,9 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
     return current, errors;
   end if;
 end intrinsic;
+*/
 
+/*
 intrinsic SolvableProjectToPP3(s::SolvableDBObject) -> Any
   {Try to embed Belyi curve in PP3 (or PP2) and update SolvableDBObject. Return before and after versions.}
   vprintf Solvable : "%o Project to PP3 or PP2:\n", s`SolvableDBName;
@@ -658,7 +593,9 @@ intrinsic SolvableProjectToPP3(s::SolvableDBObject) -> Any
     return s;
   end if;
 end intrinsic;
+*/
 
+/*
 intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
   {Determine if Belyi curve has a hyperelliptic model and if so, returns updated object.}
   vprintf Solvable : "%o IsHyperelliptic?\n", s`SolvableDBName;
@@ -670,12 +607,10 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
     vprintf Solvable : "  Genus 0 or 1. Do nothing.\n";
     return false, s;
   end if;
-  /*
-  if assigned s`SolvableDBIsLowGenusOrHyperelliptic and s`SolvableDBIsLowGenusOrHyperelliptic then
-    vprintf Solvable : "  Already hyperelliptic. Do nothing.\n";
-    return true, s;
-  end if;
-  */
+  // if assigned s`SolvableDBIsLowGenusOrHyperelliptic and s`SolvableDBIsLowGenusOrHyperelliptic then
+    // vprintf Solvable : "  Already hyperelliptic. Do nothing.\n";
+    // return true, s;
+  // end if;
   if curve_assigned and map_assigned then
     // make before and after objects
     before := SolvableCopy(s);
@@ -730,7 +665,9 @@ intrinsic SolvableIsHyperelliptic(s::SolvableDBObject) -> Any
     return false, s;
   end if;
 end intrinsic;
+*/
 
+/*
 intrinsic SolvableWrapper(s::SolvableDBObject, n::RngIntElt : only_local := false) -> SolvableDBObject
   {for internal use only}
   s := SolvableBelyiMapLowMeasure(s, n); // TODO change this for whatever d
@@ -754,15 +691,15 @@ intrinsic SolvableWrapper(s::SolvableDBObject, n::RngIntElt : only_local := fals
     SolvableLocalSanityCheck(s,8736028057);
     SolvableMapSanityCheck(s);
   end if;
-  /*
-  SolvableDBWriteObject(s);
-  filename := s`SolvableDBFilename;
-  t := SolvableDBAccessEntry(filename);
-  assert SolvableLocalSanityCheck(t, 101);
-  */
+  // SolvableDBWriteObject(s);
+  // filename := s`SolvableDBFilename;
+  // t := SolvableDBAccessEntry(filename);
+  // assert SolvableLocalSanityCheck(t, 101);
   return s;
 end intrinsic;
+*/
 
+/*
 intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   {for internal use only}
   assert d eq 32;
@@ -794,3 +731,4 @@ intrinsic SolvableWrapper(d::RngIntElt, n::RngIntElt) -> MonStgElt
   end for;
   return Sprintf("Solvable wrapper completed for degree %o\n", d);
 end intrinsic;
+*/

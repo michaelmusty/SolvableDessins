@@ -6,15 +6,10 @@ Custom printing for Belyi curve and map
 
 /* Belyi curve */
 K := Rationals();
-P<x1, x2> := PolynomialRing(K, 2);
-PP<x1, x2> := Curve(ProjectiveSpace(P));
-X<x1, x2> := PP;
-
+X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
 /* Belyi map */
 K := Rationals();
-P<x1, x2> := PolynomialRing(K, 2);
-PP<x1, x2> := Curve(ProjectiveSpace(P));
-X<x1, x2> := PP;
+X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
 KX<[x]> := FunctionField(X);
 phi := KX!(-1/(x[1]^2 - 1));
 

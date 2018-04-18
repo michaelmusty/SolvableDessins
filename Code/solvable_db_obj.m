@@ -187,7 +187,7 @@ end intrinsic;
 
 intrinsic Orders(s::SolvableDB) -> SeqEnum[RngIntElt]
   {formerly ABC}
-  return s`SolvableDBABC;
+  return s`SolvableDBOrders;
 end intrinsic;
 
 intrinsic TriangleType(s::SolvableDB) -> MonStgElt
