@@ -176,7 +176,7 @@ intrinsic ToggleNotComputedToComputed(s::SolvableDB) -> SolvableDB
   new_name := GetComputedName(s);
   s`SolvableDBName := new_name;
   s`SolvableDBFilename := new_name cat ".m";
-  s`SolvableDBPathToPP1[#s`SolvableDBPathToPP1] := new_name;
+  // s`SolvableDBPathToPP1[#s`SolvableDBPathToPP1] := new_name;
   return s;
 end intrinsic;
 
@@ -554,7 +554,7 @@ intrinsic SolvableDBUpdate(s::SolvableDB) -> MonStgElt
     error "make sure your working directory is the SolvableDessins repository.";
   end if;
   assert BelyiMapIsComputed(s);
-  assert PathToPP1(s)[#PathToPP1(s)] eq GetComputedName(s);
+  // assert PathToPP1(s)[#PathToPP1(s)] eq GetComputedName(s);
   pass := SolvableDBToPassportDB(s);
   l_pass := SolvablePassportDBGetInfo(pass);
   pass_filenames := GaloisOrbits(pass); // SeqEnum of SolvableDB filenames
@@ -583,9 +583,9 @@ intrinsic SolvableDBUpdate(s::SolvableDB) -> MonStgElt
       parent_objs := ParentObjects(s);
       for i := 1 to #parent_objs do
         p := parent_objs[i];
-        assert p`SolvableDBChild eq p`SolvableDBPathToPP1[#p`SolvableDBPathToPP1-1];
+        // assert p`SolvableDBChild eq p`SolvableDBPathToPP1[#p`SolvableDBPathToPP1-1];
         p`SolvableDBChild := GetComputedName(Filename(s));
-        p`SolvableDBPathToPP1[#p`SolvableDBPathToPP1-1] := p`SolvableDBChild;
+        // p`SolvableDBPathToPP1[#p`SolvableDBPathToPP1-1] := p`SolvableDBChild;
         assert Child(p) eq Name(s);
       end for;
     // write new files

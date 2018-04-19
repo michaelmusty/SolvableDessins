@@ -86,7 +86,7 @@ s`SolvableDBMonodromyGroup := PermutationGroup<4 |
 \[ 1, 2, 3, 4 ],
 \[ 2, 3, 4, 1 ] >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T1-4,1,4-g0-path1" ];
-s`SolvableDBParents := [ Strings() | "8T2-4,2,4-g1-path1-notcomputed", "8T1-8,1,8-g0-path1-notcomputed", "8T1-8,2,8-g2-path1-notcomputed" ];
+s`SolvableDBParents := [ Strings() | "8T2-4,2,4-g1-path1-notcomputed", "8T1-8,1,8-g0-path1-computed", "8T1-8,2,8-g2-path1-notcomputed" ];
 s`SolvableDBChild := "2T1-2,1,2-g0-path1-computed";
 
 /*

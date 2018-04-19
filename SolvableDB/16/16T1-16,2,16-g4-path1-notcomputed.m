@@ -80,7 +80,7 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
  Order := 16 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T1-4,1,4-g0-path1", "8T1-8,1,8-g0-path1", "16T1-16,2,16-g4-path1" ];
 s`SolvableDBParents := [ Strings() | "32S1-32,4,32-g12-path1-notcomputed", "32S16-16,2,16-g7-path2-notcomputed" ];
-s`SolvableDBChild := "8T1-8,1,8-g0-path1-notcomputed";
+s`SolvableDBChild := "8T1-8,1,8-g0-path1-computed";
 
 /*
 Return for eval

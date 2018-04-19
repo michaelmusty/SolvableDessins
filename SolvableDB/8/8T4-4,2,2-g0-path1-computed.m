@@ -1,11 +1,28 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
+/* Belyi map */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
+KX<[x]> := FunctionField(X);
+phi := KX!((-64/225*x[1]^8 - 1024/225*nu*x[1]^7 + 2048/75*x[1]^6 + 16384/225*nu*x[1]^5 - 16384/225*x[1]^4)/(x[1]^8 - 32/15*nu*x[1]^7 + 2624/225*x[1]^6 + 512/25*nu*x[1]^5 + 9728/225*x[1]^4 + 57344/225*nu*x[1]^3 - 114688/225*x[1]^2 - 131072/225*nu*x[1] + 65536/225));
+
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
-s`SolvableDBName := "8T4-4,2,2-g0-path1-notcomputed";
-s`SolvableDBFilename := "8T4-4,2,2-g0-path1-notcomputed.m";
+s`SolvableDBName := "8T4-4,2,2-g0-path1-computed";
+s`SolvableDBFilename := "8T4-4,2,2-g0-path1-computed.m";
 s`SolvableDBPassportName := "8T4-4,2,2-g0";
 s`SolvableDBPathNumber := 1;
 s`SolvableDBDegree := 8;
@@ -22,6 +39,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 3, 8 },
 { IntegerRing() | 4, 7 }
 @};
+s`SolvableDBBelyiMapTiming := 0.040p15;
+s`SolvableDBSanityCheckTiming := 0.010p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<8 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 1 ],

@@ -195,3 +195,20 @@ intrinsic Passports(d::RngIntElt) -> SeqEnum[SolvablePassportDB]
     error "degree is not valid";
   end if;
 end intrinsic;
+
+intrinsic Passports(d::RngIntElt, genus::RngIntElt) -> SeqEnum[SolvablePassportDB]
+  {}
+  if IsEven(d) and #Factorization(d) eq 1 then
+    all := Passports(d);
+    fixed_genus := [];
+    for pass in all do
+      l := SolvablePassportDBGetInfo(pass);
+      if l[4] eq genus then
+        Append(~fixed_genus, pass);
+      end if;
+    end for;
+    return fixed_genus;
+  else
+    error "degree is not valid";
+  end if;
+end intrinsic;
