@@ -323,6 +323,8 @@ end intrinsic;
 
 intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB) -> SolvableDB
   {}
+  s := SolvableDBCopy(s);
+  t := SolvableDBCopy(t);
   t_start := Cputime();
   if not IsRamifiedAtEveryLevel(s) then
     error Sprintf("%o is unramified at some level, no method to compute unramified covers (currently).\n", Name(s));

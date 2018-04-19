@@ -99,9 +99,9 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<8 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<8 |  
 \[ 8, 6, 5, 2, 4, 7, 1, 3 ]:
  Order := 8 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1-computed", "4T1-4,4,2-g1-path1-notcomputed", "8T1-8,8,4-g3-path1-notcomputed" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T1-4,4,2-g1-path1", "8T1-8,8,4-g3-path1" ];
 s`SolvableDBParents := [ Strings() | "16T1-16,16,8-g7-path1-notcomputed", "16T1-16,16,8-g7-path2-notcomputed", "16T5-8,8,4-g5-path1-notcomputed", "16T5-8,8,4-g5-path2-notcomputed" ];
-s`SolvableDBChild := "4T1-4,4,2-g1-path1-notcomputed";
+s`SolvableDBChild := "4T1-4,4,2-g1-path1-computed";
 
 /*
 Return for eval

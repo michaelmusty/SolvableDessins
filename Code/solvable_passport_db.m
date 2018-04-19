@@ -1,7 +1,7 @@
 /* read information from file */
 
 intrinsic SolvablePassportDBGetInfo(filename::MonStgElt) -> List
-  {without reading in the file, returns [* degree, group, [a,b,c], genus, path#, is_computed *].}
+  {without reading in the file, returns [* degree, group, [a,b,c], genus *].}
   // directory stuff
   dir := GetCurrentDirectory();
   parentdir := Pipe(Sprintf("basename 'dirname %o'", dir), "");
@@ -31,6 +31,11 @@ intrinsic SolvablePassportDBGetInfo(filename::MonStgElt) -> List
   genus := StringToInteger(genus_str[1]);
   // return
   return [* degree, group, orders, genus *];
+end intrinsic;
+
+intrinsic SolvablePassportDBGetInfo(pass::SolvablePassportDB) -> List
+  {}
+  return SolvablePassportDBGetInfo(Filename(pass));
 end intrinsic;
 
 intrinsic SolvablePassportDBRead(filename::MonStgElt) -> SolvablePassportDB

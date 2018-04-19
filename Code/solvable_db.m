@@ -113,27 +113,70 @@ intrinsic SolvableDBGetPassportNameFromFile(filename::MonStgElt) -> MonStgElt
   end if;
 end intrinsic;
 
+intrinsic NameToNameSansComputedBool(name::MonStgElt) -> MonStgElt
+  {2T1-1,2,2-g0-path1-computed -> 2T1-1,2,2-g0-path1}
+  assert name[#name] ne "m";
+  filename := name cat ".m";
+  l := SolvableDBGetInfo(filename);
+  path_number := l[5];
+  passport_name := SolvableDBGetPassportNameFromFile(filename);
+  return Sprintf("%o-path%o", passport_name, path_number);
+end intrinsic;
+
+intrinsic FixPathToPP1(d::RngIntElt) -> MonStgElt
+  {}
+  f := SolvableDBFilenames(d);
+  for i := 1 to #f do
+    printf "i=%o out of %o\n", i, #f;
+    s := SolvableDBRead(f[i]);
+    path_to_pp1 := PathToPP1(s);
+    for j := 2 to #path_to_pp1 do
+      fixed_name := NameToNameSansComputedBool(path_to_pp1[j]);
+      path_to_pp1[j] := fixed_name;
+    end for;
+    for j := 1 to #path_to_pp1 do
+      str := path_to_pp1[j];
+      assert StringToInteger(str[#str]) in Integers();
+    end for;
+    s`SolvableDBPathToPP1 := path_to_pp1;
+    SolvableDBWrite(s);
+  end for;
+  return Sprintf("done for d=%o\n", d);
+end intrinsic;
+
+
+intrinsic GetComputedName(filename::MonStgElt) -> MonStgElt
+  {}
+  l := SolvableDBGetInfo(filename);
+  path_number := l[5];
+  passport_name := SolvableDBGetPassportNameFromFile(filename);
+  return Sprintf("%o-path%o-computed", passport_name, path_number);
+end intrinsic;
+
 intrinsic GetComputedName(s::SolvableDB) -> MonStgElt
   {}
-  l := SolvableDBGetInfo(Filename(s));
+  return GetComputedName(Filename(s));
+end intrinsic;
+
+intrinsic GetNotComputedName(filename::MonStgElt) -> MonStgElt
+  {}
+  l := SolvableDBGetInfo(filename);
   path_number := l[5];
-  passport_name := SolvableDBGetPassportNameFromFile(Filename(s));
-  return Sprintf("%o-path%o-computed", passport_name, path_number);
+  passport_name := SolvableDBGetPassportNameFromFile(filename);
+  return Sprintf("%o-path%o-notcomputed", passport_name, path_number);
 end intrinsic;
 
 intrinsic GetNotComputedName(s::SolvableDB) -> MonStgElt
   {}
-  l := SolvableDBGetInfo(Filename(s));
-  path_number := l[5];
-  passport_name := SolvableDBGetPassportNameFromFile(Filename(s));
-  return Sprintf("%o-path%o-notcomputed", passport_name, path_number);
+  return GetNotComputedName(Filename(s));
 end intrinsic;
 
 intrinsic ToggleNotComputedToComputed(s::SolvableDB) -> SolvableDB
-  {}
+  {update s now that it is computed.}
   new_name := GetComputedName(s);
   s`SolvableDBName := new_name;
   s`SolvableDBFilename := new_name cat ".m";
+  s`SolvableDBPathToPP1[#s`SolvableDBPathToPP1] := new_name;
   return s;
 end intrinsic;
 
@@ -497,6 +540,11 @@ intrinsic SolvableDBWrite(s::SolvableDB) -> MonStgElt
   return returnText;
 end intrinsic;
 
+intrinsic SolvableDBToPassportDB(s::SolvableDB) -> SolvablePassportDB
+  {}
+  return SolvablePassportDBRead(PassportName(s) cat ".m");
+end intrinsic;
+
 intrinsic SolvableDBUpdate(s::SolvableDB) -> MonStgElt
   {s is newly "computed" but database files have "notcomputed" in the name...so we remedy this situation.}
   d := Degree(s);
@@ -506,29 +554,65 @@ intrinsic SolvableDBUpdate(s::SolvableDB) -> MonStgElt
     error "make sure your working directory is the SolvableDessins repository.";
   end if;
   assert BelyiMapIsComputed(s);
+  assert PathToPP1(s)[#PathToPP1(s)] eq GetComputedName(s);
+  pass := SolvableDBToPassportDB(s);
+  l_pass := SolvablePassportDBGetInfo(pass);
+  pass_filenames := GaloisOrbits(pass); // SeqEnum of SolvableDB filenames
   if DatabaseBoolMatchesLocalBool(s) then
+    assert Filename(s) in pass_filenames;
     // computed locally but already computed in database
     error "computed map already in database...you'll have to change some source code if you really want that.";
   else
+    // update SolvablePassportDB
+      assert not Filename(s) in pass_filenames;
+      computed_filename := GetComputedName(Filename(s)) cat ".m";
+      assert computed_filename eq Filename(s);
+      not_computed_filename := GetNotComputedName(Filename(s)) cat ".m";
+      file_index := Index(pass_filenames, not_computed_filename);
+      pass_filenames[file_index] := computed_filename;
+      pass`GaloisOrbits := pass_filenames;
     // computed locally and not computed in database
-    // update child
-    t := ChildObject(s);
-    assert BelyiMapIsComputed(t);
-    parents := Parents(t);
-    s_index := Index(parents, Name(s));
-    parents[s_index] := GetComputedName(s);
-    t`SolvableDBParents := parents;
+    // update child of s
+      t := ChildObject(s);
+      assert BelyiMapIsComputed(t);
+      parents := Parents(t);
+      s_index := Index(parents, GetNotComputedName(s));
+      parents[s_index] := GetComputedName(s);
+      t`SolvableDBParents := parents;
+    // update parents of s
+      parent_objs := ParentObjects(s);
+      for i := 1 to #parent_objs do
+        p := parent_objs[i];
+        assert p`SolvableDBChild eq p`SolvableDBPathToPP1[#p`SolvableDBPathToPP1-1];
+        p`SolvableDBChild := GetComputedName(Filename(s));
+        p`SolvableDBPathToPP1[#p`SolvableDBPathToPP1-1] := p`SolvableDBChild;
+        assert Child(p) eq Name(s);
+      end for;
     // write new files
-    SolvableDBWrite(s);
-    SolvableDBWrite(t);
+      SolvablePassportDBWrite(pass);
+      SolvableDBWrite(s);
+      SolvableDBWrite(t);
+      for p in parent_objs do
+        SolvableDBWrite(p);
+      end for;
     // delete old file
-    rm_filename := GetNotComputedName(s) cat ".m";
-    command := Sprintf("rm %o/SolvableDB/%o/%o", dir, d, rm_filename);
-    System(command);
-    return_text := Sprintf("Summary of update:\n");
-    return_text *:= Sprintf("%o written\n", Filename(s));
-    return_text *:= Sprintf("%o written\n", Filename(t));
-    return_text *:= Sprintf("%o removed\n", rm_filename);
-    return return_text;
+      rm_filename := GetNotComputedName(s) cat ".m";
+      command := Sprintf("rm %o/SolvableDB/%o/%o", dir, d, rm_filename);
+      System(command);
+    // return
+      return_text := Sprintf("Summary of update:\n");
+      return_text *:= Sprintf("Passport file:\n");
+      return_text *:= Sprintf("  %o written\n", Filename(pass));
+      return_text *:= Sprintf("SolvableDB file:\n");
+      return_text *:= Sprintf("  %o written\n", Filename(s));
+      return_text *:= Sprintf("Child file:\n");
+      return_text *:= Sprintf("  %o written\n", Filename(t));
+      return_text *:= Sprintf("Parent files:\n");
+      for p in parent_objs do
+        return_text *:= Sprintf("  %o written\n", Filename(p));
+      end for;
+      return_text *:= Sprintf("Removed file:\n");
+      return_text *:= Sprintf("%o removed\n", rm_filename);
+      return return_text;
   end if;
 end intrinsic;

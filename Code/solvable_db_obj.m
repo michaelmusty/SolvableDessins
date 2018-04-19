@@ -95,20 +95,10 @@ intrinsic Print(s::SolvableDB)
   if assigned s`SolvableDBBelyiCurve and s`SolvableDBIsRamifiedAtEveryLevel then
     printf "BelyiCurve:\n";
     printf "%o: ", s`SolvableDBName;
-    if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
-      if s`SolvableDBIsLowGenusOrHyperelliptic then
-        if s`SolvableDBGenus in [0,1] then
-          printf "Low genus\n";
-        else
-          printf "Hyperelliptic\n";
-        end if;
-      else
-        printf "Nonhyperelliptic\n";
-      end if;
-    else
-      printf "Low degree model not computed!\n";
-    end if;
-    printf "%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
+    printf "Genus %o %o\n", Genus(s), Type(BelyiCurve(s));
+    printf "Defining equations\n%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
+    printf "BelyiMap:\n";
+    printf "%o\n", BelyiMap(s);
     printf "BaseField:\n";
     printf "%o\n", BaseField(s`SolvableDBBelyiCurve);
     if ISA(Type(BaseField(s`SolvableDBBelyiCurve)), FldNum) then
@@ -117,7 +107,7 @@ intrinsic Print(s::SolvableDB)
     end if;
   end if;
   if assigned s`SolvableDBBelyiMapTiming then
-    printf "Timing:\n";
+    printf "Timings:\n";
     printf "BelyiMap       : %o seconds.\n", s`SolvableDBBelyiMapTiming;
   end if;
   if assigned s`SolvableDBLowDegreeTiming then
@@ -131,7 +121,7 @@ intrinsic Print(s::SolvableDB)
     printf "p = %o\n", s`SolvableDBLocalSanityCheckPrime;
   end if;
   if assigned s`SolvableDBBelyiCurve then
-    printf "Naive Measure of Curve:\n";
+    printf "Naive Measure of Curve and Map:\n";
     printf "%o\n", SolvableMeasure(s);
   end if;
 end intrinsic;

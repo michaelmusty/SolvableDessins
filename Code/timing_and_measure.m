@@ -3,6 +3,12 @@ intrinsic SolvableMeasure(s::SolvableDB) -> RngIntElt
   assert assigned s`SolvableDBBelyiCurve;
   assert assigned s`SolvableDBBelyiMap;
   X := BelyiCurve(s);
+  phi := BelyiMap(s);
+  return SolvableMeasure(X)+SolvableMeasure(phi);
+end intrinsic;
+
+intrinsic SolvableMeasure(X::Crv) -> RngIntElt
+  {}
   equations := DefiningEquations(X);
   height_sum := 0;
   if BaseField(X) eq Rationals() then
@@ -22,4 +28,31 @@ intrinsic SolvableMeasure(s::SolvableDB) -> RngIntElt
     end for;
   end if;
   return height_sum;
+end intrinsic;
+
+intrinsic SolvableMeasure(phi::FldFunFracSchElt) -> RngIntElt
+  {}
+  num := Numerator(phi);
+  den := Denominator(phi);
+  num_coeffs := Coefficients(num);
+  den_coeffs := Coefficients(den);
+  num_sum := 0;
+  den_sum := 0;
+  if BaseField(Curve(Parent(phi))) eq Rationals() then
+    for j := 1 to #num_coeffs do
+      num_sum +:= Height(num_coeffs[j]);
+    end for;
+    for j := 1 to #den_coeffs do
+      den_sum +:= Height(den_coeffs[j]);
+    end for;
+  else
+    assert ISA(Type(BaseField(Curve(Parent(phi)))), FldNum);
+    for j := 1 to #num_coeffs do
+      num_sum +:= CoefficientHeight(num_coeffs[j]);
+    end for;
+    for j := 1 to #den_coeffs do
+      den_sum +:= CoefficientHeight(den_coeffs[j]);
+    end for;
+  end if;
+  return num_sum+den_sum;
 end intrinsic;

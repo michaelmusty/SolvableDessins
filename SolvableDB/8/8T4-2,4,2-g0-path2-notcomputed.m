@@ -68,9 +68,9 @@ s`SolvableDBMonodromyGroup := PermutationGroup<8 |
 \[ 2, 1, 4, 3, 8, 7, 6, 5 ],
 \[ 3, 7, 5, 2, 6, 1, 8, 4 ],
 \[ 4, 6, 8, 1, 7, 2, 5, 3 ] >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1-computed", "4T2-2,2,2-g0-path2-notcomputed", "8T4-2,4,2-g0-path2-notcomputed" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T4-2,4,2-g0-path2" ];
 s`SolvableDBParents := [ Strings() | "16T10-4,4,2-g1-path4-notcomputed", "16T10-2,4,4-g1-path5-notcomputed", "16T8-4,4,4-g3-path11-notcomputed", "16T13-2,8,2-g0-path1-notcomputed", "16T12-4,8,2-g2-path1-notcomputed", "16T12-2,8,4-g2-path1-notcomputed", "16T14-4,8,4-g4-path1-notcomputed" ];
-s`SolvableDBChild := "4T2-2,2,2-g0-path2-notcomputed";
+s`SolvableDBChild := "4T2-2,2,2-g0-path2-computed";
 
 /*
 Return for eval

@@ -25,6 +25,7 @@ end intrinsic;
 
 intrinsic GenusZeroModel(s::SolvableDB) -> SolvableDB
   {return computed genus zero s with BelyiCurve and map updated to be conic or PP1.}
+  s := SolvableDBCopy(s);
   l := SolvableDBGetInfo(Filename(s));
   assert assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap;
   assert l[6];
@@ -34,4 +35,13 @@ intrinsic GenusZeroModel(s::SolvableDB) -> SolvableDB
   s`SolvableDBBelyiCurve := X;
   s`SolvableDBBelyiMap := phi;
   return s;
+end intrinsic;
+
+intrinsic GenusZeroWrapper(s::SolvableDB) -> MonStgElt
+  {}
+  s := SolvableBelyiMap(s);
+  s := GenusZeroModel(s);
+  assert SolvableMapSanityCheck(s);
+  SolvableDBUpdate(s);
+  return Sprintf("GenusZeroWrapper : %o\n", Filename(s));
 end intrinsic;

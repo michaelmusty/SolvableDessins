@@ -33,6 +33,8 @@ s`SolvableDBGaloisOrbitSize := 1;
 s`SolvableDBPassportSize := 1;
 s`SolvableDBPointedPassportSize := 1;
 s`SolvableDBLevel := 1;
+s`SolvableDBBelyiMapTiming := 0.000000000000000000000000000000p30;
+s`SolvableDBSanityCheckTiming := 0.0100000000000000p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<2 |  
@@ -79,8 +81,8 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<2 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<2 |  
 \[ 2, 1 ]:
  Order := 2 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1-computed" ];
-s`SolvableDBParents := [ Strings() | "4T2-2,2,2-g0-path2-notcomputed", "4T1-4,2,4-g1-path1-notcomputed", "4T1-4,1,4-g0-path1-notcomputed" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1" ];
+s`SolvableDBParents := [ Strings() | "4T2-2,2,2-g0-path2-computed", "4T1-4,2,4-g1-path1-computed", "4T1-4,1,4-g0-path1-computed" ];
 s`SolvableDBChild := "PP1";
 
 /*

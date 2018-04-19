@@ -221,7 +221,7 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<128 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<128 |  
 \[ 110, 123, 104, 43, 39, 42, 119, 115, 125, 105, 108, 109, 63, 86, 47, 79, 124, 91, 117, 34, 51, 9, 60, 103, 107, 102, 72, 13, 12, 68, 54, 56, 76, 92, 46, 73, 45, 88, 84, 120, 122, 95, 75, 112, 126, 118, 101, 55, 113, 38, 121, 65, 71, 116, 16, 100, 111, 23, 10, 81, 67, 52, 24, 26, 48, 21, 128, 89, 66, 127, 87, 97, 50, 90, 7, 49, 11, 70, 106, 33, 32, 40, 41, 2, 19, 30, 36, 53, 15, 64, 59, 74, 114, 25, 5, 44, 18, 58, 17, 98, 14, 20, 77, 35, 27, 62, 80, 28, 22, 29, 99, 85, 94, 78, 96, 69, 8, 82, 83, 3, 31, 4, 6, 61, 1, 93, 37, 57 ]:
  Order := 8 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1-computed", "4T2-2,2,2-g0-path1-notcomputed", "8T5-4,4,4-g2-path1-notcomputed", "16T8-4,4,4-g3-path15-notcomputed", "32S2-4,4,4-g5-path13-notcomputed", "64S22-8,8,8-g21-path9-notcomputed", "128S34-8,8,8-g41-path25-notcomputed" ];
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T5-4,4,4-g2-path1", "16T8-4,4,4-g3-path15", "32S2-4,4,4-g5-path13", "64S22-8,8,8-g21-path9", "128S34-8,8,8-g41-path25" ];
 s`SolvableDBChild := "64S22-8,8,8-g21-path9-notcomputed";
 
 /*

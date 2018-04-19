@@ -5,7 +5,7 @@ Magma printing
 */
 
 s`Filename := "4T2-2,2,2-g0.m";
-s`GaloisOrbits := [ Strings() | "4T2-2,2,2-g0-path1-notcomputed.m", "4T2-2,2,2-g0-path2-notcomputed.m", "4T2-2,2,2-g0-path3-notcomputed.m" ];
+s`GaloisOrbits := [ Strings() | "4T2-2,2,2-g0-path1-computed.m", "4T2-2,2,2-g0-path2-computed.m", "4T2-2,2,2-g0-path3-computed.m" ];
 s`Name := "4T2-2,2,2-g0";
 s`Passport := [ PowerSequence(PermutationGroup<4 |  
 \[ 3, 4, 1, 2 ],

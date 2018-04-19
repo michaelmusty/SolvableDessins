@@ -10,4 +10,5 @@
   genus_zero_models.m
   sanity_check.m
   solvable_maps.m
+	genus_one_models.m
 }
