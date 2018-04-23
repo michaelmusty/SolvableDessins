@@ -24,7 +24,12 @@ intrinsic Print(s::SolvablePassportDB : verbose := 1)
       Append(~children_filenames, Child(s) cat ".m");
       printf " : orbit size %o", GaloisOrbitSize(s);
       if IsRamifiedAtEveryLevel(s) then
-        printf " : ramified\n";
+        printf " : ramified";
+        if BelyiMapIsComputed(s) then
+          printf " : computed\n";
+        else
+          printf " : not computed\n";
+        end if;
       else
         printf " : unramified\n";
       end if;
@@ -102,4 +107,9 @@ end intrinsic;
 intrinsic GaloisOrbits(s::SolvablePassportDB) -> SeqEnum[SeqEnum[MonStgElt]]
   {}
   return s`GaloisOrbits;
+end intrinsic;
+
+intrinsic FilenamesInPassport(s::SolvablePassportDB) -> SeqEnum[SeqEnum[MonStgElt]]
+  {use this name more...}
+  return GaloisOrbits(s);
 end intrinsic;

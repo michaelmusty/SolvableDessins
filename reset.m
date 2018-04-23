@@ -20,6 +20,19 @@ Front Matter
 MAIN
 */
 
+System("rm -rf SolvableDB/128");
+System("rm -rf SolvablePassportDB/128");
+System("rm -rf SolvableDB/64");
+System("rm -rf SolvablePassportDB/64");
+System("rm -rf SolvableDB/32");
+System("rm -rf SolvablePassportDB/32");
+System("rm -rf SolvableDB/16");
+System("rm -rf SolvablePassportDB/16");
+System("rm -rf SolvableDB/8");
+System("rm -rf SolvablePassportDB/8");
+System("rm -rf SolvableDB/4");
+System("rm -rf SolvablePassportDB/4");
+
 f := SolvableDBFilenames(2);
 l := [SolvableDBRead(name) : name in f];
 for s in l do
@@ -27,14 +40,15 @@ for s in l do
   SolvableDBWrite(s);
 end for;
 
-/*
-s2t1_1_a := SolvableDBAccessEntry("2T1-1,2,2-g0-path1.m");
-delete s2t1_1_a`SolvableDBParents;
-SolvableDBWriteObject(s2t1_1_a);
-s2t1_1_b := SolvableDBAccessEntry("2T1-2,1,2-g0-path1.m");
-delete s2t1_1_b`SolvableDBParents;
-SolvableDBWriteObject(s2t1_1_b);
-s2t1_1_c := SolvableDBAccessEntry("2T1-2,2,1-g0-path1.m");
-delete s2t1_1_c`SolvableDBParents;
-SolvableDBWriteObject(s2t1_1_c);
-*/
+System("mkdir SolvableDB/4");
+System("mkdir SolvablePassportDB/4");
+System("mkdir SolvableDB/8");
+System("mkdir SolvablePassportDB/8");
+System("mkdir SolvableDB/16");
+System("mkdir SolvablePassportDB/16");
+System("mkdir SolvableDB/32");
+System("mkdir SolvablePassportDB/32");
+System("mkdir SolvableDB/64");
+System("mkdir SolvablePassportDB/64");
+System("mkdir SolvableDB/128");
+System("mkdir SolvablePassportDB/128");

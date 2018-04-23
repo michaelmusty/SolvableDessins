@@ -5,7 +5,7 @@ Magma printing
 */
 
 s`Filename := "32S3-8,8,4-g9.m";
-s`GaloisOrbits := [ Strings() | "32S3-8,8,4-g9-path5-notcomputed.m", "32S3-8,8,4-g9-path1-notcomputed.m", "32S3-8,8,4-g9-path7-notcomputed.m" ];
+s`GaloisOrbits := [ Strings() | "32S3-8,8,4-g9-path18.m", "32S3-8,8,4-g9-path24.m", "32S3-8,8,4-g9-path16.m", "32S3-8,8,4-g9-path10.m", "32S3-8,8,4-g9-path25.m", "32S3-8,8,4-g9-path8.m", "32S3-8,8,4-g9-path21.m", "32S3-8,8,4-g9-path2.m", "32S3-8,8,4-g9-path11.m", "32S3-8,8,4-g9-path17.m", "32S3-8,8,4-g9-path29.m", "32S3-8,8,4-g9-path7.m", "32S3-8,8,4-g9-path26.m", "32S3-8,8,4-g9-path12.m", "32S3-8,8,4-g9-path9.m", "32S3-8,8,4-g9-path22.m", "32S3-8,8,4-g9-path6.m", "32S3-8,8,4-g9-path13.m", "32S3-8,8,4-g9-path27.m", "32S3-8,8,4-g9-path5.m", "32S3-8,8,4-g9-path1.m", "32S3-8,8,4-g9-path19.m", "32S3-8,8,4-g9-path14.m", "32S3-8,8,4-g9-path23.m", "32S3-8,8,4-g9-path28.m", "32S3-8,8,4-g9-path3.m", "32S3-8,8,4-g9-path15.m", "32S3-8,8,4-g9-path20.m", "32S3-8,8,4-g9-path4.m" ];
 s`Name := "32S3-8,8,4-g9";
 s`Passport := [ PowerSequence(PermutationGroup<32 |  
 \[ 11, 18, 8, 7, 2, 5, 20, 10, 22, 12, 9, 28, 6, 1, 4, 15, 14, 19, 31, 21, 32, 29, 16, 3, 17, 24, 13, 30, 25, 26, 27, 23 ],

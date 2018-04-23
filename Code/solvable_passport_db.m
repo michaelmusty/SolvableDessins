@@ -139,7 +139,7 @@ intrinsic SolvablePassportDBExample(l::SeqEnum[SolvableDB]) -> SolvableExampleDB
       Append(~sizes, #PassportRepresentatives(sigma));
     end for;
   end for;
-  assert #SequenceToSet(sizes) eq 1;
+  assert #SequenceToSet(sizes) eq 1; // theorem here? or just Galois theory
   spass`Passport := PassportRepresentatives(GaloisOrbit(l[1])[1]);
   // GaloisOrbits
   spass`GaloisOrbits := [Filename(s) : s in l];

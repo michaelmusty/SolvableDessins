@@ -5,7 +5,7 @@ Magma printing
 */
 
 s`Filename := "32S19-2,16,4-g4.m";
-s`GaloisOrbits := [ Strings() | "32S19-2,16,4-g4-path1-notcomputed.m" ];
+s`GaloisOrbits := [ Strings() | "32S19-2,16,4-g4-path3.m", "32S19-2,16,4-g4-path2.m", "32S19-2,16,4-g4-path1.m" ];
 s`Name := "32S19-2,16,4-g4";
 s`Passport := [ PowerSequence(PermutationGroup<32 |  
 \[ 10, 5, 7, 13, 2, 8, 3, 6, 15, 1, 14, 21, 4, 11, 9, 23, 18, 17, 22, 29, 12, 19, 16, 25, 24, 31, 30, 32, 20, 27, 26, 28 ],

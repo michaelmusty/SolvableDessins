@@ -329,7 +329,7 @@ intrinsic SolvableDBExample(galois_orbit::SeqEnum[SeqEnum[GrpPermElt]], blocks::
   // generate name
     newname := SolvableDBGenerateName(sigma);
   // SolvableDBName
-    s`SolvableDBName := Sprintf("%o-path%o-notcomputed", newname, path_number); // path number is passed
+    s`SolvableDBName := Sprintf("%o-path%o", newname, path_number); // path number is passed
   // SolvableDBBlocks
     s`SolvableDBBlocks := blocks; // blocks are passed
   // SolvableDBFilename
@@ -477,13 +477,13 @@ intrinsic GaloisOrbitsAtLevel(d::RngIntElt) -> Any
           existing_path_numbers := [];
           for k := 1 to #need_to_write_above do
             test := need_to_write_above[k];
-            test_name := SolvableDBUnsolvableName(test);
+            test_name := PassportName(test);
             if test_name eq new_name then
               Append(~existing_path_numbers, test`SolvableDBPathNumber);
             end if;
           end for;
           for a in aboves do
-            a_name := SolvableDBUnsolvableName(a);
+            a_name := PassportName(a);
             if a_name eq new_name then
               Append(~existing_path_numbers, a`SolvableDBPathNumber);
             end if;
@@ -540,17 +540,6 @@ intrinsic OrbitsToPassports(l::SeqEnum[SolvableDB]) -> SeqEnum[SeqEnum[SolvableD
   return passports;
 end intrinsic;
 
-intrinsic ParentObjects(s::SolvableDB) -> SeqEnum[SolvableDB]
-  {}
-  filenames := [parent cat ".m" : parent in Parents(s)];
-  return [SolvableDBRead(filename) : filename in filenames];
-end intrinsic;
-
-intrinsic ChildObject(s::SolvableDB) -> SolvableDB
-  {the object instead of the name}
-  return SolvableDBRead(Child(s) cat ".m");
-end intrinsic;
-
 intrinsic IsRedundant(s::SolvableDB, t::SolvableDB) -> BoolElt
   {}
   check1 := PassportName(s) eq PassportName(t);
@@ -584,40 +573,75 @@ end intrinsic;
 
 intrinsic EliminateRedundancies(l::SeqEnum[SolvableDB]) -> SeqEnum[SolvableDB]
   {uses IsRedundant over a sequence of objects.}
+  vprintf Solvable : "#before=%o:\n", #l;
+  for i := 1 to #l do
+    vprintf Solvable : " %o %o\n", Name(l[i]), IsRamifiedAtEveryLevel(l[i]);
+  end for;
   for i := #l to 1 by -1 do
+    vprintf Solvable : " Comparing %o %o:\n", Name(l[i]), IsRamifiedAtEveryLevel(l[i]);
     for j := 1 to i do
       if IsRedundant(l[i],l[j]) and i ne j then
-        Remove(~l, i);
-        break j;
+        vprintf Solvable : "  %o %o redundant\n", Name(l[j]), IsRamifiedAtEveryLevel(l[j]);
+        is_i := IsRamifiedAtEveryLevel(l[i]);
+        is_j := IsRamifiedAtEveryLevel(l[j]);
+        if is_i then
+          if is_j then // both ramified
+            Remove(~l, i);
+            break j;
+          else // l[i] ramified, l[j] unramified
+            l[j] := l[i]; // want to keep l[i], so store it in l[j] and throw away l[i]
+            Remove(~l, i);
+            break j;
+          end if;
+        else
+          if is_j then // l[i] unramified, l[j] ramified
+            Remove(~l, i);
+            break j;
+          else // both unramified
+            Remove(~l, i);
+            break j;
+          end if;
+        end if;
+      else
+        vprintf Solvable : "  %o %o not redundant\n", Name(l[j]), IsRamifiedAtEveryLevel(l[j]);
       end if;
     end for;
+  end for;
+  vprintf Solvable : "#after=%o:\n", #l;
+  for i := 1 to #l do
+    vprintf Solvable : " %o %o\n", Name(l[i]), IsRamifiedAtEveryLevel(l[i]);
   end for;
   return l;
 end intrinsic;
 
-intrinsic PassportsAtLevel(d::RngIntElt) -> Any
+intrinsic PassportsAtLevel(d::RngIntElt : eliminate := false) -> Any
   {returns passports as a SeqEnum[SeqEnum[SolvableDB]] all of which need to be written to file and below as SeqEnum[SolvableDB] which also need to be written to file.}
   if IsEven(d) and #Factorization(d) eq 1 then
     below, above := GaloisOrbitsAtLevel(d);
     vprintf Solvable : "OrbitsToPassports...";
     passports := OrbitsToPassports(above);
-    vprintf Solvable : "done.\n";
-    new_passports := [];
-    for l in passports do
-      vprintf Solvable : "Eliminate redundancies %o out of %o\n", Index(passports, l), #passports;
-      Append(~new_passports, EliminateRedundancies(l));
-      vprintf Solvable : "done.\n";
-    end for;
-    return new_passports, below;
+    vprintf Solvable : "done.\n\n";
+    if eliminate then
+      new_passports := [];
+      for l in passports do
+        vprintf Solvable : "Eliminate redundancies %o out of %o\n", Index(passports, l), #passports;
+        l_new := EliminateRedundancies(l);
+        Append(~new_passports, l_new);
+        vprintf Solvable : Sprintf("Done: #before=%o, #after=%o\n\n", #l, #l_new);
+      end for;
+      return new_passports, below;
+    else
+      return passports, below;
+    end if;
   else
     error "degree is not valid";
   end if;
 end intrinsic;
 
-intrinsic WritePassportsAtLevel(d::RngIntElt) -> MonStgElt
+intrinsic WritePassportsAtLevel(d::RngIntElt : eliminate := false) -> MonStgElt
   {Calls PassportsAtLevel(d) and writes all relevant SolvablePassportDBs and SolvableDBs to file.}
   if IsEven(d) and #Factorization(d) eq 1 then
-    passports, below := PassportsAtLevel(d);
+    passports, below := PassportsAtLevel(d : eliminate := eliminate);
     // write all SolvableDBs
     for l in passports do
       for s in l do
@@ -636,4 +660,15 @@ intrinsic WritePassportsAtLevel(d::RngIntElt) -> MonStgElt
   else
     error "degree is not valid";
   end if;
+end intrinsic;
+
+intrinsic ParentObjects(s::SolvableDB) -> SeqEnum[SolvableDB]
+  {}
+  filenames := [parent cat ".m" : parent in Parents(s)];
+  return [SolvableDBRead(filename) : filename in filenames];
+end intrinsic;
+
+intrinsic ChildObject(s::SolvableDB) -> SolvableDB
+  {the object instead of the name}
+  return SolvableDBRead(Child(s) cat ".m");
 end intrinsic;

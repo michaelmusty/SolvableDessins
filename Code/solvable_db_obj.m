@@ -148,6 +148,17 @@ intrinsic SolvableDBInitialize() -> SolvableDB
   return s;
 end intrinsic;
 
+intrinsic ParentObjects(s::SolvableDB) -> SeqEnum[SolvableDB]
+  {}
+  filenames := [parent cat ".m" : parent in Parents(s)];
+  return [SolvableDBRead(filename) : filename in filenames];
+end intrinsic;
+
+intrinsic ChildObject(s::SolvableDB) -> SolvableDB
+  {the object instead of the name}
+  return SolvableDBRead(Child(s) cat ".m");
+end intrinsic;
+
 /* user convenience functions */
 
 intrinsic Name(s::SolvableDB) -> MonStgElt

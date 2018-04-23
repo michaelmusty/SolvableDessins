@@ -432,7 +432,6 @@ intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB) -> SolvableDB
   // assign information to s and return s
     s`SolvableDBBelyiCurve := X;
     s`SolvableDBBelyiMap := phi;
-    s := ToggleNotComputedToComputed(s); // put "computed" in the filename
   // timing
     t_end := Cputime();
     s`SolvableDBBelyiMapTiming := t_end - t_start;
@@ -442,7 +441,7 @@ end intrinsic;
 
 intrinsic SolvableBelyiMap(s::SolvableDB) -> SolvableDB
   {overloaded using child of s.}
-  t := SolvableDBRead(Child(s) cat ".m");
+  t := ChildObject(s);
   return SolvableBelyiMap(s, t);
 end intrinsic;
 
