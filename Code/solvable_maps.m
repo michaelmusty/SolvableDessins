@@ -423,9 +423,11 @@ intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB) -> SolvableDB
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
     X, phi := PullbackBelyiMap(X_below, f, phi_below);
+    assert IsCyclotomic(BaseField(X));
   // assertions
     vprintf Solvable : "Checking genus of curve...";
     t0_genus := Cputime();
+    assert IsGenusComputable(X);
     assert Genus(s) eq Genus(X);
     t1_genus := Cputime();
     vprintf Solvable : "done. %o seconds\n", t1_genus - t0_genus;

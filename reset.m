@@ -30,18 +30,19 @@ System("rm -rf SolvableDB/16");
 System("rm -rf SolvablePassportDB/16");
 System("rm -rf SolvableDB/8");
 System("rm -rf SolvablePassportDB/8");
-System("rm -rf SolvableDB/4");
-System("rm -rf SolvablePassportDB/4");
+// System("rm -rf SolvableDB/4");
+// System("rm -rf SolvablePassportDB/4");
 
-f := SolvableDBFilenames(2);
+// TODO
+f := SolvableDBFilenames(4);
 l := [SolvableDBRead(name) : name in f];
 for s in l do
   delete s`SolvableDBParents;
   SolvableDBWrite(s);
 end for;
 
-System("mkdir SolvableDB/4");
-System("mkdir SolvablePassportDB/4");
+// System("mkdir SolvableDB/4");
+// System("mkdir SolvablePassportDB/4");
 System("mkdir SolvableDB/8");
 System("mkdir SolvablePassportDB/8");
 System("mkdir SolvableDB/16");

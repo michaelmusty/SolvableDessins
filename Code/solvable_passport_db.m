@@ -149,6 +149,19 @@ end intrinsic;
 
 /* access information about the passport */
 
+intrinsic Passport(filename::MonStgElt) -> SolvablePassportDB
+  {}
+  raw := Split(filename, "-");
+  if #raw eq 4 then
+    s := SolvableDBRead(filename);
+    return SolvablePassportDBRead(PassportName(s) cat ".m");
+  elif #raw eq 3 then
+    return SolvablePassportDBRead(filename);
+  else
+    error "filename doesn't work!";
+  end if;
+end intrinsic;
+
 intrinsic PassportObjects(spass::SolvablePassportDB) -> SeqEnum[SolvableDB]
   {}
   filenames := GaloisOrbits(spass);

@@ -26,7 +26,9 @@ intrinsic Print(s::SolvablePassportDB : verbose := 1)
       if IsRamifiedAtEveryLevel(s) then
         printf " : ramified";
         if BelyiMapIsComputed(s) then
-          printf " : computed\n";
+          printf " : computed %o", Type(BelyiCurve(s));
+          printf " over %o : ", BaseField(BelyiCurve(s));
+          printf "%o\n", SolvableMeasure(s);
         else
           printf " : not computed\n";
         end if;

@@ -11,4 +11,7 @@
   solvable_maps.m
   genus_zero_models.m
 	genus_one_models.m
+	hyperelliptic_models.m
+	nonhyperelliptic_models.m
+	descent.m
 }
