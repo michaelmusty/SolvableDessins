@@ -5,22 +5,12 @@ Custom printing for Belyi curve and map
 */
 
 /* Belyi curve */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
-P<[x]> := PolynomialRing(K, 2);
-I<[x]> := ideal< P | [
-x[1]^2*x[2]^2 + 8/17*nu*x[1]*x[2]^2 - x[1]^2 - 16/17*x[2]^2 + 8/15*nu*x[1] - 16/15
-] >;
-X<[x]> := Curve(AffineSpace(P), I);
-
+K := Rationals();
+X<[x]> := EllipticCurve(Polynomial(K, [ 0, 260100, 0, 1 ]), Polynomial(K, []));
 /* Belyi map */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
-P<[x]> := PolynomialRing(K, 2);
-I<[x]> := ideal< P | [
-x[1]^2*x[2]^2 + 8/17*nu*x[1]*x[2]^2 - x[1]^2 - 16/17*x[2]^2 + 8/15*nu*x[1] - 16/15
-] >;
-X<[x]> := Curve(AffineSpace(P), I);
-KX<[x]> := FunctionField(X);
-phi := KX!((x[2]^8 - 578/225*x[2]^4 + 83521/50625)/(x[2]^8 + 578/225*x[2]^4 + 83521/50625));
+K := Rationals();
+X<[x]> := EllipticCurve(Polynomial(K, [ 0, 260100, 0, 1 ]), Polynomial(K, []));KX<[x]> := FunctionField(X);
+phi := KX!((x[1]^8 - 1040400*x[1]^6 + 405912060000*x[1]^4 - 70385151204000000*x[1]^2 + 4576794457040100000000)/(x[1]^8 + 3121200*x[1]^6 + 2570776380000*x[1]^4 + 211155453612000000*x[1]^2 + 4576794457040100000000));
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -51,8 +41,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 11 },
 { IntegerRing() | 13, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.060p15;
-s`SolvableDBSanityCheckTiming := 0.050p15;
+s`SolvableDBBelyiMapTiming := 0.0600000000000000p15;
+s`SolvableDBSanityCheckTiming := 0.010p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],

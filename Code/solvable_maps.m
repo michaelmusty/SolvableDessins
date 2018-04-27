@@ -443,21 +443,27 @@ intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB) -> SolvableDB
     return s;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDB) -> SolvableDB
+intrinsic SolvableBelyiMap(s::SolvableDB : best_child := false) -> SolvableDB
   {overloaded using child of s.}
   t := ChildObject(s);
-  pass := SolvableDBToPassportDB(t);
-  objs := PassportObjects(pass);
-  if PointedPassportSize(t) gt 1 and #objs gt 1 then
-    error "Careful about which map chosen below: %o\n", Filename(s);
-  end if;
-  below := t;
-  for obj in objs do
-    if SolvableMeasure(obj) lt SolvableMeasure(t) then
-      below := obj;
+  if best_child then
+    pass := SolvableDBToPassportDB(t);
+    objs := PassportObjects(pass);
+    if PointedPassportSize(t) gt 1 and #objs gt 1 then
+      error "Careful about which map chosen below: %o\n", Filename(s);
     end if;
-  end for;
-  return SolvableBelyiMap(s, below);
+    below := t;
+    for obj in objs do
+      if BelyiMapIsComputed(obj) then
+        if SolvableMeasure(obj) lt SolvableMeasure(t) then
+          below := obj;
+        end if;
+      end if;
+    end for;
+    return SolvableBelyiMap(s, below);
+  else
+    return SolvableBelyiMap(s, t);
+  end if;
 end intrinsic;
 
 /*

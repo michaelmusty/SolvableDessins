@@ -14,7 +14,7 @@ intrinsic GenusOneModel(X::Crv, phi::FldFunFracSchElt) -> Any
     print e;
     try
       pts := RationalPoints(Z);
-      E, mp := EllipticCurve(Z, pts[1]);
+      E, mp := EllipticCurve(Z, pts[2]);
       psi := Pushforward(mp, phi);
       return E, psi;
     catch e1

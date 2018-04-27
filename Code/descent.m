@@ -318,7 +318,8 @@ intrinsic ChangeOfVariables(s::SolvableDB) -> SolvableDB
   // l_curve := [P.1*(K.1^3-K.1), P.2, P.3]; // genus one
   // l_curve := [P.1*K.1];
   // l_curve := [P.1*K.1, P.2, P.3*K.1^2, P.4]; // 16T1-4,16,16-g6-path1.m
-  l_curve := [P.1*(K.1^3-K.1), P.2, P.3]; // genus one
+  // l_curve := [P.1, -P.2*K.1^4, P.3]; // genus one
+  l_curve := [P.1*K.1, P.2, P.3]; // genus one
 
   X_test := ChangeOfVariables(X, l_curve);
   // map
@@ -330,7 +331,8 @@ intrinsic ChangeOfVariables(s::SolvableDB) -> SolvableDB
   // l_map := [P.1*(K.1^3-K.1), P.2]; // genus one
   // l_map := [P.1*K.1];
   // l_map := [P.1*K.1, P.2, P.3*K.1^2]; // 16T1-4,16,16-g6-path1.m
-  l_map := [P.1*(K.1^3-K.1), P.2]; // genus one
+  // l_map := [P.1, -P.2*K.1^4]; // genus one
+  l_map := [P.1*K.1, P.2]; // genus one
 
   X_new, phi_new := ChangeOfVariables(phi, l_curve, l_map);
   // assert X_test eq X_new;
