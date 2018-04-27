@@ -9,8 +9,8 @@ K := Rationals();
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
 x[1]^5 - x[2]^2 - x[1],
-x[1]^3*x[3]^2 - x[1]^2*x[3]^2 + x[1]*x[3]^2 - x[3]^2 - x[2],
-x[2]*x[3]^2 - x[1]^2 - x[1]
+x[1]^3*x[3]^2 + x[1]*x[3]^2 - x[2],
+x[2]*x[3]^2 - x[1]^2 + 1
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 
@@ -19,12 +19,12 @@ K := Rationals();
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
 x[1]^5 - x[2]^2 - x[1],
-x[1]^3*x[3]^2 - x[1]^2*x[3]^2 + x[1]*x[3]^2 - x[3]^2 - x[2],
-x[2]*x[3]^2 - x[1]^2 - x[1]
+x[1]^3*x[3]^2 + x[1]*x[3]^2 - x[2],
+x[2]*x[3]^2 - x[1]^2 + 1
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 KX<[x]> := FunctionField(X);
-phi := KX!((-6*x[3]^12 - 3*x[3]^8 + x[3]^4)/(80*x[3]^4 + 48)*x[2]^2 + (-12*x[3]^16 + 26*x[3]^12 + 21*x[3]^8 - 2*x[3]^4 - 1)/(80*x[3]^10 + 48*x[3]^6)*x[2] + (28*x[3]^12 + 96*x[3]^8 + 45*x[3]^4 - 1)/(80*x[3]^8 + 48*x[3]^4));
+phi := KX!((x[3]^12 + x[3]^4)/8*x[2]^2 + (3*x[3]^16 + 4*x[3]^8 - 1)/(8*x[3]^6)*x[2] + (x[3]^8 + 5)/4);
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -55,8 +55,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 16 },
 { IntegerRing() | 12, 13 }
 @};
-s`SolvableDBBelyiMapTiming := 0.140p15;
-s`SolvableDBSanityCheckTiming := 0.370p15;
+s`SolvableDBBelyiMapTiming := 0.060p15;
+s`SolvableDBSanityCheckTiming := 0.200p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],

@@ -230,7 +230,7 @@ intrinsic SolvableAssignResidueFieldsAndDivisors(s::SolvableDB, t::SolvableDB) -
   {assigns F0, F1, Foo to s.}
   child_s := SolvableDBRead(Child(s) cat ".m");
   assert assigned s`SolvableDBRamification;
-  assert Name(t) eq Name(child_s);
+  assert PassportName(t) eq PassportName(child_s);
   ram0, ram1, ramoo := Explode(Ramification(s));
   X_below := BelyiCurve(t);
   phi_below := BelyiMap(t);
@@ -423,7 +423,9 @@ intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB) -> SolvableDB
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
     X, phi := PullbackBelyiMap(X_below, f, phi_below);
-    assert IsCyclotomic(BaseField(X));
+    // if Degree(BaseField(X)) gt 1 then
+      // assert IsCyclotomic(BaseField(X));
+    // end if;
   // assertions
     vprintf Solvable : "Checking genus of curve...";
     t0_genus := Cputime();
@@ -444,7 +446,18 @@ end intrinsic;
 intrinsic SolvableBelyiMap(s::SolvableDB) -> SolvableDB
   {overloaded using child of s.}
   t := ChildObject(s);
-  return SolvableBelyiMap(s, t);
+  pass := SolvableDBToPassportDB(t);
+  objs := PassportObjects(pass);
+  if PointedPassportSize(t) gt 1 and #objs gt 1 then
+    error "Careful about which map chosen below: %o\n", Filename(s);
+  end if;
+  below := t;
+  for obj in objs do
+    if SolvableMeasure(obj) lt SolvableMeasure(t) then
+      below := obj;
+    end if;
+  end for;
+  return SolvableBelyiMap(s, below);
 end intrinsic;
 
 /*

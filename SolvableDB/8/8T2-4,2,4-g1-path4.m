@@ -6,11 +6,11 @@ Custom printing for Belyi curve and map
 
 /* Belyi curve */
 K := Rationals();
-X<[x]> := EllipticCurve(Polynomial(K, [ -16, 16, -6, 1 ]), Polynomial(K, []));
+X<[x]> := EllipticCurve(Polynomial(K, [ 0, 4, 0, 1 ]), Polynomial(K, []));
 /* Belyi map */
 K := Rationals();
-X<[x]> := EllipticCurve(Polynomial(K, [ -16, 16, -6, 1 ]), Polynomial(K, []));KX<[x]> := FunctionField(X);
-phi := KX!(x[1]^4/(x[1]^4 - 16*x[1]^3 + 96*x[1]^2 - 256*x[1] + 256));
+X<[x]> := EllipticCurve(Polynomial(K, [ 0, 4, 0, 1 ]), Polynomial(K, []));KX<[x]> := FunctionField(X);
+phi := KX!((x[1]^4 + 8*x[1]^2 + 16)/(16*x[1]^2));
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;

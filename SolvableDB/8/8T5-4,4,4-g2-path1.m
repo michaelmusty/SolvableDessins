@@ -5,30 +5,14 @@ Custom printing for Belyi curve and map
 */
 
 /* Belyi curve */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-0,
--1024/255*nu,
--256/51,
-128/51*nu,
-32/51,
-1004/255*nu,
-1
-]), Polynomial(K, [])]);
+K := Rationals();
+X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, -1, 0, 0, 0, 1 ]), Polynomial(K, [])]);
 
 /* Belyi map */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-0,
--1024/255*nu,
--256/51,
-128/51*nu,
-32/51,
-1004/255*nu,
-1
-]), Polynomial(K, [])]);
+K := Rationals();
+X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, -1, 0, 0, 0, 1 ]), Polynomial(K, [])]);
 KX<[x]> := FunctionField(X);
-phi := KX!((64/289*x[1]^4 + 512/289*nu*x[1]^3 - 1024/289*x[1]^2)/(x[1]^4 + 16/17*nu*x[1]^3 - 608/289*x[1]^2 - 256/289*nu*x[1] + 256/289));
+phi := KX!((-x[1]^4 + 2*x[1]^2 - 1)/(4*x[1]^2));
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -55,8 +39,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 3, 7 },
 { IntegerRing() | 4, 8 }
 @};
-s`SolvableDBBelyiMapTiming := 0.080p15;
-s`SolvableDBSanityCheckTiming := 0.020p15;
+s`SolvableDBBelyiMapTiming := 0.030p15;
+s`SolvableDBSanityCheckTiming := 0.010p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<8 |  

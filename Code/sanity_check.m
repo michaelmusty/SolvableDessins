@@ -175,3 +175,26 @@ intrinsic SolvableLocalSanityCheck(s::SolvableDB, p::RngIntElt) -> BoolElt
     return false;
   end if;
 end intrinsic;
+
+intrinsic PassportSanityCheck(pass::SolvablePassportDB : p := 0) -> BoolElt
+  {}
+  objs := PassportObjects(pass);
+  for s in objs do
+    t0 := Cputime();
+    vprintf Solvable : "%o : ", Filename(s);
+    if p eq 0 then
+      test := SolvableMapSanityCheck(s);
+    else
+      assert IsPrime(p);
+      test := SolvableLocalSanityCheck(s, p);
+    end if;
+    t1 := Cputime();
+    if test then
+      vprintf Solvable : "passed : %o seconds\n", t1-t0;
+    else
+      vprintf Solvable : "failed!\n";
+      return false;
+    end if;
+  end for;
+  return true;
+end intrinsic;

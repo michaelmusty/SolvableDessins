@@ -5,13 +5,13 @@ Custom printing for Belyi curve and map
 */
 
 /* Belyi curve */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+K := Rationals();
 X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
 /* Belyi map */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+K := Rationals();
 X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
 KX<[x]> := FunctionField(X);
-phi := KX!((64/289*x[1]^4 + 512/289*nu*x[1]^3 - 1024/289*x[1]^2)/(x[1]^4 + 16/17*nu*x[1]^3 - 608/289*x[1]^2 - 256/289*nu*x[1] + 256/289));
+phi := KX!((64*x[1]^4 + 128*x[1]^3 + 64*x[1]^2)/(289*x[1]^4 + 68*x[1]^3 + 38*x[1]^2 + 4*x[1] + 1));
 
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
@@ -37,7 +37,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 1, 3 },
 { IntegerRing() | 2, 4 }
 @};
-s`SolvableDBBelyiMapTiming := 0.040p15;
+s`SolvableDBBelyiMapTiming := 0.0400000000000000p15;
+s`SolvableDBSanityCheckTiming := 0.010p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<4 |  
 \[ 2, 3, 4, 1 ],

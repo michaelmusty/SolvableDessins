@@ -149,12 +149,108 @@ intrinsic PolynomialMap(l::SeqEnum[RngMPolElt]) -> Map
 end intrinsic;
 
 intrinsic LessNaiveDescent(X::Crv, l::SeqEnum[RngMPolElt]) -> Any
+  {return bool, curve}
+  is_already_QQ, X_QQ := IsNaivelyDescendedToQQ(X);
+  if is_already_QQ then
+    return true, X_QQ;
+  else
+    P<[x]> := Generic(Ideal(X));
+    assert Parent(l[1]) eq P;
+    equations := DefiningEquations(X);
+    if #equations eq 0 then
+      return true, Curve(ProjectiveSpace(Rationals(),1));
+    else
+      mp := PolynomialMap(l);
+      equations_new := [mp(equation) : equation in equations];
+      P_new<[x]> := Parent(equations_new[1]);
+      I_new<[x]> := ideal< P_new| equations_new >;
+      if IsAffine(X) then
+        ambient := AffineSpace(P_new);
+      else
+        assert IsProjective(X);
+        ambient := ProjectiveSpace(P_new);
+      end if;
+      X_new := Curve(ambient, I_new);
+      curve_descends, X_QQ := IsNaivelyDescendedToQQ(X_new);
+      if curve_descends then
+        return true, X_QQ;
+      else
+        return false, X;
+      end if;
+    end if;
+  end if;
+end intrinsic;
+
+intrinsic LessNaiveDescent(phi::FldFunFracSchElt, l::SeqEnum[RngMPolElt]) -> Any
+  {returns bool, crv, phi}
+  is_already_QQ, X_QQ, phi_QQ := IsNaivelyDescendedToQQ(phi);
+  if is_already_QQ then
+    return true, X_QQ, phi_QQ;
+  else
+    KX<[x]> := Parent(phi);
+    X<[x]> := Curve(KX);
+    num := Numerator(phi);
+    den := Denominator(phi);
+    P<[x]> := PreimageRing(Parent(num));
+    assert Parent(l[1]) eq P;
+    mp := PolynomialMap(l);
+    _<[x]> := Codomain(mp);
+    num_new := mp(num);
+    den_new := mp(den);
+    phi_new_str := Sprintf("KX!(KX!(%o)/KX!(%o))", num_new, den_new);
+    phi_new := eval phi_new_str;
+    map_descends, X_QQ, phi_QQ := IsNaivelyDescendedToQQ(phi_new);
+    if map_descends then
+      return true, X_QQ, phi_QQ;
+    else
+      return false, Curve(Parent(phi)), phi;
+    end if;
+  end if;
+end intrinsic;
+
+intrinsic LessNaiveDescent(s::SolvableDB) -> SolvableDB
+  {for internal use only}
+  t := SolvableDBCopy(s);
+  X<[x]> := BelyiCurve(s);
+  KX<[x]> := FunctionField(X);
+  phi := BelyiMap(s);
+  assert Parent(phi) eq KX;
+  is_QQ, s_QQ := IsNaivelyDescendedToQQ(s);
+  if is_QQ then
+    return s_QQ;
+  else
+    K<nu> := BaseField(X);
+    assert Degree(K) gt 1;
+    // curve
+    P<[x]> := Generic(Ideal(X));
+    l := [P.1*K.1]; // user input
+    curve_descends := LessNaiveDescent(X, l);
+    // map
+    num := Numerator(phi);
+    assert Parent(num) eq Integers(KX);
+    P<[x]> := PreimageRing(Integers(KX));
+    l := [P.1*K.1];
+    map_descends, X_new, phi_new := LessNaiveDescent(phi, l);
+    if curve_descends and map_descends then
+      t`SolvableDBBelyiCurve := X_new;
+      t`SolvableDBBelyiMap := phi_new;
+      assert SolvableMapSanityCheck(t);
+      return t;
+    else
+      return s;
+    end if;
+  end if;
+end intrinsic;
+
+/* chanage of variables */
+
+intrinsic ChangeOfVariables(X::Crv, l::SeqEnum[RngMPolElt]) -> Crv
   {}
   P<[x]> := Generic(Ideal(X));
   assert Parent(l[1]) eq P;
   equations := DefiningEquations(X);
   if #equations eq 0 then
-    return true, Curve(ProjectiveSpace(Rationals(),1));
+    return X;
   else
     mp := PolynomialMap(l);
     equations_new := [mp(equation) : equation in equations];
@@ -166,41 +262,81 @@ intrinsic LessNaiveDescent(X::Crv, l::SeqEnum[RngMPolElt]) -> Any
       assert IsProjective(X);
       ambient := ProjectiveSpace(P_new);
     end if;
-    X_new := Curve(ambient, I_new);
-    curve_descends, X_QQ := IsNaivelyDescendedToQQ(X_new);
-    if curve_descends then
-      return true, X_QQ;
-    else
-      return false, X;
-    end if;
+    return Curve(ambient, I_new);
   end if;
 end intrinsic;
 
-intrinsic LessNaiveDescent(phi::Crv, l::SeqEnum[RngMPolElt]) -> Any
-  {}
+intrinsic ChangeOfVariables(phi::FldFunFracSchElt, l_curve::SeqEnum[RngMPolElt], l_map::SeqEnum[RngMPolElt]) -> Any
+  {returns Crv, phi}
+  X<[x]> := ChangeOfVariables(Curve(Parent(phi)), l_curve);
+  K := BaseField(X);
+  if K eq Rationals() then
+    error "rationals already!";
+  else
+    assert Degree(K) gt 1;
+    K<nu> := K;
+  end if;
+  _<[x]> := Parent(phi);
+  KX<[x]> := FunctionField(X);
+  phi_str := Sprintf("KX!(%o)", phi);
+  phi := eval phi_str;
+  num := Numerator(phi);
+  den := Denominator(phi);
+  P<[x]> := PreimageRing(Parent(num));
+  l_map_coerced := [];
+  for poly in l_map do
+    poly_str := Sprintf("P!(%o)", poly);
+    poly_eval := eval poly_str;
+    Append(~l_map_coerced, poly_eval);
+  end for;
+  mp := PolynomialMap(l_map_coerced);
+  _<[x]> := Codomain(mp);
+  num_new := mp(num);
+  den_new := mp(den);
+  phi_new_str := Sprintf("KX!(KX!(%o)/KX!(%o))", num_new, den_new);
+  phi_new := eval phi_new_str;
+  return Curve(Parent(phi)), phi_new;
 end intrinsic;
 
-intrinsic LessNaiveDescent(s::SolvableDB) -> SolvableDB
+intrinsic ChangeOfVariables(s::SolvableDB) -> SolvableDB
   {for internal use only}
   t := SolvableDBCopy(s);
-  X := BelyiCurve(s);
-  phi := BelyiMap(s);
-  assert Parent(phi) eq FunctionField(X);
-  if BaseField(X) eq Rationals() then
-    return s;
-  else
-    K<nu> := BaseField(X);
-    P<[x]> := Generic(Ideal(X));
-    l := [P.1*K.1];
-    curve_descends := LessNaiveDescent(X, l);
-    map_descends, X_new, phi_new := LessNaiveDescent(phi, l);
-    if curve_descends and map_descends then
-      t`SolvableDBBelyiCurve := X_new;
-      t`SolvableDBBelyiMap := phi_new;
-      assert SolvableMapSanityCheck(t);
-      return t;
-    else
-      return s;
-    end if;
+  X := BelyiCurve(t);
+  phi := BelyiMap(t);
+  KX<[x]> := Parent(phi);
+  assert KX eq FunctionField(X);
+  X<[x]> := Curve(KX); // always projective?
+  K := BaseField(X);
+  if K ne Rationals() then
+    assert Degree(K) gt 1;
+    K<nu> := K;
   end if;
+  // curve
+  P<[x]> := Generic(Ideal(X));
+
+  /* USER DEFINED */
+  // l_curve := [P.1*(K.1^3-K.1), P.2, P.3]; // genus one
+  // l_curve := [P.1*K.1];
+  // l_curve := [P.1*K.1, P.2, P.3*K.1^2, P.4]; // 16T1-4,16,16-g6-path1.m
+  l_curve := [P.1*(K.1^3-K.1), P.2, P.3]; // genus one
+
+  X_test := ChangeOfVariables(X, l_curve);
+  // map
+  num := Numerator(phi);
+  assert Parent(num) eq Integers(KX);
+  P<[x]> := PreimageRing(Integers(KX));
+
+  /* USER DEFINED */
+  // l_map := [P.1*(K.1^3-K.1), P.2]; // genus one
+  // l_map := [P.1*K.1];
+  // l_map := [P.1*K.1, P.2, P.3*K.1^2]; // 16T1-4,16,16-g6-path1.m
+  l_map := [P.1*(K.1^3-K.1), P.2]; // genus one
+
+  X_new, phi_new := ChangeOfVariables(phi, l_curve, l_map);
+  // assert X_test eq X_new;
+  t`SolvableDBBelyiCurve := X_new;
+  t`SolvableDBBelyiMap := phi_new;
+  assert SolvableMapSanityCheck(t);
+  // assert SolvableLocalSanityCheck(t, 101);
+  return t;
 end intrinsic;

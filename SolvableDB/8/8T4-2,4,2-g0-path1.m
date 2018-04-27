@@ -5,13 +5,13 @@ Custom printing for Belyi curve and map
 */
 
 /* Belyi curve */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+K := Rationals();
 X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
 /* Belyi map */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+K := Rationals();
 X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
 KX<[x]> := FunctionField(X);
-phi := KX!((40844881/41075281*x[1]^8 - 1840608/41075281*nu*x[1]^7 + 11022912/41075281*x[1]^6 + 29200896/41075281*nu*x[1]^5 - 28039680/41075281*x[1]^4 + 4644864/41075281*nu*x[1]^3 - 9289728/41075281*x[1]^2 - 10616832/41075281*nu*x[1] + 5308416/41075281)/(x[1]^8 + 288/6409*nu*x[1]^7 - 11095488/41075281*x[1]^6 - 29781504/41075281*nu*x[1]^5 + 1820160/2416193*x[1]^4 + 4644864/41075281*nu*x[1]^3 - 9289728/41075281*x[1]^2 - 10616832/41075281*nu*x[1] + 5308416/41075281));
+phi := KX!((66049*x[1]^8 + 8224*x[1]^7 + 49600*x[1]^6 + 134656*x[1]^5 + 148992*x[1]^4 + 57344*x[1]^3 + 114688*x[1]^2 + 131072*x[1] + 65536)/(65025*x[1]^8 - 8160*x[1]^7 - 48704*x[1]^6 - 127488*x[1]^5 - 113152*x[1]^4 + 57344*x[1]^3 + 114688*x[1]^2 + 131072*x[1] + 65536));
 
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
@@ -39,8 +39,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 3, 6 },
 { IntegerRing() | 4, 7 }
 @};
-s`SolvableDBBelyiMapTiming := 0.040p15;
-s`SolvableDBSanityCheckTiming := 0.010p15;
+s`SolvableDBBelyiMapTiming := 0.0700000000000000p15;
+s`SolvableDBSanityCheckTiming := 0.000p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<8 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 1 ],
