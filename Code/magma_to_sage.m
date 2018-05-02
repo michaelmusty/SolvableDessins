@@ -1,6 +1,7 @@
 intrinsic MagmaVariableNameToSageVariableName(X::Crv) -> Any
   {}
   str := Sprintf("%o", X.1);
+  assert "[" in str;
   raw := Split(str, "[");
   if #raw eq 1 then
     return false, str;
