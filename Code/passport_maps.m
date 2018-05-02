@@ -14,23 +14,28 @@ intrinsic PassportMapsWrapper(pass::SolvablePassportDB) -> SeqEnum
     s := objs[i];
     vprintf PassportMaps : "%o: %o out of %o : ", Name(s), i, #objs;
     if IsRamifiedAtEveryLevel(s) then
-      t0 := Cputime();
-      if genus eq 0 then
-        s := GenusZeroWrapper(s);
-      elif genus eq 1 then
-        s := GenusOneWrapper(s);
+      if BelyiMapIsComputed(s) then
+        vprintf PassportMaps : "previously computed\n";
+        Append(~objs_with_maps, s);
       else
-        assert genus ge 2;
-        s := HyperellipticWrapper(s);
-        if IsLowGenusOrHyperelliptic(s) then
-          assert Type(BelyiCurve(s)) eq CrvHyp;
+        t0 := Cputime();
+        if genus eq 0 then
+          s := GenusZeroWrapper(s);
+        elif genus eq 1 then
+          s := GenusOneWrapper(s);
         else
-          s := NonhyperellipticWrapper(s);
+          assert genus ge 2;
+          s := HyperellipticWrapper(s);
+          if IsLowGenusOrHyperelliptic(s) then
+            assert Type(BelyiCurve(s)) eq CrvHyp;
+          else
+            s := NonhyperellipticWrapper(s);
+          end if;
         end if;
+        Append(~objs_with_maps, s);
+        t1 := Cputime();
+        vprintf PassportMaps : "done %o seconds.\n", t1-t0;
       end if;
-      Append(~objs_with_maps, s);
-      t1 := Cputime();
-      vprintf PassportMaps : "done %o seconds.\n", t1-t0;
     else
       vprintf PassportMaps : "unramified\n";
     end if;
