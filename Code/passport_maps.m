@@ -56,3 +56,17 @@ intrinsic PassportMapsWriter(pass::SolvablePassportDB) -> MonStgElt
   t1 := Cputime();
   return Sprintf("Files with maps written for passport %o : %o seconds.\n", Name(pass), t1-t0);
 end intrinsic;
+
+intrinsic AllPassports(d::RngIntElt) -> Any
+  {}
+  error "not done yet";
+  passes := Passports(d);
+  for pass in passes do
+    try
+      PassportMapsWriter(pass);
+    catch e
+      print e;
+    end try;
+  end for;
+  return "blah";
+end intrinsic;
