@@ -84,7 +84,8 @@ intrinsic SolvableDBGetInfo(filename::MonStgElt) -> List
   genus := StringToInteger(genus_str[#genus_str]);
   // path
   path_str := Split(raw[4], "path");
-  assert #path_str eq 1;
+  path_str := path_str[#path_str];
+  // assert #path_str eq 1;
   path_num := Split(path_str[1], ".")[1];
   path := StringToInteger(path_num);
   // return
