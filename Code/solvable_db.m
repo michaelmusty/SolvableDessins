@@ -79,8 +79,9 @@ intrinsic SolvableDBGetInfo(filename::MonStgElt) -> List
   orders := [StringToInteger(ord) : ord in orders_str];
   // genus
   genus_str := Split(raw[3], "g");
-  assert #genus_str eq 1;
-  genus := StringToInteger(genus_str[1]);
+  // assert #genus_str eq 1;
+  // genus := StringToInteger(genus_str[1]);
+  genus := StringToInteger(genus_str[#genus_str]);
   // path
   path_str := Split(raw[4], "path");
   assert #path_str eq 1;
