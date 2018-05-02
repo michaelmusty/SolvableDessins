@@ -6,11 +6,11 @@ Custom printing for Belyi curve and map
 
 /* Belyi curve */
 K := Rationals();
-X<[x]> := EllipticCurve(Polynomial(K, [ 0, 260100, 0, 1 ]), Polynomial(K, []));
+X<[x]> := EllipticCurve(Polynomial(K, [ 0, 4, 0, 1 ]), Polynomial(K, []));
 /* Belyi map */
 K := Rationals();
-X<[x]> := EllipticCurve(Polynomial(K, [ 0, 260100, 0, 1 ]), Polynomial(K, []));KX<[x]> := FunctionField(X);
-phi := KX!((x[1]^8 - 1040400*x[1]^6 + 405912060000*x[1]^4 - 70385151204000000*x[1]^2 + 4576794457040100000000)/(x[1]^8 + 3121200*x[1]^6 + 2570776380000*x[1]^4 + 211155453612000000*x[1]^2 + 4576794457040100000000));
+X<[x]> := EllipticCurve(Polynomial(K, [ 0, 4, 0, 1 ]), Polynomial(K, []));KX<[x]> := FunctionField(X);
+phi := KX!((64*x[1]^6 + 512*x[1]^4 + 1024*x[1]^2)/(x[1]^8 + 48*x[1]^6 + 608*x[1]^4 + 768*x[1]^2 + 256));
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -41,7 +41,7 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 11 },
 { IntegerRing() | 13, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.0600000000000000p15;
+s`SolvableDBBelyiMapTiming := 0.030p15;
 s`SolvableDBSanityCheckTiming := 0.010p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  

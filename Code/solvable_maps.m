@@ -466,19 +466,18 @@ intrinsic SolvableBelyiMap(s::SolvableDB : best_child := false) -> SolvableDB
   end if;
 end intrinsic;
 
-/*
-intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
+intrinsic SolvableBelyiMapLowMeasure(s::SolvableDB, m::RngIntElt) -> Any
   {Compute solvable Belyi map m times, return the one with smallest SolvableMeasure. Careful with reassigning objects...}
   // make initial object
-  current := SolvableCopy(s);
+  current := SolvableDBCopy(s);
   // m iterations
   measure_list := [];
   errors := [];
   for i := 1 to m do
-    if assigned current`SolvableDBBelyiCurve then
+    if BelyiMapIsComputed(current) then
       try
         // make test object
-        test := SolvableCopy(s);
+        test := SolvableDBCopy(s);
         test := SolvableBelyiMap(test);
         test_measure := SolvableMeasure(test);
         Append(~measure_list, test_measure);
@@ -486,7 +485,7 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
         // compare with current object
         current_measure := SolvableMeasure(current);
         if test_measure lt current_measure then
-          current := SolvableCopy(test);
+          current := SolvableDBCopy(test);
         end if;
       catch e1
         Append(~errors, e1);
@@ -509,11 +508,10 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDBObject, m::RngIntElt) -> Any
     vprintf Solvable : "List of measures:\n";
     vprintf Solvable : "%o\n", measure_list;
     vprintf Solvable : "Minimum = %o\n", Min(measure_list);
-    assert SolvableMeasure(current) eq Min(measure_list);
+    assert SolvableMeasure(current) le Min(measure_list);
     return current, errors;
   end if;
 end intrinsic;
-*/
 
 /*
 intrinsic SolvableProjectToPP3(s::SolvableDBObject) -> Any

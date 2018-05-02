@@ -12,7 +12,7 @@ X<[x]> := HyperellipticCurve([Polynomial(K, [ -1 ]), Polynomial(K, [ 0, 0, 0, 0,
 K := Rationals();
 X<[x]> := HyperellipticCurve([Polynomial(K, [ -1 ]), Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
 KX<[x]> := FunctionField(X);
-phi := KX!(-x[1]^8*x[2]);
+phi := KX!(x[1]^8*x[2] + x[1]^16);
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -43,8 +43,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 16 },
 { IntegerRing() | 11, 15 }
 @};
-s`SolvableDBBelyiMapTiming := 0.050p15;
-s`SolvableDBSanityCheckTiming := 0.010p15;
+s`SolvableDBBelyiMapTiming := 0.090p15;
+s`SolvableDBSanityCheckTiming := 0.030p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  

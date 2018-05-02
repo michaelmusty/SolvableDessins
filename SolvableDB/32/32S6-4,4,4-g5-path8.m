@@ -1,6 +1,37 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K := Rationals();
+P<[x]> := PolynomialRing(K, 3);
+I<[x]> := ideal< P | [
+x[2]^3*x[3]^2 - 20*x[2]^2*x[3]^2 - 1/2*x[1]^2*x[2] + 1/4*x[1]*x[2]^2 - 1/16*x[2]^3 - 96*x[1]*x[3]^2 + 112*x[2]*x[3]^2 + 4*x[1]^2 - 3*x[1]*x[2] + 5/4*x[2]^2 - 128*x[3]^2 - 6*x[1] + x[2] + 8,
+x[1]^2*x[3]^2 - 1/2*x[2]^2*x[3]^2 - 4*x[1]*x[3]^2 + 4*x[2]*x[3]^2 + 3/16*x[1]^2 - 1/8*x[1]*x[2] + 1/32*x[2]^2 - 4*x[3]^2 - 1/4*x[1] + 1/4,
+x[1]*x[2]*x[3]^2 + x[2]^2*x[3]^2 + 4*x[1]*x[3]^2 - 6*x[2]*x[3]^2 - 1/4*x[1]^2 + 3/16*x[1]*x[2] - 1/16*x[2]^2 + 8*x[3]^2 + 1/4*x[1] - 1/8*x[2] - 1/2,
+x[1]^3 - x[2]^2 + 4*x[1]
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+
+/* Belyi map */
+K := Rationals();
+P<[x]> := PolynomialRing(K, 3);
+I<[x]> := ideal< P | [
+x[2]^3*x[3]^2 - 20*x[2]^2*x[3]^2 - 1/2*x[1]^2*x[2] + 1/4*x[1]*x[2]^2 - 1/16*x[2]^3 - 96*x[1]*x[3]^2 + 112*x[2]*x[3]^2 + 4*x[1]^2 - 3*x[1]*x[2] + 5/4*x[2]^2 - 128*x[3]^2 - 6*x[1] + x[2] + 8,
+x[1]^2*x[3]^2 - 1/2*x[2]^2*x[3]^2 - 4*x[1]*x[3]^2 + 4*x[2]*x[3]^2 + 3/16*x[1]^2 - 1/8*x[1]*x[2] + 1/32*x[2]^2 - 4*x[3]^2 - 1/4*x[1] + 1/4,
+x[1]*x[2]*x[3]^2 + x[2]^2*x[3]^2 + 4*x[1]*x[3]^2 - 6*x[2]*x[3]^2 - 1/4*x[1]^2 + 3/16*x[1]*x[2] - 1/16*x[2]^2 + 8*x[3]^2 + 1/4*x[1] - 1/8*x[2] - 1/2,
+x[1]^3 - x[2]^2 + 4*x[1]
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+KX<[x]> := FunctionField(X);
+phi := KX!((x[1]^8 + 48*x[1]^6 + 608*x[1]^4 + 768*x[1]^2 + 256)/(64*x[1]^6 + 512*x[1]^4 + 1024*x[1]^2));
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -34,6 +65,10 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 24, 29 },
 { IntegerRing() | 27, 30 }
 @};
+s`SolvableDBBelyiMapTiming := 0.060p15;
+s`SolvableDBLocalSanityCheckTiming := 0.510p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],

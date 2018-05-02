@@ -1,6 +1,23 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K := Rationals();
+X<[x]> := HyperellipticCurve([Polynomial(K, [ -4 ]), Polynomial(K, [ 0, 0, 0, 0, 1 ])]);
+
+/* Belyi map */
+K := Rationals();
+X<[x]> := HyperellipticCurve([Polynomial(K, [ -4 ]), Polynomial(K, [ 0, 0, 0, 0, 1 ])]);
+KX<[x]> := FunctionField(X);
+phi := KX!(-64*x[1]^8/(x[1]^16 - 32*x[1]^8 + 256));
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -34,6 +51,9 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 24, 32 },
 { IntegerRing() | 26, 29 }
 @};
+s`SolvableDBBelyiMapTiming := 0.060p15;
+s`SolvableDBSanityCheckTiming := 0.020p15;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],

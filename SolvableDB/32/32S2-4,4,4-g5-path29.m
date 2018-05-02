@@ -1,6 +1,35 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
+P<[x]> := PolynomialRing(K, 3);
+I<[x]> := ideal< P | [
+x[1]^2*x[2]^2 - x[1]^2 + nu^2*x[2]^2 + nu^2,
+x[1]^2*x[3]^2 - nu^2*x[1]^2 + x[3]^2 + nu^2,
+x[2]^2*x[3]^2 - x[2]^2 - nu^2*x[3]^2 - nu^2
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+
+/* Belyi map */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
+P<[x]> := PolynomialRing(K, 3);
+I<[x]> := ideal< P | [
+x[1]^2*x[2]^2 - x[1]^2 + nu^2*x[2]^2 + nu^2,
+x[1]^2*x[3]^2 - nu^2*x[1]^2 + x[3]^2 + nu^2,
+x[2]^2*x[3]^2 - x[2]^2 - nu^2*x[3]^2 - nu^2
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+KX<[x]> := FunctionField(X);
+phi := KX!((-1/4*x[3]^8 + 1/2*x[3]^4 - 1/4)/x[3]^4);
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -34,6 +63,10 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 23, 24 },
 { IntegerRing() | 30, 31 }
 @};
+s`SolvableDBBelyiMapTiming := 0.310p15;
+s`SolvableDBLocalSanityCheckTiming := 0.340p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],

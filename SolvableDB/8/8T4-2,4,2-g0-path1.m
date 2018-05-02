@@ -11,7 +11,7 @@ X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
 K := Rationals();
 X<[x]> := Curve(ProjectiveSpace(PolynomialRing(K, 2)));
 KX<[x]> := FunctionField(X);
-phi := KX!((66049*x[1]^8 + 8224*x[1]^7 + 49600*x[1]^6 + 134656*x[1]^5 + 148992*x[1]^4 + 57344*x[1]^3 + 114688*x[1]^2 + 131072*x[1] + 65536)/(65025*x[1]^8 - 8160*x[1]^7 - 48704*x[1]^6 - 127488*x[1]^5 - 113152*x[1]^4 + 57344*x[1]^3 + 114688*x[1]^2 + 131072*x[1] + 65536));
+phi := KX!((-16*x[1]^6 + 32*x[1]^4 - 16*x[1]^2)/(x[1]^8 - 12*x[1]^6 + 38*x[1]^4 - 12*x[1]^2 + 1));
 
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
@@ -39,8 +39,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 3, 6 },
 { IntegerRing() | 4, 7 }
 @};
-s`SolvableDBBelyiMapTiming := 0.0700000000000000p15;
-s`SolvableDBSanityCheckTiming := 0.000p15;
+s`SolvableDBBelyiMapTiming := 0.060p15;
+s`SolvableDBSanityCheckTiming := 0.010p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<8 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 1 ],

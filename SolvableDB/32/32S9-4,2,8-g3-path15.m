@@ -1,6 +1,43 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
+X<[x]> := HyperellipticCurve([Polynomial(K, [
+16777216/4295098369,
+33554432/4295098369*nu^4,
+-29360128/4295098369,
+-14680064/4295098369*nu^4,
+4587520/4295098369,
+917504/4295098369*nu^4,
+-114688/4295098369,
+-8192/4295098369*nu^4,
+256/65537
+]), Polynomial(K, [])]);
+
+/* Belyi map */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
+X<[x]> := HyperellipticCurve([Polynomial(K, [
+16777216/4295098369,
+33554432/4295098369*nu^4,
+-29360128/4295098369,
+-14680064/4295098369*nu^4,
+4587520/4295098369,
+917504/4295098369*nu^4,
+-114688/4295098369,
+-8192/4295098369*nu^4,
+256/65537
+]), Polynomial(K, [])]);
+KX<[x]> := FunctionField(X);
+phi := KX!((4295098369/262144*x[1]^16 - 65537/4096*nu^4*x[1]^15 - 458767/2048*x[1]^14 + 458787/256*nu^4*x[1]^13 + 2294215/256*x[1]^12 - 459025/16*nu^4*x[1]^11 - 459753/8*x[1]^10 + 66251*nu^4*x[1]^9 + 71971/2*x[1]^8 - 11440*nu^4*x[1]^7 - 32032*x[1]^6 + 69888*nu^4*x[1]^5 + 116480*x[1]^4 - 143360*nu^4*x[1]^3 - 122880*x[1]^2 + 65536*nu^4*x[1] + 16384)/(x[1]^16 - 32*nu^4*x[1]^15 - 448*x[1]^14 + 3584*nu^4*x[1]^13 + 17920*x[1]^12 - 57344*nu^4*x[1]^11 - 114688*x[1]^10 + 131072*nu^4*x[1]^9 + 65536*x[1]^8));
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -34,6 +71,9 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 28, 31 },
 { IntegerRing() | 30, 32 }
 @};
+s`SolvableDBBelyiMapTiming := 0.180p15;
+s`SolvableDBSanityCheckTiming := 0.320p15;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],

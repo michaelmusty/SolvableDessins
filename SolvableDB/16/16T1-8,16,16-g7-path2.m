@@ -43,7 +43,7 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 8, 13 },
 { IntegerRing() | 9, 14 }
 @};
-s`SolvableDBBelyiMapTiming := 0.060p15;
+s`SolvableDBBelyiMapTiming := 0.090p15;
 s`SolvableDBSanityCheckTiming := 0.020p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;

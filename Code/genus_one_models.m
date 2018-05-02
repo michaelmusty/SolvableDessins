@@ -57,11 +57,23 @@ intrinsic GenusOneMinimalModel(s::SolvableDB) -> SolvableDB
 end intrinsic;
 
 intrinsic GenusOneWrapper(s::SolvableDB) -> MonStgElt
-  {}
+  {doesn't write to database}
   s := SolvableBelyiMap(s);
-  s := GenusOneModel(s);
-  // minimal model here?
+  b, s_QQ := IsNaivelyDescendedToQQ(s);
+  if b then
+    s := s_QQ;
+    s := GenusOneModel(s);
+    s := GenusOneMinimalModel(s);
+  else
+    vprintf Solvable : "WARNING: Genus one curve not defined over QQ and CrvEll model not found.\n";
+  end if;
   assert SolvableMapSanityCheck(s);
+  return s;
+end intrinsic;
+
+intrinsic GenusOneWriter(s::SolvableDB) -> MonStgElt
+  {wrapper then write}
+  s := GenusOneWrapper(s);
   SolvableDBWrite(s);
-  return Sprintf("GenusOneWrapper : %o\n", Filename(s));
+  return Sprintf("GenusOneWriter : %o\n", Filename(s));
 end intrinsic;

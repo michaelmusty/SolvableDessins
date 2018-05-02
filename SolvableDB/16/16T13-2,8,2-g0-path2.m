@@ -1,6 +1,33 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+P<[x]> := PolynomialRing(K, 3);
+PP<[x]> := ProjectiveSpace(P);
+I<[x]> := ideal< P | [
+x[2]^2 - x[1]*x[3]
+] >;
+X<[x]> := Conic(PP, x[2]^2 - x[1]*x[3]);
+/* Belyi map */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 1]));
+P<[x]> := PolynomialRing(K, 3);
+PP<[x]> := ProjectiveSpace(P);
+I<[x]> := ideal< P | [
+x[2]^2 - x[1]*x[3]
+] >;
+X<[x]> := Conic(PP, x[2]^2 - x[1]*x[3]);
+KX<[x]> := FunctionField(X);
+phi := KX!((x[2]^16 - 2*x[2]^8 + 1)/(x[2]^16 + 2*x[2]^8 + 1));
+
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -26,6 +53,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 14 },
 { IntegerRing() | 10, 15 }
 @};
+s`SolvableDBBelyiMapTiming := 0.060p15;
+s`SolvableDBSanityCheckTiming := 0.040p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],

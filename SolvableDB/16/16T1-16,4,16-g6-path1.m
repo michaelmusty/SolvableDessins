@@ -9,8 +9,8 @@ K := Rationals();
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
 x[1]^5 - x[2]^2 - x[1],
-x[1]^3*x[3]^2 + x[1]*x[3]^2 - x[2],
-x[2]*x[3]^2 - x[1]^2 + 1
+x[1]^3*x[3]^2 - x[1]*x[3]^2 - x[2],
+x[2]*x[3]^2 - x[1]^2 - 1
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 
@@ -19,12 +19,12 @@ K := Rationals();
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
 x[1]^5 - x[2]^2 - x[1],
-x[1]^3*x[3]^2 + x[1]*x[3]^2 - x[2],
-x[2]*x[3]^2 - x[1]^2 + 1
+x[1]^3*x[3]^2 - x[1]*x[3]^2 - x[2],
+x[2]*x[3]^2 - x[1]^2 - 1
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 KX<[x]> := FunctionField(X);
-phi := KX!(x[3]^4*x[2]^2 + 2*x[3]^2*x[2] + 1);
+phi := KX!(x[3]^4*x[2]^2 - 2*x[3]^2*x[2] + 1);
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -55,8 +55,11 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 9, 16 },
 { IntegerRing() | 12, 14 }
 @};
-s`SolvableDBBelyiMapTiming := 0.110p15;
-s`SolvableDBSanityCheckTiming := 0.110p15;
+s`SolvableDBBelyiMapTiming := 0.060p15;
+s`SolvableDBSanityCheckTiming := 0.110000000000000p15;
+s`SolvableDBLocalSanityCheckTiming := 0.060p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],

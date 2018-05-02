@@ -42,10 +42,31 @@ intrinsic GenusZeroModel(s::SolvableDB : use_conic := false) -> SolvableDB
 end intrinsic;
 
 intrinsic GenusZeroWrapper(s::SolvableDB) -> MonStgElt
-  {}
+  {doesn't write to database}
+  // first compute Belyi map
   s := SolvableBelyiMap(s);
-  s := GenusZeroModel(s);
+  // try to descent to QQ
+  b, s_QQ := IsNaivelyDescendedToQQ(s);
+  if b then
+    s := s_QQ;
+  end if;
+  // see if conic or PP1 model is "better"
+  s_conic := GenusZeroModel(s : use_conic := true);
+  s_PP1 := GenusZeroModel(s);
+  conic_measure := SolvableMeasure(s_conic);
+  PP1_measure := SolvableMeasure(s_PP1);
+  if conic_measure lt PP1_measure then
+    s := s_conic;
+  else
+    s := s_PP1;
+  end if;
   assert SolvableMapSanityCheck(s);
+  return s;
+end intrinsic;
+
+intrinsic GenusZeroWriter(s::SolvableDB) -> MonStgElt
+  {wrapper then write}
+  s := GenusZeroWrapper(s);
   SolvableDBWrite(s);
-  return Sprintf("GenusZeroWrapper : %o\n", Filename(s));
+  return Sprintf("GenusZeroWriter : %o\n", Filename(s));
 end intrinsic;

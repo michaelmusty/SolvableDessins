@@ -109,7 +109,7 @@ intrinsic IsNaivelyDescendedToQQ(X::Crv, phi::FldFunFracSchElt) -> Any
   end if;
 end intrinsic;
 
-intrinsic IsNaivelyDescendedToQQ(s::SolvableDB) -> SolvableDB
+intrinsic IsNaivelyDescendedToQQ(s::SolvableDB) -> Any
   {return true, s_QQ or false, s.}
   t := SolvableDBCopy(s);
   if BelyiMapIsComputed(t) then

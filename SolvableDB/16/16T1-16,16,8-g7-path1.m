@@ -6,13 +6,13 @@ Custom printing for Belyi curve and map
 
 /* Belyi curve */
 K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 4, 0, 0, 0, 0, 0, 0, 0, 6 ]), Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
+X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, 1 ]), Polynomial(K, [ 1, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
 
 /* Belyi map */
 K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 4, 0, 0, 0, 0, 0, 0, 0, 6 ]), Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
+X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, 1 ]), Polynomial(K, [ 1, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
 KX<[x]> := FunctionField(X);
-phi := KX!((x[1]^8 + 4)/(16*x[1]^8)*x[2] + (x[1]^16 + 10*x[1]^8 - 8)/(16*x[1]^8));
+phi := KX!((x[1]^8 + 1)/(4*x[1]^8)*x[2] + (3*x[1]^8 + 1)/(4*x[1]^8));
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -43,7 +43,7 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 8, 16 },
 { IntegerRing() | 10, 13 }
 @};
-s`SolvableDBBelyiMapTiming := 0.090p15;
+s`SolvableDBBelyiMapTiming := 0.060p15;
 s`SolvableDBSanityCheckTiming := 0.020p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;

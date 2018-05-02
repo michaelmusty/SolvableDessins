@@ -6,13 +6,13 @@ Custom printing for Belyi curve and map
 
 /* Belyi curve */
 K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 4, 0, 0, 0, 0, 0, 0, 0, 6 ]), Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
+X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, -2 ]), Polynomial(K, [ 1, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
 
 /* Belyi map */
 K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 4, 0, 0, 0, 0, 0, 0, 0, 6 ]), Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
+X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, -2 ]), Polynomial(K, [ 1, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
 KX<[x]> := FunctionField(X);
-phi := KX!((-x[1]^8 - 4)/x[1]^16*x[2] + (6*x[1]^8 + 8)/x[1]^16);
+phi := KX!((-x[1]^8 + 1)*x[2] - 2*x[1]^8 + 1);
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -44,7 +44,7 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 13, 16 }
 @};
 s`SolvableDBBelyiMapTiming := 0.100p15;
-s`SolvableDBSanityCheckTiming := 0.010p15;
+s`SolvableDBSanityCheckTiming := 0.020p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  

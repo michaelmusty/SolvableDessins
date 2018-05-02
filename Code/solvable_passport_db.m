@@ -28,7 +28,7 @@ intrinsic SolvablePassportDBGetInfo(filename::MonStgElt) -> List
   // genus
   genus_str := Split(raw[3], "g");
   genus_str := Split(genus_str[1], ".")[1];
-  genus := StringToInteger(genus_str[1]);
+  genus := StringToInteger(genus_str);
   // return
   return [* degree, group, orders, genus *];
 end intrinsic;
