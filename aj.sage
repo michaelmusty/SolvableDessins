@@ -1,12 +1,6 @@
+# 2.2.3 hyperelliptic from endomorphisms paper
 from sage.schemes.riemann_surfaces.riemann_surface import RiemannSurface
-
-prec = 100
-
-A.<z, w> = AffineSpace(QQ, 2)
-C = Curve([z^3*w^4 - z^2 - z*w^4 - 1], A)
-
+A.<x,y> = AffineSpace(QQ, 2)
+C = Curve([y^2-x^5+x^4-4*x^3+8*x^2+5*x-1], A)
 S = RiemannSurface(C.defining_polynomial(), prec = prec)
-print S
-
-
 
