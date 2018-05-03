@@ -50,7 +50,7 @@ end intrinsic;
 intrinsic HyperellipticWrapper(s::SolvableDB) -> MonStgElt
   {doesn't write to database}
   // compute Belyi map
-  s := SolvableBelyiMap(s);
+  s := SolvableBelyiMapLowMeasure(s, 5);
   // try to descend
   is_QQ, s_QQ := IsNaivelyDescendedToQQ(s);
   if is_QQ then
