@@ -4,19 +4,15 @@
 // d32, g3 : 12
 // d32, g4 : 6
 // d32, g5 : 8
-  // i=3, local sanity failed but regular worked
-  // i=4, local sanity failed but regular worked
-  // i=7
-    s := SolvableDBRead("32S7-8,2,8-g5-path10.m");
-  // i=8
-    s := SolvableDBRead("32S7-8,8,2-g5-path9.m");
 // d32, g6 : 0
 // d32, g7 : 18
-// d32, g8 :
-// d32, g9 :
-// d32, g10 :
-// d32, g11 :
-// d32, g12 :
-// d32, g13 :
-// d32, g14 :
-// d32, g15 :
+i=2
+
+// d32, g8 : 6
+// d32, g9 : 15
+// d32, g10 : 0
+// d32, g11 : 7
+// d32, g12 : 3
+// d32, g13 : 6
+// d32, g14 : 3
+// d32, g15 : 3

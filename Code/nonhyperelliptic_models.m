@@ -130,7 +130,7 @@ intrinsic NonhyperellipticPlaneModel(s::SolvableDB) -> SolvableDB
   return t;
 end intrinsic;
 
-intrinsic NonhyperellipticWrapper(s::SolvableDB : num_maps := 20) -> MonStgElt
+intrinsic NonhyperellipticWrapper(s::SolvableDB : num_maps := 35) -> MonStgElt
   {}
   s := SolvableBelyiMapLowMeasure(s, num_maps);
   is_QQ, s_QQ := IsNaivelyDescendedToQQ(s);
