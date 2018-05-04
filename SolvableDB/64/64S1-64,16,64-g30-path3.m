@@ -1,49 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K := Rationals();
-P<[x]> := PolynomialRing(K, 5);
-I<[x]> := ideal< P | [
-x[1]^5 - x[2]^2 - x[1],
-x[2]*x[4]^4 - x[1]^3 - x[1],
-x[1]^3*x[5]^2 - x[2]*x[4]^3 + x[1]*x[5]^2,
-x[1]^3*x[3] - x[2]*x[4]^2 + x[1]*x[3],
-x[1]^2*x[4]^2 - x[2]*x[3] - x[4]^2,
-x[2]*x[3]*x[5]^2 - x[1]^2*x[4] + x[4],
-x[5]^4 - x[3],
-x[2]*x[3]^2 - x[1]^2 + 1,
-x[4]*x[5]^2 - 1,
-x[3]*x[4] - x[5]^2
-] >;
-X<[x]> := Curve(AffineSpace(P), I);
-
-/* Belyi map */
-K := Rationals();
-P<[x]> := PolynomialRing(K, 5);
-I<[x]> := ideal< P | [
-x[1]^5 - x[2]^2 - x[1],
-x[2]*x[4]^4 - x[1]^3 - x[1],
-x[1]^3*x[5]^2 - x[2]*x[4]^3 + x[1]*x[5]^2,
-x[1]^3*x[3] - x[2]*x[4]^2 + x[1]*x[3],
-x[1]^2*x[4]^2 - x[2]*x[3] - x[4]^2,
-x[2]*x[3]*x[5]^2 - x[1]^2*x[4] + x[4],
-x[5]^4 - x[3],
-x[2]*x[3]^2 - x[1]^2 + 1,
-x[4]*x[5]^2 - 1,
-x[3]*x[4] - x[5]^2
-] >;
-X<[x]> := Curve(AffineSpace(P), I);
-KX<[x]> := FunctionField(X);
-phi := KX!(x[3]^4*x[2]^2 + 2*x[3]^2*x[2] + 1);
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -93,9 +50,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 55, 62 },
 { IntegerRing() | 57, 64 }
 @};
-s`SolvableDBBelyiMapTiming := 28.710p15;
-s`SolvableDBLocalSanityCheckTiming := 2.010p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<64 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 1 ],
@@ -278,6 +232,7 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<64 |
 \[ 4, 11, 16, 14, 20, 21, 22, 1, 27, 5, 30, 7, 33, 2, 36, 32, 6, 40, 3, 26, 8, 28, 31, 25, 44, 12, 24, 13, 47, 9, 17, 10, 45, 43, 52, 23, 18, 56, 15, 19, 49, 46, 60, 34, 29, 61, 42, 59, 37, 51, 63, 41, 38, 64, 35, 39, 62, 54, 58, 48, 50, 53, 57, 55 ]:
  Order := 64 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T1-4,1,4-g0-path1", "8T1-8,2,8-g2-path1", "16T1-16,4,16-g6-path1", "32S1-32,8,32-g14-path1", "64S1-64,16,64-g30-path3" ];
+s`SolvableDBParents := [ Strings() | "128S1-128,32,128-g62-path1", "128S1-128,32,128-g62-path2", "128S159-64,16,64-g59-path1", "128S159-64,16,64-g59-path2" ];
 s`SolvableDBChild := "32S1-32,8,32-g14-path1";
 
 /*
