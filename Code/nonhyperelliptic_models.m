@@ -25,6 +25,7 @@ intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt) -> Any
     mp := map<Z->Z_plane|map_vars>;
     phi_plane := Pushforward(mp, phi);
     if Genus(Z_plane) eq Genus(Z) and #DefiningEquations(Z_plane) eq 1 then
+      print Z_plane;
       Append(~pairs, [* Z_plane, phi_plane *]);
     end if;
   end for;
