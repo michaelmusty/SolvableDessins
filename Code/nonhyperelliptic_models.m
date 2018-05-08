@@ -17,6 +17,7 @@ intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt) -> Any
   PP2 := ProjectiveSpace(BaseRing(P), 2);
   pairs := [* *];
   for sub in subs do
+    printf "%o\n", sub;
     sub_sort := Sort(SetToSequence(sub));
     map_vars := [Z.i : i in sub_sort];
     mp := map<Z->PP2|map_vars>;
