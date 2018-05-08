@@ -1,6 +1,6 @@
 /* Projections */
 
-intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt) -> Any
+intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt : return_immediately := false) -> Any
   {}
   if IsProjective(X) then
     Z := X;
@@ -17,7 +17,7 @@ intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt) -> Any
   PP2 := ProjectiveSpace(BaseRing(P), 2);
   pairs := [* *];
   for sub in subs do
-    printf "%o\n", sub;
+    vprintf Solvable : "Projecting to %o\n", sub;
     sub_sort := Sort(SetToSequence(sub));
     map_vars := [Z.i : i in sub_sort];
     mp := map<Z->PP2|map_vars>;
@@ -25,7 +25,9 @@ intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt) -> Any
     mp := map<Z->Z_plane|map_vars>;
     phi_plane := Pushforward(mp, phi);
     if Genus(Z_plane) eq Genus(Z) and #DefiningEquations(Z_plane) eq 1 then
-      print Z_plane;
+      if return_immediately then
+        return Z_plane, phi_plane;
+      end if;
       Append(~pairs, [* Z_plane, phi_plane *]);
     end if;
   end for;
