@@ -321,7 +321,7 @@ intrinsic PullbackBelyiMap(X_below::Crv, f::FldFunFracSchElt, phi_below::FldFunF
   return X, phi;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB) -> SolvableDB
+intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 0) -> SolvableDB
   {}
   s := SolvableDBCopy(s);
   t := SolvableDBCopy(t);
@@ -421,6 +421,11 @@ intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB) -> SolvableDB
     vprintf Solvable: "f = \n%o\n", f;
     vprintf Solvable: "Numerator(f) = %o.\n", numer;
     vprintf Solvable: "Denominator(f) = %o.\n", denom;
+    f_measure := SolvableMeasure(f);
+    vprintf Solvable: "Measure of f = %o.\n", f_measure;
+    if measure_bound ne 0 then
+      assert f_measure lt measure_bound;
+    end if;
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
     X, phi := PullbackBelyiMap(X_below, f, phi_below);
     // if Degree(BaseField(X)) gt 1 then

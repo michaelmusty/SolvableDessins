@@ -1,23 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1 ]), Polynomial(K, [])]);
-
-/* Belyi map */
-K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1 ]), Polynomial(K, [])]);
-KX<[x]> := FunctionField(X);
-phi := KX!(1/x[1]^16);
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -51,9 +34,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 25, 29 },
 { IntegerRing() | 27, 31 }
 @};
-s`SolvableDBBelyiMapTiming := 0.050p15;
-s`SolvableDBSanityCheckTiming := 0.020p15;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],
@@ -108,7 +88,7 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 26, 29, 28, 20, 17, 18, 31, 23, 25, 21, 19, 9, 10, 16, 8, 27, 12, 32, 14, 30, 11, 2, 5, 7, 6, 22, 4, 24, 15, 3, 13, 1 ]:
  Order := 16 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T1-4,1,4-g0-path1", "8T1-8,1,8-g0-path1", "16T5-8,2,8-g3-path1", "32S16-16,2,16-g7-path4" ];
-s`SolvableDBParents := [ Strings() | "64S26-16,4,16-g21-path2", "64S44-16,4,16-g21-path48", "64S50-32,2,32-g15-path4", "64S50-32,4,32-g23-path4", "64S51-32,2,32-g15-path2", "64S51-32,4,32-g23-path2", "64S29-16,2,16-g13-path2" ];
+s`SolvableDBParents := [ Strings() | "64S26-16,4,16-g21-path1", "64S44-16,4,16-g21-path7", "64S50-32,2,32-g15-path3", "64S50-32,4,32-g23-path3", "64S51-32,2,32-g15-path1", "64S51-32,4,32-g23-path1", "64S29-16,2,16-g13-path1" ];
 s`SolvableDBChild := "16T5-8,2,8-g3-path1";
 
 /*

@@ -1,43 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-16777216/4295098369,
-33554432/4295098369*nu^2,
--29360128/4295098369,
--14680064/4295098369*nu^2,
-4587520/4295098369,
-917504/4295098369*nu^2,
--114688/4295098369,
--8192/4295098369*nu^2,
-256/65537
-]), Polynomial(K, [])]);
-
-/* Belyi map */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-16777216/4295098369,
-33554432/4295098369*nu^2,
--29360128/4295098369,
--14680064/4295098369*nu^2,
-4587520/4295098369,
-917504/4295098369*nu^2,
--114688/4295098369,
--8192/4295098369*nu^2,
-256/65537
-]), Polynomial(K, [])]);
-KX<[x]> := FunctionField(X);
-phi := KX!((4295098369/4294836225*x[1]^16 - 4194368/4294836225*nu^2*x[1]^15 - 58722176/4294836225*x[1]^14 + 156599296/1431612075*nu^2*x[1]^13 + 469855232/858967245*x[1]^12 - 300826624/171793449*nu^2*x[1]^11 - 5021728768/1431612075*x[1]^10 + 17367302144/4294836225*nu^2*x[1]^9 + 9433382912/4294836225*x[1]^8 - 599785472/858967245*nu^2*x[1]^7 - 8396996608/4294836225*x[1]^6 + 6106906624/1431612075*nu^2*x[1]^5 + 6106906624/858967245*x[1]^4 - 7516192768/858967245*nu^2*x[1]^3 - 2147483648/286322415*x[1]^2 + 17179869184/4294836225*nu^2*x[1] + 4294967296/4294836225)/(x[1]^16 + 64/65535*nu^2*x[1]^15 + 58718336/4294836225*x[1]^14 - 469726208/4294836225*nu^2*x[1]^13 - 156556288/286322415*x[1]^12 + 7511719936/4294836225*nu^2*x[1]^11 + 14999584768/4294836225*x[1]^10 - 333185024/84212475*nu^2*x[1]^9 - 7746486272/4294836225*x[1]^8 - 599785472/858967245*nu^2*x[1]^7 - 8396996608/4294836225*x[1]^6 + 6106906624/1431612075*nu^2*x[1]^5 + 6106906624/858967245*x[1]^4 - 7516192768/858967245*nu^2*x[1]^3 - 2147483648/286322415*x[1]^2 + 17179869184/4294836225*nu^2*x[1] + 4294967296/4294836225));
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -71,9 +34,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 21, 32 },
 { IntegerRing() | 25, 29 }
 @};
-s`SolvableDBBelyiMapTiming := 0.120p15;
-s`SolvableDBSanityCheckTiming := 0.260p15;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],
@@ -129,9 +89,9 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<32 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |  
 \[ 6, 1, 20, 21, 18, 8, 4, 2, 3, 5, 7, 31, 22, 28, 9, 32, 25, 23, 16, 15, 11, 17, 10, 12, 13, 14, 19, 30, 24, 26, 29, 27 ]:
  Order := 4 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T2-2,2,2-g0-path3", "8T4-2,4,2-g0-path3", "16T10-4,4,2-g1-path8", "32S9-4,8,2-g3-path3" ];
-s`SolvableDBParents := [ Strings() | "64S12-8,8,2-g9-path14", "64S8-4,8,4-g13-path64", "64S6-8,8,4-g17-path71", "64S6-8,8,2-g9-path71", "64S21-4,8,4-g13-path169", "64S13-8,8,4-g17-path59", "64S38-4,16,2-g7-path9", "64S42-8,16,2-g11-path3", "64S41-4,16,4-g15-path20", "64S40-8,16,4-g19-path3", "64S41-4,16,2-g7-path3", "64S40-8,16,2-g11-path3", "64S39-4,16,4-g15-path32", "64S43-8,16,4-g19-path3", "64S8-4,8,2-g5-path25" ];
-s`SolvableDBChild := "16T10-4,4,2-g1-path8";
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T4-4,2,2-g0-path1", "16T10-4,4,2-g1-path5", "32S9-4,8,2-g3-path3" ];
+s`SolvableDBParents := [ Strings() | "64S12-8,8,2-g9-path2", "64S8-4,8,4-g13-path8", "64S6-8,8,4-g17-path9", "64S6-8,8,2-g9-path9", "64S21-4,8,4-g13-path21", "64S13-8,8,4-g17-path9", "64S38-4,16,2-g7-path3", "64S42-8,16,2-g11-path1", "64S41-4,16,4-g15-path4", "64S40-8,16,4-g19-path1", "64S41-4,16,2-g7-path1", "64S40-8,16,2-g11-path1", "64S39-4,16,4-g15-path8", "64S43-8,16,4-g19-path1", "64S8-4,8,2-g5-path3" ];
+s`SolvableDBChild := "16T10-4,4,2-g1-path5";
 
 /*
 Return for eval

@@ -1,23 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, 1, 0, 0, 0, 0, 0, 0, 0, -1 ]), Polynomial(K, [])]);
-
-/* Belyi map */
-K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, 1, 0, 0, 0, 0, 0, 0, 0, -1 ]), Polynomial(K, [])]);
-KX<[x]> := FunctionField(X);
-phi := KX!(4*x[1]^8/(x[1]^16 + 2*x[1]^8 + 1));
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -51,9 +34,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 26, 28 },
 { IntegerRing() | 29, 31 }
 @};
-s`SolvableDBBelyiMapTiming := 0.080p15;
-s`SolvableDBSanityCheckTiming := 0.030p15;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],
@@ -109,9 +89,9 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 25, 30, 29, 26, 32, 17, 31, 22, 23, 24, 21, 28, 20, 27, 18, 8, 14, 13, 16, 15, 9, 19, 11, 2, 5, 12, 6, 4, 7, 10, 3, 1 ],
 \[ 6, 1, 4, 15, 14, 16, 12, 2, 3, 5, 7, 13, 23, 22, 21, 24, 8, 9, 10, 11, 31, 30, 29, 32, 17, 18, 19, 20, 26, 25, 28, 27 ]:
  Order := 16 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T4-4,2,2-g0-path2", "16T13-8,2,2-g0-path2", "32S19-16,4,2-g4-path1" ];
-s`SolvableDBParents := [ Strings() | "64S39-16,4,4-g15-path4", "64S48-16,4,4-g15-path21", "64S38-16,4,2-g7-path4" ];
-s`SolvableDBChild := "16T13-8,2,2-g0-path2";
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T4-4,2,2-g0-path1", "16T13-8,2,2-g0-path1", "32S19-16,4,2-g4-path1" ];
+s`SolvableDBParents := [ Strings() | "64S39-16,4,4-g15-path2", "64S48-16,4,4-g15-path5", "64S38-16,4,2-g7-path2" ];
+s`SolvableDBChild := "16T13-8,2,2-g0-path1";
 
 /*
 Return for eval

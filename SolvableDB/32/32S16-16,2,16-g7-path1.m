@@ -1,23 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ]), Polynomial(K, [])]);
-
-/* Belyi map */
-K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ]), Polynomial(K, [])]);
-KX<[x]> := FunctionField(X);
-phi := KX!(1/x[1]^16);
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -51,9 +34,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 27, 31 },
 { IntegerRing() | 29, 32 }
 @};
-s`SolvableDBBelyiMapTiming := 0.060p15;
-s`SolvableDBSanityCheckTiming := 0.020p15;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],
@@ -92,8 +72,8 @@ s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<32 |
 \[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32 ]:
  Order := 263130836933693530167218012160000000 > |
 [ 3, 1, 7, 8, 2, 4, 11, 12, 5, 6, 15, 16, 9, 10, 19, 20, 13, 14, 23, 24, 17, 18, 27, 28, 21, 22, 29, 31, 25, 26, 32, 30 ],
-[ 4, 6, 8, 1, 10, 2, 12, 3, 14, 5, 16, 7, 18, 9, 20, 11, 22, 13, 24, 15, 26, 17, 28, 19, 30, 21, 31, 23, 32, 25, 27, 29 ],
-[ 6, 10, 4, 2, 14, 5, 8, 1, 18, 9, 12, 3, 22, 13, 16, 7, 26, 17, 20, 11, 30, 21, 24, 15, 32, 25, 28, 19, 31, 29, 23, 27 ]
+[ 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ],
+[ 31, 28, 32, 27, 24, 23, 30, 29, 20, 19, 26, 25, 16, 15, 22, 21, 12, 11, 18, 17, 8, 7, 14, 13, 4, 3, 10, 9, 6, 1, 5, 2 ]
 ]
 ];
 s`SolvableDBMonodromyGroup := PermutationGroup<32 |  
@@ -110,7 +90,7 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 3, 1, 7, 8, 2, 4, 11, 12, 5, 6, 15, 16, 9, 10, 19, 20, 13, 14, 23, 24, 17, 18, 27, 28, 21, 22, 29, 31, 25, 26, 32, 30 ]:
  Order := 16 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T1-4,1,4-g0-path1", "8T1-8,1,8-g0-path1", "16T1-16,1,16-g0-path1", "32S16-16,2,16-g7-path1" ];
-s`SolvableDBParents := [ Strings() | "64S26-16,4,16-g21-path3", "64S44-16,4,16-g21-path49", "64S50-32,2,32-g15-path5", "64S50-32,4,32-g23-path5", "64S51-32,2,32-g15-path3", "64S51-32,4,32-g23-path3", "64S29-16,2,16-g13-path3" ];
+s`SolvableDBParents := [ Strings() | "64S26-16,4,16-g21-path2", "64S44-16,4,16-g21-path8", "64S50-32,2,32-g15-path4", "64S50-32,4,32-g23-path4", "64S51-32,2,32-g15-path2", "64S51-32,4,32-g23-path2", "64S29-16,2,16-g13-path2" ];
 s`SolvableDBChild := "16T1-16,1,16-g0-path1";
 
 /*

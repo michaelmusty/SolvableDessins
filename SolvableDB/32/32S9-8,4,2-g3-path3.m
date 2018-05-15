@@ -1,43 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-16777216/4294836225*nu^2,
--33554432/4294836225,
--29360128/4294836225*nu^2,
-14680064/4294836225,
-917504/858967245*nu^2,
--917504/4294836225,
--114688/4294836225*nu^2,
-8192/4294836225,
--256/65535*nu^2
-]), Polynomial(K, [])]);
-
-/* Belyi map */
-K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-16777216/4294836225*nu^2,
--33554432/4294836225,
--29360128/4294836225*nu^2,
-14680064/4294836225,
-917504/858967245*nu^2,
--917504/4294836225,
--114688/4294836225*nu^2,
-8192/4294836225,
--256/65535*nu^2
-]), Polynomial(K, [])]);
-KX<[x]> := FunctionField(X);
-phi := KX!((262144/4295098369*x[1]^16 - 8388608/4295098369*nu^2*x[1]^15 - 117440512/4295098369*x[1]^14 + 939524096/4295098369*nu^2*x[1]^13 + 4697620480/4295098369*x[1]^12 - 15032385536/4295098369*nu^2*x[1]^11 - 30064771072/4295098369*x[1]^10 + 34359738368/4295098369*nu^2*x[1]^9 + 17179869184/4295098369*x[1]^8)/(x[1]^16 - 64/65537*nu^2*x[1]^15 - 58722176/4295098369*x[1]^14 + 469797888/4295098369*nu^2*x[1]^13 + 2349276160/4295098369*x[1]^12 - 7520665600/4295098369*nu^2*x[1]^11 - 15065186304/4295098369*x[1]^10 + 17367302144/4295098369*nu^2*x[1]^9 + 9433382912/4295098369*x[1]^8 - 2998927360/4295098369*nu^2*x[1]^7 - 8396996608/4295098369*x[1]^6 + 18320719872/4295098369*nu^2*x[1]^5 + 30534533120/4295098369*x[1]^4 - 37580963840/4295098369*nu^2*x[1]^3 - 32212254720/4295098369*x[1]^2 + 17179869184/4295098369*nu^2*x[1] + 4294967296/4295098369));
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -71,9 +34,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 21, 24 },
 { IntegerRing() | 25, 30 }
 @};
-s`SolvableDBBelyiMapTiming := 0.130p15;
-s`SolvableDBSanityCheckTiming := 0.270p15;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],
@@ -129,9 +89,9 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |
 \[ 8, 18, 23, 11, 22, 2, 24, 5, 32, 6, 16, 25, 31, 15, 3, 27, 13, 10, 21, 9, 7, 1, 14, 19, 28, 20, 4, 30, 17, 12, 29, 26 ],
 \[ 6, 1, 20, 21, 18, 22, 4, 2, 3, 5, 7, 17, 12, 32, 26, 24, 30, 8, 16, 15, 27, 10, 9, 11, 13, 14, 19, 31, 28, 29, 25, 23 ]:
  Order := 8 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T2-2,2,2-g0-path3", "8T4-2,4,2-g0-path3", "16T10-4,4,2-g1-path8", "32S9-8,4,2-g3-path3" ];
-s`SolvableDBParents := [ Strings() | "64S12-8,8,2-g9-path42", "64S8-8,4,4-g13-path75", "64S6-8,8,4-g17-path99", "64S6-8,8,2-g9-path99", "64S21-8,4,4-g13-path180", "64S13-8,8,4-g17-path87", "64S38-16,4,2-g7-path20", "64S42-16,8,2-g11-path14", "64S41-16,4,4-g15-path31", "64S40-16,8,4-g19-path14", "64S41-16,4,2-g7-path14", "64S40-16,8,2-g11-path14", "64S39-16,4,4-g15-path43", "64S43-16,8,4-g19-path14", "64S8-8,4,2-g5-path36" ];
-s`SolvableDBChild := "16T10-4,4,2-g1-path8";
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T4-4,2,2-g0-path1", "16T10-4,4,2-g1-path5", "32S9-8,4,2-g3-path3" ];
+s`SolvableDBParents := [ Strings() | "64S12-8,8,2-g9-path5", "64S8-8,4,4-g13-path8", "64S6-8,8,4-g17-path12", "64S6-8,8,2-g9-path12", "64S21-8,4,4-g13-path21", "64S13-8,8,4-g17-path12", "64S38-16,4,2-g7-path3", "64S42-16,8,2-g11-path1", "64S41-16,4,4-g15-path4", "64S40-16,8,4-g19-path1", "64S41-16,4,2-g7-path1", "64S40-16,8,2-g11-path1", "64S39-16,4,4-g15-path8", "64S43-16,8,4-g19-path1", "64S8-8,4,2-g5-path3" ];
+s`SolvableDBChild := "16T10-4,4,2-g1-path5";
 
 /*
 Return for eval

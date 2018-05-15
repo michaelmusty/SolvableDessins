@@ -1,23 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, -2 ]), Polynomial(K, [ 1, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
-
-/* Belyi map */
-K := Rationals();
-X<[x]> := HyperellipticCurve([Polynomial(K, [ 0, 0, 0, 0, 0, 0, 0, 0, -2 ]), Polynomial(K, [ 1, 0, 0, 0, 0, 0, 0, 0, 1 ])]);
-KX<[x]> := FunctionField(X);
-phi := KX!((-x[1]^8 + 1)*x[2] - 2*x[1]^8 + 1);
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -43,9 +26,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 14 },
 { IntegerRing() | 13, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.100p15;
-s`SolvableDBSanityCheckTiming := 0.020p15;
-s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],
@@ -88,8 +68,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 2, 7, 8, 9, 1, 10, 15, 4, 6, 11, 16, 5, 3, 13, 14, 12 ]:
  Order := 16 > |
 [ 5, 1, 13, 8, 12, 9, 2, 3, 4, 6, 10, 16, 14, 15, 7, 11 ],
-[ 3, 8, 11, 12, 13, 1, 4, 16, 5, 2, 7, 14, 10, 6, 9, 15 ],
-[ 10, 11, 2, 15, 6, 13, 16, 7, 14, 3, 8, 9, 1, 5, 12, 4 ]
+[ 12, 5, 14, 3, 16, 4, 1, 13, 8, 9, 6, 11, 15, 7, 2, 10 ],
+[ 15, 14, 9, 10, 7, 16, 13, 6, 11, 12, 5, 2, 4, 8, 3, 1 ]
 ],
 [ PermutationGroup<16 |  
 \[ 2, 7, 8, 9, 1, 10, 15, 4, 6, 11, 16, 5, 3, 13, 14, 12 ],
@@ -106,8 +86,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<16 |
 \[ 2, 7, 8, 9, 1, 10, 15, 4, 6, 11, 16, 5, 3, 13, 14, 12 ]:
  Order := 16 > |
 [ 5, 1, 13, 8, 12, 9, 2, 3, 4, 6, 10, 16, 14, 15, 7, 11 ],
-[ 12, 5, 14, 3, 16, 4, 1, 13, 8, 9, 6, 11, 15, 7, 2, 10 ],
-[ 15, 14, 9, 10, 7, 16, 13, 6, 11, 12, 5, 2, 4, 8, 3, 1 ]
+[ 3, 8, 11, 12, 13, 1, 4, 16, 5, 2, 7, 14, 10, 6, 9, 15 ],
+[ 10, 11, 2, 15, 6, 13, 16, 7, 14, 3, 8, 9, 1, 5, 12, 4 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<16 |  

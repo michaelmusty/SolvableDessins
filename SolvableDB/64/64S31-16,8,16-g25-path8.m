@@ -50,7 +50,7 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 49, 60 },
 { IntegerRing() | 50, 64 }
 @};
-s`SolvableDBIsRamifiedAtEveryLevel := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<64 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 1 ],
 \[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64 ]:
@@ -154,9 +154,8 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<64 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<64 |  
 \[ 42, 59, 39, 18, 20, 16, 10, 49, 22, 63, 44, 29, 28, 19, 60, 12, 64, 13, 21, 9, 8, 34, 52, 3, 58, 5, 11, 56, 26, 31, 25, 43, 45, 2, 27, 62, 38, 32, 35, 6, 4, 40, 36, 41, 46, 14, 57, 30, 48, 37, 15, 50, 23, 55, 47, 7, 53, 51, 61, 33, 1, 17, 24, 54 ]:
  Order := 16 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T2-4,2,4-g1-path4", "16T6-8,4,8-g5-path4", "32S5-8,4,8-g9-path20", "64S31-16,8,16-g25-path8" ];
-s`SolvableDBParents := [ Strings() | "128S55-16,8,16-g49-path84", "128S61-16,8,16-g49-path240", "128S70-16,8,16-g49-path176", "128S69-16,8,16-g49-path240", "128S62-16,8,16-g49-path176", "128S111-16,8,16-g49-path538", "128S47-16,8,16-g49-path84" ];
-s`SolvableDBChild := "32S5-8,4,8-g9-path20";
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T4-2,2,4-g0-path1", "16T10-4,2,4-g1-path4", "32S5-8,4,8-g9-path3", "64S31-16,8,16-g25-path8" ];
+s`SolvableDBChild := "32S5-8,4,8-g9-path3";
 
 /*
 Return for eval

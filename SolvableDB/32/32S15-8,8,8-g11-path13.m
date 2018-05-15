@@ -1,37 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K := Rationals();
-P<[x]> := PolynomialRing(K, 3);
-I<[x]> := ideal< P | [
-x[1]^3*x[2]*x[3]^2 + 7*x[1]*x[2]*x[3]^2 + 16*x[1]^3 - x[2]^2 + 16*x[1],
-x[1]*x[2]*x[3]^4 + 12*x[1]^3*x[3]^2 - 2*x[1]^2*x[2] + 4*x[1]*x[3]^2 + 2*x[2],
-x[2]^2*x[3]^4 + 14*x[1]^2*x[2]*x[3]^2 - 2*x[1]*x[2]^2 + 18*x[2]*x[3]^2 + 32*x[1]^2 + 32,
-x[1]^4 - 1/2*x[2]*x[3]^2 - 1
-] >;
-X<[x]> := Curve(AffineSpace(P), I);
-
-/* Belyi map */
-K := Rationals();
-P<[x]> := PolynomialRing(K, 3);
-I<[x]> := ideal< P | [
-x[1]^3*x[2]*x[3]^2 + 7*x[1]*x[2]*x[3]^2 + 16*x[1]^3 - x[2]^2 + 16*x[1],
-x[1]*x[2]*x[3]^4 + 12*x[1]^3*x[3]^2 - 2*x[1]^2*x[2] + 4*x[1]*x[3]^2 + 2*x[2],
-x[2]^2*x[3]^4 + 14*x[1]^2*x[2]*x[3]^2 - 2*x[1]*x[2]^2 + 18*x[2]*x[3]^2 + 32*x[1]^2 + 32,
-x[1]^4 - 1/2*x[2]*x[3]^2 - 1
-] >;
-X<[x]> := Curve(AffineSpace(P), I);
-KX<[x]> := FunctionField(X);
-phi := KX!((x[1]^8 + 12*x[1]^6 + 38*x[1]^4 + 12*x[1]^2 + 1)/(x[1]^8 - 4*x[1]^6 + 6*x[1]^4 - 4*x[1]^2 + 1));
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -65,10 +34,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 25, 30 },
 { IntegerRing() | 29, 32 }
 @};
-s`SolvableDBBelyiMapTiming := 0.220p15;
-s`SolvableDBLocalSanityCheckTiming := 0.530p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],
@@ -139,8 +104,8 @@ s`SolvableDBPassport := [ PowerSequence(PermutationGroup<32 |
 \[ 4, 7, 14, 17, 18, 3, 25, 1, 11, 21, 29, 2, 23, 28, 31, 13, 22, 26, 6, 15, 30, 5, 32, 9, 27, 8, 10, 20, 16, 12, 19, 24 ]:
  Order := 32 > |
 [ 2, 9, 8, 12, 10, 1, 24, 7, 20, 13, 28, 11, 6, 26, 22, 3, 30, 27, 4, 5, 16, 21, 19, 15, 32, 25, 23, 18, 14, 29, 17, 31 ],
-[ 21, 23, 5, 10, 7, 18, 13, 30, 3, 11, 6, 32, 15, 22, 1, 31, 27, 2, 26, 4, 9, 25, 20, 14, 16, 12, 29, 17, 19, 24, 8, 28 ],
-[ 11, 15, 25, 29, 23, 7, 31, 9, 18, 3, 26, 20, 4, 27, 30, 1, 16, 32, 2, 21, 14, 13, 17, 5, 19, 24, 6, 10, 8, 28, 12, 22 ]
+[ 7, 11, 1, 2, 21, 4, 9, 25, 15, 23, 20, 29, 3, 8, 5, 14, 12, 10, 17, 18, 13, 30, 6, 31, 24, 27, 32, 26, 28, 16, 22, 19 ],
+[ 23, 3, 30, 32, 11, 21, 14, 13, 4, 15, 17, 6, 18, 12, 25, 5, 24, 29, 10, 7, 31, 9, 26, 1, 28, 16, 20, 2, 22, 19, 27, 8 ]
 ]
 ];
 s`SolvableDBPointedPassport := [ PowerSequence(PermutationGroup<32 |  
@@ -207,9 +172,9 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<32 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<32 |  
 \[ 10, 13, 18, 21, 2, 5, 23, 27, 6, 9, 3, 16, 20, 26, 4, 28, 30, 7, 22, 1, 11, 12, 15, 19, 32, 25, 24, 8, 14, 29, 17, 31 ]:
  Order := 8 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T2-4,4,2-g1-path4", "16T8-4,4,4-g3-path11", "32S15-8,8,8-g11-path13" ];
-s`SolvableDBParents := [ Strings() | "64S22-8,8,8-g21-path50", "64S16-8,8,8-g21-path290", "64S15-8,8,8-g21-path290" ];
-s`SolvableDBChild := "16T8-4,4,4-g3-path11";
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,2,1-g0-path1", "4T1-4,4,1-g0-path1", "8T2-4,4,2-g1-path1", "16T8-4,4,4-g3-path9", "32S15-8,8,8-g11-path13" ];
+s`SolvableDBParents := [ Strings() | "64S22-8,8,8-g21-path5", "64S16-8,8,8-g21-path41", "64S15-8,8,8-g21-path41" ];
+s`SolvableDBChild := "16T8-4,4,4-g3-path9";
 
 /*
 Return for eval

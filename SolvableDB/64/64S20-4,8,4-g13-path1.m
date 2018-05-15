@@ -50,7 +50,7 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 61, 63 },
 { IntegerRing() | 62, 64 }
 @};
-s`SolvableDBIsRamifiedAtEveryLevel := false;
+s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<64 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 1 ],
 \[ 2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64 ]:
@@ -121,9 +121,8 @@ s`SolvableDBAutomorphismGroup := PermutationGroup<64 |
 s`SolvableDBPointedAutomorphismGroup := PermutationGroup<64 |  
 \[ 6, 1, 22, 7, 2, 5, 19, 23, 3, 4, 8, 11, 16, 35, 9, 39, 24, 25, 10, 26, 27, 15, 12, 20, 37, 17, 45, 51, 31, 13, 14, 18, 21, 28, 29, 34, 32, 44, 30, 42, 46, 60, 48, 55, 33, 43, 52, 41, 50, 53, 36, 54, 59, 58, 57, 40, 38, 47, 49, 56, 62, 63, 64, 61 ]:
  Order := 4 >;
-s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T2-2,4,4-g1-path3", "16T10-2,4,4-g1-path4", "32S11-2,8,4-g3-path4", "64S20-4,8,4-g13-path1" ];
-s`SolvableDBParents := [ Strings() | "128S8-8,8,4-g33-path258", "128S11-4,8,8-g33-path588", "128S10-8,8,8-g41-path1628", "128S35-8,8,4-g33-path31", "128S32-4,8,8-g33-path266", "128S31-8,8,8-g41-path266", "128S32-8,8,4-g33-path60", "128S27-4,8,8-g33-path266", "128S34-8,8,8-g41-path266", "128S17-8,8,4-g33-path193", "128S20-4,8,8-g33-path296", "128S23-8,8,8-g41-path752", "128S29-4,8,4-g25-path60", "128S26-4,8,4-g25-path60", "128S16-4,8,4-g25-path222" ];
-s`SolvableDBChild := "32S11-2,8,4-g3-path4";
+s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-1,2,2-g0-path1", "4T2-2,2,2-g0-path1", "8T4-2,2,4-g0-path1", "16T10-2,4,4-g1-path4", "32S11-2,8,4-g3-path2", "64S20-4,8,4-g13-path1" ];
+s`SolvableDBChild := "32S11-2,8,4-g3-path2";
 
 /*
 Return for eval

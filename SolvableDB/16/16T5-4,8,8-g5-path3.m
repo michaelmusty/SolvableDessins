@@ -1,35 +1,6 @@
 s := SolvableDBInitialize();
 
 /*
-Custom printing for Belyi curve and map
-*/
-
-/* Belyi curve */
-K := Rationals();
-P<[x]> := PolynomialRing(K, 3);
-I<[x]> := ideal< P | [
-x[1]^2*x[3]^2 + x[3]^2 - x[2],
-x[2]^2*x[3]^2 + 2*x[1]*x[3]^2 - x[1]*x[2],
-x[1]^3 - x[2]^2 - x[1]
-] >;
-X<[x]> := Curve(AffineSpace(P), I);
-
-/* Belyi map */
-K := Rationals();
-P<[x]> := PolynomialRing(K, 3);
-I<[x]> := ideal< P | [
-x[1]^2*x[3]^2 + x[3]^2 - x[2],
-x[2]^2*x[3]^2 + 2*x[1]*x[3]^2 - x[1]*x[2],
-x[1]^3 - x[2]^2 - x[1]
-] >;
-X<[x]> := Curve(AffineSpace(P), I);
-KX<[x]> := FunctionField(X);
-phi := KX!((x[1]^4 + 2*x[1]^2 + 1)/(x[1]^4 - 2*x[1]^2 + 1));
-/* assign to object */
-s`SolvableDBBelyiCurve := X;
-s`SolvableDBBelyiMap := phi;
-
-/*
 Magma printing
 */
 
@@ -55,10 +26,6 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 15 },
 { IntegerRing() | 13, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.200p15;
-s`SolvableDBLocalSanityCheckTiming := 0.120p15;
-s`SolvableDBLocalSanityCheckPrime := 101;
-s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],
@@ -115,7 +82,7 @@ s`SolvableDBPointedAutomorphismGroup := PermutationGroup<16 |
 \[ 6, 1, 8, 7, 2, 5, 14, 12, 3, 4, 13, 9, 15, 10, 16, 11 ]:
  Order := 4 >;
 s`SolvableDBPathToPP1 := [ Strings() | "PP1", "2T1-2,1,2-g0-path1", "4T2-2,2,2-g0-path2", "8T2-2,4,4-g1-path4", "16T5-4,8,8-g5-path3" ];
-s`SolvableDBParents := [ Strings() | "32S16-8,16,16-g13-path15", "32S17-8,16,16-g13-path11", "32S16-8,16,16-g13-path16", "32S17-8,16,16-g13-path12", "32S12-4,8,8-g9-path13", "32S3-4,8,8-g9-path28", "32S5-4,8,8-g9-path17" ];
+s`SolvableDBParents := [ Strings() | "32S16-8,16,16-g13-path7", "32S17-8,16,16-g13-path3", "32S16-8,16,16-g13-path8", "32S17-8,16,16-g13-path4", "32S12-4,8,8-g9-path5", "32S3-4,8,8-g9-path8", "32S5-4,8,8-g9-path5" ];
 s`SolvableDBChild := "8T2-2,4,4-g1-path4";
 
 /*
