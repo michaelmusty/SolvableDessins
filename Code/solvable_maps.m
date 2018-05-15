@@ -448,7 +448,7 @@ intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 0) ->
     return s;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDB : best_child := false) -> SolvableDB
+intrinsic SolvableBelyiMap(s::SolvableDB : best_child := true) -> SolvableDB
   {overloaded using child of s.}
   t := ChildObject(s);
   if best_child then
