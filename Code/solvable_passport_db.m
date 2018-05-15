@@ -209,6 +209,35 @@ intrinsic Passports(d::RngIntElt) -> SeqEnum[SolvablePassportDB]
   end if;
 end intrinsic;
 
+intrinsic Passports(d::RngIntElt, orders::SeqEnum[RngIntElt] : set := false) -> SeqEnum[SolvablePassportDB]
+  {}
+  if IsEven(d) and #Factorization(d) eq 1 then
+    assert #orders eq 3;
+    orders_set := SequenceToSet(orders);
+    all := [SolvablePassportDBRead(name) : name in SolvablePassportDBFilenames(d)];
+    just_orders_equal := [];
+    for pass in all do
+      l := SolvablePassportDBGetInfo(pass);
+      test_orders := l[3];
+      test_orders_set := SequenceToSet(test_orders);
+      orders_equal := test_orders eq orders;
+      orders_equal_set := test_orders_set eq orders_set;
+      if set then // only care about orders as a set
+        if orders_equal_set then
+          Append(~just_orders_equal, pass);
+        end if;
+      else // want exactly matching orders (orders in order)
+        if orders_equal then
+          Append(~just_orders_equal, pass);
+        end if;
+      end if;
+    end for;
+    return just_orders_equal;
+  else
+    error "degree is not valid";
+  end if;
+end intrinsic;
+
 intrinsic Passports(d::RngIntElt, genus::RngIntElt) -> SeqEnum[SolvablePassportDB]
   {}
   if IsEven(d) and #Factorization(d) eq 1 then

@@ -273,22 +273,22 @@ end intrinsic;
 
 intrinsic PointedPassport(s::SolvableDB) -> SeqEnum[SeqEnum[GrpPermElt]]
   {}
-  s`SolvableDBPointedPassport;
+  return s`SolvableDBPointedPassport;
 end intrinsic;
 
-intrinsic PointedPassport(s::SolvableDB) -> GrpPerm
+intrinsic MonodromyGroup(s::SolvableDB) -> GrpPerm
   {}
-  s`SolvableDBMonodromyGroup;
+  return s`SolvableDBMonodromyGroup;
 end intrinsic;
 
 intrinsic AutomorphismGroup(s::SolvableDB) -> GrpPerm
   {}
-  s`SolvableDBAutomorphismGroup;
+  return s`SolvableDBAutomorphismGroup;
 end intrinsic;
 
 intrinsic PointedAutomorphismGroup(s::SolvableDB) -> GrpPerm
   {}
-  s`SolvableDBPointedAutomorphismGroup;
+  return s`SolvableDBPointedAutomorphismGroup;
 end intrinsic;
 
 intrinsic BelyiCurve(s::SolvableDB) -> Crv
