@@ -213,16 +213,16 @@ intrinsic Passports(d::RngIntElt, orders::SeqEnum[RngIntElt] : set := false) -> 
   {}
   if IsEven(d) and #Factorization(d) eq 1 then
     assert #orders eq 3;
-    orders_set := SequenceToSet(orders);
+    orders_set := SequenceToMultiset(orders);
     all := [SolvablePassportDBRead(name) : name in SolvablePassportDBFilenames(d)];
     just_orders_equal := [];
     for pass in all do
       l := SolvablePassportDBGetInfo(pass);
       test_orders := l[3];
-      test_orders_set := SequenceToSet(test_orders);
+      test_orders_set := SequenceToMultiset(test_orders);
       orders_equal := test_orders eq orders;
       orders_equal_set := test_orders_set eq orders_set;
-      if set then // only care about orders as a set
+      if set then // only care about orders as a multiset
         if orders_equal_set then
           Append(~just_orders_equal, pass);
         end if;
@@ -253,4 +253,104 @@ intrinsic Passports(d::RngIntElt, genus::RngIntElt) -> SeqEnum[SolvablePassportD
   else
     error "degree is not valid";
   end if;
+end intrinsic;
+
+intrinsic IsLax(pass1::SolvablePassportDB, pass2::SolvablePassportDB) -> BoolElt
+  {}
+  l1 := SolvablePassportDBGetInfo(pass1);
+  l2 := SolvablePassportDBGetInfo(pass2);
+  d1 := l1[1];
+  group1 := l1[2];
+  orders1 := l1[3];
+  genus1 := l1[4];
+  d2 := l2[1];
+  group2 := l2[2];
+  orders2 := l2[3];
+  genus2 := l2[4];
+  if (d1 eq d2) and (group1 eq group2) and (genus1 eq genus2) then
+    if SequenceToMultiset(orders1) eq SequenceToMultiset(orders2) then
+      return true;
+    else
+      return false;
+    end if;
+  else
+    return false;
+  end if;
+end intrinsic;
+
+intrinsic LaxPassports(d::RngIntElt) -> SeqEnum[SeqEnum[SolvablePassportDB]]
+  {}
+  if IsEven(d) and #Factorization(d) eq 1 then
+    all := Passports(d);
+    lax_list := [];
+    for pass in all do
+      is_new := true;
+      i := 1;
+      while is_new and (i le #lax_list) do
+        // lax_list[i] is a SeqEnum of SolvablePassportDBs
+        if IsLax(lax_list[i][1], pass) then
+          Append(~lax_list[i], pass);
+          is_new := false;
+        end if;
+        i +:= 1;
+      end while;
+      if is_new then
+        Append(~lax_list, [pass]);
+      end if;
+    end for;
+    return lax_list;
+  else
+    error "degree is not valid";
+  end if;
+end intrinsic;
+
+intrinsic LaxPassports(d::RngIntElt, g::RngIntElt) -> SeqEnum[SeqEnum[SolvablePassportDB]]
+  {}
+  if IsEven(d) and #Factorization(d) eq 1 then
+    all := Passports(d);
+    lax_list := [];
+    for pass in all do
+      info := SolvablePassportDBGetInfo(pass);
+      g_test := info[#info];
+      if g_test eq g then
+        is_new := true;
+        i := 1;
+        while is_new and (i le #lax_list) do
+          // lax_list[i] is a SeqEnum of SolvablePassportDBs
+          if IsLax(lax_list[i][1], pass) then
+            Append(~lax_list[i], pass);
+            is_new := false;
+          end if;
+          i +:= 1;
+        end while;
+        if is_new then
+          Append(~lax_list, [pass]);
+        end if;
+      end if;
+    end for;
+    return lax_list;
+  else
+    error "degree is not valid";
+  end if;
+end intrinsic;
+
+intrinsic MaxGenera(d::RngIntElt) -> RngIntElt
+  {}
+  genera := [];
+  all_passports := Passports(d);
+  for pass in all_passports do
+    info := SolvablePassportDBGetInfo(pass);
+    Append(~genera, info[#info]);
+  end for;
+  return Max(genera);
+end intrinsic;
+
+intrinsic PassportInfo(d::RngIntElt) -> MonStgElt
+  {}
+  max_genera := MaxGenera(d);
+  printf "\n";
+  for g := 0 to max_genera do
+    printf "Degree %o, Genus %o : #Passports = %o : #LaxPassports = %o\n", d, g, #Passports(d,g), #LaxPassports(d,g);
+  end for;
+  return Sprintf("\nPassport information printed for degree %o\n", d);
 end intrinsic;

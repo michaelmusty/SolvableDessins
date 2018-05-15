@@ -446,7 +446,7 @@ intrinsic GaloisOrbitsAtLevel(d::RngIntElt) -> Any
         vprintf Solvable : "Degree %o above %o: ", d, name;
         vprintf Solvable : "%o out of %o\n\n", i, #filenames_below;
         s_below := SolvableDBRead(name);
-        assert not assigned s_below`SolvableDBParents;
+        // assert not assigned s_below`SolvableDBParents;
         s_below`SolvableDBParents := [];
         orbit_below := s_below`SolvableDBGaloisOrbit;
         vprintf Solvable : "Galois orbit size = %o\n", #orbit_below;

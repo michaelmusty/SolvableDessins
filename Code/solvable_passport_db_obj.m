@@ -8,7 +8,7 @@ declare attributes SolvablePassportDB:
 
 intrinsic Print(s::SolvablePassportDB : verbose := 1)
   {Print SolvablePassportDB}
-  printf "Passport %o : Size %o :\n", s`Name, #Passport(s);
+  printf "Passport %o : Size %o \n", s`Name, #Passport(s);
   if verbose eq 0 then
     printf " Filenames:\n";
     for i := 1 to #GaloisOrbits(s) do
