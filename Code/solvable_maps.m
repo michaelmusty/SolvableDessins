@@ -183,6 +183,7 @@ intrinsic ExtractRoot(Y::Crv, f::FldFunFracSchElt, m::RngIntElt) -> Crv
     new_equation := denom*PX.Rank(PX)^m-numer;
     Append(~basis, new_equation);
     IX := ideal< PX | basis >;
+    vprintf Solvable : "saturating at...";
     // S := Saturation(IX, numer); // saturate at numerator
     // vprintf Solvable : "numerator...\n";
     S := Saturation(IX, denom); // saturate at numerator

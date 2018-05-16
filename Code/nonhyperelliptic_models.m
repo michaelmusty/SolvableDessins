@@ -141,7 +141,8 @@ intrinsic NonhyperellipticWrapper(s::SolvableDB : num_maps := 35) -> MonStgElt
   if is_QQ then
     s := s_QQ;
   end if;
-  assert SolvableLocalSanityCheck(s, 101);
+  // assert SolvableLocalSanityCheck(s, 101);
+  assert SolvableLocalSanityCheck(s, 8736028057);
   return s;
 end intrinsic;
 
