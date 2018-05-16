@@ -8,9 +8,8 @@ Custom printing for Belyi curve and map
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 6, 0, 1]));
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
-x[2]^2*x[3]^2 + 1/8*(nu^3 + 7*nu)*x[2]^2 + x[3]^2 - x[1] + 1/8*(-3*nu^3 - 21*nu),
-x[1]*x[3]^2 + 1/2*(-nu^3 - 7*nu)*x[3]^2 + 1/8*(nu^3 + 7*nu)*x[1] - 1/2,
-x[1]^2 - x[2]^2 + 1
+x[1] - x[2]^2*x[3]^2 + 1/8*(-nu^3 - 7*nu)*x[2]^2 - x[3]^2 + 1/8*(3*nu^3 + 21*nu),
+x[2]^2*x[3]^4 + 1/4*(nu^3 + 7*nu)*x[2]^2*x[3]^2 - 1/8*x[2]^2 + x[3]^4 + 1/4*(-3*nu^3 - 21*nu)*x[3]^2 - 1/8
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 
@@ -18,9 +17,8 @@ X<[x]> := Curve(AffineSpace(P), I);
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 6, 0, 1]));
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
-x[2]^2*x[3]^2 + 1/8*(nu^3 + 7*nu)*x[2]^2 + x[3]^2 - x[1] + 1/8*(-3*nu^3 - 21*nu),
-x[1]*x[3]^2 + 1/2*(-nu^3 - 7*nu)*x[3]^2 + 1/8*(nu^3 + 7*nu)*x[1] - 1/2,
-x[1]^2 - x[2]^2 + 1
+x[1] - x[2]^2*x[3]^2 + 1/8*(-nu^3 - 7*nu)*x[2]^2 - x[3]^2 + 1/8*(3*nu^3 + 21*nu),
+x[2]^2*x[3]^4 + 1/4*(nu^3 + 7*nu)*x[2]^2*x[3]^2 - 1/8*x[2]^2 + x[3]^4 + 1/4*(-3*nu^3 - 21*nu)*x[3]^2 - 1/8
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 KX<[x]> := FunctionField(X);
@@ -55,8 +53,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 12, 15 },
 { IntegerRing() | 14, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.200p15;
-s`SolvableDBSanityCheckTiming := 0.250p15;
+s`SolvableDBBelyiMapTiming := 0.200000000000000p15;
+s`SolvableDBSanityCheckTiming := 0.250000000000000p15;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1 ],

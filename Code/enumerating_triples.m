@@ -665,7 +665,16 @@ end intrinsic;
 intrinsic ParentObjects(s::SolvableDB) -> SeqEnum[SolvableDB]
   {}
   filenames := [parent cat ".m" : parent in Parents(s)];
-  return [SolvableDBRead(filename) : filename in filenames];
+  parents := [];
+  for filename in filenames do
+    try
+      parent := SolvableDBRead(filename);
+      Append(~parents, parent);
+    catch e1
+      vprintf Solvable : "only returning \"nonredundant\" parents\n";
+    end try;
+  end for;
+  return parents;
 end intrinsic;
 
 intrinsic ChildObject(s::SolvableDB) -> SolvableDB

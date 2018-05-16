@@ -197,6 +197,7 @@ intrinsic LessNaiveDescent(phi::FldFunFracSchElt, l::SeqEnum[RngMPolElt]) -> Any
     _<[x]> := Codomain(mp);
     num_new := mp(num);
     den_new := mp(den);
+    // problem when K.1s show up in this expression...tells you descent failed
     phi_new_str := Sprintf("KX!(KX!(%o)/KX!(%o))", num_new, den_new);
     phi_new := eval phi_new_str;
     map_descends, X_QQ, phi_QQ := IsNaivelyDescendedToQQ(phi_new);
@@ -223,13 +224,17 @@ intrinsic LessNaiveDescent(s::SolvableDB) -> SolvableDB
     assert Degree(K) gt 1;
     // curve
     P<[x]> := Generic(Ideal(X));
-    l := [P.1*K.1]; // user input
+    print Rank(P);
+    // #l must be equal to Rank(P);
+    l := [P.1,K.1*P.2-1,P.3]; // user input
     curve_descends := LessNaiveDescent(X, l);
     // map
     num := Numerator(phi);
     assert Parent(num) eq Integers(KX);
     P<[x]> := PreimageRing(Integers(KX));
-    l := [P.1*K.1];
+    print Rank(P);
+    print K.1*P.2-1;
+    l := [P.1,K.1*P.2-1,P.3]; // user input
     map_descends, X_new, phi_new := LessNaiveDescent(phi, l);
     if curve_descends and map_descends then
       t`SolvableDBBelyiCurve := X_new;

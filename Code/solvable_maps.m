@@ -321,10 +321,13 @@ intrinsic PullbackBelyiMap(X_below::Crv, f::FldFunFracSchElt, phi_below::FldFunF
   return X, phi;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 0) -> SolvableDB
+intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 2000) -> SolvableDB
   {}
   s := SolvableDBCopy(s);
   t := SolvableDBCopy(t);
+  if measure_bound ne 0 then
+    assert SolvableMeasure(t) lt measure_bound;
+  end if;
   t_start := Cputime();
   if not IsRamifiedAtEveryLevel(s) then
     error Sprintf("%o is unramified at some level, no method to compute unramified covers (currently).\n", Name(s));
@@ -424,7 +427,7 @@ intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 0) ->
     f_measure := SolvableMeasure(f);
     vprintf Solvable: "Measure of f = %o.\n", f_measure;
     if measure_bound ne 0 then
-      assert f_measure lt measure_bound;
+      assert f_measure lt measure_bound div 2;
     end if;
   // make the curve (brutal) using primary decomposition or (less brutal) use saturation
     X, phi := PullbackBelyiMap(X_below, f, phi_below);
@@ -458,11 +461,19 @@ intrinsic SolvableBelyiMap(s::SolvableDB : best_child := true) -> SolvableDB
       error "Careful about which map chosen below: %o\n", Filename(s);
     end if;
     below := t;
+    better_base_fields := [];
     for obj in objs do
       if BelyiMapIsComputed(obj) then
-        if SolvableMeasure(obj) lt SolvableMeasure(t) then
-          below := obj;
+        is_base_field_better := Degree(BaseField(BelyiCurve(obj))) lt Degree(BaseField(BelyiCurve(below)));
+        if is_base_field_better then
+          Append(~better_base_fields, obj);
         end if;
+      end if;
+    end for;
+    for obj in better_base_fields do
+      is_measure_better := SolvableMeasure(obj) lt SolvableMeasure(below);
+      if is_measure_better then
+        below := obj;
       end if;
     end for;
     return SolvableBelyiMap(s, below);

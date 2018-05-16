@@ -63,7 +63,11 @@ intrinsic GenusOneWrapper(s::SolvableDB) -> MonStgElt
   if b then
     s := s_QQ;
     s := GenusOneModel(s);
-    s := GenusOneMinimalModel(s);
+    try
+      s := GenusOneMinimalModel(s);
+    catch e1
+      print e1;
+    end try;
   else
     vprintf Solvable : "WARNING: Genus one curve not defined over QQ and CrvEll model not found.\n";
   end if;

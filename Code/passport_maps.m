@@ -59,7 +59,6 @@ end intrinsic;
 
 intrinsic AllPassports(d::RngIntElt) -> Any
   {}
-  error "not done yet";
   passes := Passports(d);
   for pass in passes do
     try
