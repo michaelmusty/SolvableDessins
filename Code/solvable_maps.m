@@ -452,14 +452,14 @@ intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 2000)
     return s;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDB : best_child := true) -> SolvableDB
+intrinsic SolvableBelyiMap(s::SolvableDB : best_child := false) -> SolvableDB
   {overloaded using child of s.}
   t := ChildObject(s);
   if best_child then
     pass := SolvableDBToPassportDB(t);
     objs := PassportObjects(pass);
     if PointedPassportSize(t) gt 1 and #objs gt 1 then
-      error "Careful about which map chosen below: %o\n", Filename(s);
+      error "Careful about which map chosen below: \n", Filename(s);
     end if;
     below := t;
     better_base_fields := [];
