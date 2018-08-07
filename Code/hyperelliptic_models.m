@@ -7,6 +7,7 @@ intrinsic IsHyperellipticModel(X::Crv, phi::FldFunFracSchElt) -> Any
     Z := ProjectiveClosure(X);
   end if;
   genus, is_low_genus_or_hyp, mp := GenusAndCanonicalMap(Z);
+  vprintf Solvable : "Canonical map computed\n";
   assert Genus(X) eq genus;
   if genus eq 0 then
     return true, GenusZeroModel(X, phi);
@@ -15,9 +16,11 @@ intrinsic IsHyperellipticModel(X::Crv, phi::FldFunFracSchElt) -> Any
   else
     if is_low_genus_or_hyp then // hyperelliptic
       hyp_bool, hyp_H, hyp_mp := IsHyperelliptic(Z);
+      vprintf Solvable : "Hyperelliptic model computed\n";
       assert hyp_bool;
       X_new := hyp_H;
       phi_new := Pushforward(hyp_mp, phi);
+      vprintf Solvable : "Pushforward of Belyi map computed\n";
       _<[x]> := Parent(phi_new);
       return true, X_new, phi_new;
     else
