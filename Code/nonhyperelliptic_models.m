@@ -1,6 +1,6 @@
 /* Projections */
 
-intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt : return_immediately := false) -> Any
+intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt : return_immediately := true) -> Any
   {}
   if IsProjective(X) then
     Z := X;
@@ -22,8 +22,11 @@ intrinsic PlaneProjection(X::Crv, phi::FldFunFracSchElt : return_immediately := 
     map_vars := [Z.i : i in sub_sort];
     mp := map<Z->PP2|map_vars>;
     Z_plane := Image(mp);
+    vprintf Solvable : "image computed%o\n", sub;
     mp := map<Z->Z_plane|map_vars>;
+    vprintf Solvable : "map computed%o\n", sub;
     phi_plane := Pushforward(mp, phi);
+    vprintf Solvable : "pushforward computed%o\n", sub;
     if Genus(Z_plane) eq Genus(Z) and #DefiningEquations(Z_plane) eq 1 then
       if return_immediately then
         return Z_plane, phi_plane;

@@ -45,7 +45,8 @@ intrinsic SolvableCheckResidueFields(D::DivCrvElt) -> BoolElt, Any
   else
     return_field := Rationals();
     for i := 1 to #fields do
-      return_field := Compositum(return_field, fields[i]);
+      // return_field := Compositum(return_field, fields[i]);
+      return_field := CompositeFields(return_field, fields[i])[1];
     end for;
     return true, AbsoluteField(return_field);
   end if;
@@ -322,7 +323,7 @@ intrinsic PullbackBelyiMap(X_below::Crv, f::FldFunFracSchElt, phi_below::FldFunF
   return X, phi;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 2000) -> SolvableDB
+intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 20000000000000) -> SolvableDB
   {}
   s := SolvableDBCopy(s);
   t := SolvableDBCopy(t);
