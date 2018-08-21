@@ -25,9 +25,14 @@ intrinsic PassportMapsWrapper(pass::SolvablePassportDB) -> SeqEnum
           s := GenusOneWrapper(s);
         else
           assert genus ge 2;
-          s := HyperellipticWrapper(s);
+          /* s := HyperellipticWrapper(s); */
+          /* if IsLowGenusOrHyperelliptic(s) then */
+          /*   assert Type(BelyiCurve(s)) eq CrvHyp; */
+          /* else */
+          /*   s := NonhyperellipticWrapper(s); */
+          /* end if; */
           if IsLowGenusOrHyperelliptic(s) then
-            assert Type(BelyiCurve(s)) eq CrvHyp;
+            s`SolvableDBIsLowGenusOrHyperelliptic := true;
           else
             s := NonhyperellipticWrapper(s);
           end if;
