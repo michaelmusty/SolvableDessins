@@ -6,33 +6,21 @@ Custom printing for Belyi curve and map
 
 /* Belyi curve */
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-16777216/4295098369,
-33554432/4295098369*nu^4,
--29360128/4295098369,
--14680064/4295098369*nu^4,
-4587520/4295098369,
-917504/4295098369*nu^4,
--114688/4295098369,
--8192/4295098369*nu^4,
-256/65537
-]), Polynomial(K, [])]);
+P<[x]> := PolynomialRing(K, 2);
+I<[x]> := ideal< P | [
+x[1]^4*x[2]^2 + (nu^3 - nu)*x[1]^3*x[2]^2 - x[1]^4 + (-nu^4 + nu^2)*x[1]^2*x[2]^2 + (nu^3 - nu)*x[1]^3 + (nu^5 - nu^3)*x[1]*x[2]^2 + (-nu^6 + nu^4)*x[1]^2 - nu^6*x[2]^2 + (-nu^7 - nu)*x[1] - nu^2
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
 
 /* Belyi map */
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-16777216/4295098369,
-33554432/4295098369*nu^4,
--29360128/4295098369,
--14680064/4295098369*nu^4,
-4587520/4295098369,
-917504/4295098369*nu^4,
--114688/4295098369,
--8192/4295098369*nu^4,
-256/65537
-]), Polynomial(K, [])]);
+P<[x]> := PolynomialRing(K, 2);
+I<[x]> := ideal< P | [
+x[1]^4*x[2]^2 + (nu^3 - nu)*x[1]^3*x[2]^2 - x[1]^4 + (-nu^4 + nu^2)*x[1]^2*x[2]^2 + (nu^3 - nu)*x[1]^3 + (nu^5 - nu^3)*x[1]*x[2]^2 + (-nu^6 + nu^4)*x[1]^2 - nu^6*x[2]^2 + (-nu^7 - nu)*x[1] - nu^2
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
 KX<[x]> := FunctionField(X);
-phi := KX!((65537/65536*x[1]^8 - 1/2048*nu^4*x[1]^7 - 7/1024*x[1]^6 + 7/128*nu^4*x[1]^5 + 35/128*x[1]^4 - 7/8*nu^4*x[1]^3 - 7/4*x[1]^2 + 2*nu^4*x[1] + 1)/x[1]^8);
+phi := KX!(x[1]^8 + 1);
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -63,8 +51,10 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 11, 15 },
 { IntegerRing() | 13, 16 }
 @};
-s`SolvableDBBelyiMapTiming := 0.180p15;
-s`SolvableDBSanityCheckTiming := 0.080p15;
+s`SolvableDBBelyiMapTiming := 0.230p15;
+s`SolvableDBSanityCheckTiming := 0.0800000000000000p15;
+s`SolvableDBLocalSanityCheckTiming := 0.050p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<16 |  

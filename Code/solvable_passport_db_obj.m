@@ -28,6 +28,9 @@ intrinsic Print(s::SolvablePassportDB : verbose := 1)
         if BelyiMapIsComputed(s) then
           printf " : computed %o", Type(BelyiCurve(s));
           printf " over %o : ", BaseField(BelyiCurve(s));
+          if not IsLowGenusOrHyperelliptic(s) then
+            printf " nonhyperelliptic : ";
+          end if;
           printf "%o\n", SolvableMeasure(s);
         else
           printf " : not computed\n";

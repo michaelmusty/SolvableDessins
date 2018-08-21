@@ -531,6 +531,14 @@ intrinsic SolvableBelyiMapLowMeasure(s::SolvableDB, m::RngIntElt) -> Any
   end if;
 end intrinsic;
 
+intrinsic SolvableBelyiMapWrapper(s::SolvableDB) -> Any
+  {}
+  s := SolvableBelyiMap(s);
+  SolvableLocalSanityCheck(s, 101);
+  SolvableDBWrite(s);
+  return "ola";
+end intrinsic;
+
 /*
 intrinsic SolvableProjectToPP3(s::SolvableDBObject) -> Any
   {Try to embed Belyi curve in PP3 (or PP2) and update SolvableDBObject. Return before and after versions.}

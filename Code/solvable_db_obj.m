@@ -265,17 +265,24 @@ intrinsic IsLowGenusOrHyperelliptic(s::SolvableDB) -> BoolElt
   if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
     return s`SolvableDBIsLowGenusOrHyperelliptic;
   else
-    X := BelyiCurve(s);
-    g := Genus(X);
-    if g lt 2 then
-      return true;
-    else
-      g_test, bl := GenusAndCanonicalMap(X);
-      if bl then
+    if BelyiMapIsComputed(s) then
+      X := BelyiCurve(s);
+      g := Genus(X);
+      if g lt 2 then
+        s`SolvableDBIsLowGenusOrHyperelliptic := true;
         return true;
       else
-        return false;
+        g_test, bl := GenusAndCanonicalMap(X);
+        if bl then
+          s`SolvableDBIsLowGenusOrHyperelliptic := true;
+          return true;
+        else
+          s`SolvableDBIsLowGenusOrHyperelliptic := false;
+          return false;
+        end if;
       end if;
+    else
+      error "Belyi map is not computed yet!\n";
     end if;
   end if;
 end intrinsic;

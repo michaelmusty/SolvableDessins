@@ -31,8 +31,18 @@ intrinsic PassportMapsWrapper(pass::SolvablePassportDB) -> SeqEnum
           /* else */
           /*   s := NonhyperellipticWrapper(s); */
           /* end if; */
+          s := SolvableBelyiMap(s);
           if IsLowGenusOrHyperelliptic(s) then
-            s`SolvableDBIsLowGenusOrHyperelliptic := true;
+            try
+              bl := SolvableLocalSanityCheck(s, 8736028057);
+            catch e;
+              bl := SolvableLocalSanityCheck(s, 101);
+            end try;
+            assert bl;
+            is_QQ, s_QQ := IsNaivelyDescendedToQQ(s);
+            if is_QQ then
+              s := s_QQ;
+            end if;
           else
             s := NonhyperellipticWrapper(s);
           end if;
