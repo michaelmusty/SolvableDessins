@@ -6,33 +6,21 @@ Custom printing for Belyi curve and map
 
 /* Belyi curve */
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-16777216/4295098369,
-33554432/4295098369*nu^4,
--29360128/4295098369,
--14680064/4295098369*nu^4,
-4587520/4295098369,
-917504/4295098369*nu^4,
--114688/4295098369,
--8192/4295098369*nu^4,
-256/65537
-]), Polynomial(K, [])]);
+P<[x]> := PolynomialRing(K, 2);
+I<[x]> := ideal< P | [
+x[1]^4*x[2]^2 + (nu^5 + nu^3)*x[1]^3*x[2]^2 - x[1]^4 + (-nu^2 - 1)*x[1]^2*x[2]^2 + (nu^5 + nu^3)*x[1]^3 + (-nu^7 - nu^5)*x[1]*x[2]^2 + (-nu^6 + 1)*x[1]^2 + nu^2*x[2]^2 + (-nu^3 - nu)*x[1] + nu^6
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
 
 /* Belyi map */
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
-X<[x]> := HyperellipticCurve([Polynomial(K, [
-16777216/4295098369,
-33554432/4295098369*nu^4,
--29360128/4295098369,
--14680064/4295098369*nu^4,
-4587520/4295098369,
-917504/4295098369*nu^4,
--114688/4295098369,
--8192/4295098369*nu^4,
-256/65537
-]), Polynomial(K, [])]);
+P<[x]> := PolynomialRing(K, 2);
+I<[x]> := ideal< P | [
+x[1]^4*x[2]^2 + (nu^5 + nu^3)*x[1]^3*x[2]^2 - x[1]^4 + (-nu^2 - 1)*x[1]^2*x[2]^2 + (nu^5 + nu^3)*x[1]^3 + (-nu^7 - nu^5)*x[1]*x[2]^2 + (-nu^6 + 1)*x[1]^2 + nu^2*x[2]^2 + (-nu^3 - nu)*x[1] + nu^6
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
 KX<[x]> := FunctionField(X);
-phi := KX!((4295098369/4294836225*x[1]^16 - 4194368/4294836225*nu^4*x[1]^15 - 58722176/4294836225*x[1]^14 + 156599296/1431612075*nu^4*x[1]^13 + 469855232/858967245*x[1]^12 - 300826624/171793449*nu^4*x[1]^11 - 5021728768/1431612075*x[1]^10 + 17367302144/4294836225*nu^4*x[1]^9 + 9433382912/4294836225*x[1]^8 - 599785472/858967245*nu^4*x[1]^7 - 8396996608/4294836225*x[1]^6 + 6106906624/1431612075*nu^4*x[1]^5 + 6106906624/858967245*x[1]^4 - 7516192768/858967245*nu^4*x[1]^3 - 2147483648/286322415*x[1]^2 + 17179869184/4294836225*nu^4*x[1] + 4294967296/4294836225)/(x[1]^16 + 64/65535*nu^4*x[1]^15 + 58718336/4294836225*x[1]^14 - 469726208/4294836225*nu^4*x[1]^13 - 156556288/286322415*x[1]^12 + 7511719936/4294836225*nu^4*x[1]^11 + 14999584768/4294836225*x[1]^10 - 333185024/84212475*nu^4*x[1]^9 - 7746486272/4294836225*x[1]^8 - 599785472/858967245*nu^4*x[1]^7 - 8396996608/4294836225*x[1]^6 + 6106906624/1431612075*nu^4*x[1]^5 + 6106906624/858967245*x[1]^4 - 7516192768/858967245*nu^4*x[1]^3 - 2147483648/286322415*x[1]^2 + 17179869184/4294836225*nu^4*x[1] + 4294967296/4294836225));
+phi := KX!((x[1]^16 + 2*x[1]^8 + 1)/(x[1]^16 - 2*x[1]^8 + 1));
 /* assign to object */
 s`SolvableDBBelyiCurve := X;
 s`SolvableDBBelyiMap := phi;
@@ -71,8 +59,10 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 27, 32 },
 { IntegerRing() | 28, 30 }
 @};
-s`SolvableDBBelyiMapTiming := 0.180p15;
-s`SolvableDBSanityCheckTiming := 0.450p15;
+s`SolvableDBBelyiMapTiming := 0.240p15;
+s`SolvableDBSanityCheckTiming := 0.450000000000000p15;
+s`SolvableDBLocalSanityCheckTiming := 0.100p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  

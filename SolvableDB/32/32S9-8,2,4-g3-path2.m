@@ -51,8 +51,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 22, 32 },
 { IntegerRing() | 24, 30 }
 @};
-s`SolvableDBBelyiMapTiming := 0.060p15;
-s`SolvableDBSanityCheckTiming := 0.010p15;
+s`SolvableDBBelyiMapTiming := 0.0600000000000000p15;
+s`SolvableDBSanityCheckTiming := 0.0100000000000000p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  

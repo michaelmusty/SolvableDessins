@@ -1,6 +1,31 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]));
+P<[x]> := PolynomialRing(K, 2);
+I<[x]> := ideal< P | [
+x[1]^8*x[2]^2 - x[1]^9 + (-nu^11 + nu^5)*x[1]^7*x[2]^2 + (-nu^11 + nu^5)*x[1]^8 + (nu^14 + nu^10 + nu^2 + 1)*x[1]^6*x[2]^2 + (nu^14 + nu^6 + nu^2 - 1)*x[1]^7 + (nu^15 - nu^13 + nu^9 + nu^7 + nu^5 - nu^3)*x[1]^5*x[2]^2 + (nu^13 - nu^11 - nu^9 - nu^7 + nu^3 - nu)*x[1]^6 + (nu^14 + nu^12 + nu^10 - nu^8 + nu^2 - 1)*x[1]^4*x[2]^2 + (nu^14 - nu^8 + nu^6 + nu^4 + nu^2 + 1)*x[1]^5 + (-nu^13 + nu^11 + nu^7 - nu^5 - nu^3 - nu)*x[1]^3*x[2]^2 + (nu^15 + nu^13 + nu^11 - nu^9 - nu^5 + nu^3)*x[1]^4 + (nu^12 - nu^10 - nu^8 - 1)*x[1]^2*x[2]^2 + (-nu^8 - nu^6 + nu^4 + 1)*x[1]^3 + (-nu^15 - nu^5)*x[1]*x[2]^2 + (nu^11 + nu)*x[1]^2 - nu^10*x[2]^2 - nu^6*x[1]
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+
+/* Belyi map */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]));
+P<[x]> := PolynomialRing(K, 2);
+I<[x]> := ideal< P | [
+x[1]^8*x[2]^2 - x[1]^9 + (-nu^11 + nu^5)*x[1]^7*x[2]^2 + (-nu^11 + nu^5)*x[1]^8 + (nu^14 + nu^10 + nu^2 + 1)*x[1]^6*x[2]^2 + (nu^14 + nu^6 + nu^2 - 1)*x[1]^7 + (nu^15 - nu^13 + nu^9 + nu^7 + nu^5 - nu^3)*x[1]^5*x[2]^2 + (nu^13 - nu^11 - nu^9 - nu^7 + nu^3 - nu)*x[1]^6 + (nu^14 + nu^12 + nu^10 - nu^8 + nu^2 - 1)*x[1]^4*x[2]^2 + (nu^14 - nu^8 + nu^6 + nu^4 + nu^2 + 1)*x[1]^5 + (-nu^13 + nu^11 + nu^7 - nu^5 - nu^3 - nu)*x[1]^3*x[2]^2 + (nu^15 + nu^13 + nu^11 - nu^9 - nu^5 + nu^3)*x[1]^4 + (nu^12 - nu^10 - nu^8 - 1)*x[1]^2*x[2]^2 + (-nu^8 - nu^6 + nu^4 + 1)*x[1]^3 + (-nu^15 - nu^5)*x[1]*x[2]^2 + (nu^11 + nu)*x[1]^2 - nu^10*x[2]^2 - nu^6*x[1]
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+KX<[x]> := FunctionField(X);
+phi := KX!(-4*x[1]^16/(x[1]^32 - 2*x[1]^16 + 1));
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -50,6 +75,10 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 58, 60 },
 { IntegerRing() | 61, 63 }
 @};
+s`SolvableDBBelyiMapTiming := 5.220p15;
+s`SolvableDBLocalSanityCheckTiming := 2.450p15;
+s`SolvableDBLocalSanityCheckPrime := 8736028057;
+s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<64 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 1 ],

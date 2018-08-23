@@ -1,7 +1,7 @@
 {
   auts.m
   passports.m
-	solvable_db_obj.m
+  solvable_db_obj.m
   solvable_db.m
   solvable_passport_db_obj.m
   solvable_passport_db.m
@@ -10,10 +10,11 @@
   sanity_check.m
   solvable_maps.m
   genus_zero_models.m
-	genus_one_models.m
-	hyperelliptic_models.m
-	nonhyperelliptic_models.m
-	descent.m
-	magma_to_sage.m
-	passport_maps.m
+  genus_one_models.m
+  hyperelliptic_models.m
+  nonhyperelliptic_models.m
+  descent.m
+  magma_to_sage.m
+  passport_maps.m
+  query.m
 }

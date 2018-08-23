@@ -8,10 +8,10 @@ Custom printing for Belyi curve and map
 K := Rationals();
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
-x[1]^2*x[3]^4 - x[1]^4 - x[3]^4 - x[1]^2,
+-x[1]^4 + x[1]^2*x[3]^4 - x[1]^2 - x[3]^4,
 x[1]^3*x[2] - x[1]^2*x[3]^2 + x[1]*x[2] + x[3]^2,
 x[1]^2*x[2]^2 - x[1]^2 + x[2]^2 + 1,
-x[2]*x[3]^2 - x[1]
+-x[1] + x[2]*x[3]^2
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 
@@ -19,10 +19,10 @@ X<[x]> := Curve(AffineSpace(P), I);
 K := Rationals();
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
-x[1]^2*x[3]^4 - x[1]^4 - x[3]^4 - x[1]^2,
+-x[1]^4 + x[1]^2*x[3]^4 - x[1]^2 - x[3]^4,
 x[1]^3*x[2] - x[1]^2*x[3]^2 + x[1]*x[2] + x[3]^2,
 x[1]^2*x[2]^2 - x[1]^2 + x[2]^2 + 1,
-x[2]*x[3]^2 - x[1]
+-x[1] + x[2]*x[3]^2
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 KX<[x]> := FunctionField(X);
@@ -65,8 +65,8 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 21, 28 },
 { IntegerRing() | 25, 32 }
 @};
-s`SolvableDBBelyiMapTiming := 0.280p15;
-s`SolvableDBLocalSanityCheckTiming := 0.120p15;
+s`SolvableDBBelyiMapTiming := 0.280000000000000p15;
+s`SolvableDBLocalSanityCheckTiming := 0.120000000000000p15;
 s`SolvableDBLocalSanityCheckPrime := 101;
 s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
