@@ -1,0 +1,7 @@
+Computed Curves:
+d64g13
+d128g17
+
+Checked examples:
+d64g11
+d128g17
