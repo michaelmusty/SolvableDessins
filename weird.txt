@@ -1,0 +1,2 @@
+64S48-4,4,16-g15-path3.m // hyperelliptic
+64S48-4,4,16-g15-path3.m // nonhyperelliptic
