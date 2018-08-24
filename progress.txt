@@ -1,7 +1,7 @@
-Computed Curves:
-d64g13
-d128g17
+Currnetly computing:
+d64g15
+d128g21
 
-Checked examples:
+Checked examples up to:
 d64g11
 d128g17
