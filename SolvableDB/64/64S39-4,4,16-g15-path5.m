@@ -1,6 +1,39 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K := Rationals();
+P<[x]> := PolynomialRing(K, 3);
+I<[x]> := ideal< P | [
+x[1]*x[2]^2*x[3]^4 + 4*x[1]^2*x[2]^2*x[3]^2 - x[1]^3*x[2]^2 - 2*x[2]^3*x[3]^2 + 2*x[1]*x[3]^4 - 2*x[1]*x[2]^3 - 2*x[1]^3 - 4*x[1]*x[2],
+x[2]^3*x[3]^4 + 4*x[1]^4*x[2]^2 + 4*x[1]*x[2]^3*x[3]^2 + 3*x[1]^2*x[2]^3 - 8*x[1]^3*x[3]^2 + 2*x[2]*x[3]^4 + 8*x[1]*x[2]*x[3]^2 - 2*x[1]^2*x[2] - 8*x[2]^2 - 8,
+x[1]^4*x[3]^2 - x[1]^2*x[2]*x[3]^2 + 1/2*x[2]^2*x[3]^2 + 1/2*x[1]*x[2]^2 + x[1],
+x[1]^3*x[2]*x[3]^2 + 1/4*x[2]^2*x[3]^4 - 1/4*x[1]^2*x[2]^2 + 1/2*x[3]^4 - 1/2*x[1]^2,
+x[1]^5 + x[1]^3*x[2] + 1/2*x[2]^2*x[3]^2 + 1/2*x[1]*x[2]^2 + x[3]^2
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+
+/* Belyi map */
+K := Rationals();
+P<[x]> := PolynomialRing(K, 3);
+I<[x]> := ideal< P | [
+x[1]*x[2]^2*x[3]^4 + 4*x[1]^2*x[2]^2*x[3]^2 - x[1]^3*x[2]^2 - 2*x[2]^3*x[3]^2 + 2*x[1]*x[3]^4 - 2*x[1]*x[2]^3 - 2*x[1]^3 - 4*x[1]*x[2],
+x[2]^3*x[3]^4 + 4*x[1]^4*x[2]^2 + 4*x[1]*x[2]^3*x[3]^2 + 3*x[1]^2*x[2]^3 - 8*x[1]^3*x[3]^2 + 2*x[2]*x[3]^4 + 8*x[1]*x[2]*x[3]^2 - 2*x[1]^2*x[2] - 8*x[2]^2 - 8,
+x[1]^4*x[3]^2 - x[1]^2*x[2]*x[3]^2 + 1/2*x[2]^2*x[3]^2 + 1/2*x[1]*x[2]^2 + x[1],
+x[1]^3*x[2]*x[3]^2 + 1/4*x[2]^2*x[3]^4 - 1/4*x[1]^2*x[2]^2 + 1/2*x[3]^4 - 1/2*x[1]^2,
+x[1]^5 + x[1]^3*x[2] + 1/2*x[2]^2*x[3]^2 + 1/2*x[1]*x[2]^2 + x[3]^2
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+KX<[x]> := FunctionField(X);
+phi := KX!((2*x[1]^9 + 10*x[1])*x[3]^9 + (-23*x[1]^16 - 96*x[1]^8 + 1)/(4*x[1]^8)*x[3]^8 + (7*x[1]^8 + 19)/x[1]*x[3]^7 + (-6*x[1]^8 - 6)/x[1]^2*x[3]^6 + (5*x[1]^8 + 1)/x[1]^3*x[3]^5 + (8*x[1]^12 + 36*x[1]^4)*x[3]^4 + (-7*x[1]^11 - 13*x[1]^3)*x[3]^3 + (6*x[1]^10 + 2*x[1]^2)*x[3]^2 + (2*x[1]^17 + 5*x[1]^9 + x[1])*x[3] + (9*x[1]^16 + 80*x[1]^8 + 1)/4);
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -50,6 +83,10 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 59, 60 },
 { IntegerRing() | 63, 64 }
 @};
+s`SolvableDBBelyiMapTiming := 0.560p15;
+s`SolvableDBLocalSanityCheckTiming := 4.770p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<64 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 1 ],

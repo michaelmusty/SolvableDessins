@@ -1,5 +1,5 @@
 Currnetly computing:
-d64g15
+d64g17
 d128g21
 
 Checked examples up to:

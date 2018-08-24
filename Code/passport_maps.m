@@ -50,6 +50,7 @@ intrinsic PassportMapsWrapper(pass::SolvablePassportDB) -> SeqEnum
         Append(~objs_with_maps, s);
         t1 := Cputime();
         vprintf PassportMaps : "done %o seconds.\n", t1-t0;
+        SolvableDBWrite(s);
       end if;
     else
       vprintf PassportMaps : "unramified\n";
