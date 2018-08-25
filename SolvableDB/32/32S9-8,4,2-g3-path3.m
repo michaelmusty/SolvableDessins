@@ -8,8 +8,8 @@ Custom printing for Belyi curve and map
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
-x[1]^2*x[2]^2 - x[1]^2 + nu^2*x[2]^2 + nu^2,
-x[3]^2 - x[1]
+x[1] - x[3]^2,
+x[2]^2*x[3]^4 + nu^2*x[2]^2 - x[3]^4 + nu^2
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 
@@ -17,8 +17,8 @@ X<[x]> := Curve(AffineSpace(P), I);
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 1]));
 P<[x]> := PolynomialRing(K, 3);
 I<[x]> := ideal< P | [
-x[1]^2*x[2]^2 - x[1]^2 + nu^2*x[2]^2 + nu^2,
-x[3]^2 - x[1]
+x[1] - x[3]^2,
+x[2]^2*x[3]^4 + nu^2*x[2]^2 - x[3]^4 + nu^2
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 KX<[x]> := FunctionField(X);
@@ -61,7 +61,7 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 21, 24 },
 { IntegerRing() | 25, 30 }
 @};
-s`SolvableDBBelyiMapTiming := 0.130p15;
+s`SolvableDBBelyiMapTiming := 0.130000000000000p15;
 s`SolvableDBSanityCheckTiming := 0.250000000000000p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;

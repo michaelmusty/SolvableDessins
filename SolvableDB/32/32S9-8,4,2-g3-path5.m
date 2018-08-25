@@ -8,7 +8,7 @@ Custom printing for Belyi curve and map
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
 P<[x]> := PolynomialRing(K, 2);
 I<[x]> := ideal< P | [
-x[1]^4*x[2]^2 + (-nu^3 + nu)*x[1]^3*x[2]^2 - x[1]^4 + (nu^6 - nu^4)*x[1]^2*x[2]^2 + (-nu^3 + nu)*x[1]^3 + (nu^7 + nu)*x[1]*x[2]^2 + (nu^4 - nu^2)*x[1]^2 + nu^2*x[2]^2 + (-nu^5 + nu^3)*x[1] + nu^6
+x[1]^4*x[2]^2 - x[1]^4 + (-nu^3 + nu)*x[1]^3*x[2]^2 + (-nu^3 + nu)*x[1]^3 + (nu^6 - nu^4)*x[1]^2*x[2]^2 + (nu^4 - nu^2)*x[1]^2 + (nu^7 + nu)*x[1]*x[2]^2 + (-nu^5 + nu^3)*x[1] + nu^2*x[2]^2 + nu^6
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 
@@ -16,7 +16,7 @@ X<[x]> := Curve(AffineSpace(P), I);
 K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
 P<[x]> := PolynomialRing(K, 2);
 I<[x]> := ideal< P | [
-x[1]^4*x[2]^2 + (-nu^3 + nu)*x[1]^3*x[2]^2 - x[1]^4 + (nu^6 - nu^4)*x[1]^2*x[2]^2 + (-nu^3 + nu)*x[1]^3 + (nu^7 + nu)*x[1]*x[2]^2 + (nu^4 - nu^2)*x[1]^2 + nu^2*x[2]^2 + (-nu^5 + nu^3)*x[1] + nu^6
+x[1]^4*x[2]^2 - x[1]^4 + (-nu^3 + nu)*x[1]^3*x[2]^2 + (-nu^3 + nu)*x[1]^3 + (nu^6 - nu^4)*x[1]^2*x[2]^2 + (nu^4 - nu^2)*x[1]^2 + (nu^7 + nu)*x[1]*x[2]^2 + (-nu^5 + nu^3)*x[1] + nu^2*x[2]^2 + nu^6
 ] >;
 X<[x]> := Curve(AffineSpace(P), I);
 KX<[x]> := FunctionField(X);
@@ -59,7 +59,7 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 26, 28 },
 { IntegerRing() | 29, 31 }
 @};
-s`SolvableDBBelyiMapTiming := 0.190p15;
+s`SolvableDBBelyiMapTiming := 0.190000000000000p15;
 s`SolvableDBSanityCheckTiming := 0.430000000000000p15;
 s`SolvableDBIsLowGenusOrHyperelliptic := true;
 s`SolvableDBIsRamifiedAtEveryLevel := true;

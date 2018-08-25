@@ -1,6 +1,37 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
+P<[x]> := PolynomialRing(K, 3);
+I<[x]> := ideal< P | [
+x[1]^2*x[3]^4 - x[1]^2 + (-2*nu^7 + 2*nu^5 - 2*nu^3)*x[1]*x[3]^8 + (2*nu^7 - 2*nu^5 + 2*nu)*x[1]*x[3]^4 + (2*nu^6 + 2*nu^4 - 2*nu^2 + 2)*x[2]^3*x[3]^6 + (-8*nu^2 + 8)*x[2]^2*x[3]^8 + (2*nu^6 - 6*nu^4 + 6*nu^2)*x[2]^2*x[3]^4 + (2*nu^6 + 2*nu^4 - 2*nu^2 + 2)*x[2]*x[3]^10 + (8*nu^6 - 6*nu^4 + 2*nu^2 - 2)*x[2]*x[3]^6 + (-3*nu^6 + 2*nu^4 + nu^2 - 2)*x[2]*x[3]^2 + (2*nu^6 - 4*nu^4 + 2*nu^2 + 2)*x[3]^8 + (-3*nu^6 + 2*nu^4 - 2)*x[3]^4 - nu^6,
+x[1]*x[2] + (nu^6 - nu^4 + nu^2 - 1)*x[1]*x[3]^6 + (-nu^6 + nu^4 - nu^2)*x[1]*x[3]^2 + (-2*nu^5 + 2*nu)*x[2]^3*x[3]^4 + 8*nu^7*x[2]^2*x[3]^6 + (-nu^7 - nu^5 + nu^3 - 5*nu)*x[2]^2*x[3]^2 + (-2*nu^5 + 2*nu)*x[2]*x[3]^8 + (-3*nu^7 - nu^5 + 7*nu^3 + nu)*x[2]*x[3]^4 + (2*nu^5 - nu^3)*x[2] + (nu^7 - nu^5 + nu^3 - 3*nu)*x[3]^6 + (-nu^7 + nu^5 - 2*nu^3 + nu)*x[3]^2,
+x[1]*x[3]^10 + (nu^2 - 1)*x[1]*x[3]^6 - nu^2*x[1]*x[3]^2 + (nu^7 + nu^5 - nu^3 - nu)*x[2]^3*x[3]^8 - nu^5*x[2]^3*x[3]^4 + (-4*nu^7 + 4*nu)*x[2]^2*x[3]^10 + (3*nu^7 + 4*nu^3 + 2*nu)*x[2]^2*x[3]^6 + 1/2*(3*nu^5 - 3*nu)*x[2]^2*x[3]^2 + (nu^7 + nu^5 - nu^3 - nu)*x[2]*x[3]^12 + (2*nu^7 - 4*nu^5 - 4*nu^3 - 2*nu)*x[2]*x[3]^8 + 1/2*(-8*nu^7 - 3*nu^5 + 2*nu^3 + nu)*x[2]*x[3]^4 + nu*x[2] + (nu^3 + 2*nu)*x[3]^10 + (nu^5 + nu^3 - 2*nu)*x[3]^6 + (nu^7 - nu^3)*x[3]^2,
+x[2]^4*x[3]^4 + (2*nu^6 - 2*nu^2)*x[2]^3*x[3]^6 + 1/2*(-3*nu^4 - 3)*x[2]^3*x[3]^2 + x[2]^2*x[3]^8 + (nu^4 + 4*nu^2 + 1)*x[2]^2*x[3]^4 + nu^4*x[2]^2 + 1/2*(-3*nu^4 - 3)*x[2]*x[3]^6 + (-2*nu^6 - 2*nu^2)*x[2]*x[3]^2 + nu^4*x[3]^4
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+
+/* Belyi map */
+K<nu> := NumberField(Polynomial([RationalField() | 1, 0, 0, 0, 0, 0, 0, 0, 1]));
+P<[x]> := PolynomialRing(K, 3);
+I<[x]> := ideal< P | [
+x[1]^2*x[3]^4 - x[1]^2 + (-2*nu^7 + 2*nu^5 - 2*nu^3)*x[1]*x[3]^8 + (2*nu^7 - 2*nu^5 + 2*nu)*x[1]*x[3]^4 + (2*nu^6 + 2*nu^4 - 2*nu^2 + 2)*x[2]^3*x[3]^6 + (-8*nu^2 + 8)*x[2]^2*x[3]^8 + (2*nu^6 - 6*nu^4 + 6*nu^2)*x[2]^2*x[3]^4 + (2*nu^6 + 2*nu^4 - 2*nu^2 + 2)*x[2]*x[3]^10 + (8*nu^6 - 6*nu^4 + 2*nu^2 - 2)*x[2]*x[3]^6 + (-3*nu^6 + 2*nu^4 + nu^2 - 2)*x[2]*x[3]^2 + (2*nu^6 - 4*nu^4 + 2*nu^2 + 2)*x[3]^8 + (-3*nu^6 + 2*nu^4 - 2)*x[3]^4 - nu^6,
+x[1]*x[2] + (nu^6 - nu^4 + nu^2 - 1)*x[1]*x[3]^6 + (-nu^6 + nu^4 - nu^2)*x[1]*x[3]^2 + (-2*nu^5 + 2*nu)*x[2]^3*x[3]^4 + 8*nu^7*x[2]^2*x[3]^6 + (-nu^7 - nu^5 + nu^3 - 5*nu)*x[2]^2*x[3]^2 + (-2*nu^5 + 2*nu)*x[2]*x[3]^8 + (-3*nu^7 - nu^5 + 7*nu^3 + nu)*x[2]*x[3]^4 + (2*nu^5 - nu^3)*x[2] + (nu^7 - nu^5 + nu^3 - 3*nu)*x[3]^6 + (-nu^7 + nu^5 - 2*nu^3 + nu)*x[3]^2,
+x[1]*x[3]^10 + (nu^2 - 1)*x[1]*x[3]^6 - nu^2*x[1]*x[3]^2 + (nu^7 + nu^5 - nu^3 - nu)*x[2]^3*x[3]^8 - nu^5*x[2]^3*x[3]^4 + (-4*nu^7 + 4*nu)*x[2]^2*x[3]^10 + (3*nu^7 + 4*nu^3 + 2*nu)*x[2]^2*x[3]^6 + 1/2*(3*nu^5 - 3*nu)*x[2]^2*x[3]^2 + (nu^7 + nu^5 - nu^3 - nu)*x[2]*x[3]^12 + (2*nu^7 - 4*nu^5 - 4*nu^3 - 2*nu)*x[2]*x[3]^8 + 1/2*(-8*nu^7 - 3*nu^5 + 2*nu^3 + nu)*x[2]*x[3]^4 + nu*x[2] + (nu^3 + 2*nu)*x[3]^10 + (nu^5 + nu^3 - 2*nu)*x[3]^6 + (nu^7 - nu^3)*x[3]^2,
+x[2]^4*x[3]^4 + (2*nu^6 - 2*nu^2)*x[2]^3*x[3]^6 + 1/2*(-3*nu^4 - 3)*x[2]^3*x[3]^2 + x[2]^2*x[3]^8 + (nu^4 + 4*nu^2 + 1)*x[2]^2*x[3]^4 + nu^4*x[2]^2 + 1/2*(-3*nu^4 - 3)*x[2]*x[3]^6 + (-2*nu^6 - 2*nu^2)*x[2]*x[3]^2 + nu^4*x[3]^4
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+KX<[x]> := FunctionField(X);
+phi := KX!(x[1]^8 + 1);
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -34,6 +65,10 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 29, 32 },
 { IntegerRing() | 30, 31 }
 @};
+s`SolvableDBBelyiMapTiming := 0.970000000000000p15;
+s`SolvableDBLocalSanityCheckTiming := 1.25000000000000p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<32 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 1 ],

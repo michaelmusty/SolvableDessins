@@ -96,6 +96,15 @@ intrinsic Print(s::SolvableDB)
     printf "BelyiCurve:\n";
     printf "%o: ", s`SolvableDBName;
     printf "Genus %o %o\n", Genus(s), Type(BelyiCurve(s));
+    if Genus(s) lt 2 then
+      printf "curve has low genus\n";
+    else
+      if IsLowGenusOrHyperelliptic(s) then
+        printf "curve is hyperelliptic\n";
+      else
+        printf "curve is nonhyperelliptic\n";
+      end if;
+    end if;
     printf "Defining equations\n%o\n", DefiningEquations(s`SolvableDBBelyiCurve);
     printf "BelyiMap:\n";
     printf "%o\n", BelyiMap(s);
@@ -253,7 +262,29 @@ end intrinsic;
 
 intrinsic IsLowGenusOrHyperelliptic(s::SolvableDB) -> BoolElt
   {true if Genus(s) le 1 or curve is hyperelliptic.}
-  return s`SolvableDBIsLowGenusOrHyperelliptic;
+  if assigned s`SolvableDBIsLowGenusOrHyperelliptic then
+    return s`SolvableDBIsLowGenusOrHyperelliptic;
+  else
+    if BelyiMapIsComputed(s) then
+      X := BelyiCurve(s);
+      g := Genus(X);
+      if g lt 2 then
+        s`SolvableDBIsLowGenusOrHyperelliptic := true;
+        return true;
+      else
+        g_test, bl := GenusAndCanonicalMap(X);
+        if bl then
+          s`SolvableDBIsLowGenusOrHyperelliptic := true;
+          return true;
+        else
+          s`SolvableDBIsLowGenusOrHyperelliptic := false;
+          return false;
+        end if;
+      end if;
+    else
+      error "Belyi map is not computed yet!\n";
+    end if;
+  end if;
 end intrinsic;
 
 intrinsic IsRamifiedAtEveryLevel(s::SolvableDB) -> BoolElt

@@ -1,0 +1,7 @@
+Currnetly computing:
+d64g17
+d128g21
+
+Checked examples up to:
+d64g11
+d128g17

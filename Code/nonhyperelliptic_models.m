@@ -65,52 +65,53 @@ intrinsic NonhyperellipticPlaneModel(X::Crv, phi::FldFunFracSchElt) -> Any
   if is_low_genus_or_hyp then
     error "this curve should be nonhyperelliptic with genus > 2.";
   else
-    if genus eq 3 then
-      try
-        gonality, mp := Genus3GonalMap(Z);
-        Z_plane := Image(mp);
-        phi_plane := Pushforward(mp, phi);
-        assert phi_plane in FunctionField(Z_plane);
-        return Z_plane, phi_plane;
-      catch e1
-        vprint Solvable : e1;
-      end try;
-    elif genus eq 4 then
-      try
-        gonality, mp := Genus4GonalMap(Z);
-        Z_plane := Image(mp);
-        phi_plane := Pushforward(mp, phi);
-        assert phi_plane in FunctionField(Z_plane);
-        return Z_plane, phi_plane;
-      catch e1
-        vprint Solvable : e1;
-      end try;
-    elif genus eq 5 then
-      try
-        // gonality, mp, Z_plane := Genus5GonalMap(Z);
-        is_5_plane_model, mp := Genus5PlaneCurveModel(Z);
-        assert is_5_plane_model;
-        phi_plane := Pushforward(mp, phi);
-        assert phi_plane in FunctionField(Z_plane);
-        return Z_plane, phi_plane;
-      catch e1
-        vprint Solvable : e1;
-      end try;
-    elif genus eq 6 then
-      try
-        // gonality, type, mp, mp2 := Genus6GonalMap(Z);
-        is_6_plane_model, mp := Genus6PlaneCurveModel(Z);
-        assert is_6_plane_model;
-        Z_plane := Image(mp);
-        phi_plane := Pushforward(mp, phi);
-        assert phi_plane in FunctionField(Z_plane);
-        return Z_plane, phi_plane;
-      catch e1
-        vprint Solvable : e1;
-      end try;
-    else
-      return PlaneProjection(Z, phi);
-    end if;
+    return PlaneProjection(Z, phi);
+    /* if genus eq 3 then */
+    /*   try */
+    /*     gonality, mp := Genus3GonalMap(Z); */
+    /*     Z_plane := Image(mp); */
+    /*     phi_plane := Pushforward(mp, phi); */
+    /*     assert phi_plane in FunctionField(Z_plane); */
+    /*     return Z_plane, phi_plane; */
+    /*   catch e1 */
+    /*     vprint Solvable : e1; */
+    /*   end try; */
+    /* elif genus eq 4 then */
+    /*   try */
+    /*     gonality, mp := Genus4GonalMap(Z); */
+    /*     Z_plane := Image(mp); */
+    /*     phi_plane := Pushforward(mp, phi); */
+    /*     assert phi_plane in FunctionField(Z_plane); */
+    /*     return Z_plane, phi_plane; */
+    /*   catch e1 */
+    /*     vprint Solvable : e1; */
+    /*   end try; */
+    /* elif genus eq 5 then */
+    /*   try */
+    /*     // gonality, mp, Z_plane := Genus5GonalMap(Z); */
+    /*     is_5_plane_model, mp := Genus5PlaneCurveModel(Z); */
+    /*     assert is_5_plane_model; */
+    /*     phi_plane := Pushforward(mp, phi); */
+    /*     assert phi_plane in FunctionField(Z_plane); */
+    /*     return Z_plane, phi_plane; */
+    /*   catch e1 */
+    /*     vprint Solvable : e1; */
+    /*   end try; */
+    /* elif genus eq 6 then */
+    /*   try */
+    /*     // gonality, type, mp, mp2 := Genus6GonalMap(Z); */
+    /*     is_6_plane_model, mp := Genus6PlaneCurveModel(Z); */
+    /*     assert is_6_plane_model; */
+    /*     Z_plane := Image(mp); */
+    /*     phi_plane := Pushforward(mp, phi); */
+    /*     assert phi_plane in FunctionField(Z_plane); */
+    /*     return Z_plane, phi_plane; */
+    /*   catch e1 */
+    /*     vprint Solvable : e1; */
+    /*   end try; */
+    /* else */
+    /*   return PlaneProjection(Z, phi); */
+    /* end if; */
   end if;
 end intrinsic;
 
@@ -137,7 +138,7 @@ intrinsic NonhyperellipticPlaneModel(s::SolvableDB) -> SolvableDB
   return t;
 end intrinsic;
 
-intrinsic NonhyperellipticWrapper(s::SolvableDB : num_maps := 35) -> MonStgElt
+intrinsic NonhyperellipticWrapper(s::SolvableDB : num_maps := 10) -> MonStgElt
   {}
   s := SolvableBelyiMapLowMeasure(s, num_maps);
   is_QQ, s_QQ := IsNaivelyDescendedToQQ(s);
@@ -146,6 +147,8 @@ intrinsic NonhyperellipticWrapper(s::SolvableDB : num_maps := 35) -> MonStgElt
   end if;
   // assert SolvableLocalSanityCheck(s, 101);
   assert SolvableLocalSanityCheck(s, 8736028057);
+  assert not IsLowGenusOrHyperelliptic(s);
+  s`SolvableDBIsLowGenusOrHyperelliptic := false;
   return s;
 end intrinsic;
 

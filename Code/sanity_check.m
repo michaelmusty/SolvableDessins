@@ -138,6 +138,33 @@ intrinsic SolvableReduceCurve(X::Crv, f::FldFunFracSchElt, p::RngIntElt) -> Crv,
     return Xpp, fpp;
 end intrinsic;
 
+intrinsic SolvableReduceCurve(X::Crv, p::RngIntElt) -> Crv
+  {Reduce X mod p and return X mod p.}
+  // setup
+    K := BaseField(X);
+    if not IsProjective(X) then
+      X := ProjectiveClosure(X);
+    end if;
+    ZK := Integers(K); // works for any K
+    pp := Factorization(p*ZK)[1][1];
+    FFq, mpZKtoFFq := ResidueClassField(pp);
+    I := Ideal(X);
+  // reduce I mod pp
+    equations := Basis(I);
+    equations_pp := []; // equations for Ipp
+    grading := Grading(I);
+    P := PolynomialRing(FFq, grading); // grading for CrvHyp
+    for eqn in equations do
+      eqn_pp := SolvablePolynomialReduction(eqn, mpZKtoFFq, P);
+      Append(~equations_pp, eqn_pp);
+    end for;
+    Ipp := ideal<P|equations_pp>;
+  // make new curve and coordinate rings
+    PP := ProjectiveSpace(Generic(Ipp));
+    Xpp := Curve(PP, Ipp);
+    return Xpp;
+end intrinsic;
+
 intrinsic SolvableLocalSanityCheck(s::SolvableDB, p::RngIntElt) -> BoolElt
   {SolvableMapSanityCheck...Localified...no lax!}
   if assigned s`SolvableDBGaloisOrbit and assigned s`SolvableDBBelyiCurve and assigned s`SolvableDBBelyiMap then

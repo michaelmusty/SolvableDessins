@@ -25,9 +25,24 @@ intrinsic PassportMapsWrapper(pass::SolvablePassportDB) -> SeqEnum
           s := GenusOneWrapper(s);
         else
           assert genus ge 2;
-          s := HyperellipticWrapper(s);
+          /* s := HyperellipticWrapper(s); */
+          /* if IsLowGenusOrHyperelliptic(s) then */
+          /*   assert Type(BelyiCurve(s)) eq CrvHyp; */
+          /* else */
+          /*   s := NonhyperellipticWrapper(s); */
+          /* end if; */
+          s := SolvableBelyiMap(s);
           if IsLowGenusOrHyperelliptic(s) then
-            assert Type(BelyiCurve(s)) eq CrvHyp;
+            try
+              bl := SolvableLocalSanityCheck(s, 8736028057);
+            catch e;
+              bl := SolvableLocalSanityCheck(s, 101);
+            end try;
+            assert bl;
+            is_QQ, s_QQ := IsNaivelyDescendedToQQ(s);
+            if is_QQ then
+              s := s_QQ;
+            end if;
           else
             s := NonhyperellipticWrapper(s);
           end if;
@@ -35,6 +50,7 @@ intrinsic PassportMapsWrapper(pass::SolvablePassportDB) -> SeqEnum
         Append(~objs_with_maps, s);
         t1 := Cputime();
         vprintf PassportMaps : "done %o seconds.\n", t1-t0;
+        SolvableDBWrite(s);
       end if;
     else
       vprintf PassportMaps : "unramified\n";
