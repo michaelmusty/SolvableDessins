@@ -60,7 +60,7 @@ intrinsic NaivePointSearch(X::Crv, p::RngIntElt : m := 0) -> Any
   end for;
   all_points_set := SequenceToSet(all_points);
   vprintf Solvable : "#all_points = %o:\n", #all_points;
-  vprint all_points;
+  vprint Solvable : all_points;
   vprintf Solvable : "#all_points_set = %o:\n", #all_points_set;
   return SetToSequence(all_points_set);
 end intrinsic;
