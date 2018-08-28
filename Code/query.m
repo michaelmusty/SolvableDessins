@@ -157,7 +157,7 @@ intrinsic MascotFast(d::RngIntElt, genus::RngIntElt) -> Any
         bl2 := false;
       end if;
       t3 := Cputime();
-      if bl then
+      if bl1 then
         printf "3 has good reduction %o seconds : ", t1-t0;
       else
         printf "3 has bad reduction %o seconds : ", t1-t0;
