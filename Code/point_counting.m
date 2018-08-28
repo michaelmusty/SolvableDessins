@@ -67,9 +67,9 @@ intrinsic NaivePointSearch(X::Crv, p::RngIntElt : m := 0) -> Any
   /* vprintf Solvable : "\nCollecting projective points over %o\n", FFqq; */
   /* vprintf Solvable : "# projective points = %o:\n", #all_points_set; */
   all_pts := SetToSequence(all_points_set);
-  for pt in all_pts do
-    /* vprintf Solvable : "%o\n", pt; */
-  end for;
+  /* for pt in all_pts do */
+  /*   vprintf Solvable : "%o\n", pt; */
+  /* end for; */
   return all_pts;
 end intrinsic;
 
