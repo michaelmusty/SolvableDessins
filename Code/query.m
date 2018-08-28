@@ -105,11 +105,25 @@ intrinsic Mascot(d::RngIntElt, genus::RngIntElt) -> Any
       t0 := Cputime();
       bl, Lpoly := CheckLPolynomial(curves[i], 3);
       t1 := Cputime();
+      t2 := Cputime();
+      pts := NaivePointSearch(curves[i], 3 : m := 2);
+      if (#pts mod 4) ne 0 then
+        bl2 := true;
+      else
+        bl2 := false;
+      end if;
+      t3 := Cputime();
       if bl then
         printf "SUCCESS in %o seconds\n", t1-t0;
         Append(~names, Filename(objects[i]));
       else
         printf "failed in %o seconds\n", t1-t0;
+      end if;
+      if bl2 then
+        printf "SUCCESS in %o seconds\n", t3-t2;
+        Append(~names, Filename(objects[i]));
+      else
+        printf "failed in %o seconds\n", t3-t2;
       end if;
     catch e1
       printf "error\n";
@@ -117,3 +131,4 @@ intrinsic Mascot(d::RngIntElt, genus::RngIntElt) -> Any
   end for;
   return names;
 end intrinsic;
+
