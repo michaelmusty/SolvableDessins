@@ -132,7 +132,7 @@ intrinsic Mascot(d::RngIntElt, genus::RngIntElt) -> Any
   return names;
 end intrinsic;
 
-intrinsic MascotFast(d::RngIntElt, genus::RngIntElt) -> Any
+intrinsic MascotFast(d::RngIntElt, genus::RngIntElt, p::RngIntElt) -> Any
   {}
   // only rationals for now
   curves, maps, objects := GetNonhyperelliptic(d, genus : QQ := true);
@@ -141,7 +141,7 @@ intrinsic MascotFast(d::RngIntElt, genus::RngIntElt) -> Any
     printf "d=%o,g=%o,i=%o : ", d, genus, i;
     try
       t0 := Cputime();
-      Xp := ReduceCurve(curves[i], 3);
+      Xp := ReduceCurve(curves[i], p);
       sings := SingularPoints(Xp);
       if #sings gt 0 then
         bl1 := false;
@@ -150,7 +150,7 @@ intrinsic MascotFast(d::RngIntElt, genus::RngIntElt) -> Any
       end if;
       t1 := Cputime();
       t2 := Cputime();
-      pts := NaivePointSearch(curves[i], 3 : m := 2);
+      pts := NaivePointSearch(curves[i], p : m := 2);
       if (#pts mod 4) ne 0 then
         bl2 := true;
       else
@@ -158,9 +158,9 @@ intrinsic MascotFast(d::RngIntElt, genus::RngIntElt) -> Any
       end if;
       t3 := Cputime();
       if bl1 then
-        printf "3 has good reduction %o seconds : ", t1-t0;
+        printf "good reduction at %o %o seconds : ",p , t1-t0;
       else
-        printf "3 has bad reduction %o seconds : ", t1-t0;
+        printf "bad reduction at %o %o seconds : ",p , t1-t0;
       end if;
       if bl2 then
         printf "#pts not 0 mod 4 %o seconds\n", t3-t2;
