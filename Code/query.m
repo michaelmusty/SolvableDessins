@@ -176,3 +176,30 @@ intrinsic MascotFast(d::RngIntElt, genus::RngIntElt, p::RngIntElt) -> Any
   end for;
   return names;
 end intrinsic;
+
+intrinsic PrimitivePartDimension(s::SolvableDB) -> RngIntElt
+  {}
+  t := ChildObject(s);
+  return Genus(s) - Genus(t);
+end intrinsic;
+
+intrinsic CheckPrimitiveParts(d::RngIntElt : m := 0) -> Any
+  {}
+  filenames := SolvableDBFilenames(d);
+  dimensions := [];
+  objs := [];
+  for filename in filenames do
+    s := SolvableDBRead(filename);
+    dimension := PrimitivePartDimension(s);
+    if m gt 0 then
+      if dimension eq m then
+        Append(~dimensions, dimension);
+        Append(~objs, s);
+      end if;
+    else
+      Append(~dimensions, dimension);
+      Append(~objs, s);
+    end if;
+  end for;
+  return dimensions, objs;
+end intrinsic;
