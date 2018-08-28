@@ -48,27 +48,27 @@ intrinsic NaivePointSearch(X::Crv, p::RngIntElt : m := 0) -> Any
   end if;
   Xqq := CoerceCurve(X, p : m := m);
   FFqq<eta> := BaseField(Xqq);
-  vprintf Solvable : "Point search over %o\n", FFqq;
+  /* vprintf Solvable : "Point search over %o\n", FFqq; */
   all_points := []; // projective points
   for i := 1 to Dimension(Ambient(Xqq)) do
     Xi := AffinePatch(Xqq, i);
     t0 := Cputime();
     ptsi := RationalPoints(Xi);
     t1 := Cputime();
-    vprintf Solvable : "\n";
-    vprintf Solvable : "# of points in affine patch %o = %o:\n", i, #ptsi;
-    vprintf Solvable : "%o\n", ptsi;
-    vprintf Solvable : "%o seconds\n", t1-t0;
+    /* vprintf Solvable : "\n"; */
+    /* vprintf Solvable : "# of points in affine patch %o = %o:\n", i, #ptsi; */
+    /* vprintf Solvable : "%o\n", ptsi; */
+    /* vprintf Solvable : "%o seconds\n", t1-t0; */
     for pt in ptsi do
       Append(~all_points, ProjectiveRepresentative(pt));
     end for;
   end for;
   all_points_set := SequenceToSet(all_points);
-  vprintf Solvable : "\nCollecting projective points over %o\n", FFqq;
-  vprintf Solvable : "# projective points = %o:\n", #all_points_set;
+  /* vprintf Solvable : "\nCollecting projective points over %o\n", FFqq; */
+  /* vprintf Solvable : "# projective points = %o:\n", #all_points_set; */
   all_pts := SetToSequence(all_points_set);
   for pt in all_pts do
-    vprintf Solvable : "%o\n", pt;
+    /* vprintf Solvable : "%o\n", pt; */
   end for;
   return all_pts;
 end intrinsic;
