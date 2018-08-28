@@ -114,10 +114,10 @@ intrinsic Mascot(d::RngIntElt, genus::RngIntElt) -> Any
       end if;
       t3 := Cputime();
       if bl then
-        printf "SUCCESS in %o seconds\n", t1-t0;
+        printf "SUCCESS in %o seconds : ", t1-t0;
         Append(~names, Filename(objects[i]));
       else
-        printf "failed in %o seconds\n", t1-t0;
+        printf "failed in %o seconds : ", t1-t0;
       end if;
       if bl2 then
         printf "SUCCESS in %o seconds\n", t3-t2;
