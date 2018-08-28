@@ -132,3 +132,47 @@ intrinsic Mascot(d::RngIntElt, genus::RngIntElt) -> Any
   return names;
 end intrinsic;
 
+intrinsic MascotFast(d::RngIntElt, genus::RngIntElt) -> Any
+  {}
+  // only rationals for now
+  curves, maps, objects := GetNonhyperelliptic(d, genus : QQ := true);
+  names := [];
+  for i := 1 to #curves do
+    printf "d=%o,g=%o,i=%o : ", d, genus, i;
+    try
+      t0 := Cputime();
+      Xp := ReduceCurve(curves[i], 3);
+      sings := SingularPoints(Xp);
+      if #sings gt 0 then
+        bl1 := false;
+      else
+        bl1 := true;
+      end if;
+      t1 := Cputime();
+      t2 := Cputime();
+      pts := NaivePointSearch(curves[i], 3 : m := 2);
+      if (#pts mod 4) ne 0 then
+        bl2 := true;
+      else
+        bl2 := false;
+      end if;
+      t3 := Cputime();
+      if bl then
+        printf "3 has good reduction %o seconds : ", t1-t0;
+      else
+        printf "3 has bad reduction %o seconds : ", t1-t0;
+      end if;
+      if bl2 then
+        printf "#pts not 0 mod 4 %o seconds\n", t3-t2;
+      else
+        printf "#pts is 0 mod 4 %o seconds\n", t3-t2;
+      end if;
+      if bl1 and bl2 then
+        Append(~names, Filename(objects[i]));
+      end if;
+    catch e1
+      printf "error\n";
+    end try;
+  end for;
+  return names;
+end intrinsic;
