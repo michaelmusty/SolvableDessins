@@ -203,3 +203,28 @@ intrinsic CheckPrimitiveParts(d::RngIntElt : m := 0) -> Any
   end for;
   return dimensions, objs;
 end intrinsic;
+
+intrinsic NonhyperellipticPrimitiveParts(d::RngIntElt : m := 0) -> Any
+  {}
+  filenames := SolvableDBFilenames(d);
+  dimensions := [];
+  objs := [];
+  for filename in filenames do
+    s := SolvableDBRead(filename);
+    if BelyiMapIsComputed(s) then
+      if not IsLowGenusOrHyperelliptic(s) then
+        dimension := PrimitivePartDimension(s);
+        if m gt 0 then
+          if dimension eq m then
+            Append(~dimensions, dimension);
+            Append(~objs, s);
+          end if;
+        else
+          Append(~dimensions, dimension);
+          Append(~objs, s);
+        end if;
+      end if;
+    end if;
+  end for;
+  return dimensions, objs;
+end intrinsic;
