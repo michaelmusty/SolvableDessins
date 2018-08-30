@@ -94,6 +94,7 @@ intrinsic PassportSimpleWrapper(s::SolvableDB) -> Any
     SolvableDBWrite(s);
   end if;
   print s;
+  return "ola";
 end intrinsic;
 
 intrinsic PassportMapsSimpleWrapper(pass::SolvablePassportDB, inds::SeqEnum[RngIntElt]) -> Any
