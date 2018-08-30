@@ -90,10 +90,11 @@ intrinsic PassportSimpleWrapper(s::SolvableDB) -> Any
   {}
   s := SolvableBelyiMap(s);
   bl := SolvableLocalSanityCheck(s, 101);
+  IsLowGenusOrHyperelliptic(s);
+  assert assigned s`SolvableDBIsLowGenusOrHyperelliptic;
   if bl then
     SolvableDBWrite(s);
   end if;
-  print s;
   return "ola";
 end intrinsic;
 
