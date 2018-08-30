@@ -95,3 +95,13 @@ intrinsic PassportSimpleWrapper(s::SolvableDB) -> Any
   end if;
   return "ola";
 end intrinsic;
+
+intrinsic PassportMapsSimpleWrapper(pass::SolvablePassportDB, inds::SeqEnum[RngIntElt]) -> Any
+  {}
+  objs := PassportObjects(pass);
+  for i in inds do
+    s := objs[i];
+    PassportSimpleWrapper(s);
+  end for;
+  return "OLA";
+end intrinsic;
