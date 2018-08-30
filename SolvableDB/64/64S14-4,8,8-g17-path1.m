@@ -1,6 +1,43 @@
 s := SolvableDBInitialize();
 
 /*
+Custom printing for Belyi curve and map
+*/
+
+/* Belyi curve */
+K<nu> := NumberField(Polynomial([RationalField() | 16, 0, 0, 0, 0, 0, 0, 0, 1]));
+P<[x]> := PolynomialRing(K, 4);
+I<[x]> := ideal< P | [
+x[2]^2*x[4]^4 - nu^2*x[4]^4 - 2*nu^4*x[1]^3 + 1/2*(nu^6 + 4*nu^2)*x[3]*x[4]^2 + 4*x[2]^2 + 8*x[1] - nu^6,
+x[2]^2*x[3]^3 + 1/2*(nu^4 - 12)*x[1]^3*x[3] - 1/4*nu^4*x[2]^2*x[4]^2 - 1/4*nu^6*x[3]^2*x[4]^2 + 1/2*nu^6*x[1]^2*x[3] - 3*x[2]^2*x[3] + 1/4*nu^6*x[3]^3 + 1/2*(-nu^4 - 4)*x[1]*x[3] + 1/4*nu^6*x[4]^2 - 1/4*nu^6*x[3],
+x[2]^2*x[3]*x[4]^2 - 1/4*nu^4*x[2]^2*x[3]^2 + 1/2*(nu^4 - 4)*x[1]^3 + 2*nu^2*x[1]^2 - 1/4*nu^4*x[2]^2 + nu^2*x[3]^2 + 1/2*(-nu^4 + 4)*x[1] - nu^2,
+x[3]*x[4]^4 + 1/4*(-nu^4 - 4)*x[3]^2*x[4]^2 + 1/4*(-nu^4 - 4)*x[4]^2 + nu^4*x[3],
+x[1]^4 + 1/32*(nu^6 + 4*nu^2)*x[2]^2*x[3]^2 + 1/8*(-nu^6 - 4*nu^2)*x[1]^3 + 1/8*(nu^4 + 4)*x[3]*x[4]^2 - x[1]^2 + 1/32*(-nu^6 - 4*nu^2)*x[2]^2 + 1/8*(-nu^4 - 4)*x[3]^2 + 1/8*(-nu^4 - 4),
+x[1]*x[3]^2 - 1/8*nu^6*x[3]*x[4]^2 + 1/8*nu^6*x[3]^2 - x[1] + 1/8*nu^6,
+x[1]*x[4]^2 - 1/2*nu^4*x[1]*x[3] - 1/2*nu^2*x[4]^2 + nu^2*x[3]
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+
+/* Belyi map */
+K<nu> := NumberField(Polynomial([RationalField() | 16, 0, 0, 0, 0, 0, 0, 0, 1]));
+P<[x]> := PolynomialRing(K, 4);
+I<[x]> := ideal< P | [
+x[2]^2*x[4]^4 - nu^2*x[4]^4 - 2*nu^4*x[1]^3 + 1/2*(nu^6 + 4*nu^2)*x[3]*x[4]^2 + 4*x[2]^2 + 8*x[1] - nu^6,
+x[2]^2*x[3]^3 + 1/2*(nu^4 - 12)*x[1]^3*x[3] - 1/4*nu^4*x[2]^2*x[4]^2 - 1/4*nu^6*x[3]^2*x[4]^2 + 1/2*nu^6*x[1]^2*x[3] - 3*x[2]^2*x[3] + 1/4*nu^6*x[3]^3 + 1/2*(-nu^4 - 4)*x[1]*x[3] + 1/4*nu^6*x[4]^2 - 1/4*nu^6*x[3],
+x[2]^2*x[3]*x[4]^2 - 1/4*nu^4*x[2]^2*x[3]^2 + 1/2*(nu^4 - 4)*x[1]^3 + 2*nu^2*x[1]^2 - 1/4*nu^4*x[2]^2 + nu^2*x[3]^2 + 1/2*(-nu^4 + 4)*x[1] - nu^2,
+x[3]*x[4]^4 + 1/4*(-nu^4 - 4)*x[3]^2*x[4]^2 + 1/4*(-nu^4 - 4)*x[4]^2 + nu^4*x[3],
+x[1]^4 + 1/32*(nu^6 + 4*nu^2)*x[2]^2*x[3]^2 + 1/8*(-nu^6 - 4*nu^2)*x[1]^3 + 1/8*(nu^4 + 4)*x[3]*x[4]^2 - x[1]^2 + 1/32*(-nu^6 - 4*nu^2)*x[2]^2 + 1/8*(-nu^4 - 4)*x[3]^2 + 1/8*(-nu^4 - 4),
+x[1]*x[3]^2 - 1/8*nu^6*x[3]*x[4]^2 + 1/8*nu^6*x[3]^2 - x[1] + 1/8*nu^6,
+x[1]*x[4]^2 - 1/2*nu^4*x[1]*x[3] - 1/2*nu^2*x[4]^2 + nu^2*x[3]
+] >;
+X<[x]> := Curve(AffineSpace(P), I);
+KX<[x]> := FunctionField(X);
+phi := KX!((x[3]^8 - 4*x[3]^6 - 10*x[3]^4 - 4*x[3]^2 + 1)/(x[3]^8 - 4*x[3]^6 + 6*x[3]^4 - 4*x[3]^2 + 1));
+/* assign to object */
+s`SolvableDBBelyiCurve := X;
+s`SolvableDBBelyiMap := phi;
+
+/*
 Magma printing
 */
 
@@ -50,6 +87,10 @@ s`SolvableDBBlocks := {@ PowerSet(IntegerRing()) |
 { IntegerRing() | 47, 62 },
 { IntegerRing() | 56, 64 }
 @};
+s`SolvableDBBelyiMapTiming := 49.490p15;
+s`SolvableDBLocalSanityCheckTiming := 12.340p15;
+s`SolvableDBLocalSanityCheckPrime := 101;
+s`SolvableDBIsLowGenusOrHyperelliptic := false;
 s`SolvableDBIsRamifiedAtEveryLevel := true;
 s`SolvableDBGaloisOrbit := [ PowerSequence(PermutationGroup<64 |  
 \[ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 1 ],
