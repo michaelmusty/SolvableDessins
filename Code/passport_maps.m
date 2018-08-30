@@ -85,3 +85,13 @@ intrinsic AllPassports(d::RngIntElt) -> Any
   end for;
   return "blah";
 end intrinsic;
+
+intrinsic PassportSimpleWrapper(s::SolvableDB) -> Any
+  {}
+  s := SolvableBelyiMap(s);
+  bl := SolvableLocalSanityCheck(s, 101);
+  if bl then
+    SolvableDBWrite(s);
+  end if;
+  return "ola";
+end intrinsic;
