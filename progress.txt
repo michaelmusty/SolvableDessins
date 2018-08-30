@@ -1,6 +1,6 @@
 Currently computing:
 d64g17
-d128g21
+d128g29
 
 Checked examples up to:
 d64g16
