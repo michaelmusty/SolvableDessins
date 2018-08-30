@@ -1,4 +1,4 @@
-Currnetly computing:
+Currently computing:
 d64g17
 d128g21
 

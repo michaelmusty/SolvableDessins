@@ -323,7 +323,7 @@ intrinsic PullbackBelyiMap(X_below::Crv, f::FldFunFracSchElt, phi_below::FldFunF
   return X, phi;
 end intrinsic;
 
-intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 20000000000000) -> SolvableDB
+intrinsic SolvableBelyiMap(s::SolvableDB, t::SolvableDB : measure_bound := 0) -> SolvableDB
   {}
   s := SolvableDBCopy(s);
   t := SolvableDBCopy(t);
