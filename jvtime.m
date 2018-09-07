@@ -1,5 +1,5 @@
 load "oli.m";
-s := SolvableDBRead("64S10-8,4,8-g17-path2.m")
+s := SolvableDBRead("64S10-8,4,8-g17-path2.m");
 X := BelyiCurve(s);
 phi := BelyiMap(s);
 
