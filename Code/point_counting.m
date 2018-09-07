@@ -1,3 +1,48 @@
+intrinsic NaivePlaneProjection(X::Crv) -> Any
+  {}
+  if IsProjective(X) then
+    Z := X;
+  else
+    assert IsAffine(X);
+    Z := ProjectiveClosure(X);
+  end if;
+  dim := Dimension(Ambient(Z));
+  r := Rank(Generic(Ideal(Z)));
+  assert dim+1 eq r;
+  indices := {1..r};
+  subs := Subsets(indices, 3);
+  P := Ambient(Z);
+  PP2 := ProjectiveSpace(BaseRing(P), 2);
+  curves := [* *];
+  for sub in subs do
+    vprintf Solvable : "Projecting to %o\n", sub;
+    sub_sort := Sort(SetToSequence(sub));
+    map_vars := [Z.i : i in sub_sort];
+    mp := map<Z->PP2|map_vars>;
+    Z_plane := Image(mp);
+    vprintf Solvable : "image computed%o\n", sub;
+    mp := map<Z->Z_plane|map_vars>;
+    vprintf Solvable : "map computed%o\n", sub;
+    if Genus(Z_plane) eq Genus(Z) and #DefiningEquations(Z_plane) eq 1 then
+      Append(~curves, [* Z_plane, mp *]);
+    end if;
+  end for;
+  if #curves eq 0 then
+    error "plane projection failed!";
+  else
+    vprintf Solvable : "checking %o curves:\n", #curves;
+    max_multiplicities := [];
+    for i := 1 to #curves do
+      X := curves[i][1];
+      _, max_mult := HasOnlyOrdinarySingularities(X);
+      vprintf Solvable : "curve %o has maximum multiplicity = %o\n", i, max_mult;
+      Append(~max_multiplicities, max_mult);
+    end for;
+    ind := Index(max_multiplicities, Min(max_multiplicities));
+    return curves[ind][1], curves[ind][2]; // curve and projection map
+  end if;
+end intrinsic;
+
 intrinsic PolynomialReduction(poly::RngMPolElt, mp::Map, P::RngMPol) -> RngMPolElt
   {Given a poly and a mp on coefficients, return poly with new coeffs.}
   assert Codomain(mp) eq BaseRing(P);

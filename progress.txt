@@ -1,7 +1,9 @@
 Currently computing:
-d64g17
-d128g29
+	d64g17 maps
+	d128g29 maps
+	d256g17 maps
+	d512 triples
 
 Checked examples up to:
-d64g16
-d128g20
+	d64g16
+	d128g20
