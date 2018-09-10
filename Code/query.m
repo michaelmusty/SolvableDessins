@@ -76,6 +76,62 @@ intrinsic FactorAtLeastDegree(f::RngUPolElt, d::RngIntElt) -> Any
   return false, facts[1][1];
 end intrinsic;
 
+intrinsic NaiveTest(s::SolvableDB) -> Any
+  {}
+  printf "%o: \n", Filename(s);
+  X := BelyiCurve(s);
+  X3 := ReduceCurve(X,3);
+  X5 := ReduceCurve(X,5);
+  X7 := ReduceCurve(X,7);
+  KX3 := AlgorithmicFunctionField(FunctionField(X3));
+  KX5 := AlgorithmicFunctionField(FunctionField(X5));
+  KX7 := AlgorithmicFunctionField(FunctionField(X7));
+  count3 := NumberOfPlacesOfDegreeOneOverExactConstantField(KX3);
+  count5 := NumberOfPlacesOfDegreeOneOverExactConstantField(KX5);
+  count7 := NumberOfPlacesOfDegreeOneOverExactConstantField(KX7);
+  printf "  p=3: %o points\n", count3;
+  printf "  p=5: %o points\n", count5;
+  printf "  p=7: %o points\n", count7;
+  if IsOdd(count3) or IsOdd(count5) or IsOdd(count7) then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
+intrinsic NaiveTest(d::RngIntElt, g::RngIntElt) -> Any
+  {}
+  objs := PassportsNonhyperelliptic(d, g);
+  bools := [];
+  for s in objs do
+    try
+      bl := NaiveTest(s);
+      Append(~bools, bl);
+    catch e
+      printf "error\n";
+    end try;
+  end for;
+  if true in bools then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
+intrinsic NaiveTest(d::RngIntElt) -> Any
+  {}
+  bools := [];
+  for g := 1 to MaxGenera(d) do
+    bl := NaiveTest(d, g);
+    Append(~bools, bl);
+  end for;
+  if true in bools then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
 intrinsic CheckLPolynomial(X::Crv, p::RngIntElt) -> Any
   {returns true,Lpoly if there is a factor of degree gt 4 that is not completely reducible mod 2 and false, Lpoly otherwise.}
   Xp := SolvableReduceCurve(X, p);
