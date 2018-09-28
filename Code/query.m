@@ -91,6 +91,29 @@ intrinsic FactorAtLeastDegree(f::RngUPolElt, d::RngIntElt) -> Any
   return false, facts[1][1];
 end intrinsic;
 
+intrinsic GetTotallySplitPrimes(s::SolvableDB, B::RngIntElt) -> Any
+  {}
+  if BelyiMapIsComputed(s) then
+    X := BelyiCurve(s);
+    K := BaseField(X);
+    primes := PrimesUpTo(B, K);
+    if Degree(K) eq 1 then
+      return [Generator(prime) : prime in primes];
+    end if;
+    // if we get here then K is a FldNum
+    l := [];
+    for pp in primes do
+      if IsTotallySplit(pp) then
+        p := Norm(pp);
+        assert IsPrime(p);
+        Append(~l, p);
+      end if;
+    end for;
+    return l;
+  else
+    error "Belyi map not computed";
+  end if;
+end intrinsic;
 
 intrinsic NaiveTest(s::SolvableDB) -> Any
   {}
