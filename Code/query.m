@@ -61,7 +61,22 @@ intrinsic GetNonhyperelliptic(d::RngIntElt, genus::RngIntElt : QQ := false) -> A
     end for;
     vprintf Solvable : "# nonhyperelliptic curves over QQ = %o\n", #curves;
   end if;
-  return curves, maps, objs;
+  return curves, maps, objects;
+end intrinsic;
+
+intrinsic GetNonhyperelliptic(d::RngIntElt : QQ := false) -> Any
+  {}
+  curves := [* *];
+  maps := [* *];
+  objects := [* *];
+  max_genus := MaxGenera(d);
+  for g := 0 to max_genus do
+    curves_g, maps_g, objs_g := GetNonhyperelliptic(d, g : QQ := QQ);
+    curves cat:= curves_g;
+    maps cat:= maps_g;
+    objects cat:= objs_g;
+  end for;
+  return curves, maps, objects;
 end intrinsic;
 
 intrinsic FactorAtLeastDegree(f::RngUPolElt, d::RngIntElt) -> Any
@@ -75,6 +90,7 @@ intrinsic FactorAtLeastDegree(f::RngUPolElt, d::RngIntElt) -> Any
   end for;
   return false, facts[1][1];
 end intrinsic;
+
 
 intrinsic NaiveTest(s::SolvableDB) -> Any
   {}
