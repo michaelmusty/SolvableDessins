@@ -109,7 +109,7 @@ intrinsic GetTotallySplitPrimes(s::SolvableDB, B::RngIntElt) -> Any
         Append(~l, p);
       end if;
     end for;
-    return l;
+    return SetToSequence(SequenceToSet(l));
   else
     error "Belyi map not computed";
   end if;
@@ -133,6 +133,25 @@ intrinsic NaiveTest(s::SolvableDB, p::RngIntElt) -> Any
     test2 := false;
     vprintf Solvable : "#degree2places = %o : %o\n", count2, test2;
     return test1 or test2;
+  else
+    error "Belyi map not computed";
+  end if;
+end intrinsic;
+
+intrinsic BrutalTest(s::SolvableDB, p::RngIntElt) -> Any
+  {}
+  assert IsPrime(p);
+  vprintf Solvable : "%o : p=%o :\n", Filename(s), p;
+  if BelyiMapIsComputed(s) then
+    X := BelyiCurve(s);
+    Xp := ReduceCurve(X, p);
+    f := LPolynomial(Xp);
+    bl, fact := FactorAtLeastDegree(f, 2);
+    vprintf Solvable : "Lpoly = %o\n", f;
+    vprintf Solvable : "largest degree factor = %o\n", fact;
+    if bl then
+      printf "SUCCESS with %o\n", Name(s);
+    end if;
   else
     error "Belyi map not computed";
   end if;
