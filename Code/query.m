@@ -152,6 +152,7 @@ intrinsic BrutalTest(s::SolvableDB, p::RngIntElt) -> Any
     if bl then
       printf "SUCCESS with %o\n", Name(s);
     end if;
+    vprintf Solvable : "\n";
     return f;
   else
     error "Belyi map not computed";
