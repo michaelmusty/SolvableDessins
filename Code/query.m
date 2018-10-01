@@ -146,7 +146,7 @@ intrinsic BrutalTest(s::SolvableDB, p::RngIntElt) -> Any
     X := BelyiCurve(s);
     Xp := ReduceCurve(X, p);
     f := LPolynomial(Xp);
-    bl, fact := FactorAtLeastDegree(f, 2);
+    bl, fact := FactorAtLeastDegree(PolynomialRing(GF(2))!f, 2);
     vprintf Solvable : "Lpoly = %o\n", f;
     vprintf Solvable : "largest degree factor = %o\n", fact;
     if bl then
