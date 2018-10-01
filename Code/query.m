@@ -115,6 +115,29 @@ intrinsic GetTotallySplitPrimes(s::SolvableDB, B::RngIntElt) -> Any
   end if;
 end intrinsic;
 
+intrinsic NaiveTest(s::SolvableDB, p::RngIntElt) -> Any
+  {}
+  assert IsPrime(p);
+  vprintf Solvable : "%o : p=%o :\n", Filename(s), p;
+  if BelyiMapIsComputed(s) then
+    X := BelyiCurve(s);
+    Xp := ReduceCurve(X, p);
+    KXp := AlgorithmicFunctionField(FunctionField(Xp));
+    count1 := NumberOfPlacesOfDegreeOneOverExactConstantField(KXp);
+    count2 := NumberOfPlacesOfDegreeOverExactConstantField(KXp, 2);
+    // test1
+    test1 := IsOdd(count1);
+    vprintf Solvable : "#degree1places = %o : %o\n", count1, test1;
+    // test2
+    // TODO test2 := ?
+    test2 := false;
+    vprintf Solvable : "#degree2places = %o : %o\n", count2, test2;
+    return test1 or test2;
+  else
+    error "Belyi map not computed";
+  end if;
+end intrinsic;
+
 intrinsic NaiveTest(s::SolvableDB) -> Any
   {}
   printf "%o: \n", Filename(s);
