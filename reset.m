@@ -1,3 +1,4 @@
+error "are you sure you want to do this?";
 /*
 Front Matter
 */

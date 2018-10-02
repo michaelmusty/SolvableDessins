@@ -17,5 +17,6 @@
   magma_to_sage.m
   passport_maps.m
   query.m
-	point_counting.m
+  point_counting.m
+  refined.m
 }
