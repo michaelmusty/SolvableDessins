@@ -143,8 +143,10 @@ intrinsic NaiveTest(s::SolvableDB) -> BoolElt
   primes := GetTotallySplitPrimes(s, 100);
   bools := [];
   for pp in primes do
-    bl := NaiveTest(s, pp);
-    Append(~bools, bl);
+    if pp ne 2 then
+      bl := NaiveTest(s, pp);
+      Append(~bools, bl);
+    end if;
   end for;
   if true in bools then
     return true;
@@ -179,8 +181,10 @@ intrinsic BrutalTest(s::SolvableDB) -> BoolElt
   primes := GetTotallySplitPrimes(s, 100);
   bools := [];
   for pp in primes do
-    bl := BrutalTest(s, pp);
-    Append(~bools, bl);
+    if pp ne 2 then
+      bl := BrutalTest(s, pp);
+      Append(~bools, bl);
+    end if;
   end for;
   if true in bools then
     return true;
