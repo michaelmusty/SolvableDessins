@@ -212,11 +212,44 @@ intrinsic NaiveTest(d::RngIntElt, g::RngIntElt) -> BoolElt
   end if;
 end intrinsic;
 
+intrinsic BrutalTest(d::RngIntElt, g::RngIntElt) -> BoolElt
+  {}
+  objs := PassportsNonhyperelliptic(d, g);
+  bools := [];
+  for s in objs do
+    try
+      bl := BrutalTest(s);
+      Append(~bools, bl);
+    catch e
+      printf "error\n";
+    end try;
+  end for;
+  if true in bools then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
 intrinsic NaiveTest(d::RngIntElt) -> Any
   {}
   bools := [];
   for g := 1 to MaxGenera(d) do
     bl := NaiveTest(d, g);
+    Append(~bools, bl);
+  end for;
+  if true in bools then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
+intrinsic BrutalTest(d::RngIntElt) -> Any
+  {}
+  bools := [];
+  for g := 1 to MaxGenera(d) do
+    bl := BrutalTest(d, g);
     Append(~bools, bl);
   end for;
   if true in bools then
