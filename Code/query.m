@@ -193,7 +193,7 @@ intrinsic BrutalTest(s::SolvableDB) -> BoolElt
   end if;
 end intrinsic;
 
-intrinsic NaiveTest(d::RngIntElt, g::RngIntElt) -> Any
+intrinsic NaiveTest(d::RngIntElt, g::RngIntElt) -> BoolElt
   {}
   objs := PassportsNonhyperelliptic(d, g);
   bools := [];
