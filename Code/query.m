@@ -174,6 +174,21 @@ intrinsic BrutalTest(s::SolvableDB, p::RngIntElt) -> BoolElt
   end if;
 end intrinsic;
 
+intrinsic BrutalTest(s::SolvableDB) -> BoolElt
+  {}
+  primes := GetTotallySplitPrimes(s, 100);
+  bools := [];
+  for pp in primes do
+    bl := BrutalTest(s, pp);
+    Append(~bools, bl);
+  end for;
+  if true in bools then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
 intrinsic NaiveTest(d::RngIntElt, g::RngIntElt) -> Any
   {}
   objs := PassportsNonhyperelliptic(d, g);
