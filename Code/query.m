@@ -149,7 +149,7 @@ intrinsic NaiveTest(s::SolvableDB) -> BoolElt
   if true in bools then
     return true;
   else
-    return false
+    return false;
   end if;
 end intrinsic;
 
