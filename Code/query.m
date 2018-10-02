@@ -115,7 +115,7 @@ intrinsic GetTotallySplitPrimes(s::SolvableDB, B::RngIntElt) -> Any
   end if;
 end intrinsic;
 
-intrinsic NaiveTest(s::SolvableDB, p::RngIntElt) -> Any
+intrinsic NaiveTest(s::SolvableDB, p::RngIntElt) -> BoolElt
   {}
   assert IsPrime(p);
   vprintf Solvable : "%o : p=%o :\n", Filename(s), p;
@@ -138,7 +138,22 @@ intrinsic NaiveTest(s::SolvableDB, p::RngIntElt) -> Any
   end if;
 end intrinsic;
 
-intrinsic BrutalTest(s::SolvableDB, p::RngIntElt) -> Any
+intrinsic NaiveTest(s::SolvableDB) -> BoolElt
+  {}
+  primes := GetTotallySplitPrimes(s, 100);
+  bools := [];
+  for pp in primes do
+    bl := NaiveTest(s, pp);
+    Append(~bools, bl);
+  end for;
+  if true in bools then
+    return true;
+  else
+    return false
+  end if;
+end intrinsic;
+
+intrinsic BrutalTest(s::SolvableDB, p::RngIntElt) -> BoolElt
   {}
   assert IsPrime(p);
   vprintf Solvable : "%o : p=%o :\n", Filename(s), p;
@@ -156,49 +171,6 @@ intrinsic BrutalTest(s::SolvableDB, p::RngIntElt) -> Any
     return f;
   else
     error "Belyi map not computed";
-  end if;
-end intrinsic;
-
-intrinsic NaiveTest(s::SolvableDB) -> Any
-  {}
-  printf "%o: \n", Filename(s);
-  X := BelyiCurve(s);
-  X3 := ReduceCurve(X,3);
-  X5 := ReduceCurve(X,5);
-  X7 := ReduceCurve(X,7);
-  KX3 := AlgorithmicFunctionField(FunctionField(X3));
-  KX5 := AlgorithmicFunctionField(FunctionField(X5));
-  KX7 := AlgorithmicFunctionField(FunctionField(X7));
-  count3 := NumberOfPlacesOfDegreeOneOverExactConstantField(KX3);
-  count5 := NumberOfPlacesOfDegreeOneOverExactConstantField(KX5);
-  count7 := NumberOfPlacesOfDegreeOneOverExactConstantField(KX7);
-  printf "  p=3: %o points\n", count3;
-  printf "  p=5: %o points\n", count5;
-  printf "  p=7: %o points\n", count7;
-  test1 := IsOdd(count3) or IsOdd(count5) or IsOdd(count7);
-  /* count3_2 := NumberOfPlacesOfDegreeOverExactConstantField(KX3, 2); */
-  /* count5_2 := NumberOfPlacesOfDegreeOverExactConstantField(KX5, 2); */
-  /* count7_2 := NumberOfPlacesOfDegreeOverExactConstantField(KX7, 2); */
-  count3_2 := NumberOfPlacesDegECF(KX3, 2);
-  count5_2 := NumberOfPlacesDegECF(KX5, 2);
-  count7_2 := NumberOfPlacesDegECF(KX7, 2);
-  printf "  p=3: %o points of degree 2\n", count3_2;
-  printf "  p=5: %o points of degree 2\n", count5_2;
-  printf "  p=7: %o points of degree 2\n", count7_2;
-  test2 := false;
-  if count3_2 mod 4 ne 0 then
-    test2 := true;
-  end if;
-  if count5_2 mod 4 ne 0 then
-    test2 := true;
-  end if;
-  if count7_2 mod 4 ne 0 then
-    test2 := true;
-  end if;
-  if test1 or test2 then
-    return true;
-  else
-    return false;
   end if;
 end intrinsic;
 
