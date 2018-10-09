@@ -115,6 +115,118 @@ intrinsic GetTotallySplitPrimes(s::SolvableDB, B::RngIntElt) -> Any
   end if;
 end intrinsic;
 
+intrinsic JustNaive(s::SolvableDB) -> Any
+  {}
+  primes := GetTotallySplitPrimes(s, 100);
+  if primes[1] eq 2 then
+    p := primes[2];
+  else
+    p := primes[1];
+  end if;
+  vprintf Solvable : "%o : p=%o :\n", Filename(s), p;
+  if BelyiMapIsComputed(s) then
+    X := BelyiCurve(s);
+    Xp := ReduceCurve(X, p);
+    KXp := AlgorithmicFunctionField(FunctionField(Xp));
+    count := [];
+    t_start := Cputime();
+    count[1] := NumberOfPlacesOfDegreeOneOverExactConstantField(KXp);
+    t_end := Cputime();
+    printf "  #deg%oplcs = %o : %o s\n", 1, count[1], t_end-t_start;
+    for i := 2 to 3 do
+      t_start := Cputime();
+      count[i] := NumberOfPlacesOfDegreeOverExactConstantField(KXp, i);
+      t_end := Cputime();
+      printf "  #deg%oplcs = %o : %o s\n", i, count[i], t_end-t_start;
+    end for;
+    N1 := count[1];
+    N2 := N1 + 2*count[2];
+    t1 := p+1-N1;
+    t2 := p^2+1-N2;
+    a1 := N1;
+    a2 := Integers()!((t1^2-t2)/2);
+    printf "  a1 = %o\n", t1;
+    printf "  a2 = %o\n", a2;
+    /* printf "  Z(t) = %o\n", LPolynomial(Xp); */
+    // new method
+    printf "  computing Aut(Xp) : ";
+    t_start := Cputime();
+    AutX := AutomorphismGroup(Xp);
+    t_end := Cputime();
+    printf "%o s\n", t_end-t_start;
+    G := MonodromyGroup(s);
+    if #AutX lt #G then
+      Xpp := BaseChange(Xp, GF(p^2));
+      printf "  computing Aut(Xpp) : ";
+      t_start := Cputime();
+      AutX := AutomorphismGroup(Xpp);
+      t_end := Cputime();
+      printf "%o s\n", t_end-t_start;
+    end if;
+    assert #G le #AutX;
+    printf "  computing permutation representation : ";
+    t_start := Cputime();
+    Gperm, mperm := PermutationRepresentation(AutX);
+    t_end := Cputime();
+    printf "%o s\n", t_end-t_start;
+    printf "  computing matrix representation : ";
+    t_start := Cputime();
+    M, phi := MatrixRepresentation(AutX);
+    t_end := Cputime();
+    printf "%o s\n", t_end-t_start;
+    printf "  decomposing GModule : ";
+    t_start := Cputime();
+    mp := mperm^-1*phi;
+    V := GModule(mp);
+    l := Decomposition(V);
+    t_end := Cputime();
+    printf "%o s\n", t_end-t_start;
+    dims := [Dimension(W) : W in l];
+    printf "  dimensions = %o\n", dims;
+    printf "\n";
+    if Max(dims) ge 3 then
+      return true;
+    else
+      return false;
+    end if;
+  else
+    error "Belyi map not computed";
+  end if;
+end intrinsic;
+
+intrinsic JustNaive(d::RngIntElt, g::RngIntElt) -> BoolElt
+  {}
+  objs := PassportsNonhyperelliptic(d, g);
+  bools := [];
+  for s in objs do
+    try
+      bl := JustNaive(s);
+      Append(~bools, bl);
+    catch e
+      printf "error\n";
+    end try;
+  end for;
+  if true in bools then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
+intrinsic JustNaive(d::RngIntElt) -> Any
+  {}
+  bools := [];
+  for g := 1 to MaxGenera(d) do
+    bl := JustNaive(d, g);
+    Append(~bools, bl);
+  end for;
+  if true in bools then
+    return true;
+  else
+    return false;
+  end if;
+end intrinsic;
+
 intrinsic NaiveTest(s::SolvableDB, p::RngIntElt) -> BoolElt
   {}
   assert IsPrime(p);
