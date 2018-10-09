@@ -153,16 +153,18 @@ intrinsic JustNaive(s::SolvableDB) -> Any
     t_start := Cputime();
     AutX := AutomorphismGroup(Xp);
     t_end := Cputime();
-    printf "%o s\n", t_end-t_start;
+    printf "#AutX = %o : %o s\n", #AutX, t_end-t_start;
     G := MonodromyGroup(s);
-    if #AutX lt #G then
-      Xpp := BaseChange(Xp, GF(p^2));
-      printf "  computing Aut(Xpp) : ";
+    m := 1;
+    while #AutX lt #G do
+      m +:= 1;
+      Xpp := BaseChange(Xp, GF(p^m));
+      printf "  computing Aut(Xp^%o) : ", m;
       t_start := Cputime();
       AutX := AutomorphismGroup(Xpp);
       t_end := Cputime();
-      printf "%o s\n", t_end-t_start;
-    end if;
+      printf "#AutX = %o : %o s\n", #AutX, t_end-t_start;
+    end while;
     assert #G le #AutX;
     printf "  computing permutation representation : ";
     t_start := Cputime();
