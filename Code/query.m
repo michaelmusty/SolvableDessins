@@ -115,14 +115,9 @@ intrinsic GetTotallySplitPrimes(s::SolvableDB, B::RngIntElt) -> Any
   end if;
 end intrinsic;
 
-intrinsic JustNaive(s::SolvableDB) -> Any
+intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
   {}
-  primes := GetTotallySplitPrimes(s, 100);
-  if primes[1] eq 2 then
-    p := primes[2];
-  else
-    p := primes[1];
-  end if;
+  assert IsPrime(p);
   vprintf Solvable : "%o : p=%o :\n", Filename(s), p;
   if BelyiMapIsComputed(s) then
     X := BelyiCurve(s);
@@ -194,6 +189,17 @@ intrinsic JustNaive(s::SolvableDB) -> Any
   else
     error "Belyi map not computed";
   end if;
+end intrinsic;
+
+intrinsic JustNaive(s::SolvableDB) -> Any
+  {}
+  primes := GetTotallySplitPrimes(s, 100);
+  if primes[1] eq 2 then
+    p := primes[2];
+  else
+    p := primes[1];
+  end if;
+  return JustNaive(s, p);
 end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt, g::RngIntElt) -> BoolElt
