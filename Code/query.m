@@ -235,10 +235,26 @@ intrinsic JustNaive(d::RngIntElt) -> Any
     auto_issues, gt_2, gt_3, gt_4 := JustNaive(d, g);
   end for;
   // TODO: put what you want here :)
+  printf "\nauto_issues:\n";
+  for s in auto_issues do
+    printf "  %o\n", Filename(s);
+  end for;
+  printf "\ngt_2:\n";
+  for s in gt_2 do
+    printf "  %o\n", Filename(s);
+  end for;
+  printf "\ngt_3:\n";
+  for s in gt_3 do
+    printf "  %o\n", Filename(s);
+  end for;
+  printf "\ngt_4:\n";
+  for s in gt_4 do
+    printf "  %o\n", Filename(s);
+  end for;
   if #gt_4 gt 0 then
-    return gt_4[1];
+    return true;
   else
-    return gt_4;
+    return false;
   end if;
 end intrinsic;
 
