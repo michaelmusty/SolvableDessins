@@ -152,6 +152,9 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
     G := MonodromyGroup(s);
     m := 1;
     while #AutX lt #G do
+      if m gt 10 then
+        return "not_enough_automorphisms", s;
+      end if;
       m +:= 1;
       Xpp := BaseChange(Xp, GF(p^m));
       printf "  computing Aut(Xp^%o) : ", m;
@@ -181,11 +184,7 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
     dims := [Dimension(W) : W in l];
     printf "  dimensions = %o\n", dims;
     printf "\n";
-    if Max(dims) ge 3 then
-      return true;
-    else
-      return false;
-    end if;
+    return Max(dims), s;
   else
     error "Belyi map not computed";
   end if;
@@ -204,34 +203,42 @@ end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt, g::RngIntElt) -> BoolElt
   {}
-  objs := PassportsNonhyperelliptic(d, g);
-  bools := [];
+  objs := PassportsNonhyperelliptic(d, g); // must already be computed
+  auto_issues := [];
+  gt_2 := [];
+  gt_3 := [];
+  gt_4 := [];
   for s in objs do
-    try
-      bl := JustNaive(s);
-      Append(~bools, bl);
-    catch e
-      printf "error\n";
-    end try;
+    a, b := JustNaive(s);
+    if ISA(Type(a), MonStgElt) then
+      Append(~auto_issues, b);
+    elif a gt 4 then
+      Append(~gt_4, b);
+    elif a gt 3 then
+      Append(~gt_3, b);
+    elif a gt 2 then
+      Append(~gt_2, b);
+    end if;
   end for;
-  if true in bools then
-    return true;
-  else
-    return false;
-  end if;
+  printf "d=%o, g=%o:\n", d, g;
+  printf "  #auto_issues = %o\n", #auto_issues;
+  printf "  #objs with max_dim gt 2 = %o\n", #gt_2;
+  printf "  #objs with max_dim gt 3 = %o\n", #gt_3;
+  printf "  #objs with max_dim gt 4 = %o\n", #gt_4;
+  return auto_issues, gt_2, gt_3, gt_4;
 end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt) -> Any
   {}
   bools := [];
   for g := 1 to MaxGenera(d) do
-    bl := JustNaive(d, g);
-    Append(~bools, bl);
+    auto_issues, gt_2, gt_3, gt_4 := JustNaive(d, g);
   end for;
-  if true in bools then
-    return true;
+  // TODO: put what you want here :)
+  if #gt_4 gt 0 then
+    return gt_4[1];
   else
-    return false;
+    return gt_4;
   end if;
 end intrinsic;
 
