@@ -230,9 +230,16 @@ end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt) -> Any
   {}
-  bools := [];
+  auto_issues := [];
+  gt_2 := [];
+  gt_3 := [];
+  gt_4 := [];
   for g := 1 to MaxGenera(d) do
-    auto_issues, gt_2, gt_3, gt_4 := JustNaive(d, g);
+    auto_issues_g, gt_2_g, gt_3_g, gt_4_g := JustNaive(d, g);
+    auto_issues cat:= auto_issues_g;
+    gt_2 cat:= gt_2_g;
+    gt_3 cat:= gt_3_g;
+    gt_4 cat:= gt_4_g;
   end for;
   // TODO: put what you want here :)
   printf "\nauto_issues:\n";
