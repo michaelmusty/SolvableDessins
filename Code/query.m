@@ -128,7 +128,7 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
     count[1] := NumberOfPlacesOfDegreeOneOverExactConstantField(KXp);
     t_end := Cputime();
     printf "  #deg%oplcs = %o : %o s\n", 1, count[1], t_end-t_start;
-    for i := 2 to 3 do
+    for i := 2 to 2 do // TODO higher degree places might take too long
       t_start := Cputime();
       count[i] := NumberOfPlacesOfDegreeOverExactConstantField(KXp, i);
       t_end := Cputime();
