@@ -152,7 +152,7 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
     G := MonodromyGroup(s);
     m := 1;
     while #AutX lt #G do
-      if m gt 10 then
+      if m gt 4 then
         return "not_enough_automorphisms", s;
       end if;
       m +:= 1;
@@ -192,13 +192,22 @@ end intrinsic;
 
 intrinsic JustNaive(s::SolvableDB) -> Any
   {}
-  primes := GetTotallySplitPrimes(s, 100);
+  primes := GetTotallySplitPrimes(s, 1000);
   if primes[1] eq 2 then
-    p := primes[2];
-  else
-    p := primes[1];
+    Remove(~primes, 1);
   end if;
-  return JustNaive(s, p);
+  assert #primes gt 3;
+  max_dims := [];
+  for i := 1 to 4 do
+    try
+      a, b := JustNaive(s, primes[i]);
+      Append(~max_dims, a);
+    catch e
+      printf "prime %o error for %o\n", primes[i], Filename(s);
+    end try;
+  end for;
+  assert #max_dims gt 0;
+  return Min(max_dims), s;
 end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt, g::RngIntElt) -> BoolElt
