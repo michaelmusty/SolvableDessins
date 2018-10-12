@@ -151,15 +151,13 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
     printf "#AutX = %o : %o s\n", #AutX, t_end-t_start;
     G := MonodromyGroup(s);
     m := 1;
-    pow := p;
     while #AutX lt #G do
       if m gt 2 then
         return "not_enough_automorphisms", s;
       end if;
-      m +:= 1;
-      Xpp := BaseChange(Xp, GF(pow^m));
-      pow := pow^m;
+      Xpp := BaseChange(Xp, GF(p^(2^m)));
       printf "  computing Aut(Xp^(2^%o)) : ", m;
+      m +:= 1;
       t_start := Cputime();
       AutX := AutomorphismGroup(Xpp);
       t_end := Cputime();
