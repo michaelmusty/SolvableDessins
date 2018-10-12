@@ -274,6 +274,19 @@ intrinsic JustNaive(d::RngIntElt) -> Any
   end if;
 end intrinsic;
 
+// TODO deal with FFq
+intrinsic LPolynomial(s::SolvableDB, p::RngIntElt) -> Any
+  {}
+  assert IsPrime(p);
+  if BelyiMapIsComputed(s) then
+    X := BelyiCurve(s);
+    Xp := ReduceCurve(X, p);
+    return LPolynomial(Xp);
+  else
+    error "Belyi map not computed";
+  end if;
+end intrinsic;
+
 intrinsic NaiveTest(s::SolvableDB, p::RngIntElt) -> BoolElt
   {}
   assert IsPrime(p);
