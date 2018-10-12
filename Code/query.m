@@ -159,7 +159,7 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
       m +:= 1;
       Xpp := BaseChange(Xp, GF(pow^m));
       pow := pow^m;
-      printf "  computing Aut(Xp^%o) : ", m;
+      printf "  computing Aut(Xp^(2^%o)) : ", m;
       t_start := Cputime();
       AutX := AutomorphismGroup(Xpp);
       t_end := Cputime();
