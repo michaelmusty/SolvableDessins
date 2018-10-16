@@ -301,10 +301,12 @@ end intrinsic;
 /* Distilling pointed refinements: */
 
 intrinsic CyclesOverBasePoint(sigma::SeqEnum, bp::RngIntElt, ln::RngIntElt, aut::RngIntElt) -> SeqEnum
-    {Given a permutation triple sigma computes the cycles of length ln in
-    sigma[bp] up to simultaneous conjugation in Sym(d).  Here bp specifies in
-    which permutation we mark a cycle, i.e., bp := 1,2,3 corresponds to sigma0,
-    sigma1, sigmaoo (default is sigma0).}
+    {Given a permutation triple sigma, this function computes the cycles of
+    length ln in sigma[bp] for which the corresponding pointed dessin has
+    pointed automorphism group of size aut. These cycles are returned up to
+    automorphisms of the dessin, that is, up to simultaneous conjugation in
+    Sym(d). Note that bp specifies in which permutation we mark a cycle, i.e.,
+    bp := 1,2,3 corresponds to sigma0, sigma1, sigmaoo.}
     cycles := CycleDecomposition(sigma[bp]);
     cycles := { cycle : cycle in cycles | #cycle eq ln };
     /* Generic cases get fast result */
@@ -325,7 +327,8 @@ end intrinsic;
 
 intrinsic PointedRefinementSetFromCycles(sigma::SeqEnum, bp::RngIntElt, cycs::SeqEnum) -> SeqEnum
     {Normalizes the pointed refinements over the base point bp corresponding to
-    the cycles in cycs.}
+    the cycles in cycs: we move the distinguished cycle to be 1 in the first
+    permutation (corresponding to sigma0).}
     S := Sym(Degree(Parent(sigma[1])));
     G := sub<S | [ S ! s : s in sigma]>;
     gset := GSet(G, {1..Degree(G)});
@@ -347,20 +350,23 @@ intrinsic PointedRefinementSetFromCycles(sigma::SeqEnum, bp::RngIntElt, cycs::Se
 end intrinsic;
 
 intrinsic PointedRefinementSet(sigma::SeqEnum, bp::RngIntElt, ln::RngIntElt, aut::RngIntElt) -> SeqEnum
-    {Given a permutation triple sigma computes the cycles of length ln in
-    sigma[bp] up to simultaneous conjugation in Sym(d).  Here bp specifies in
-    which permutation we mark a cycle, i.e., bp := 1,2,3 corresponds to sigma0,
-    sigma1, sigmaoo (default is sigma0). After this, the special point is moved
-    to 1 in the first permutation, that is, it is above 0.}
+    {Given a permutation triple sigma, this function computes the cycles of
+    length ln in sigma[bp] for which the corresponding pointed dessin has
+    pointed automorphism group of size aut. These cycles are returned up to
+    automorphisms of the dessin, that is, up to simultaneous conjugation in
+    Sym(d). Note that bp specifies in which permutation we mark a cycle, i.e.,
+    bp := 1,2,3 corresponds to sigma0, sigma1, sigmaoo. We then normalize the
+    distinguished cycle to correspond to 1 in the first permutation
+    (corresponding to sigma0).}
     cycles := CyclesOverBasePoint(sigma, bp, ln, aut);
     return PointedRefinementSetFromCycles(sigma, bp, cycles);
 end intrinsic;
 
 intrinsic SomeMinimalPointedRefinementSet(sigma::SeqEnum[GrpPermElt]) -> SeqEnum[GrpPermElt]
-    {Given a triple sigma, find a small set of pointed representatives with
-    respect to some branch order. The special point is always 1 in the first
-    permutation, that is, it is above 0.}
-
+    {Given a triple sigma, this function finds a small set of pointed
+    representatives with respect to some cycle over some base point, which is
+    chosen in the process. We then normalize the distinguished cycle to
+    correspond to 1 in the first permutation (corresponding to sigma0).}
     /* In the generic case that there is a point with unique ramification
      * index, we return that */
     for bp in [1..#sigma] do
@@ -400,10 +406,10 @@ intrinsic SomeMinimalPointedRefinementSet(sigma::SeqEnum[GrpPermElt]) -> SeqEnum
 end intrinsic;
 
 intrinsic AllMinimalPointedRefinementSets(sigma::SeqEnum[GrpPermElt]) -> SeqEnum[GrpPermElt]
-    {Given a triple sigma, find all small sets of pointed representatives with
-    respect to some branch order. The special point is always 1 in the first
-    permutation, that is, it is above 0.}
-
+    {Given a triple sigma, this function finds all small sets of pointed
+    representatives with respect to some cycle over some base point, which is
+    chosen in the process. We then normalize the distinguished cycle to
+    correspond to 1 in the first permutation (corresponding to sigma0).}
     N := Infinity();
     refss := [ ];
     for bp in [1..#sigma] do
@@ -426,11 +432,11 @@ intrinsic AllMinimalPointedRefinementSets(sigma::SeqEnum[GrpPermElt]) -> SeqEnum
     return refss;
 end intrinsic;
 
-
 intrinsic MinimalPointedRefinementSets(sigmas::SeqEnum[SeqEnum[GrpPermElt]]) -> SeqEnum[SeqEnum[GrpPermElt]]
-    {Given a sequence of triples sigmas, find a small set of pointed
-    representatives with respect to some branch order. The special point is
-    always 1 in the first permutation, that is, it is above 0.}
+    {Given a sequence of triples sigmas, this function finds a small set of
+    pointed representatives with respect to some cycle over some base point,
+    which is chosen in the process. We then normalize the distinguished cycle
+    to correspond to 1 in the first permutation (corresponding to sigma0).}
     if #sigmas eq 0 then
         return [ ];
     end if;
@@ -793,300 +799,4 @@ intrinsic PassportRepresentatives(d::RngIntElt : Pointed := false, Weak := false
         db := TransitiveGroupDatabase(d);
     end if;
     return [ [* G, PassportRepresentatives(G : Pointed := Pointed, Weak := Weak, genus := genus, only_hyperbolic := only_hyperbolic, abc := abc, partitions := partitions) *] : G in db ];
-end intrinsic;
-
-/* refined passports */
-
-intrinsic RefinedPassportLemma(G::GrpPerm, tau::SeqEnum[GrpPermElt] : generates := true) -> SeqEnum
-    {Given a transitive permutation group G, and representatives tau of two
-    conjugacy classes in G, return double coset reps for
-    Centralizer(G, tau[1])\G/Centralizer(G, tau[2]).
-    Setting generates to true will select only those representatives for which
-    the corresponding dessin has monodromy group G (and not merely contained in
-    G.}
-    S := SymmetricGroup(Degree(G));
-    nus := DoubleCosetRepresentatives(G, Centralizer(G, tau[1]), Centralizer(G, tau[2]));
-    pairs := [ [ G ! tau[1], G ! (nu*tau[2]*nu^(-1)) ] : nu in nus ];
-    if generates then
-        pairs := [ pair : pair in pairs | sub< S | pair > eq G ];
-    end if;
-    return pairs;
-end intrinsic;
-
-intrinsic RefinedPassportRepresentatives(G::GrpPerm : Pointed := false, Weak := false, genus := -1, only_hyperbolic := false, abc := [], partitions := []) -> SeqEnum
-    {Given a transitive subgroup G of Sym(d), this function returns a complete
-    list of coarse passports for G, ordered by cycle type.
-    If genus ge 0, return only passports of specified genus.
-    If only_hyperbolic, return only hyperbolic triples.
-    If abc is specified, returns only triples with orders a,b,c (zero entries
-    ignored; may supply less than three entries).
-    If partitions is specified, return only triples whose cycle structures are
-    one of the cycle structures that is described (empty entries ignored).
-    Setting Pointed to true will give a small set of pointings that is stable
-    under Galois; this will enlarge the number of resulting triples in general.
-    Setting Weak to true will only give representatives up to the action of
-    Sym(3).}
-
-    // Conversion:
-    if partitions ne [] then
-        if Type(partitions[1][1]) eq RngIntElt then
-            partition_tups := [ Reverse([ < n, #[ x : x in partition | x eq n ] > : n in Set(partition) ]) : partition in partitions ];
-        else
-            partition_tups := partitions;
-        end if;
-    else
-        partition_tups := partitions;
-    end if;
-
-    // Setting the (desymmetrized) stage:
-    S := SymmetricGroup(Degree(G));
-    N := G;
-    CCsModN := ClassRepresentativesModAmbient(G, N);
-    vprintf Passport : "CCsModN = \n%o\n", CCsModN;
-    vprintf Passport : "#CCsModN = %o\n", #CCsModN;
-    indss := CartesianPower({1..#CCsModN}, 3);
-    indss := [ [ elt : elt in tup ] : tup in indss ];
-    indss := [ inds : inds in indss | CheckCycleStructures([ CycleStructure(CCsModN[ind]) : ind in inds ] : genus := genus, only_hyperbolic := only_hyperbolic, abc := abc, partition_tups := partition_tups) ];
-    indss := S3Representatives(indss, G, N);
-    indss12 := [ [ inds[1], inds[2] ] : inds in indss ];
-    indss12 := [ elt : elt in Set(indss12) ];
-    passports_by_ccs := [];
-    vprint Passport : "Sorted conjugacy class indices modulo ambient:";
-    vprint Passport : indss;
-    vprintf Passport : "#indss = %o\n", #indss;
-
-    // Run over the first two entries and sort into conjugacy triples above:
-    for inds12 in indss12 do
-        pairs := PassportLemma(G, [ CCsModN[ind] : ind in inds12 ]);
-        if #pairs ne 0 then
-            vprint Passport : "Pair found for", inds12;
-            vprintf Passport : "Pairs = \n%o\n", pairs;
-        end if;
-        sigmas_new := [ [ pair[1], pair[2], (pair[2]*pair[1])^(-1) ] : pair in pairs ];
-        // Store by third entry:
-        for sigma in sigmas_new do
-            CCinds := Append(inds12, ConjugacyClassModAmbientNumber(G, N, sigma[3]));
-            if CCinds in indss then
-                create_new := true;
-                for i:=1 to #passports_by_ccs do
-                    if passports_by_ccs[i][1] eq CCinds then
-                        Append(~passports_by_ccs[i][2], sigma);
-                        create_new := false;
-                    end if;
-                end for;
-                if create_new then
-                    Append(~passports_by_ccs, [* CCinds, [ sigma ] *]);
-                end if;
-            end if;
-        end for;
-    end for;
-    vprint Passport : "After passport lemma and first sorting:";
-    vprint Passport : passports_by_ccs;
-    vprintf Passport : "#passports = %o\n", #passports_by_ccs;
-    vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_ccs];
-
-    // Testing the entries for compatibility demands and discarding failures:
-    passports_by_ccs := [ [* passport[1], [ sigma : sigma in passport[2] | CheckCycleStructures([ CycleStructure(s) : s in sigma ] : genus := genus, only_hyperbolic := only_hyperbolic, abc := abc, partition_tups := partition_tups) ] *] : passport in passports_by_ccs ];
-    passports_by_ccs := [ passport : passport in passports_by_ccs | passport[2] ne [] ];
-    vprint Passport : "After throwing away entries that do not stand the test:";
-    vprintf Passport : "#passports = %o\n", #passports_by_ccs;
-    vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_ccs];
-
-    if Weak then
-        passports_by_ccs_new := [ ];
-        for passport in passports_by_ccs do
-            ccs, sigmas := Explode(passport);
-            if ccs[1] eq ccs[2] or ccs[2] eq ccs[3] then
-                sigmas := [ sigmas[i] : i in [1..#sigmas] | &and([ not IsWeaklyIsomorphic(N, sigmas[i], sigmas[j]) : j in [1..i-1] ]) ];
-            end if;
-            Append(~passports_by_ccs_new, [* ccs, sigmas *]);
-        end for;
-        passports_by_ccs := passports_by_ccs_new;
-        vprint Passport : "After removing weak isomorphisms:";
-        vprint Passport : passports_by_ccs;
-        vprintf Passport : "#passports = %o\n", #passports_by_ccs;
-        vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_ccs];
-    end if;
-
-    // Symmetrizing to get all possible triples of conjugacy classes:
-    if not Weak then
-        for passport in passports_by_ccs do
-            for g in Sym(3) do
-                new_entry := S3Action(g, passport[1], G, N);
-                if not new_entry in [ passport[1] : passport in passports_by_ccs ] then
-                    Append(~passports_by_ccs, [* new_entry, [ S3Action(g, sigma) : sigma in passport[2] ] *]);
-                end if;
-            end for;
-        end for;
-        vprint Passport : "After symmetrization:";
-        vprint Passport : passports_by_ccs;
-        vprintf Passport : "#passports = %o\n", #passports_by_ccs;
-        vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_ccs];
-    end if;
-
-    // Throwing together all passports with equal cycle structures:
-    passports_by_cycstrs := [];
-    for passport_by_ccs in passports_by_ccs do
-        cycstrs := [ CycleStructure(CCsModN[ind]) : ind in passport_by_ccs[1] ];
-        create_new := true;
-        for i:=1 to #passports_by_cycstrs do
-            if passports_by_cycstrs[i][1] eq cycstrs then
-                create_new := false;
-                passports_by_cycstrs[i][2] cat:= passport_by_ccs[2];
-            end if;
-        end for;
-        if create_new then
-            Append(~passports_by_cycstrs, [* cycstrs, passport_by_ccs[2] *]);
-        end if;
-    end for;
-
-    if not Weak then
-        passports_by_cycstrs := [ pair : pair in passports_by_cycstrs | IsInLexicographicalOrder(pair[1]) ];
-    end if;
-
-    vprint Passport : "After throwing cycle structures together:";
-    vprint Passport : passports_by_cycstrs;
-    vprintf Passport : "#passports = %o\n", #passports_by_cycstrs;
-    vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_cycstrs];
-
-    // Return pointings if so indicated
-    if Pointed eq true then
-        passports_by_cycstrs := [ [* passport[1], MinimalPointedRefinementSets(passport[2]) *] : passport in passports_by_cycstrs ];
-    end if;
-
-    return passports_by_cycstrs;
-end intrinsic;
-
-intrinsic RefinedPassport(G::GrpPerm : Pointed := false, Weak := false, genus := -1, only_hyperbolic := false, abc := [], partitions := []) -> SeqEnum
-    {}
-
-    // Conversion:
-    if partitions ne [] then
-        if Type(partitions[1][1]) eq RngIntElt then
-            partition_tups := [ Reverse([ < n, #[ x : x in partition | x eq n ] > : n in Set(partition) ]) : partition in partitions ];
-        else
-            partition_tups := partitions;
-        end if;
-    else
-        partition_tups := partitions;
-    end if;
-
-    // Setting the (desymmetrized) stage:
-    /* S := SymmetricGroup(Degree(G)); */
-    S := G;
-    N := G;
-    CCsModN := ClassRepresentativesModAmbient(G, N);
-    vprintf Passport : "CCsModN = \n%o\n", CCsModN;
-    vprintf Passport : "#CCsModN = %o\n", #CCsModN;
-    indss := CartesianPower({1..#CCsModN}, 3);
-    indss := [ [ elt : elt in tup ] : tup in indss ];
-    indss := [ inds : inds in indss | CheckCycleStructures([ CycleStructure(CCsModN[ind]) : ind in inds ] : genus := genus, only_hyperbolic := only_hyperbolic, abc := abc, partition_tups := partition_tups) ];
-    indss := S3Representatives(indss, G, N);
-    indss12 := [ [ inds[1], inds[2] ] : inds in indss ];
-    indss12 := [ elt : elt in Set(indss12) ];
-    passports_by_ccs := [];
-    vprint Passport : "Sorted conjugacy class indices modulo ambient:";
-    vprint Passport : indss;
-    vprintf Passport : "#indss = %o\n", #indss;
-
-    // Run over the first two entries and sort into conjugacy triples above:
-    for inds12 in indss12 do
-        pairs := PassportLemma(G, [ CCsModN[ind] : ind in inds12 ]);
-        if #pairs ne 0 then
-            vprint Passport : "Pair found for", inds12;
-            vprintf Passport : "Pairs = \n%o\n", pairs;
-        end if;
-        sigmas_new := [ [ pair[1], pair[2], (pair[2]*pair[1])^(-1) ] : pair in pairs ];
-        // Store by third entry:
-        for sigma in sigmas_new do
-            CCinds := Append(inds12, ConjugacyClassModAmbientNumber(G, N, sigma[3]));
-            if CCinds in indss then
-                create_new := true;
-                for i:=1 to #passports_by_ccs do
-                    if passports_by_ccs[i][1] eq CCinds then
-                        Append(~passports_by_ccs[i][2], sigma);
-                        create_new := false;
-                    end if;
-                end for;
-                if create_new then
-                    Append(~passports_by_ccs, [* CCinds, [ sigma ] *]);
-                end if;
-            end if;
-        end for;
-    end for;
-    vprint Passport : "After passport lemma and first sorting:";
-    vprint Passport : passports_by_ccs;
-    vprintf Passport : "#passports = %o\n", #passports_by_ccs;
-    vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_ccs];
-
-    // Testing the entries for compatibility demands and discarding failures:
-    passports_by_ccs := [ [* passport[1], [ sigma : sigma in passport[2] | CheckCycleStructures([ CycleStructure(s) : s in sigma ] : genus := genus, only_hyperbolic := only_hyperbolic, abc := abc, partition_tups := partition_tups) ] *] : passport in passports_by_ccs ];
-    passports_by_ccs := [ passport : passport in passports_by_ccs | passport[2] ne [] ];
-    vprint Passport : "After throwing away entries that do not stand the test:";
-    vprintf Passport : "#passports = %o\n", #passports_by_ccs;
-    vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_ccs];
-
-    if Weak then
-        passports_by_ccs_new := [ ];
-        for passport in passports_by_ccs do
-            ccs, sigmas := Explode(passport);
-            if ccs[1] eq ccs[2] or ccs[2] eq ccs[3] then
-                sigmas := [ sigmas[i] : i in [1..#sigmas] | &and([ not IsWeaklyIsomorphic(N, sigmas[i], sigmas[j]) : j in [1..i-1] ]) ];
-            end if;
-            Append(~passports_by_ccs_new, [* ccs, sigmas *]);
-        end for;
-        passports_by_ccs := passports_by_ccs_new;
-        vprint Passport : "After removing weak isomorphisms:";
-        vprint Passport : passports_by_ccs;
-        vprintf Passport : "#passports = %o\n", #passports_by_ccs;
-        vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_ccs];
-    end if;
-
-    // Symmetrizing to get all possible triples of conjugacy classes:
-    if not Weak then
-        for passport in passports_by_ccs do
-            for g in Sym(3) do
-                new_entry := S3Action(g, passport[1], G, N);
-                if not new_entry in [ passport[1] : passport in passports_by_ccs ] then
-                    Append(~passports_by_ccs, [* new_entry, [ S3Action(g, sigma) : sigma in passport[2] ] *]);
-                end if;
-            end for;
-        end for;
-        vprint Passport : "After symmetrization:";
-        vprint Passport : passports_by_ccs;
-        vprintf Passport : "#passports = %o\n", #passports_by_ccs;
-        vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_ccs];
-    end if;
-
-    // Throwing together all passports with equal cycle structures:
-    passports_by_cycstrs := [];
-    for passport_by_ccs in passports_by_ccs do
-        cycstrs := [ CycleStructure(CCsModN[ind]) : ind in passport_by_ccs[1] ];
-        create_new := true;
-        for i:=1 to #passports_by_cycstrs do
-            if passports_by_cycstrs[i][1] eq cycstrs then
-                create_new := false;
-                passports_by_cycstrs[i][2] cat:= passport_by_ccs[2];
-            end if;
-        end for;
-        if create_new then
-            Append(~passports_by_cycstrs, [* cycstrs, passport_by_ccs[2] *]);
-        end if;
-    end for;
-
-    if not Weak then
-        passports_by_cycstrs := [ pair : pair in passports_by_cycstrs | IsInLexicographicalOrder(pair[1]) ];
-    end if;
-
-    vprint Passport : "After throwing cycle structures together:";
-    vprint Passport : passports_by_cycstrs;
-    vprintf Passport : "#passports = %o\n", #passports_by_cycstrs;
-    vprintf Passport : "sizes = %o\n", [#pass[2] : pass in passports_by_cycstrs];
-
-    // Return pointings if so indicated
-    if Pointed eq true then
-        passports_by_cycstrs := [ [* passport[1], MinimalPointedRefinementSets(passport[2]) *] : passport in passports_by_cycstrs ];
-    end if;
-
-    return passports_by_cycstrs;
 end intrinsic;

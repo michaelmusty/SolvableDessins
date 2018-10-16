@@ -151,6 +151,7 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
     printf "#AutX = %o : %o s\n", #AutX, t_end-t_start;
     G := MonodromyGroup(s);
     m := 1;
+    /*
     while #AutX lt #G do
       if m gt 3 then
         error "not enough automorphisms";
@@ -164,27 +165,32 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
       printf "#AutX = %o : %o s\n", #AutX, t_end-t_start;
     end while;
     assert #G le #AutX;
-    printf "  computing permutation representation : ";
-    t_start := Cputime();
-    Gperm, mperm := PermutationRepresentation(AutX);
-    t_end := Cputime();
-    printf "%o s\n", t_end-t_start;
-    printf "  computing matrix representation : ";
-    t_start := Cputime();
-    M, phi := MatrixRepresentation(AutX);
-    t_end := Cputime();
-    printf "%o s\n", t_end-t_start;
-    printf "  decomposing GModule : ";
-    t_start := Cputime();
-    mp := mperm^-1*phi;
-    V := GModule(mp);
-    l := Decomposition(V);
-    t_end := Cputime();
-    printf "%o s\n", t_end-t_start;
-    dims := [Dimension(W) : W in l];
-    printf "  dimensions = %o\n", dims;
-    printf "\n";
-    return Max(dims), s;
+    */
+    if #G gt #AutX then
+      error "not enough automorphisms";
+    else
+      printf "  computing permutation representation : ";
+      t_start := Cputime();
+      Gperm, mperm := PermutationRepresentation(AutX);
+      t_end := Cputime();
+      printf "%o s\n", t_end-t_start;
+      printf "  computing matrix representation : ";
+      t_start := Cputime();
+      M, phi := MatrixRepresentation(AutX);
+      t_end := Cputime();
+      printf "%o s\n", t_end-t_start;
+      printf "  decomposing GModule : ";
+      t_start := Cputime();
+      mp := mperm^-1*phi;
+      V := GModule(mp);
+      l := Decomposition(V);
+      t_end := Cputime();
+      printf "%o s\n", t_end-t_start;
+      dims := [Dimension(W) : W in l];
+      printf "  dimensions = %o\n", dims;
+      printf "\n";
+      return Max(dims), s;
+    end if;
   else
     error "Belyi map not computed";
   end if;
@@ -193,6 +199,7 @@ end intrinsic;
 intrinsic JustNaive(s::SolvableDB) -> Any
   {}
   primes := GetTotallySplitPrimes(s, 1000);
+  primes := Sort(primes);
   if primes[1] eq 2 then
     Remove(~primes, 1);
   end if;
@@ -203,11 +210,14 @@ intrinsic JustNaive(s::SolvableDB) -> Any
       a, b := JustNaive(s, primes[i]);
       Append(~max_dims, a);
     catch e
-      printf "prime %o error for %o\n", primes[i], Filename(s);
+      printf "  prime %o error for %o\n", primes[i], Filename(s);
     end try;
   end for;
-  assert #max_dims gt 0;
-  return Min(max_dims), s;
+  if #max_dims eq 0 then
+    return 0, s;
+  else
+    return Min(max_dims), s;
+  end if;
 end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt, g::RngIntElt) -> BoolElt
