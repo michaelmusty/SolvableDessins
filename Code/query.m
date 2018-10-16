@@ -166,31 +166,27 @@ intrinsic JustNaive(s::SolvableDB, p::RngIntElt) -> Any
     end while;
     assert #G le #AutX;
     */
-    if #G gt #AutX then
-      error "not enough automorphisms";
-    else
-      printf "  computing permutation representation : ";
-      t_start := Cputime();
-      Gperm, mperm := PermutationRepresentation(AutX);
-      t_end := Cputime();
-      printf "%o s\n", t_end-t_start;
-      printf "  computing matrix representation : ";
-      t_start := Cputime();
-      M, phi := MatrixRepresentation(AutX);
-      t_end := Cputime();
-      printf "%o s\n", t_end-t_start;
-      printf "  decomposing GModule : ";
-      t_start := Cputime();
-      mp := mperm^-1*phi;
-      V := GModule(mp);
-      l := Decomposition(V);
-      t_end := Cputime();
-      printf "%o s\n", t_end-t_start;
-      dims := [Dimension(W) : W in l];
-      printf "  dimensions = %o\n", dims;
-      printf "\n";
-      return Max(dims), s;
-    end if;
+    printf "  computing permutation representation : ";
+    t_start := Cputime();
+    Gperm, mperm := PermutationRepresentation(AutX);
+    t_end := Cputime();
+    printf "%o s\n", t_end-t_start;
+    printf "  computing matrix representation : ";
+    t_start := Cputime();
+    M, phi := MatrixRepresentation(AutX);
+    t_end := Cputime();
+    printf "%o s\n", t_end-t_start;
+    printf "  decomposing GModule : ";
+    t_start := Cputime();
+    mp := mperm^-1*phi;
+    V := GModule(mp);
+    l := Decomposition(V);
+    t_end := Cputime();
+    printf "%o s\n", t_end-t_start;
+    dims := [Dimension(W) : W in l];
+    printf "  dimensions = %o\n", dims;
+    printf "\n";
+    return Max(dims), s;
   else
     error "Belyi map not computed";
   end if;
@@ -216,53 +212,78 @@ intrinsic JustNaive(s::SolvableDB) -> Any
   if #max_dims eq 0 then
     return 0, s;
   else
-    return Min(max_dims), s;
+    return Max(max_dims), s;
   end if;
 end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt, g::RngIntElt) -> BoolElt
   {}
   objs := PassportsNonhyperelliptic(d, g); // must already be computed
+  printf "\n";
   auto_issues := [];
+  gt_0 := [];
+  gt_1 := [];
   gt_2 := [];
   gt_3 := [];
   gt_4 := [];
   for s in objs do
     a, b := JustNaive(s);
-    if ISA(Type(a), MonStgElt) then
-      Append(~auto_issues, b);
-    elif a gt 4 then
+    assert a ge 0;
+    if a gt 4 then
       Append(~gt_4, b);
     elif a gt 3 then
       Append(~gt_3, b);
     elif a gt 2 then
       Append(~gt_2, b);
+    elif a gt 1 then
+      Append(~gt_1, b);
+    elif a gt 0 then
+      Append(~gt_0, b);
+    else
+      assert a eq 0;
+      Append(~auto_issues, b);
     end if;
   end for;
   printf "d=%o, g=%o:\n", d, g;
   printf "  #auto_issues = %o\n", #auto_issues;
+  printf "  #objs with max_dim gt 0 = %o\n", #gt_0;
+  printf "  #objs with max_dim gt 1 = %o\n", #gt_1;
   printf "  #objs with max_dim gt 2 = %o\n", #gt_2;
   printf "  #objs with max_dim gt 3 = %o\n", #gt_3;
   printf "  #objs with max_dim gt 4 = %o\n", #gt_4;
-  return auto_issues, gt_2, gt_3, gt_4;
+  printf "\n";
+  return auto_issues, gt_0, gt_1, gt_2, gt_3, gt_4;
 end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt) -> Any
   {}
   auto_issues := [];
+  gt_0 := [];
+  gt_1 := [];
   gt_2 := [];
   gt_3 := [];
   gt_4 := [];
   for g := 1 to MaxGenera(d) do
-    auto_issues_g, gt_2_g, gt_3_g, gt_4_g := JustNaive(d, g);
+    auto_issues_g, gt_0_g, gt_1_g, gt_2_g, gt_3_g, gt_4_g := JustNaive(d, g);
     auto_issues cat:= auto_issues_g;
+    gt_0 cat:= gt_0_g;
+    gt_1 cat:= gt_1_g;
     gt_2 cat:= gt_2_g;
     gt_3 cat:= gt_3_g;
     gt_4 cat:= gt_4_g;
   end for;
   // TODO: put what you want here :)
+  printf "Summary for degree %o\n", d;
   printf "\nauto_issues:\n";
   for s in auto_issues do
+    printf "  %o\n", Filename(s);
+  end for;
+  printf "\ngt_0:\n";
+  for s in gt_0 do
+    printf "  %o\n", Filename(s);
+  end for;
+  printf "\ngt_1:\n";
+  for s in gt_1 do
     printf "  %o\n", Filename(s);
   end for;
   printf "\ngt_2:\n";
@@ -277,6 +298,7 @@ intrinsic JustNaive(d::RngIntElt) -> Any
   for s in gt_4 do
     printf "  %o\n", Filename(s);
   end for;
+  printf "\n";
   if #gt_4 gt 0 then
     return true;
   else
