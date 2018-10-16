@@ -229,7 +229,9 @@ intrinsic JustNaive(d::RngIntElt, g::RngIntElt) -> BoolElt
   gt_2 := [];
   gt_3 := [];
   gt_4 := [];
-  for s in objs do
+  for i := 1 to #objs do
+    s := objs[i];
+    printf "\n  obj %o out of %o\n\n", i, #objs;
     a, b := JustNaive(s);
     assert a ge 0;
     if a gt 4 then
@@ -260,23 +262,46 @@ end intrinsic;
 
 intrinsic JustNaive(d::RngIntElt) -> Any
   {}
+  _, _, objs := GetNonhyperelliptic(d);
+  printf "\n";
   auto_issues := [];
   gt_0 := [];
   gt_1 := [];
   gt_2 := [];
   gt_3 := [];
   gt_4 := [];
-  for g := 1 to MaxGenera(d) do
-    auto_issues_g, gt_0_g, gt_1_g, gt_2_g, gt_3_g, gt_4_g := JustNaive(d, g);
-    auto_issues cat:= auto_issues_g;
-    gt_0 cat:= gt_0_g;
-    gt_1 cat:= gt_1_g;
-    gt_2 cat:= gt_2_g;
-    gt_3 cat:= gt_3_g;
-    gt_4 cat:= gt_4_g;
+  for i := 1 to #objs do
+    t0 := Cputime();
+    s := objs[i];
+    a, b := JustNaive(s);
+    assert a ge 0;
+    if a gt 4 then
+      Append(~gt_4, b);
+    elif a gt 3 then
+      Append(~gt_3, b);
+    elif a gt 2 then
+      Append(~gt_2, b);
+    elif a gt 1 then
+      Append(~gt_1, b);
+    elif a gt 0 then
+      Append(~gt_0, b);
+    else
+      assert a eq 0;
+      Append(~auto_issues, b);
+    end if;
+    t1 := Cputime();
+    printf "obj %o out of %o : %o (s)\n\n", i, #objs, t1-t0;
   end for;
-  // TODO: put what you want here :)
-  printf "Summary for degree %o\n", d;
+  printf "summary for d=%o :\n", d;
+  printf "  #objs total = %o\n", #objs;
+  printf "  #auto_issues = %o\n", #auto_issues;
+  printf "  #objs with max_dim gt 0 = %o\n", #gt_0;
+  printf "  #objs with max_dim gt 1 = %o\n", #gt_1;
+  printf "  #objs with max_dim gt 2 = %o\n", #gt_2;
+  printf "  #objs with max_dim gt 3 = %o\n", #gt_3;
+  printf "  #objs with max_dim gt 4 = %o\n", #gt_4;
+  printf "\n";
+  printf "summary of objs for degree %o\n", d;
   printf "\nauto_issues:\n";
   for s in auto_issues do
     printf "  %o\n", Filename(s);
