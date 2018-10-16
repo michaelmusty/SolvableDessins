@@ -205,6 +205,9 @@ intrinsic JustNaive(s::SolvableDB) -> Any
     try
       a, b := JustNaive(s, primes[i]);
       Append(~max_dims, a);
+      if a gt 4 then
+        error "Found dimension gt 4 : p=%o, s=%o\n", primes[i], Filename(s);
+      end if;
     catch e
       printf "  prime %o error for %o\n", primes[i], Filename(s);
     end try;
