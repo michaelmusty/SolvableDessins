@@ -44,3 +44,9 @@ intrinsic Refined(d::RngIntElt) -> Any
     return true;
   end if;
 end intrinsic;
+
+intrinsic Frattini(s::SolvableDB) -> Any
+  {}
+  G := MonodromyGroup(s);
+  return FrattiniSubgroup(G);
+end intrinsic;
