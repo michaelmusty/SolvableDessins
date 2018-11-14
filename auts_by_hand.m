@@ -19,21 +19,13 @@ s := TwoGroupAutomorphisms(s,t);
 t := s;
 s := ParentObjects(t)[1];
 s := TwoGroupBelyiMap(s, t);
-
-// playing with lifts
-K := CyclotomicField(4);
-K := CyclotomicField(8);
-/* L1 := NumberField(Polynomial([-1,-2,1])); */
-/* L2 := NumberField(Polynomial([-1,2,1])); */
-/* L := Compositum(K, L1); */
-/* L<eta> := Compositum(L, L2); */
-
-s := TwoGroupBaseChange(s, K);
-t := TwoGroupBaseChange(t, K);
-s, t := TwoGroupRelateObjects(s, t);
-aut := GetTwoGroupCurveAutomorphisms(t)[3];
-iota := GetTwoGroupAutomorphisms(t)[3];
-f := GetTwoGroupExtractFunction(s);
+/* K := CyclotomicField(4); */
+/* s := TwoGroupBaseChange(s, K); */
+/* t := TwoGroupBaseChange(t, K); */
+/* s, t := TwoGroupRelateObjects(s, t); */
+/* aut := GetTwoGroupCurveAutomorphisms(t)[3]; */
+/* iota := GetTwoGroupAutomorphisms(t)[3]; */
+/* f := GetTwoGroupExtractFunction(s); */
 
 /* s := TwoGroupAutomorphisms(s, t); */
 

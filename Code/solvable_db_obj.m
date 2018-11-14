@@ -37,6 +37,15 @@ declare attributes SolvableDB:
   // Belyi map attributes
     SolvableDBBelyiCurve, // X
     SolvableDBBelyiMap, // phi
+  // temporary attributs (for now) to compute action on differentials
+    IsTwoGroupBelyiMapComputed, // BoolElt
+    TwoGroupBelyiCurveList, // List[Crv]
+    TwoGroupBelyiMapList, // List[FldFunFracSchElt]
+    TwoGroupExtractList, // List[FldFunFracSchElt] (below)
+    TwoGroupAutomorphisms, // SeqEnum[functionfield hom]
+    TwoGroupCurveAutomorphisms, // SeqEnum[curve map]
+    TwoGroupAutoTextList, // SeqEnum[SeqEnum[MonStgElt]]
+    TwoGroupCyclotomicPower, // k where zeta_2^k is base field
   // temporary attributes (not saved to database)
     SolvableDBResidueField0,
     SolvableDBResidueField1,
