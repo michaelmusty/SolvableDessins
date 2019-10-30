@@ -1,3 +1,6 @@
+# This repository has been replaced with another (more updated) repository:
+# https://github.com/michaelmusty/2GroupDessins
+
 # SolvableDessins
 
 This is a database and Magma code for computing solvable Belyi maps.
