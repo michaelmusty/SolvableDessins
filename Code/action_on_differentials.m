@@ -379,6 +379,8 @@ intrinsic TwoGroupLocalSanityCheck(s::SolvableDB, p::RngIntElt) -> BoolElt
   end if;
 end intrinsic;
 
+
+
 /* /////////////////
 TwoGroupAutomorphisms
 ///////////////// */

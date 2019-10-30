@@ -2,6 +2,7 @@ intrinsic AutomorphismGroup(sigma::SeqEnum[GrpPermElt]) -> GrpPerm
   {Returns the automorphism group of the dessin.}
   S := Generic(Parent(sigma[1]));
   G := sub<S|sigma>;
+  //
   sigma := [G!sigma[i] : i in [1..3]];
   return &meet[ Centralizer(S, s) : s in sigma ];
 end intrinsic;
